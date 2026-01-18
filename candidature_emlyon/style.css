@@ -1,0 +1,177 @@
+:root {
+    --em-red: #E61E2B;
+    --mines-purple: #572a86;
+    --white: #ffffff;
+    --dark: #1a1a1a;
+    --vert-minitel: #69ff0a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--white);
+    background-color: #000;
+    scroll-behavior: smooth;
+}
+
+/* Navbar */
+.navbar {
+    position: fixed; top: 0; width: 100%;
+    background: white;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 5%; z-index: 1000;
+}
+.logo { font-weight: 700; color: var(--dark); text-transform: uppercase; font-size: 1.2rem; }
+.logo span { color: var(--em-red); }
+.nav-links { list-style: none; display: flex; }
+.nav-links li { margin-left: 1.5rem; }
+.nav-links a { text-decoration: none; color: var(--dark); font-weight: 600; font-size: 1rem; }
+.btn-cv { background: var(--em-red); color: white !important; padding: 0.5rem 1rem; border-radius: 8px; }
+
+/* Séparateurs */
+.white-divider {
+    position: relative; z-index: 100;
+    background-color: var(--white); color: var(--dark);
+    padding: 40px 0; text-align: center;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+}
+.white-divider h2 { font-size: 2.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 6px; }
+
+/* Sections */
+.section {
+    position: relative; min-height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+    background-attachment: fixed; background-size: cover; background-position: center;
+}
+/* Vignettes */
+.vignette { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(0,0,0,0.65) 100%); z-index: 1; }
+
+.vignette-light { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0) 50%,
+    rgba(0,0,0,0.5) 100%); 
+    z-index: 1; }
+
+
+.vignette-minitel { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,0,0,0.4) 0%,
+    rgba(0,0,0,0) 100%); 
+    z-index: 1; }
+
+.vignette-hero {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.75) 100%);
+    z-index: 1;
+}
+.vignette-dark { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.85) 100%); 
+    z-index: 1; 
+}
+
+/* Backgrounds .png */
+.bg-ismin { background-image: url('ismin-bg.png'); }
+.bg-phinia { background-image: url('phinia-bg.png'); }
+.bg-minitel { background-image: url('minitel-3d-vlad.png'); }
+.bg-milan { background-image: url('milan-bg.png'); }
+.bg-emlyon { background-image: url('emlyon-bg.png'); }
+.bg-po { background-image: url('po-bg.png'); }
+
+/* Contenu plus large pour réduire les marges latérales */
+.content { 
+    position: relative; 
+    z-index: 5; 
+    max-width: 1150px; /* Augmenté pour réduire les marges */
+    text-align: center; 
+    padding: 20px; 
+}
+
+.grid-layout { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 4rem; 
+    align-items: center; 
+}
+
+.text-side { text-align: left; }
+
+/* Alignement des photos à DROITE pour créer l'offset avec le centre */
+.photo-side { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 2rem; 
+    align-items: flex-end; /* Aligné à droite de la colonne */
+}
+
+/* Cadres photos à 250px de hauteur */
+.photo-frame-rect { 
+    width: 75%; /* Largeur pour laisser l'offset au milieu */
+    height: 250px; 
+    border: 3px solid var(--mines-purple); 
+    border-radius: 8px; 
+    overflow: hidden; 
+}
+.photo-img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Typographie */
+h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 0.8rem; text-shadow: 0 4px 12px rgba(0,0,0,0.9); }
+.subtitle { font-size: 1.3rem; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 2rem; text-shadow: 0 4px 10px rgba(0,0,0,0.8); }
+.title-white { font-size: 2.2rem; color: var(--white); margin-bottom: 2rem; text-transform: uppercase; font-weight: 700; text-shadow: 0 4px 15px rgba(0,0,0,0.9); }
+
+/* Centrage global des h3 */
+h3 { 
+    font-size: 1.4rem; 
+    color: var(--white); 
+    margin-bottom: 1.5rem; 
+    text-align: center; 
+    text-transform: uppercase; 
+    font-weight: 700; 
+}
+
+.simple-text { 
+    font-size: 1.35rem; line-height: 1.7; font-weight: 400; 
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    max-width: 900px;
+    margin: 0 auto 4rem;
+}
+
+.large-text { font-size: 1.4rem; font-weight: 400; line-height: 1.5; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+
+.text-block { 
+    margin-bottom: 3rem; 
+    text-align: center; 
+}
+
+/* Profil */
+.profile-frame { 
+    width: 250px; 
+    height: 250px; 
+    border-radius: 50%; 
+    border: 8px solid var(--em-red); 
+    overflow: hidden;  
+    margin: 4rem auto 2rem; 
+    box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+    position: relative; z-index: 10;
+}
+.profile-img { width: 100%; height: 100%; object-fit: cover; }
+
+.footer { padding: 1.2rem; background: #000; text-align: center; color: #555; font-size: 0.8rem; }
+
+.no-wrap-title { white-space: nowrap; width: 100%; display: block; text-align: center; }
+
+.section-pro-tall { padding-top: 100px; padding-bottom: 100px; min-height: 120vh; }
+
+.sub-section-container { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2rem; }
+.sub-section { text-align: center; }
+.sub-section h3 { text-align: center; }
+
+@media (max-width: 768px) { 
+    .grid-layout { grid-template-columns: 1fr; } 
+    .sub-section-container { grid-template-columns: 1fr; }
+    .photo-frame-rect { width: 100%; height: 200px; }
+}
+
+/* Applique le contour vert minitel uniquement dans la section correspondante */
+.bg-minitel .photo-frame-rect {
+    border-color: var(--vert-minitel);
+}

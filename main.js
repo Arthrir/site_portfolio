@@ -23,7 +23,8 @@ const translations = {
     nav_projects: "Projets",
     nav_skills: "Compétences",
     nav_engagements: "Engagements",
-    nav_contact: "Contact"
+    nav_contact: "Contact",
+    nav_emlyon: "Candidature emlyon"
   },
   en: {
     nav_home: "Home",
@@ -32,7 +33,8 @@ const translations = {
     nav_projects: "Projects",
     nav_skills: "Skills",
     nav_engagements: "Involvement",
-    nav_contact: "Contact"
+    nav_contact: "Contact",
+    nav_emlyon: "emlyon Application"
   }
 };
 
