@@ -166,10 +166,70 @@ h3 {
 .sub-section { text-align: center; }
 .sub-section h3 { text-align: center; }
 
+/* --- OPTIMISATION MOBILE --- */
 @media (max-width: 768px) { 
-    .grid-layout { grid-template-columns: 1fr; } 
-    .sub-section-container { grid-template-columns: 1fr; }
-    .photo-frame-rect { width: 100%; height: 200px; }
+    /* Navbar plus compacte */
+    .navbar { 
+        padding: 0.5rem 3%; 
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .logo { font-size: 1rem; }
+    .nav-links { 
+        justify-content: center; 
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .nav-links li { margin-left: 0; margin: 0 5px; }
+    .nav-links a { font-size: 0.75rem; }
+    .btn-cv { padding: 0.4rem 0.8rem; }
+
+    /* Séparateurs blancs plus fins */
+    .white-divider { padding: 25px 0; }
+    .white-divider h2 { font-size: 1.4rem; letter-spacing: 3px; }
+
+    /* Ajustement des grilles */
+    .grid-layout { 
+        grid-template-columns: 1fr;
+        gap: 2rem; 
+    } 
+    .text-side { text-align: center; }
+    
+    /* CORRECTION DES PHOTOS ENCADRÉES */
+    .photo-side { 
+        align-items: center;
+    }
+    .photo-frame-rect { 
+        width: 100%; /* Prend toute la largeur */
+        height: auto; /* La hauteur s'adapte pour garder les proportions */
+        max-height: 300px; /* Limite pour ne pas avoir d'images géantes */
+    }
+    .photo-img {
+        width: 100%;
+        height: auto; /* Important pour conserver le ratio */
+    }
+
+    /* Textes et Sections */
+    .content { padding: 15px; }
+    h1 { font-size: 2.2rem; }
+    .subtitle { font-size: 1rem; letter-spacing: 1px; margin-bottom: 1.5rem; }
+    .title-white { font-size: 1.6rem; margin-bottom: 1.5rem; }
+    .simple-text, .large-text { font-size: 1.1rem; line-height: 1.5; }
+    
+    .section-pro-tall { padding-top: 50px; padding-bottom: 50px; min-height: auto; }
+    .sub-section-container { grid-template-columns: 1fr; gap: 2rem; }
+    
+    /* CORRECTION PHOTO DE PROFIL */
+    .profile-frame { 
+        width: 160px; /* Taille légèrement réduite */
+        height: 160px; 
+        margin-top: 5rem; 
+        border: 5px solid var(--em-red);
+    }
+    .profile-img {
+        /* Centre l'image sur le haut (visage) pour éviter la coupe */
+        object-position: center 20%; 
+    }
 }
 
 /* Applique le contour vert minitel uniquement dans la section correspondante */
