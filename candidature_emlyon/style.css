@@ -35,8 +35,9 @@ body {
     background-color: var(--white); color: var(--dark);
     padding: 40px 0; text-align: center;
     box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+     scroll-margin-top: 20px;
 }
-.white-divider h2 { font-size: 2.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 6px; }
+.white-divider h2 { font-size: 2.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 6px;}
 
 /* Sections */
 .section {
