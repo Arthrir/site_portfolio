@@ -184,6 +184,12 @@ h3 {
     .nav-links a { font-size: 0.75rem; }
     .btn-cv { padding: 0.4rem 0.8rem; }
 
+    .section {
+        background-attachment: scroll !important; /* Désactive le mode fixe sur mobile */
+        background-size: cover;
+        background-position: center center;
+    }
+
     /* Séparateurs blancs plus fins */
     .white-divider { padding: 25px 0; }
     .white-divider h2 { font-size: 1.4rem; letter-spacing: 3px; }
