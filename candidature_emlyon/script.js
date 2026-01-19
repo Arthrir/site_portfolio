@@ -1,4 +1,4 @@
-// Petit script pour des animations au scroll
+// Effet léger sur la navbar au scroll
 window.addEventListener('scroll', () => {
     const nav = document.querySelector('.navbar');
     if (window.scrollY > 50) {

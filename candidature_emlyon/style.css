@@ -161,7 +161,7 @@ h3 {
 }
 
 .simple-text { 
-    font-size: 1.35rem; line-height: 1.7; font-weight: 400; 
+    font-size: 1.4rem; line-height: 1.7; font-weight: 400; 
     text-shadow: 0 2px 10px rgba(0,0,0,0.9);
     max-width: 900px;
     margin: 0 auto 4rem;
@@ -283,6 +283,12 @@ h3 {
     }
     .profile-img {
         object-position: center 20%; 
+    }
+    .text-side, .text-block {
+        text-align: center !important;
+    }
+    .large-text {
+        text-align: center;
     }
 }
 
