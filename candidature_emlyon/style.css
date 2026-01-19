@@ -30,12 +30,13 @@ body {
 .btn-cv { background: var(--em-red); color: white !important; padding: 0.5rem 1rem; border-radius: 8px; }
 
 /* Séparateurs */
+/* Séparateurs (version Bureau) */
 .white-divider {
     position: relative; z-index: 100;
     background-color: var(--white); color: var(--dark);
     padding: 40px 0; text-align: center;
     box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-     scroll-margin-top: 20px;
+    scroll-margin-top: 20px; /* Augmenté de 20px à 80px pour le bureau */
 }
 .white-divider h2 { font-size: 2.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 6px;}
 
@@ -169,6 +170,14 @@ h3 {
 /* --- OPTIMISATION MOBILE --- */
 @media (max-width: 768px) { 
     /* Navbar plus compacte */
+
+
+
+    #intro, #parcours, #futur, .white-divider {
+        scroll-margin-top: 80px !important;
+    }
+
+    /* Reste de ton code mobile existant... */
     .navbar { 
         padding: 0.5rem 3%; 
         flex-direction: column;
