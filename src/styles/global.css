@@ -1,6 +1,6 @@
 /* src/styles/global.css */
 :root {
-  --bg: #F8F8FA; /* Un blanc lumineux et propre */
+  --bg: #F8F8FA;
   --card-bg: #FFFFFF;
   --text: #111113;
   --muted: #6B6B70;
@@ -11,11 +11,13 @@
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-serif: 'Playfair Display', serif;
 
-  /* Couleurs d'accent pop (touches subtiles) */
+  /* Couleurs Pop & Marques avec le vert exact demandé */
   --pop-green: #69FF0A;
+  --emse-purple: #7B1FA2;
+  --emlyon-red: #E60028;
   --pop-orange: #FF9F0A;
   --pop-blue: #0A84FF;
-  --pop-yellow: #FFD60A;
+  --pop-yellow: #D4AC0D;
   --pop-purple: #BF5AF2;
   --pop-fuchsia: #FF375F;
 }
@@ -40,7 +42,39 @@ body {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* Timeline partagée (Expérience & Éducation) */
+/* Titres Superposés */
+.stacked-title-wrapper {
+  position: relative;
+  margin-bottom: 40px;
+  padding-top: 20px;
+}
+
+.stacked-bg {
+  position: absolute;
+  top: 0;
+  left: -5px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 4rem;
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--border);
+  opacity: 0.4;
+  z-index: 0;
+  user-select: none;
+  letter-spacing: -1px;
+}
+
+.stacked-main {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  padding-top: 25px;
+}
+
+/* Timeline */
 .timeline {
   display: flex;
   flex-direction: column;
@@ -73,7 +107,7 @@ body {
   width: 12px;
   height: 12px;
   background: var(--bg);
-  border: 2px solid var(--pop-blue);
+  border: 2px solid var(--pop-green);
   border-radius: 50%;
   z-index: 2;
 }
@@ -102,13 +136,14 @@ body {
   transform: translateY(-2px);
 }
 
-/* Puces de compétences colorées */
-.pop-dot {
+.skill-tag {
   display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
 }
 
 @media (max-width: 768px) {
@@ -117,4 +152,5 @@ body {
   .timeline-item { flex-direction: column; gap: 12px; }
   .timeline-date { width: auto; text-align: left; padding-left: 32px; padding-top: 0; }
   .timeline-content { margin-left: 32px; }
+  .stacked-bg { font-size: 2.8rem; }
 }

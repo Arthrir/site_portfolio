@@ -21,13 +21,22 @@ const { title } = Astro.props;
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 	</head>
-	<body class="theme-light"> <!-- Défini par défaut sur le mode clair -->
-		
+	<body class="theme-light">
 		<Header />
 		
 		<main style="max-width: 1100px; margin: 0 auto; padding: 120px 24px 60px;">
 			<slot />
 		</main>
+
+		<footer style="border-top: 1px solid var(--border); padding: 30px 24px; text-align: center; color: var(--muted); font-size: 0.9rem;">
+			<div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+				<p>© 2026 Arthur Doradoux. All rights reserved.</p>
+				<div style="display: flex; gap: 16px;">
+					<a href="https://linkedin.com/in/arthur-doradoux/" target="_blank" style="color: var(--muted); text-decoration: none;">LinkedIn</a>
+					<a href="https://github.com/Arthrir" target="_blank" style="color: var(--muted); text-decoration: none;">GitHub</a>
+				</div>
+			</div>
+		</footer>
 
 		<script>
 			const savedTheme = localStorage.getItem('theme');

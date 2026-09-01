@@ -1,0 +1,147 @@
+---
+/* src/pages/projects.astro */
+import Layout from '../layouts/Layout.astro';
+
+const projects = [
+  {
+    title: "FPGA ECG & Secure Communication",
+    date: "Feb 2026 – Mar 2026",
+    desc: "FPGA programming to decrypt ECG frames previously encrypted using ASCON in Python. Real-time monitoring dashboard.",
+    tags: ["FPGA", "SystemVerilog", "Python", "Vivado", "Cryptography"],
+    link: "https://github.com/Arthrir"
+  },
+  {
+    title: "Embedded AI Fault Detection",
+    date: "Feb 2026 – Mar 2026",
+    desc: "Machine fault detection AI embedded onto an STM32 microcontroller board.",
+    tags: ["STM32", "AI", "Python", "Embedded Electronics", "C", "Git"],
+    link: "https://github.com/Arthrir/ISMIN-IA_Embarquee_Projet"
+  },
+  {
+    title: "RISC-V Processor Architecture",
+    date: "Oct 2025 – Jan 2026",
+    desc: "Implementation of a 32-bit RISC-V processor in SystemVerilog, handling jumps, branches and ALU logic.",
+    tags: ["RISC-V", "Processors", "SystemVerilog", "Design"],
+    link: "https://github.com/Arthrir"
+  },
+  {
+    title: "IoT Air Quality Enclosure (Terrariot)",
+    date: "Nov 2025 – Feb 2026",
+    desc: "Design of an air quality monitoring enclosure for zoos using STM32, environmental sensors and LoRaWAN connectivity.",
+    tags: ["STM32", "3D Modeling", "3D Printing", "Sensors", "C", "IoT"],
+    link: "#"
+  },
+  {
+    title: "Capacitive Sensor Fan Prototype",
+    date: "Feb 2025 – Jun 2025",
+    desc: "Hardware prototyping project controlling a fan speed via sliding gestures on capacitive electrodes using an STM32.",
+    tags: ["STM32", "PCB", "Hardware Prototyping", "Electronics", "C"],
+    link: "#"
+  },
+  {
+    title: "Autonomous Robot Programming",
+    date: "Feb 2025 – Jun 2025",
+    desc: "Programming an STM32 robot to dynamically follow and maintain distance from objects using ultrasonic sensors.",
+    tags: ["C", "STM32", "Robotics", "Hardware Prototyping"],
+    link: "#"
+  },
+  {
+    title: "ASCON128 Encryption Implementation",
+    date: "Feb 2025 – May 2025",
+    desc: "Lightweight cryptographic algorithm implementation using a state machine in SystemVerilog with a Typst report.",
+    tags: ["SystemVerilog", "Cryptography", "Security"],
+    link: "https://github.com/Arthrir/ISMIN-ASCON-CSN"
+  },
+  {
+    title: "State.io Game (Client-Server in C)",
+    date: "Feb 2025 – Apr 2025",
+    desc: "Multithreaded client-server territorial conquest game built in C with a simplified Ncurses terminal UI.",
+    tags: ["C", "Sockets", "Ncurses", "Multithreading", "Dev Lead"],
+    link: "https://github.com/Arthrir/ISMIN-Jeu_Stateio"
+  },
+  {
+    title: "Blackjack Optimization (TIPE)",
+    date: "Jan 2023 – Jul 2024",
+    desc: "Python simulation modeling player happiness and strategy optimization to balance casino gains and retention.",
+    tags: ["Python", "Statistical Modeling", "NumPy", "Matplotlib"],
+    link: "#"
+  }
+];
+
+// Extraction de tous les tags uniques pour les filtres
+const allTags = Array.from(new Set(projects.flatMap(p => p.tags))).sort();
+---
+
+<Layout title="Arthur Doradoux | Projects Hub">
+  <section style="padding: 40px 0 80px;">
+    <div class="section-header-wrapper">
+      <div class="ghost-title">Projects</div>
+      <h2 class="section-title">Projects Hub</h2>
+    </div>
+    
+    <p style="color: var(--muted); margin-bottom: 24px; max-width: 600px;">
+      Explore all technical realizations, hardware prototypes, and software architectures. Click on a tag to filter projects dynamically.
+    </p>
+
+    <!-- Barre de filtres par tags -->
+    <div id="tagFilterContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px;">
+      <button class="skill-tag active" data-tag="all">All Projects</button>
+      {allTags.map(tag => (
+        <button class="skill-tag" data-tag={tag}>{tag}</button>
+      ))}
+    </div>
+
+    <!-- Grille des projets -->
+    <div id="projectsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+      {projects.map(project => (
+        <article class="card project-card" data-tags={JSON.stringify(project.tags)} style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <h3 style="font-size: 1.25rem; font-weight: 600;">{project.title}</h3>
+            </div>
+            <p class="muted" style="font-size: 0.85rem; margin-bottom: 12px;">{project.date}</p>
+            <p style="font-size: 0.95rem; margin-bottom: 20px; color: var(--text);">{project.desc}</p>
+          </div>
+
+          <div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
+              {project.tags.map(t => (
+                <span class="skill-tag" style="font-size: 0.7rem; pointer-events: none;">{t}</span>
+              ))}
+            </div>
+            {project.link !== "#" && (
+              <a href={project.link} target="_blank" style="display: inline-block; font-size: 0.85rem; font-weight: 600; color: var(--pop-blue); text-decoration: none;">
+                View on GitHub →
+              </a>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Script de filtrage dynamique par tag -->
+  <script>
+    const filterButtons = document.querySelectorAll('#tagFilterContainer .skill-tag');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Gestion de l'état actif du bouton
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        const selectedTag = button.getAttribute('data-tag');
+
+        projectCards.forEach(card => {
+          const cardTags = JSON.parse(card.getAttribute('data-tags'));
+          if (selectedTag === 'all' || cardTags.includes(selectedTag)) {
+            (card as HTMLElement).style.display = 'flex';
+          } else {
+            (card as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</Layout>
