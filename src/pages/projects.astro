@@ -4,88 +4,122 @@ import Layout from '../layouts/Layout.astro';
 
 const projects = [
   {
-    title: "FPGA ECG & Secure Communication",
-    date: "Feb 2026 – Mar 2026",
-    desc: "FPGA programming to decrypt ECG frames previously encrypted using ASCON in Python. Real-time monitoring dashboard.",
-    tags: ["FPGA", "SystemVerilog", "Python", "Vivado", "Cryptography"],
-    link: "https://github.com/Arthrir"
+    title: "FPGA ECG and Communication",
+    date: "Feb. 2026 – Mar. 2026",
+    desc: "Project involving FPGA programming in order to decrypt ECG frames previously encrypted using the ASCON algorithm in Python. Implementation of a Python dashboard for real-time monitoring.",
+    tags: ["SystemVerilog", "FPGA", "Vivado", "Python"],
+    link: "#"
   },
   {
-    title: "Embedded AI Fault Detection",
-    date: "Feb 2026 – Mar 2026",
-    desc: "Machine fault detection AI embedded onto an STM32 microcontroller board.",
+    title: "Embedded AI",
+    date: "Feb. 2026 – Mar. 2026",
+    desc: "AI project aimed at detecting faults in machines. The AI is then embedded on a board using an STM32 microcontroller.",
     tags: ["STM32", "AI", "Python", "Embedded Electronics", "C", "Git"],
     link: "https://github.com/Arthrir/ISMIN-IA_Embarquee_Projet"
   },
   {
-    title: "RISC-V Processor Architecture",
-    date: "Oct 2025 – Jan 2026",
-    desc: "Implementation of a 32-bit RISC-V processor in SystemVerilog, handling jumps, branches and ALU logic.",
-    tags: ["RISC-V", "Processors", "SystemVerilog", "Design"],
-    link: "https://github.com/Arthrir"
+    title: "AI Manufacturing",
+    date: "Feb. 2026 – Mar. 2026",
+    desc: "Work in progress project focusing on AI manufacturing applications.",
+    tags: ["R", "AI"],
+    link: "#"
   },
   {
-    title: "IoT Air Quality Enclosure (Terrariot)",
-    date: "Nov 2025 – Feb 2026",
-    desc: "Design of an air quality monitoring enclosure for zoos using STM32, environmental sensors and LoRaWAN connectivity.",
+    title: "Processor Architecture (RISC-V)",
+    date: "Oct. 2025 – Jan. 2026",
+    desc: "Implementation of a RISC-V processor in SystemVerilog, including jump and branch handling.",
+    tags: ["RISC-V", "Processors", "SystemVerilog", "Design"],
+    link: "#"
+  },
+  {
+    title: "Enterprise Computer Network Security",
+    date: "Oct. 2025 – Jan. 2026",
+    desc: "Network security project analyzing a virtual machine to identify and exploit vulnerabilities, creating a Python environment for tools, and exploring social engineering approaches.",
+    tags: ["Python", "Linux", "OSINT", "Networks"],
+    link: "#"
+  },
+  {
+    title: "IoT Project",
+    date: "Nov. 2025 – Feb. 2026",
+    desc: "Design of an air quality measurement enclosure intended for zoos in order to regulate and better control microclimates.",
     tags: ["STM32", "3D Modeling", "3D Printing", "Sensors", "C", "IoT"],
     link: "#"
   },
   {
     title: "Capacitive Sensor Fan Prototype",
-    date: "Feb 2025 – Jun 2025",
-    desc: "Hardware prototyping project controlling a fan speed via sliding gestures on capacitive electrodes using an STM32.",
-    tags: ["STM32", "PCB", "Hardware Prototyping", "Electronics", "C"],
+    date: "Feb. 2025 – Jun. 2025",
+    desc: "Hardware prototyping project to design a fan controlled by a capacitive sensor using an STM32 microcontroller and sliding gestures.",
+    tags: ["Sensor", "STM32", "PCB", "Hardware Prototyping", "Electronics", "C"],
     link: "#"
   },
   {
-    title: "Autonomous Robot Programming",
-    date: "Feb 2025 – Jun 2025",
-    desc: "Programming an STM32 robot to dynamically follow and maintain distance from objects using ultrasonic sensors.",
-    tags: ["C", "STM32", "Robotics", "Hardware Prototyping"],
+    title: "Autonomous Robot Programming (STM32)",
+    date: "Feb. 2025 – Jun. 2025",
+    desc: "Programming of a robot based on an STM32 microcontroller to stop 20 cm away from an object and follow it dynamically using an ultrasonic sensor.",
+    tags: ["C", "STM32 Microcontroller", "Robotics"],
+    link: "#"
+  },
+  {
+    title: "Design of a RISC-V Processor (32-bit ISA)",
+    date: "Oct. 2025 – Dec. 2025",
+    desc: "Complete design of a processing unit (CPU) based on the RISC-V architecture (RV32I) using Logisim-evolution with a control unit, ALU, registers, and memory.",
+    tags: ["CPU Architecture", "RISC-V", "Logisim Evolution", "Digital Logic"],
     link: "#"
   },
   {
     title: "ASCON128 Encryption Implementation",
-    date: "Feb 2025 – May 2025",
-    desc: "Lightweight cryptographic algorithm implementation using a state machine in SystemVerilog with a Typst report.",
+    date: "Feb. 2025 – May 2025",
+    desc: "Implementation of the lightweight cryptographic algorithm ASCON128 using a state machine in SystemVerilog for embedded systems and IoT.",
     tags: ["SystemVerilog", "Cryptography", "Security"],
     link: "https://github.com/Arthrir/ISMIN-ASCON-CSN"
   },
   {
-    title: "State.io Game (Client-Server in C)",
-    date: "Feb 2025 – Apr 2025",
-    desc: "Multithreaded client-server territorial conquest game built in C with a simplified Ncurses terminal UI.",
-    tags: ["C", "Sockets", "Ncurses", "Multithreading", "Dev Lead"],
+    title: "State.io Game",
+    date: "Feb. 2025 – Apr. 2025",
+    desc: "Development of the State.io game in C using a client-server system and the Ncurses library for a terminal-based graphical interface.",
+    tags: ["Dev Lead", "C", "Sockets", "Ncurses", "Multithreading"],
     link: "https://github.com/Arthrir/ISMIN-Jeu_Stateio"
   },
   {
-    title: "Blackjack Optimization (TIPE)",
-    date: "Jan 2023 – Jul 2024",
-    desc: "Python simulation modeling player happiness and strategy optimization to balance casino gains and retention.",
+    title: "Handi’Mines — Disability Awareness",
+    date: "Feb. 2025 – Jun. 2025",
+    desc: "Organization of a stand during the event 'Sport dans ma ville' in Gardanne to promote disability sports (blind football and showdown) and production of an awareness video.",
+    tags: ["Communication", "Event Organization"],
+    link: "#"
+  },
+  {
+    title: "Velisud — Entrep’ Program",
+    date: "Oct. 2024 – Mar. 2025",
+    desc: "Participation in the Entrep’ entrepreneurship program with the project of designing an intermediate vehicle to be commercialized in the south of France.",
+    tags: ["Technical Lead", "Entrepreneurship", "Electronic Design"],
+    link: "#"
+  },
+  {
+    title: "TIPE — Blackjack Optimization",
+    date: "Jan. 2023 – Jul. 2024",
+    desc: "Creation of a Python simulation modeling player happiness and strategy optimization to balance casino gains and player retention.",
     tags: ["Python", "Statistical Modeling", "NumPy", "Matplotlib"],
     link: "#"
   }
 ];
 
-// Extraction de tous les tags uniques pour les filtres
 const allTags = Array.from(new Set(projects.flatMap(p => p.tags))).sort();
 ---
 
 <Layout title="Arthur Doradoux | Projects Hub">
   <section style="padding: 40px 0 80px;">
-    <div class="section-header-wrapper">
-      <div class="ghost-title">Projects</div>
-      <h2 class="section-title">Projects Hub</h2>
+    <div class="stacked-title-wrapper" style="margin-bottom: 40px;">
+      <div class="stacked-bg">Hub</div>
+      <h2 class="stacked-main">Projects Hub</h2>
     </div>
     
     <p style="color: var(--muted); margin-bottom: 24px; max-width: 600px;">
-      Explore all technical realizations, hardware prototypes, and software architectures. Click on a tag to filter projects dynamically.
+      Explore all 14 technical realizations, hardware prototypes, and software architectures. Click on a tag to filter projects dynamically.
     </p>
 
-    <!-- Barre de filtres par tags -->
+    <!-- Filtres par tags -->
     <div id="tagFilterContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px;">
-      <button class="skill-tag active" data-tag="all">All Projects</button>
+      <button class="skill-tag active" data-tag="all">All Projects (14)</button>
       {allTags.map(tag => (
         <button class="skill-tag" data-tag={tag}>{tag}</button>
       ))}
@@ -96,9 +130,7 @@ const allTags = Array.from(new Set(projects.flatMap(p => p.tags))).sort();
       {projects.map(project => (
         <article class="card project-card" data-tags={JSON.stringify(project.tags)} style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between;">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-              <h3 style="font-size: 1.25rem; font-weight: 600;">{project.title}</h3>
-            </div>
+            <h3 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; margin-bottom: 6px;">{project.title}</h3>
             <p class="muted" style="font-size: 0.85rem; margin-bottom: 12px;">{project.date}</p>
             <p style="font-size: 0.95rem; margin-bottom: 20px; color: var(--text);">{project.desc}</p>
           </div>
@@ -120,14 +152,12 @@ const allTags = Array.from(new Set(projects.flatMap(p => p.tags))).sort();
     </div>
   </section>
 
-  <!-- Script de filtrage dynamique par tag -->
   <script>
     const filterButtons = document.querySelectorAll('#tagFilterContainer .skill-tag');
     const projectCards = document.querySelectorAll('.project-card');
 
     filterButtons.forEach(button => {
       button.addEventListener('click', () => {
-        // Gestion de l'état actif du bouton
         filterButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
 
