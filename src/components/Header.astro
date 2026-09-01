@@ -1,0 +1,66 @@
+---
+// Header.astro
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" class="header-logo-link" aria-label="Arthur Doradoux Home">
+      <img src="/logo/icone_white.png" alt="Logo" class="header-logo-img dark-only" />
+      <img src="/logo/icone_gray.png" alt="Logo" class="header-logo-img light-only" />
+    </a>
+
+    <nav class="nav" aria-label="Main Navigation">
+      <ul class="nav-list" id="navList">
+        <li><a href="/" data-link="home">Home</a></li>
+        <li><a href="/projects" data-link="projects">Projects</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-controls">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+        <span class="icon-placeholder">☀️</span>
+      </button>
+
+      <button class="lang-toggle" aria-label="Toggle Language">EN</button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    backdrop-filter: blur(12px);
+    background: transparent;
+    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+    height: 70px;
+    display: flex;
+    align-items: center;
+  }
+
+  .header-inner {
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-logo-img { height: 32px; }
+  
+  body.theme-dark .light-only { display: none; }
+  body.theme-light .dark-only { display: none; }
+
+  .nav-list { display: flex; gap: 24px; list-style: none; }
+  .nav-list a { color: var(--muted); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+  .nav-list a:hover { color: var(--text); }
+
+  .header-controls { display: flex; gap: 16px; align-items: center; }
+  
+  .theme-toggle, .lang-toggle {
+    background: none; border: none; color: var(--text); cursor: pointer; font-weight: 600; font-size: 0.9rem;
+  }
+</style>

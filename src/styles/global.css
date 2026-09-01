@@ -1,0 +1,120 @@
+/* src/styles/global.css */
+:root {
+  --bg: #F8F8FA; /* Un blanc lumineux et propre */
+  --card-bg: #FFFFFF;
+  --text: #111113;
+  --muted: #6B6B70;
+  --border: rgba(0, 0, 0, 0.08);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  --radius: 14px;
+  
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Playfair Display', serif;
+
+  /* Couleurs d'accent pop (touches subtiles) */
+  --pop-green: #69FF0A;
+  --pop-orange: #FF9F0A;
+  --pop-blue: #0A84FF;
+  --pop-yellow: #FFD60A;
+  --pop-purple: #BF5AF2;
+  --pop-fuchsia: #FF375F;
+}
+
+body.theme-dark {
+  --bg: #0F0F11;
+  --card-bg: #18181C;
+  --text: #F2F2F7;
+  --muted: #8E8E93;
+  --border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text);
+  background-color: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Timeline partagée (Expérience & Éducation) */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 140px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.timeline-item {
+  display: flex;
+  gap: 40px;
+  position: relative;
+  align-items: flex-start;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 135px;
+  top: 24px;
+  width: 12px;
+  height: 12px;
+  background: var(--bg);
+  border: 2px solid var(--pop-blue);
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.timeline-date {
+  width: 100px;
+  padding-top: 20px;
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.timeline-content {
+  flex: 1;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease;
+}
+
+.timeline-content:hover {
+  transform: translateY(-2px);
+}
+
+/* Puces de compétences colorées */
+.pop-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+@media (max-width: 768px) {
+  .timeline::before { left: 10px; }
+  .timeline-item::before { left: 5px; }
+  .timeline-item { flex-direction: column; gap: 12px; }
+  .timeline-date { width: auto; text-align: left; padding-left: 32px; padding-top: 0; }
+  .timeline-content { margin-left: 32px; }
+}
