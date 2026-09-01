@@ -11,7 +11,6 @@
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-serif: 'Playfair Display', serif;
 
-  /* Couleurs Pop & Marques avec le vert exact demandé */
   --pop-green: #69FF0A;
   --emse-purple: #7B1FA2;
   --emlyon-red: #E60028;
@@ -26,8 +25,8 @@ body.theme-dark {
   --bg: #0F0F11;
   --card-bg: #18181C;
   --text: #F2F2F7;
-  --muted: #8E8E93;
-  --border: rgba(255, 255, 255, 0.1);
+  --muted: #9A9A9F;
+  --border: rgba(255, 255, 255, 0.12);
   --shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
 
@@ -42,7 +41,7 @@ body {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* Titres Superposés */
+/* Titres Ghost en arrière-plan (Pastel un peu plus soutenu mais élégant) */
 .stacked-title-wrapper {
   position: relative;
   margin-bottom: 40px;
@@ -51,18 +50,18 @@ body {
 
 .stacked-bg {
   position: absolute;
-  top: 0;
+  top: -5px;
   left: -5px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 4rem;
+  font-size: 4.2rem;
   font-weight: 700;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--border);
-  opacity: 0.4;
+  color: var(--pop-blue);
+  opacity: 0.15; /* Un poil plus visible qu'avant, mais reste doux */
   z-index: 0;
   user-select: none;
   letter-spacing: -1px;
+  pointer-events: none;
 }
 
 .stacked-main {
@@ -71,7 +70,7 @@ body {
   font-family: var(--font-serif);
   font-size: 2.2rem;
   font-weight: 700;
-  padding-top: 25px;
+  padding-top: 20px;
 }
 
 /* Timeline */
@@ -85,7 +84,7 @@ body {
 .timeline::before {
   content: '';
   position: absolute;
-  left: 140px;
+  left: 150px;
   top: 0;
   bottom: 0;
   width: 2px;
@@ -93,37 +92,34 @@ body {
 }
 
 .timeline-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 130px 1fr;
   gap: 40px;
   position: relative;
-  align-items: flex-start;
-}
-
-.timeline-item::before {
-  content: '';
-  position: absolute;
-  left: 135px;
-  top: 24px;
-  width: 12px;
-  height: 12px;
-  background: var(--bg);
-  border: 2px solid var(--pop-green);
-  border-radius: 50%;
-  z-index: 2;
+  align-items: start;
 }
 
 .timeline-date {
-  width: 100px;
   padding-top: 20px;
   font-weight: 600;
   color: var(--muted);
   font-size: 0.9rem;
   text-align: right;
-  flex-shrink: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 145px;
+  top: 24px;
+  width: 12px;
+  height: 12px;
+  background: var(--card-bg);
+  border: 2px solid var(--pop-blue);
+  border-radius: 50%;
+  z-index: 2;
 }
 
 .timeline-content {
-  flex: 1;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -136,21 +132,22 @@ body {
   transform: translateY(-2px);
 }
 
+/* Tags corrigés pour le mode sombre (fond contrasté et texte lisible) */
 .skill-tag {
   display: inline-block;
   font-size: 0.75rem;
   font-weight: 500;
   padding: 4px 10px;
   border-radius: 6px;
-  background: var(--card-bg);
+  background: var(--bg);
   border: 1px solid var(--border);
+  color: var(--text);
 }
 
 @media (max-width: 768px) {
   .timeline::before { left: 10px; }
-  .timeline-item::before { left: 5px; }
-  .timeline-item { flex-direction: column; gap: 12px; }
-  .timeline-date { width: auto; text-align: left; padding-left: 32px; padding-top: 0; }
-  .timeline-content { margin-left: 32px; }
-  .stacked-bg { font-size: 2.8rem; }
+  .timeline-item { grid-template-columns: 1fr; gap: 12px; padding-left: 28px; }
+  .timeline-date { text-align: left; padding-top: 0; }
+  .timeline-dot { left: 4px; top: 4px; }
+  .stacked-bg { font-size: 3rem; }
 }
