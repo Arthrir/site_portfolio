@@ -100,7 +100,8 @@ const t = makeT(lang);
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
-						<img class="org-logo" src="/logo/phinia.png" alt="PHINIA Delphi" />
+            <!-- Ajout de la classe logo-phinia pour gérer le contraste -->
+						<img class="org-logo logo-phinia" src="/logo/phinia.png" alt="PHINIA Delphi" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? 'Stage Ingénieur Systèmes Hardware' : 'Hardware Systems Engineering Intern'}</h3>
               <span class="org-name-sub" style="color: var(--pop-blue);">PHINIA Delphi France</span>
@@ -135,7 +136,6 @@ const t = makeT(lang);
 
 	<section style="padding: 40px 0;">
 		<div class="stacked-title-wrapper" style="--stacked-color: var(--pop-orange); --dot-color: var(--pop-orange);">
-      <!-- Traduction dynamique du fond de texte -->
 			<div class="stacked-bg">{lang === 'fr' ? 'Diplômes' : 'Degrees'}</div>
 			<h2 class="stacked-main">{lang === 'fr' ? 'Formation' : 'Education'}</h2>
 		</div>
@@ -233,6 +233,8 @@ const t = makeT(lang);
 				<div class="timeline-dot" style="border-color: var(--muted);"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
+            <!-- Ajout du logo Pothier -->
+            <img class="org-logo" src="/logo/pothier.png" alt="Lycée Pothier" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? "Classes Préparatoires (MPSI / MP*)" : "Intensive Preparatory Classes (CPGE)"}</h3>
               <span class="org-name-sub" style="color: var(--muted);">Lycée Pothier</span>
@@ -248,6 +250,8 @@ const t = makeT(lang);
 				<div class="timeline-dot" style="border-color: var(--muted);"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
+            <!-- Ajout du logo NDA -->
+            <img class="org-logo" src="/logo/nda.png" alt="Lycée Notre-Dame des Aydes" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? "Baccalauréat Mention Bien (Section Européenne)" : "High School Diploma with Honors"}</h3>
               <span class="org-name-sub" style="color: var(--muted);">Lycée Notre-Dame des Aydes</span>
@@ -259,4 +263,11 @@ const t = makeT(lang);
 			</div>
 		</div>
 	</section>
+
+  <style is:global>
+    /* Gestion du logo blanc PHINIA en mode clair */
+    body.theme-light .logo-phinia {
+      background-color: var(--ink);
+    }
+  </style>
 </Layout>
