@@ -31,14 +31,15 @@ const t = makeT(lang);
         </div>
       </div>
 
+      <!-- Theme Toggle épuré (Style ancien site) -->
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" type="button">
-        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
 
-      <!-- Bouton de langue avec la bordure Bleu-Blanc-Rouge -->
-      <button class="lang-toggle" id="langToggle" data-current={lang}>
-        {lang === 'fr' ? 'EN' : 'FR'}
+      <!-- Bouton Langue avec classe dynamique pour le drapeau -->
+      <button class={`lang-toggle ${lang === 'fr' ? 'is-fr' : 'is-en'}`} id="langToggle" data-current={lang}>
+        {lang === 'fr' ? 'FR' : 'EN'}
       </button>
 
       <button class="mobile-toggle" id="mobileToggle" aria-label="Menu principal">
@@ -66,40 +67,41 @@ const t = makeT(lang);
   .nav-list a.active { color: var(--text); }
   .nav-list a.active::after { right: 0; }
 
-  .header-controls { display: flex; gap: 8px; align-items: center; }
+  .header-controls { display: flex; gap: 12px; align-items: center; }
 
+  /* Theme Toggle épuré */
   .theme-toggle {
-    background: var(--card-bg); border: 1px solid var(--border-strong); color: var(--text);
-    cursor: pointer; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; position: relative; transition: border-color 0.2s ease;
+    background: transparent; border: none; color: var(--text); cursor: pointer; 
+    width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; 
+    position: relative; transition: transform 0.2s ease, color 0.2s ease;
   }
-  .theme-toggle:hover { border-color: var(--text); }
+  .theme-toggle:hover { color: var(--accent); transform: scale(1.05); }
   .theme-toggle svg { position: absolute; transition: opacity 0.3s ease, transform 0.3s ease; }
-  .icon-sun { opacity: 1; transform: scale(1); color: var(--pop-orange); }
-  .icon-moon { opacity: 0; transform: scale(0.5) rotate(-45deg); color: var(--pop-purple); }
+  .icon-sun { opacity: 1; transform: scale(1); }
+  .icon-moon { opacity: 0; transform: scale(0.5) rotate(-45deg); }
   body.theme-dark .icon-sun { opacity: 0; transform: scale(0.5) rotate(45deg); }
   body.theme-dark .icon-moon { opacity: 1; transform: scale(1) rotate(0); }
 
-  /* Bouton Langue Bleu-Blanc-Rouge */
+  /* Bouton Langue Dynamique */
   .lang-toggle {
-    background: var(--card-bg);
-    color: var(--text);
-    cursor: pointer; font-weight: 600; font-size: 0.8rem; width: 32px; height: 32px;
-    display: inline-flex; align-items: center; justify-content: center; border-radius: 6px;
+    background: var(--card-bg); color: var(--text); cursor: pointer; font-weight: 600; font-size: 0.8rem; 
+    width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; 
+    border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .lang-toggle.is-en {
+    border: 1px solid var(--border-strong);
+  }
+  .lang-toggle.is-fr {
     border: 2px solid transparent;
     background-image: linear-gradient(var(--card-bg), var(--card-bg)), 
                       linear-gradient(90deg, #0059b3 0%, #0059b3 33.3%, #ffffff 33.3%, #ffffff 66.6%, #cc0000 66.6%, #cc0000 100%);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-origin: border-box; background-clip: padding-box, border-box;
   }
-  body.theme-dark .lang-toggle {
+  body.theme-dark .lang-toggle.is-fr {
     background-image: linear-gradient(var(--card-bg), var(--card-bg)), 
                       linear-gradient(90deg, #007aff 0%, #007aff 33.3%, #f0f0f0 33.3%, #f0f0f0 66.6%, #ff4040 66.6%, #ff4040 100%);
   }
-  .lang-toggle:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(15, 23, 42, 0.1);
-  }
+  .lang-toggle:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(15, 23, 42, 0.1); }
 
   .cv-menu { position: relative; }
   .cv-trigger { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--bg); border: 1px solid var(--ink); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: transform 0.2s ease; }

@@ -135,7 +135,8 @@ const t = makeT(lang);
 
 	<section style="padding: 40px 0;">
 		<div class="stacked-title-wrapper" style="--stacked-color: var(--pop-orange); --dot-color: var(--pop-orange);">
-			<div class="stacked-bg">{t('home.educationKicker')}</div>
+      <!-- Traduction dynamique du fond de texte -->
+			<div class="stacked-bg">{lang === 'fr' ? 'Diplômes' : 'Degrees'}</div>
 			<h2 class="stacked-main">{lang === 'fr' ? 'Formation' : 'Education'}</h2>
 		</div>
 
@@ -187,13 +188,13 @@ const t = makeT(lang);
 					<p class="muted">Milan, Italie</p>
           <div class="mission-list" style="--dot-color: var(--school-polimi);" set:html={lang === 'fr' ? `
             <ul>
-              <li><strong>Cours étudiés :</strong> Design of Engineering, Design Strategy, Design Ergonomics, Material Selection.</li>
-              <li><strong>Objectif :</strong> Un semestre essentiel pour comprendre l'ergonomie, l'industrialisation et placer l'utilisateur final au centre de la conception matérielle.</li>
+              <li><strong>Cours :</strong> Product Design Studio 1, UX Design, Design and Manufacturing, Virtual and Physical Prototyping.</li>
+              <li><strong>Enjeu :</strong> Maîtriser l'ergonomie, le prototypage rapide et l'UX pour placer l'utilisateur au centre de la conception matérielle. Une compétence clé pour diriger des produits dans les entreprises technologiques innovantes.</li>
             </ul>
           ` : `
             <ul>
-              <li><strong>Courses:</strong> Design of Engineering, Design Strategy, Design Ergonomics, Material Selection.</li>
-              <li><strong>Goal:</strong> An essential semester to understand ergonomics, industrialization, and to put the end user at the center of hardware design.</li>
+              <li><strong>Courses:</strong> Product Design Studio 1, UX Design, Design and Manufacturing, Virtual and Physical Prototyping.</li>
+              <li><strong>Goal:</strong> Master ergonomics, rapid prototyping, and UX to put the user at the center of hardware design—a key skill for leading products in innovative tech companies.</li>
             </ul>
           `} />
 				</div>

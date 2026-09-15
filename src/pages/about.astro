@@ -7,20 +7,18 @@ const t = makeT(lang);
 ---
 
 <Layout title={lang === 'fr' ? "Arthur Doradoux | À propos" : "Arthur Doradoux | About"}>
-  <section style="padding: 40px 0; max-width: 720px; margin: 0 auto;">
-    
-    <!-- Logo et Titre Centrés -->
-    <div style="text-align: center; margin-bottom: 40px;">
-      <img src="/logo/icone_gray.png" alt="Logo" class="logo-light" style="width: 60px; height: auto; margin: 0 auto 24px; display: block;" />
-      <img src="/logo/icone_white.png" alt="Logo" class="logo-dark" style="width: 60px; height: auto; margin: 0 auto 24px; display: none;" />
+  
+  <!-- EN-TÊTE CENTRÉ -->
+  <section style="padding: 40px 0; max-width: 720px; margin: 0 auto; text-align: center;">
+    <img src="/logo/icone_gray.png" alt="Logo" class="logo-light" style="width: 60px; height: auto; margin: 0 auto 24px; display: block;" />
+    <img src="/logo/icone_white.png" alt="Logo" class="logo-dark" style="width: 60px; height: auto; margin: 0 auto 24px; display: none;" />
 
-      <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); display: inline-block;">
-        <h2 class="stacked-main" style="margin-left: 0;">{lang === 'fr' ? 'Profil & Ambitions' : 'Profile & Ambitions'}</h2>
-      </div>
+    <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); display: inline-block;">
+      <h2 class="stacked-main" style="margin-left: 0;">{lang === 'fr' ? 'Profil & Ambitions' : 'Profile & Ambitions'}</h2>
     </div>
 
-    <!-- Contenu texte aligné à gauche -->
-    <div style="font-size: 1.05rem; line-height: 1.8; color: var(--text); display: flex; flex-direction: column; gap: 20px;">
+    <!-- Intro centrée mais texte aligné à gauche pour la lisibilité -->
+    <div style="font-size: 1.05rem; line-height: 1.8; color: var(--text); text-align: left; display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
       <p set:html={lang === 'fr' ? `
         Actuellement élève ingénieur à <strong>Mines Saint-Étienne (ISMIN)</strong>, je construis un profil à la croisée de <strong>l’ingénierie, du design et du management</strong>. 
         Ma formation en microélectronique et en informatique m’a permis d’acquérir une solide rigueur technique, à travers des projets en systèmes embarqués, hardware, architecture des processeurs et intelligence artificielle.
@@ -36,63 +34,101 @@ const t = makeT(lang);
         Over time, through both academic projects and student leadership experiences, I realized that what drives me most is not only the technical design of a system. 
         I am equally interested in understanding <em>why</em> a technology is developed, <em>for whom</em> it creates value, and <em>how</em> it can be turned into a relevant, coherent and impactful product.
       `} />
+    </div>
+  </section>
 
+  <!-- CE QUE JE VEUX CONSTRUIRE & TRIPLE COMPÉTENCE -->
+  <section style="padding: 20px 0 60px; max-width: 720px; margin: 0 auto;">
+    <h3 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; margin-bottom: 18px;">
+      {lang === 'fr' ? "La Triple Compétence" : "Triple Competency"}
+    </h3>
+    
+    <div style="font-size: 1.02rem; line-height: 1.8; color: var(--text); display: flex; flex-direction: column; gap: 20px;">
       <p set:html={lang === 'fr' ? `
-        C’est cette conviction qui guide aujourd’hui mon parcours. À terme, je souhaite évoluer vers des fonctions de <strong>Product Owner / Product Manager</strong>, au croisement de la technique, de l’expérience utilisateur et de la stratégie, afin de piloter le développement de produits technologiques ambitieux et à fort impact.
+        Je n'ai jamais été le plus passionné par un seul composant ou un seul langage de programmation. Ce qui m'a toujours fasciné, c'est le moment où une technologie cesse d'être un exercice de laboratoire pour devenir un objet que quelqu'un utilise. Le FPGA, le RISC-V, le PCB, c'est le moyen. Le produit fini dans les mains de l'utilisateur, c'est la fin.
       ` : `
-        This perspective now shapes my academic and professional direction. In the long term, I aim to grow into <strong>Product Owner / Product Manager</strong> roles, at the crossroads of technology, user experience and strategy, with the ambition of leading the development of ambitious and high-impact technological products.
-      `} />
-
-      <p set:html={lang === 'fr' ? `
-        Dans cette logique, je souhaite enrichir ma formation d’ingénieur par une approche plus centrée sur les usages, l’expérience et la vision produit, notamment à travers un <strong>semestre en design au Politecnico di Milano</strong>, puis par une spécialisation en management avec <strong>emlyon business school</strong>. 
-        Mon ambition est de savoir dialoguer aussi bien avec des équipes techniques qu’avec des équipes business ou design, afin d’aligner vision produit, faisabilité technique et création de valeur.
-      ` : `
-        With this in mind, I want to complement my engineering education with a stronger focus on product vision, usage and experience, notably through a <strong>design semester at Politecnico di Milano</strong>, followed by a management specialization with <strong>emlyon business school</strong>. 
-        My ambition is to be able to work seamlessly with technical, business and design teams alike, in order to align product vision, technical feasibility and value creation.
+        I have never been most passionate about a single component or programming language. What has always fascinated me is the moment when a technology stops being a lab exercise and becomes an object someone uses. FPGA, RISC-V, PCBs are the means. The finished product in the user's hands is the end.
       `} />
 
       <div style="border-left: 3px solid var(--pop-blue); padding-left: 16px; margin: 12px 0; font-weight: 500; font-style: italic;">
-        {lang === 'fr' ? "Mon objectif est de développer une véritable triple compétence entre ingénierie, design et management, pour concevoir et piloter des produits technologiques innovants avec une vision à la fois technique, humaine et stratégique." : "My goal is to build a genuine triple competency across engineering, design and management, in order to design and lead innovative technological products with a vision that is both technical, human and strategic."}
+        {lang === 'fr' ? "Je ne veux pas choisir entre comprendre comment un produit fonctionne et comprendre pourquoi il existe. Je veux faire les deux, au même endroit." : "I don't want to choose between understanding how a product works and understanding why it exists. I want to do both, in the same place."}
+      </div>
+
+      <div class="card" style="border-top: 3px solid var(--pop-blue); margin-top: 10px;">
+        <p style="font-size: 1.02rem; line-height: 1.7; margin-bottom: 16px;" set:html={lang === 'fr' ? `
+          C'est pourquoi j'ai été sélectionné par mon école pour réaliser un semestre au <strong>Politecnico di Milano</strong> dans le <strong>Master Design & Engineering</strong> afin d'étudier le design produit (ergonomie, matériaux, intégration) dans une université d'exception.
+        ` : `
+          This is why I was selected by my school to complete a semester at <strong>Politecnico di Milano</strong> in the <strong>Master's Degree in Design & Engineering</strong> to study product design (ergonomics, materials, integration).
+        `} />
+        <p style="font-size: 1.02rem; line-height: 1.7;" set:html={lang === 'fr' ? `
+          Par la suite, je vais poursuivre par le <strong>Double Diplôme "Business Mediation"</strong> de l'<strong>emlyon business school</strong> afin d'acquérir les outils financiers, stratégiques et managériaux nécessaires pour devenir Product Owner / Manager.
+        ` : `
+          Following this, I will pursue the <strong>"Business Mediation" Double Degree</strong> at <strong>emlyon business school</strong> to acquire the financial, strategic, and managerial tools necessary to become a Product Owner / Manager.
+        `} />
       </div>
     </div>
   </section>
 
-  <!-- Section Parcours / Objectif -->
-  <section style="padding: 0 0 80px; max-width: 900px; margin: 0 auto;">
-    <hr style="margin: 30px 0; border: 0; border-top: 1px solid var(--border-strong);">
+  <!-- PASSIONS ET VOYAGES (Très personnel) -->
+  <section style="padding: 20px 0 80px; max-width: 720px; margin: 0 auto;">
+    <div class="stacked-title-wrapper" style="--stacked-color: var(--muted); --dot-color: var(--muted); margin-bottom: 30px;">
+      <h2 class="stacked-main" style="margin-left: 0; font-size: 1.8rem;">{lang === 'fr' ? "En dehors des salles de cours" : "Outside the classroom"}</h2>
+    </div>
 
-    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-top: 30px;">
-        
-      <div class="card" style="flex:1; min-width:300px; display:flex; flex-direction:column;">
-        <h3 class="h2" style="font-size:1.15rem; margin-bottom: 10px;">{lang === 'fr' ? "Mon parcours détaillé" : "My Detailed Background"}</h3>
-        <p class="muted" style="margin-bottom: 20px;">
-          {lang === 'fr' ? "Découvrez ma formation académique, mes projets techniques et mon investissement associatif :" : "Explore my academic background, technical achievements and student involvement:"}
-        </p>
-        
-        <div style="display:flex; flex-direction:column; gap:10px; margin-top:auto;">
-          <a href="/assets/CV-Arthur_DORADOUX-FR.pdf" download class="btn btn-secondary" style="justify-content:center; font-size:0.9rem;">
-            {lang === 'fr' ? "Voir mon CV" : "View my Resume"}
-          </a>
-          <a href="/projects" class="btn btn-secondary" style="justify-content:center; font-size:0.9rem;">
-            {lang === 'fr' ? "Explorer mes Projets" : "Explore my Projects"}
-          </a>
-          <a href="/engagements" class="btn btn-secondary" style="justify-content:center; font-size:0.9rem;">
-            {lang === 'fr' ? "Mes Engagements" : "My Engagements"}
-          </a>
+    <div style="display: flex; flex-direction: column; gap: 36px;">
+      
+      <!-- F1 -->
+      <div>
+        <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-orange);">Motorsport</span>
+          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">Formula 1</h4>
         </div>
+        <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
+          {lang === 'fr' ? 
+            "Je suis chaque session, pas seulement les courses. La stratégie en qualifications, les choix de pneumatiques et la rivalité d'ingénierie entre les écuries m'intéressent autant que la course elle-même. C'est d'ailleurs cette même exigence qui m'attire vers le hardware : une quantité énorme de précision et de développement cachée derrière un objet qui a l'air simple, où aucune décision n'est gratuite." : 
+            "I follow every session, not just the races. The qualifying strategies, tire choices, and the engineering rivalries between teams interest me as much as the track itself. It's the same demand for excellence that draws me to hardware: an enormous amount of precision and development hidden behind a sleek final product, where no decision is made without a reason."}
+        </p>
       </div>
 
-      <div class="card" style="flex:2; min-width:300px; border-top: 3px solid var(--pop-blue);">
-        <h3 class="h2" style="font-size:1.15rem; margin-bottom: 10px;">{lang === 'fr' ? "Mon Objectif : Triple Compétence" : "My Goal: Triple Competency"}</h3>
-        <p class="muted" style="line-height: 1.7;" set:html={lang === 'fr' ? `
-          J'ai été sélectionné par mon école pour réaliser un semestre au <strong>Politecnico di Milano</strong> dans le <strong>Master Design & Engineering</strong> afin d'étudier en profondeur le design produit dans une université d'exception.<br><br>
-          Par la suite, je vais poursuivre par le <strong>Double Diplôme "Business Mediation"</strong> de l'<strong>emlyon</strong> afin d'acquérir les outils financiers, stratégiques et managériaux nécessaires au développement avancé de produits et de projets.<br><br>
-          Ainsi, je vais pouvoir obtenir cette triple compétence rare et parfaite pour mon futur : Ingénierie Microélectronique et Informatique, Design et Développement Produit, Business et Stratégie.
-        ` : `
-          I want to complement my engineering degree at <strong>Mines Saint-Étienne (ISMIN)</strong> with a semester at <strong>Politecnico di Milano</strong> in the <strong>Master's Degree in Design & Engineering</strong>, followed by a Double Degree "Business Mediation" at <strong>emlyon business school</strong>.<br><br>
-          This path will allow me to develop a stronger product-oriented perspective by combining engineering, design and management and will help me to become a Product Owner/Manager, my dream job, early in my career.
-        `} />
+      <!-- Vitality -->
+      <div>
+        <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-purple);">Esport</span>
+          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">Gaming & Team Vitality</h4>
+        </div>
+        <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
+          {lang === 'fr' ? 
+            "Supporter de longue date de la Team Vitality, que ce soit sur League of Legends ou Counter-Strike. Organiser les LAN de MINITEL avec Riot Games et Red Bull a été ma manière la plus concrète de me rapprocher de ce monde-là en tant qu'organisateur, et cela m'a confirmé que je veux rester lié à cette industrie." : 
+            "A long-time supporter of Team Vitality, whether on League of Legends or Counter-Strike. Organizing MINITEL's LAN parties in partnership with Riot Games and Red Bull was my most concrete way of getting involved in this environment as an organizer, confirming my desire to stay connected to this industry."}
+        </p>
       </div>
+
+      <!-- Sport -->
+      <div>
+        <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-blue);">Lifestyle</span>
+          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{lang === 'fr' ? "Sport & Équilibre" : "Sports & Balance"}</h4>
+        </div>
+        <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
+          {lang === 'fr' ? 
+            "Le sport est l'endroit où je coupe mon cerveau des circuits, du code et des deadlines. Rien de très rigide — un mélange de course à pied, de renforcement musculaire et de sports de combat — mais c'est une partie non négociable de ma semaine pour maintenir un équilibre de vie sain." : 
+            "Sports are where I turn my brain off from circuits, code, and deadlines. Nothing too rigid—a mix of running, strength training, and combat sports—but it's a non-negotiable part of my week to maintain a healthy work-life balance."}
+        </p>
+      </div>
+
+      <!-- Voyages -->
+      <div>
+        <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-fuchsia);">Travel</span>
+          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{lang === 'fr' ? "Voyages & Découvertes" : "Travel & Discovery"}</h4>
+        </div>
+        <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
+          {lang === 'fr' ? 
+            "L'exploration est pour moi une source d'inspiration constante. De l'Égypte aux États-Unis, en passant par de nombreux pays d'Europe, voyager me permet d'élargir ma perspective. Observer comment différentes cultures interagissent avec le monde et la technologie nourrit directement ma vision de ce que doit être un bon design produit : universel et adapté." : 
+            "Exploration is a constant source of inspiration for me. From Egypt to the USA and across many European countries, traveling allows me to broaden my perspective. Observing how different cultures interact with the world and technology directly feeds my vision of what good product design should be: universal and adaptable."}
+        </p>
+      </div>
+
     </div>
   </section>
 
