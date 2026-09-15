@@ -1,0 +1,104 @@
+---
+/* src/pages/about.astro */
+import Layout from '../layouts/Layout.astro';
+import { getLangFromCookie, makeT } from '../i18n/translations';
+
+const lang = getLangFromCookie(Astro.cookies.get('lang')?.value);
+const t = makeT(lang);
+---
+
+<Layout title="Arthur Doradoux | About">
+  <section style="padding: 40px 0 30px; max-width: 720px;">
+    <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue);">
+      <div class="stacked-bg">{t('about.kicker')}</div>
+      <h2 class="stacked-main">{t('about.title')}</h2>
+    </div>
+
+    <div style="font-size: 1.02rem; line-height: 1.8; display: flex; flex-direction: column; gap: 18px; color: var(--text);">
+      <p>{t('about.intro')}</p>
+    </div>
+  </section>
+
+  <!-- Ce que je veux faire de ma vie -->
+  <section style="padding: 30px 0 60px; max-width: 720px;">
+    <h3 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; margin-bottom: 18px;">
+      Ce que je veux construire
+    </h3>
+    <div style="font-size: 1.02rem; line-height: 1.85; display: flex; flex-direction: column; gap: 18px; color: var(--text);">
+      <p>
+        Je n'ai jamais été le plus passionné par un seul composant, un seul langage ou une seule machine — ce qui m'a toujours fasciné, c'est le moment où une technologie cesse d'être un exercice de laboratoire pour devenir un objet que quelqu'un utilise, aime, ou dont il ne peut plus se passer. Le FPGA, le RISC-V, le PCB, c'est le moyen. Le produit fini dans les mains de quelqu'un, c'est la fin.
+      </p>
+      <p>
+        Ce que je veux faire de ma carrière, c'est me tenir exactement à cet endroit-là : suffisamment technique pour comprendre ce qui est faisable et pourquoi une contrainte hardware existe, suffisamment orienté design pour me demander si l'expérience est la bonne, et suffisamment business pour savoir si le produit doit exister. Le monde de l'électronique grand public — là où le hardware, l'interface et la marque doivent être pensés comme un seul geste — est précisément le terrain où je veux construire ça.
+      </p>
+      <div style="border-left: 2px solid var(--pop-orange); padding-left: 18px; margin: 8px 0; font-family: var(--font-serif); font-size: 1.2rem; font-style: italic; line-height: 1.5;">
+        Je ne veux pas choisir entre comprendre comment un produit fonctionne et comprendre pourquoi il existe. Je veux faire les deux, au même endroit.
+      </div>
+      <p>
+        Politecnico di Milano et emlyon ne sont pas des cases à cocher sur un CV : c'est la manière la plus directe que j'ai trouvée pour construire cette double lecture — design et stratégie — sans jamais lâcher la partie ingénieur qui reste mon socle.
+      </p>
+    </div>
+  </section>
+
+  <!-- Pourquoi l'innovation et le design -->
+  <section style="padding: 0 0 60px; max-width: 720px;">
+    <h3 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; margin-bottom: 18px;">
+      Pourquoi l'innovation, pourquoi le design
+    </h3>
+    <div style="font-size: 1.02rem; line-height: 1.85; display: flex; flex-direction: column; gap: 18px; color: var(--text);">
+      <p>
+        J'ai grandi entouré de choses bien faites plutôt que de choses compliquées — et j'ai fini par remarquer que les objets qui durent dans le temps ne sont presque jamais les plus techniquement impressionnants, mais les plus cohérents. Une F1 est fascinante parce que chaque pièce, y compris celles qu'on ne voit jamais, sert une seule idée : gagner une course. Aucune fioriture, aucune décision gratuite.
+      </p>
+      <p>
+        C'est cette exigence-là que je veux appliquer au design produit : ne rien mettre qui ne serve pas l'usage, mais soigner à l'excès ce qui sert vraiment. C'est un principe d'ingénieur autant que de designer, et c'est probablement pour ça que le pont entre les deux mondes me paraît naturel plutôt que schizophrène.
+      </p>
+    </div>
+  </section>
+
+  <!-- Voyages — section volontairement ouverte, à compléter -->
+  <section style="padding: 0 0 60px; max-width: 720px;">
+    <h3 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; margin-bottom: 18px;">
+      Voyages
+    </h3>
+    <div style="font-size: 1.02rem; line-height: 1.85; color: var(--muted); font-style: italic;">
+      <p><!-- À compléter : lieux marquants, ce que ça t'a appris, une anecdote --></p>
+    </div>
+  </section>
+
+  <!-- Passions — traité comme un carnet, pas des cartes identiques -->
+  <section style="padding: 0 0 80px;">
+    <div class="section-subhead" style="margin-top: 0;">En dehors des salles de cours</div>
+
+    <div style="display: flex; flex-direction: column; gap: 36px; max-width: 720px;">
+      <div>
+        <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-orange);">Motorsport</span>
+          <h4 style="font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600;">Formula 1</h4>
+        </div>
+        <p style="font-size: 0.98rem; line-height: 1.75;">
+          Je suis chaque session, pas seulement les courses — la stratégie en qualifications et la rivalité d'ingénierie entre écuries m'intéressent autant que la course elle-même. C'est la même raison qui m'attire vers le hardware : une quantité énorme de précision, cachée derrière quelque chose qui a l'air simple.
+        </p>
+      </div>
+
+      <div>
+        <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-purple);">Esport</span>
+          <h4 style="font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600;">Gaming & Team Vitality</h4>
+        </div>
+        <p style="font-size: 0.98rem; line-height: 1.75;">
+          Supporter de longue date de Team Vitality, sur League of Legends comme sur CS. Organiser les LAN de <span style="color: var(--accent-bright); font-weight: 600;">MINITEL</span> avec Riot Games et Red Bull a été ma manière la plus concrète de me rapprocher de ce monde-là — et ça m'a confirmé que je veux y rester lié.
+        </p>
+      </div>
+
+      <div>
+        <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;">
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-blue);">Sport</span>
+          <h4 style="font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600;">Rester actif</h4>
+        </div>
+        <p style="font-size: 0.98rem; line-height: 1.75;">
+          Le sport, c'est l'endroit où je coupe le cerveau des circuits et des deadlines. Rien de très structuré — un mélange de sports co et de mouvement régulier — mais c'est une partie non négociable de ma semaine.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

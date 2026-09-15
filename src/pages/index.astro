@@ -1,6 +1,9 @@
 ---
-/* src/pages/index.astro */
 import Layout from '../layouts/Layout.astro';
+import { getLangFromCookie, makeT } from '../i18n/translations';
+
+const lang = getLangFromCookie(Astro.cookies.get('lang')?.value);
+const t = makeT(lang);
 ---
 
 <Layout title="Arthur Doradoux | Engineering & Product Design">
@@ -8,67 +11,46 @@ import Layout from '../layouts/Layout.astro';
 	<section style="padding: 40px 0 70px;">
 		<div style="display: flex; align-items: center; justify-content: space-between; gap: 60px; flex-wrap: wrap;">
 			<div style="flex: 1; min-width: 300px;">
-				<div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
-					<span style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--emse-purple); padding: 4px 10px; border: 1px solid var(--emse-purple); border-radius: 6px; background: rgba(123, 31, 162, 0.08);">
-						MINES SAINT-ÉTIENNE
-					</span>
-					<span style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--pop-blue); padding: 4px 10px; border: 1px solid var(--pop-blue); border-radius: 6px; background: rgba(10, 132, 255, 0.08);">
-						POLITECNICO DI MILANO
-					</span>
-					<span style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--emlyon-red); padding: 4px 10px; border: 1px solid var(--emlyon-red); border-radius: 6px; background: rgba(230, 0, 40, 0.08);">
-						EMLYON
-					</span>
+				<div class="badge-row">
+					<span class="badge badge-emse">Mines Saint-Étienne</span>
+					<span class="badge badge-polimi">Politecnico di Milano</span>
+					<span class="badge badge-emlyon">emlyon</span>
 				</div>
 
-				<h1 style="font-family: var(--font-serif); font-size: 4rem; line-height: 1.05; margin-bottom: 20px; letter-spacing: -1px;">
-					Arthur <em style="font-style: italic; color: var(--pop-fuchsia);">Doradoux</em>
+				<h1 style="font-family: var(--font-serif); font-weight: 600; font-size: clamp(2.6rem, 6vw, 4rem); line-height: 1.05; margin-bottom: 20px; letter-spacing: -0.01em;">
+					Arthur Doradoux
 				</h1>
-				<p style="font-size: 1.15rem; color: var(--muted); line-height: 1.6; margin-bottom: 32px; max-width: 540px;">
-					Microelectronics & Computer Science engineering student, bridging <span style="color: var(--pop-green); font-weight: 600;">deep tech hardware</span>, embedded systems, and <span style="color: var(--pop-fuchsia); font-weight: 600;">product design</span>.
+				<p style="font-size: 1.1rem; color: var(--muted); margin-bottom: 32px; max-width: 520px;">
+					{t('home.heroSubtitle')}
 				</p>
-				
-				<div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-bottom: 30px;">
-					<a href="/projects" style="background: linear-gradient(135deg, var(--pop-fuchsia), var(--pop-orange)); color: #fff; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 15px rgba(255, 55, 95, 0.3);">Explore Projects Hub →</a>
-					<a href="mailto:arthur.doradoux@etu.emse.fr" style="background-color: transparent; color: var(--text); border: 1px solid var(--border); padding: 12px 20px; border-radius: 8px; font-weight: 600; text-decoration: none;">Get in touch</a>
-				</div>
 
-				<!-- Panneau CV Propre -->
-				<div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; display: inline-flex; gap: 20px; align-items: center; box-shadow: var(--shadow);">
-					<div style="font-size: 0.9rem; font-weight: 600;">📄 Resumes:</div>
-					<div style="display: flex; gap: 10px;">
-						<a href="/assets/CV-Arthur_DORADOUX-ENG.pdf" download style="background: rgba(10, 132, 255, 0.1); color: var(--pop-blue); border: 1px solid var(--pop-blue); padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none;">English (PDF) ↓</a>
-						<a href="/assets/CV-Arthur_DORADOUX-FR.pdf" download style="background: rgba(105, 255, 10, 0.15); color: #2e8500; border: 1px solid var(--pop-green); padding: 6px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none;">Français (PDF) ↓</a>
-					</div>
+				<div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+					<a href="/projects" class="btn btn-primary">{t('home.ctaProjects')}</a>
+					<a href="mailto:arthur.doradoux@etu.emse.fr" class="btn btn-secondary">{t('common.getInTouch')}</a>
 				</div>
 			</div>
 
-			<div style="position: relative; width: 280px; height: 350px; flex-shrink: 0; margin: 0 auto;">
-				<img src="/assets/arthur.jpeg" alt="Arthur Doradoux" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); position: relative; z-index: 2; box-shadow: var(--shadow);" />
-				<div style="position: absolute; bottom: -14px; right: -14px; width: 100%; height: 100%; border: 2px solid var(--pop-green); border-radius: var(--radius); z-index: 1; opacity: 0.7;"></div>
+			<div style="position: relative; width: 260px; height: 330px; flex-shrink: 0; margin: 0 auto;">
+				<img src="/assets/arthur.jpeg" alt="Arthur Doradoux" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); position: relative; z-index: 2;" />
+				<div style="position: absolute; bottom: -12px; right: -12px; width: 100%; height: 100%; border: 1px solid var(--pop-blue); border-radius: var(--radius); z-index: 1;"></div>
 			</div>
 		</div>
 	</section>
 
-	<!-- Profile & Ambitions Section -->
+	<!-- Profile & Ambitions -->
 	<section style="padding: 40px 0;">
-		<div class="stacked-title-wrapper">
-			<div class="stacked-bg">Vision</div>
-			<h2 class="stacked-main">Profile & Ambitions</h2>
+		<div class="stacked-title-wrapper" style="--stacked-color: var(--pop-fuchsia); --dot-color: var(--pop-fuchsia);">
+			<div class="stacked-bg">{t('home.visionKicker')}</div>
+			<h2 class="stacked-main">{t('home.visionTitle')}</h2>
 		</div>
 
-		<div class="card" style="padding: 36px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow);">
-			<div style="font-size: 1.05rem; line-height: 1.8; display: flex; flex-direction: column; gap: 20px;">
-				<p>
-					Currently an engineering student at <strong style="color: var(--emse-purple);">Mines Saint-Étienne (ISMIN)</strong>, I am building a profile at the intersection of <span style="color: var(--pop-blue); font-weight: 600;">engineering, design and management</span>. My background in microelectronics and computer science has given me strong technical foundations through projects in embedded systems, hardware, processor architecture, and artificial intelligence.
-				</p>
-				<p>
-					Over time, through both academic projects and student leadership experiences, I realized that what drives me most is not only the technical design of a system. I am equally interested in understanding <em style="color: var(--pop-green);">why</em> a technology is developed, <em style="color: var(--pop-orange);">for whom</em> it creates value, and <em style="color: var(--pop-fuchsia);">how</em> it can be turned into a relevant, coherent and impactful product.
-				</p>
-				<p>
-					In the long term, my dream is to grow into <strong style="color: var(--pop-fuchsia);">Product Owner / Product Manager</strong> roles at the heart of technological innovation, bridging technical feasibility, user experience, and strategy.
-				</p>
-				<div style="border-left: 3px solid var(--pop-green); padding-left: 16px; margin: 10px 0; font-weight: 500; font-style: italic; color: var(--text);">
-					My goal is to build a genuine <strong>triple competency across engineering, design (via Politecnico di Milano) and management (via emlyon business school)</strong> to lead high-impact technological products.
+		<div class="card" style="padding: 36px;">
+			<div style="font-size: 1.02rem; line-height: 1.8; display: flex; flex-direction: column; gap: 20px;">
+				<p set:html={t('home.visionP1')} />
+				<p set:html={t('home.visionP2')} />
+				<p set:html={t('home.visionP3')} />
+				<div style="border-left: 2px solid var(--pop-fuchsia); padding-left: 16px; margin: 6px 0; font-style: italic; color: var(--text);">
+					{t('home.visionQuote')}
 				</div>
 			</div>
 		</div>
@@ -76,109 +58,114 @@ import Layout from '../layouts/Layout.astro';
 
 	<!-- Experience Section -->
 	<section style="padding: 40px 0;">
-		<div class="stacked-title-wrapper">
-			<div class="stacked-bg">Career</div>
-			<h2 class="stacked-main">Experience</h2>
+		<div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue);">
+			<div class="stacked-bg">{t('home.careerKicker')}</div>
+			<h2 class="stacked-main">{t('home.careerTitle')}</h2>
 		</div>
-		
-		<div class="timeline">
+
+		<div class="timeline" style="--dot-color: var(--pop-blue);">
 			<div class="timeline-item">
-				<div class="timeline-date">Apr — Jul 2026</div>
-				<div class="timeline-dot" style="border-color: var(--pop-blue);"></div>
+				<div class="timeline-date">Avr. — Juil. 2026</div>
+				<div class="timeline-dot"></div>
 				<div class="timeline-content">
-					<span style="display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--pop-blue); margin-bottom: 2px;">R&D Test Cell Integration</span>
-					<h3 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600;">Intern <em style="color: var(--pop-blue);">@ Advantest</em></h3>
-					<p class="muted" style="font-size: 0.9rem;">Böblingen, Germany</p>
-					<p style="margin-top: 12px; font-size: 0.95rem;">Testing calibration PCBs intended for AI/GPU chip testing, 3D modeling and printing of interface enclosures, and precision measurements using VNA and TDR.</p>
-					<div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-						<span class="skill-tag" style="border-color: var(--pop-green); color: var(--pop-green);">KiCAD</span>
-						<span class="skill-tag" style="border-color: var(--pop-blue); color: var(--pop-blue);">Hardware Design</span>
+					<div class="timeline-org-head">
+						<img class="org-logo" src="/logo/advantest.png" alt="Advantest" />
+						<div>
+              <!-- Hiérarchie Inversée : Rôle en H3, Orga en Label -->
+							<h3 class="role-name">R&D Test Cell Integration Intern</h3>
+              <span class="org-name-sub" style="--dot-color: var(--pop-blue);">Advantest</span>
+						</div>
 					</div>
+					<p class="muted">Böblingen, Allemagne</p>
+					<ul class="mission-list" style="--dot-color: var(--pop-blue);">
+						<li>Développement et calibration de PCB de test destinés au test de puces AI/GPU</li>
+						<li>Modélisation et impression 3D de boîtiers d'interface pour les bancs de test</li>
+						<li>Mesures de précision par analyseur de réseau vectoriel (VNA) et réflectométrie (TDR)</li>
+					</ul>
 				</div>
 			</div>
 
 			<div class="timeline-item">
-				<div class="timeline-date">Jan — Feb 2025</div>
-				<div class="timeline-dot" style="border-color: var(--pop-orange);"></div>
+				<div class="timeline-date">Jan. — Fév. 2025</div>
+				<div class="timeline-dot"></div>
 				<div class="timeline-content">
-					<span style="display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--pop-orange); margin-bottom: 2px;">Hardware Systems Engineering</span>
-					<h3 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600;">Intern <em style="color: var(--pop-orange);">@ PHINIA Delphi France</em></h3>
-					<p class="muted" style="font-size: 0.9rem;">Blois, France</p>
-					<p style="margin-top: 12px; font-size: 0.95rem;">Configuration and testing of injection systems, functional validation of ECUs for hydrogen-related applications, and thermal characterization after 12V to 24V adaptation.</p>
-					<div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-						<span class="skill-tag" style="border-color: var(--pop-orange); color: var(--pop-orange);">Embedded Systems</span>
-						<span class="skill-tag" style="border-color: var(--pop-purple); color: var(--pop-purple);">CAN</span>
+					<div class="timeline-org-head">
+						<img class="org-logo" src="/logo/phinia.png" alt="PHINIA Delphi" />
+						<div>
+							<h3 class="role-name">Hardware Systems Engineering Intern</h3>
+              <span class="org-name-sub" style="--dot-color: var(--pop-blue);">PHINIA Delphi France</span>
+						</div>
 					</div>
+					<p class="muted">Blois, France</p>
+					<ul class="mission-list" style="--dot-color: var(--pop-blue);">
+						<li>Configuration et test de systèmes d'injection</li>
+						<li>Validation fonctionnelle d'ECU pour des applications liées à l'hydrogène</li>
+						<li>Caractérisation thermique après adaptation 12V → 24V</li>
+					</ul>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- Education Section -->
+	<!-- Education Section (à remplacer dans ton index.astro) -->
 	<section style="padding: 40px 0;">
-		<div class="stacked-title-wrapper">
-			<div class="stacked-bg">Degrees</div>
-			<h2 class="stacked-main">Education</h2>
+		<div class="stacked-title-wrapper" style="--stacked-color: var(--pop-orange); --dot-color: var(--pop-orange);">
+			<div class="stacked-bg">{t('home.educationKicker')}</div>
+			<h2 class="stacked-main">{t('home.educationTitle')}</h2>
 		</div>
-		
-		<div class="timeline">
+
+		<div class="timeline" style="--dot-color: var(--pop-orange);">
+      
+      <!-- EMLYON -->
+			<div class="timeline-item">
+				<div class="timeline-date">2027 — 2028</div>
+				<div class="timeline-dot" style="border-color: var(--school-emlyon);"></div>
+				<div class="timeline-content">
+					<div class="timeline-org-head">
+						<img class="org-logo" src="/logo/emlyon.png" alt="emlyon" />
+						<div>
+							<h3 class="role-name">{lang === 'fr' ? 'Double Diplôme (À venir)' : 'Double Degree (Upcoming)'}</h3>
+              <span class="org-name-sub" style="color: var(--school-emlyon);">emlyon business school</span>
+						</div>
+					</div>
+					<p class="muted">Lyon, France</p>
+					<p>{lang === 'fr' ? "Programme de double diplôme axé sur la stratégie d'entreprise, le management de l'innovation et le product management." : "Double degree program focused on business strategy, innovation management, and product management."}</p>
+				</div>
+			</div>
+
+      <!-- POLIMI -->
+			<div class="timeline-item">
+				<div class="timeline-date">Sep. 2026 — Fév. 2027</div>
+				<div class="timeline-dot" style="border-color: var(--school-polimi);"></div>
+				<div class="timeline-content">
+					<div class="timeline-org-head">
+						<img class="org-logo" src="/logo/polimi.png" alt="Politecnico di Milano" />
+						<div>
+							<h3 class="role-name">Master in Design & Engineering</h3>
+              <span class="org-name-sub" style="color: var(--school-polimi);">Politecnico di Milano</span>
+						</div>
+					</div>
+					<p class="muted">Milan, Italie</p>
+					<p>{lang === 'fr' ? "Semestre d'échange académique axé sur le design produit, l'ergonomie et l'intégration technologique dans les produits de grande consommation." : "Academic exchange semester focused on product design, ergonomics, and technological integration in consumer products."}</p>
+				</div>
+			</div>
+
+      <!-- EMSE -->
 			<div class="timeline-item">
 				<div class="timeline-date">2024 — 2027</div>
-				<div class="timeline-dot" style="border-color: var(--emse-purple);"></div>
+				<div class="timeline-dot" style="border-color: var(--school-emse);"></div>
 				<div class="timeline-content">
-					<span style="display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--emse-purple); margin-bottom: 2px;">Master’s Degree (ISMIN Program)</span>
-					<h3 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600;">École Nationale Supérieure des <em style="color: var(--emse-purple);">Mines de Saint-Étienne</em></h3>
-					<p class="muted" style="font-size: 0.9rem;">Gardanne, France</p>
-					<p style="margin-top: 12px; font-size: 0.95rem;">Core curriculum covering microcontrollers, digital/analog electronics, embedded systems, CPU architecture, and cryptography. Includes a specialized design semester at <strong style="color: var(--pop-blue);">Politecnico di Milano</strong> in the Master's Degree in Design & Engineering, followed by a double degree at <strong style="color: var(--emlyon-red);">emlyon business school</strong>.</p>
-					<div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-						<span class="skill-tag" style="border-color: var(--emse-purple); color: var(--emse-purple);">Microelectronics</span>
-						<span class="skill-tag" style="border-color: var(--pop-blue); color: var(--pop-blue);">Design & Engineering</span>
+					<div class="timeline-org-head">
+						<img class="org-logo" src="/logo/emse.png" alt="Mines Saint-Étienne" />
+						<div>
+							<h3 class="role-name">Diplôme d'ingénieur (ISMIN)</h3>
+              <span class="org-name-sub" style="color: var(--school-emse);">Mines de Saint-Étienne</span>
+						</div>
 					</div>
+					<p class="muted">Gardanne, France</p>
+					<p>{lang === 'fr' ? "Tronc commun couvrant microcontrôleurs, électronique numérique/analogique, systèmes embarqués et architecture CPU." : "Core curriculum covering microcontrollers, digital/analog electronics, embedded systems, and CPU architecture."}</p>
 				</div>
 			</div>
-
-			<div class="timeline-item">
-				<div class="timeline-date">2022 — 2024</div>
-				<div class="timeline-dot" style="border-color: var(--pop-yellow);"></div>
-				<div class="timeline-content">
-					<span style="display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #D4AC0D; margin-bottom: 2px;">Intensive Scientific Courses (MPSI / MP*)</span>
-					<h3 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600;">Classes Préparatoires <em style="color: #D4AC0D;">Lycée Pothier</em></h3>
-					<p class="muted" style="font-size: 0.9rem;">Orléans, France</p>
-					<p style="margin-top: 12px; font-size: 0.95rem;">Intensive scientific courses focused on advanced mathematics, physics, and computer science.</p>
-					<div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-						<span class="skill-tag" style="border-color: var(--pop-yellow); color: #B7950B;">Mathematics</span>
-						<span class="skill-tag" style="border-color: var(--pop-orange); color: var(--pop-orange);">Physics</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- Featured Projects Preview -->
-	<section style="padding: 40px 0 80px;">
-		<div class="stacked-title-wrapper">
-			<div class="stacked-bg">Selected</div>
-			<h2 class="stacked-main">Featured Projects</h2>
-		</div>
-
-		<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 24px;">
-			<div class="card" style="padding: 24px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow);">
-				<span style="font-size: 0.75rem; font-weight: 700; color: var(--pop-fuchsia); text-transform: uppercase;">FPGA & Cryptography</span>
-				<h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 6px 0 10px;">FPGA ECG & ASCON Decryption</h3>
-				<p class="muted" style="font-size: 0.9rem; margin-bottom: 16px;">SystemVerilog architecture to process and decrypt secure ECG transmissions with a real-time Python dashboard.</p>
-				<a href="/projects" style="font-size: 0.85rem; font-weight: 600; color: var(--pop-blue); text-decoration: none;">View in Projects Hub →</a>
-			</div>
-
-			<div class="card" style="padding: 24px; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow);">
-				<span style="font-size: 0.75rem; font-weight: 700; color: var(--pop-green); text-transform: uppercase;">IoT & Hardware</span>
-				<h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 6px 0 10px;">Terrariot IoT Microclimate Box</h3>
-				<p class="muted" style="font-size: 0.9rem; margin-bottom: 16px;">Air quality monitoring enclosure using STM32, LoRaWAN connectivity, and custom 3D-printed enclosures for zoos.</p>
-				<a href="/projects" style="font-size: 0.85rem; font-weight: 600; color: var(--pop-blue); text-decoration: none;">View in Projects Hub →</a>
-			</div>
-		</div>
-
-		<div style="text-align: center; margin-top: 32px;">
-			<a href="/projects" style="display: inline-block; background: var(--text); color: var(--bg); padding: 12px 28px; border-radius: 8px; font-weight: 600; text-decoration: none;">Browse Full Projects Hub →</a>
 		</div>
 	</section>
 </Layout>

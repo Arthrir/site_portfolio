@@ -1,165 +1,116 @@
 ---
-/* src/pages/engagements.astro */
 import Layout from '../layouts/Layout.astro';
+import { getLangFromCookie, makeT } from '../i18n/translations';
+
+const lang = getLangFromCookie(Astro.cookies.get('lang')?.value);
+const t = makeT(lang);
+
+const featured = [
+  {
+    logo: "/logo/minitel.png",
+    color: "var(--accent-bright)",
+    date: "Mar 2025 — Mar 2026",
+    role: "MINITEL", // Le nom de l'orga devient le sous-titre
+    title: "Association President", // Le poste devient le gros titre
+    desc: "Student association focused on IT, networking and gaming. Leadership of a 16-member team, management of campus Wi-Fi/wired infrastructure (150+ apartments), LAN events with Riot Games and Red Bull, and budgeting (>€10k). Elected honorary member.",
+    tags: ["Team Management", "Network Administration", "Budget Management"]
+  },
+  {
+    logo: "/logo/emse.png",
+    color: "var(--school-emse)",
+    date: "Feb 2026 — Pres.",
+    role: "ISMIN & ICM Cohorts",
+    title: "Elected Member of the Academic Committee",
+    desc: "Participation in Academic Committee meetings where major changes to the school's academic programs are discussed, decided upon and presented. Representative and spokesperson.",
+    tags: ["Institutional Communication", "Mediation", "Stakeholder Management"]
+  }
+];
+
+const others = [
+  {
+    logo: "/logo/emse.png",
+    date: "Sep 2024 — Pres.",
+    role: "1st & 2nd Year",
+    title: "Class Representative",
+    desc: "Active liaison and mediation between students and the administration for all academic, logistical and social matters. Monthly meetings with campus leadership.",
+  },
+  {
+    logo: "/logo/bde.jpeg",
+    date: "Apr 2025 — Mar 2026",
+    role: "Student Union",
+    title: "Merchandising and Uniforms Manager",
+    desc: "Management of orders, inventory, and distribution of uniforms and merchandise for the school's students.",
+  },
+  {
+    logo: "/logo/emse.png",
+    date: "Jan 2025 — Pres.",
+    role: "Communication Department",
+    title: "School Ambassador",
+    desc: "Collaboration on updating the ISMIN Alpha brochure, scriptwriting social media video capsules, and producing presentation videos.",
+  },
+  {
+    logo: "/logo/comif.jpeg",
+    date: "Mar 2025 — Pres.",
+    role: "Student Bar & Café",
+    title: "COMIF Staff Member",
+    desc: "Daily service of drinks and snacks during breaks and student events, handling transactions, customer service.",
+  }
+];
 ---
 
 <Layout title="Arthur Doradoux | Student Engagements">
   <section style="padding: 40px 0 80px; max-width: 900px; margin: 0 auto;">
-    <div class="stacked-title-wrapper" style="margin-bottom: 40px;">
-      <div class="stacked-bg">Leadership</div>
-      <h2 class="stacked-main">Student Engagements & Leadership</h2>
+    <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); margin-bottom: 40px;">
+      <div class="stacked-bg">{t('engagements.kicker')}</div>
+      <h2 class="stacked-main">{t('engagements.title')}</h2>
     </div>
 
-    <p style="color: var(--muted); margin-bottom: 40px;">
-      Involved across campus life, student representation, and association management, developing strong expertise in team leadership, institutional mediation, and network administration.
+    <p style="color: var(--muted); margin-bottom: 40px; max-width: 620px;">
+      {t('engagements.subtitle')}
     </p>
 
-    <div class="timeline">
-      <!-- Academic Committee -->
-      <div class="timeline-item">
-        <div class="timeline-date">Feb 2026 — Pres.</div>
-        <div class="timeline-content">
-          <span style="font-size: 0.75rem; font-weight: 700; color: var(--pop-green); text-transform: uppercase;">Elected Representative</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 4px 0;">Elected Member of the Academic Committee</h3>
-          <p class="muted" style="font-size: 0.9rem; margin-top: 8px;">
-            Participation in Academic Committee meetings where major changes to the school’s academic programs are discussed, decided upon and presented. Representative and spokesperson for the ISMIN and ICM cohorts.
-          </p>
+    <div class="section-subhead" style="margin-top: 0;">{t('engagements.featuredLabel')}</div>
+    <div>
+      {featured.map(item => (
+        <div class="impact-card" style={`--dot-color: ${item.color};`}>
+          <span class="impact-tag">{item.date}</span>
+          <div class="item-head" style="margin-bottom: 10px;">
+            {item.logo && <img class="item-logo" src={item.logo} alt="" />}
+            <div>
+              <h3 class="role-name">{item.title}</h3>
+              <span class="org-name-sub" style={`--dot-color: ${item.color};`}>{item.role}</span>
+            </div>
+          </div>
+          <p style="font-size: 0.96rem; line-height: 1.7; max-width: 640px;">{item.desc}</p>
           <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span class="skill-tag" style="border-color: var(--pop-green); color: var(--pop-green);">Institutional Communication</span>
-            <span class="skill-tag" style="border-color: var(--pop-blue); color: var(--pop-blue);">Mediation</span>
-            <span class="skill-tag" style="border-color: var(--pop-orange); color: var(--pop-orange);">Stakeholder Management</span>
+            {item.tags.map(tag => <span class="skill-tag">{tag}</span>)}
           </div>
         </div>
-      </div>
+      ))}
+    </div>
 
-      <!-- Class Representative -->
-      <div class="timeline-item">
-        <div class="timeline-date">Sep 2024 — Pres.</div>
-        <div class="timeline-content">
-          <span style="font-size: 0.75rem; font-weight: 700; color: var(--emse-purple); text-transform: uppercase;">Class Representative</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 4px 0;">Class Representative (1st & 2nd Year)</h3>
-          <p class="muted" style="font-size: 0.9rem; margin-top: 8px;">
-            Active liaison and mediation between students and the administration for all academic, logistical and social matters. Monthly meetings with campus leadership and advocacy for students' academic interests.
-          </p>
-          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span class="skill-tag" style="border-color: var(--emse-purple); color: var(--emse-purple);">Mediation</span>
-            <span class="skill-tag" style="border-color: var(--pop-yellow); color: var(--pop-yellow);">Feedback Collection</span>
+    <div class="section-subhead">{t('engagements.othersLabel')}</div>
+    <div>
+      {others.map(item => (
+        <details class="accordion-item">
+          <summary>
+            <span class="item-head">
+              {item.logo && <img class="item-logo" src={item.logo} alt="" />}
+              <span>{item.title}</span>
+            </span>
+            <span class="accordion-meta">
+              <span class="accordion-date">{item.date}</span>
+              <span class="accordion-plus"></span>
+            </span>
+          </summary>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <p class="org-name-sub" style="margin-bottom: 8px;">{item.role}</p>
+              <p style="font-size: 0.92rem;">{item.desc}</p>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <!-- MINITEL President -->
-      <div class="timeline-item">
-        <div class="timeline-date">Mar 2025 — Mar 2026</div>
-        <div class="timeline-content">
-          <span style="font-size: 0.75rem; font-weight: 700; color: var(--pop-fuchsia); text-transform: uppercase;">Association President</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 4px 0;">MINITEL - President</h3>
-          <p class="muted" style="font-size: 0.9rem; margin-top: 8px;">
-            Student association focused on IT, networking and gaming. Leadership of a 16-member team, management of campus Wi-Fi/wired infrastructure (150+ apartments), LAN events with Riot Games and Red Bull, and budgeting (>€10k). Elected honorary member.
-          </p>
-          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span class="skill-tag" style="border-color: var(--pop-fuchsia); color: var(--pop-fuchsia);">Team Management</span>
-            <span class="skill-tag" style="border-color: var(--pop-blue); color: var(--pop-blue);">Network Administration</span>
-            <span class="skill-tag" style="border-color: var(--pop-orange); color: var(--pop-orange);">Budget Management</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Student Union Merchandising -->
-      <div class="timeline-item">
-        <div class="timeline-date">Apr 2025 — Mar 2026</div>
-        <div class="timeline-content">
-          <span style="font-size: 0.75rem; font-weight: 700; color: var(--pop-orange); text-transform: uppercase;">Student Union Role</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 4px 0;">Merchandising and Uniforms Manager</h3>
-          <p class="muted" style="font-size: 0.9rem; margin-top: 8px;">
-            Management of orders, inventory, and distribution of uniforms and merchandise for the school’s students.
-          </p>
-          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span class="skill-tag" style="border-color: var(--pop-orange); color: var(--pop-orange);">Logistics</span>
-            <span class="skill-tag" style="border-color: var(--pop-yellow); color: var(--pop-yellow);">Inventory Management</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Communication Ambassador -->
-      <div class="timeline-item">
-        <div class="timeline-date">Jan 2025 — Pres.</div>
-        <div class="timeline-content">
-          <span style="font-size: 0.75rem; font-weight: 700; color: var(--pop-blue); text-transform: uppercase;">School Ambassador</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 4px 0;">Mines Saint-Étienne Communication Ambassador</h3>
-          <p class="muted" style="font-size: 0.9rem; margin-top: 8px;">
-            Collaboration on updating the ISMIN Alpha brochure, scriptwriting social media video capsules, and producing presentation videos for prospective students.
-          </p>
-          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span class="skill-tag" style="border-color: var(--pop-blue); color: var(--pop-blue);">Communication</span>
-            <span class="skill-tag" style="border-color: var(--pop-green); color: var(--pop-green);">Content Creation</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- FEI Logistics Officer -->
-      <div class="timeline-item">
-        <div class="timeline-date">Apr 2025 — Nov 2025</div>
-        <div class="timeline-content">
-          <span style="font-size: 0.75rem; font-weight: 700; color: var(--pop-yellow); text-transform: uppercase;">Event Staff</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 4px 0;">FEI (Engineering Career Fair) - Logistics Officer</h3>
-          <p class="muted" style="font-size: 0.9rem; margin-top: 8px;">
-            Welcoming and guiding companies, and ensuring smooth running of conferences and on-site logistics during the career fair.
-          </p>
-          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span class="skill-tag" style="border-color: var(--pop-yellow); color: var(--pop-yellow);">Event Logistics</span>
-            <span class="skill-tag" style="border-color: var(--pop-orange); color: var(--pop-orange);">Coordination</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- COMIF Staff -->
-      <div class="timeline-item">
-        <div class="timeline-date">Mar 2025 — Pres.</div>
-        <div class="timeline-content">
-          <span style="font-size: 0.75rem; font-weight: 700; color: var(--pop-fuchsia); text-transform: uppercase;">Café Staff</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 4px 0;">COMIF - Student Bar & Café Staff Member</h3>
-          <p class="muted" style="font-size: 0.9rem; margin-top: 8px;">
-            Daily service of drinks and snacks during breaks and student events, handling transactions, customer service, and food hygiene safety.
-          </p>
-          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span class="skill-tag" style="border-color: var(--pop-fuchsia); color: var(--pop-fuchsia);">Customer Service</span>
-            <span class="skill-tag" style="border-color: var(--pop-blue); color: var(--pop-blue);">Teamwork</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Alumni Representative -->
-      <div class="timeline-item">
-        <div class="timeline-date">Lifetime</div>
-        <div class="timeline-content">
-          <span style="font-size: 0.75rem; font-weight: 700; color: var(--emse-purple); text-transform: uppercase;">Network Role</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 4px 0;">Class Representative for the Alumni Network</h3>
-          <p class="muted" style="font-size: 0.9rem; margin-top: 8px;">
-            Representation of the class within the alumni network to ensure communication, organize networking events, and facilitate professional collaboration.
-          </p>
-          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span class="skill-tag" style="border-color: var(--emse-purple); color: var(--emse-purple);">Networking</span>
-            <span class="skill-tag" style="border-color: var(--pop-green); color: var(--pop-green);">Community Engagement</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Solidar'ISMIN -->
-      <div class="timeline-item">
-        <div class="timeline-date">Mar 2025 — Pres.</div>
-        <div class="timeline-content">
-          <span style="font-size: 0.75rem; font-weight: 700; color: var(--pop-green); text-transform: uppercase;">Prevention Team</span>
-          <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 4px 0;">Solidar'ISMIN - HVSSD Prevention Team</h3>
-          <p class="muted" style="font-size: 0.9rem; margin-top: 8px;">
-            Active participation in training sessions and development of awareness campaigns against harassment, violence, and discrimination on campus (HVSSD).
-          </p>
-          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
-            <span class="skill-tag" style="border-color: var(--pop-green); color: var(--pop-green);">Awareness Raising</span>
-            <span class="skill-tag" style="border-color: var(--pop-blue); color: var(--pop-blue);">Ethics</span>
-          </div>
-        </div>
-      </div>
+        </details>
+      ))}
     </div>
   </section>
 </Layout>

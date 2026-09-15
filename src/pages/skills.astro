@@ -1,0 +1,91 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getLangFromCookie, makeT } from '../i18n/translations';
+
+const lang = getLangFromCookie(Astro.cookies.get('lang')?.value);
+const t = makeT(lang);
+
+const technical = [
+  { name: "SystemVerilog / FPGA", desc: lang === 'fr' ? "Conception architecturale et cryptographie" : "Architectural design and cryptography", color: "var(--pop-purple)" },
+  { name: "Embedded C / STM32", desc: lang === 'fr' ? "Microcontrôleurs et robotique" : "Microcontrollers and robotics", color: "var(--pop-blue)" },
+  { name: "PCB Design (KiCAD)", desc: lang === 'fr' ? "Routage, intégrité du signal et schématique" : "Routing, signal integrity, and schematics", color: "var(--pop-orange)" },
+  { name: "Python / Data", desc: lang === 'fr' ? "Automatisation, modélisation et analyse" : "Automation, modeling, and analysis", color: "var(--pop-fuchsia)" },
+  { name: "RISC-V / CPU", desc: lang === 'fr' ? "Architecture matérielle et logique numérique" : "Hardware architecture and digital logic", color: "var(--pop-purple)" },
+  { name: "Networking & Infra", desc: lang === 'fr' ? "Sécurité réseau, Sockets et OSINT" : "Network security, Sockets, and OSINT", color: "var(--accent-bright)" },
+];
+
+const transversal = [
+  { name: "Product Thinking", desc: lang === 'fr' ? "Compréhension du besoin et priorisation" : "User needs and prioritization", color: "var(--pop-purple)" },
+  { name: "Team Leadership", desc: lang === 'fr' ? "Gestion associative et encadrement" : "Association management and leadership", color: "var(--pop-blue)" },
+  { name: "Stakeholder Management", desc: lang === 'fr' ? "Médiation et communication institutionnelle" : "Mediation and institutional communication", color: "var(--pop-orange)" },
+  { name: "Event & Budget Management", desc: lang === 'fr' ? "Logistique et budgets (>10k€)" : "Logistics and budget management", color: "var(--pop-fuchsia)" },
+];
+
+const tools = ["KiCAD", "Vivado", "Logisim", "Git / GitHub", "Figma", "Unity", "Typst", "Linux (Pop!_OS)", "VS Code"];
+---
+
+<Layout title={lang === 'fr' ? "Arthur Doradoux | Compétences" : "Arthur Doradoux | Skills"}>
+  <section style="padding: 40px 0 40px; max-width: 720px;">
+    <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue);">
+      <div class="stacked-bg">{t('skills.kicker')}</div>
+      <h2 class="stacked-main">{t('skills.title')}</h2>
+    </div>
+    <p style="color: var(--muted); max-width: 620px;">{t('skills.subtitle')}</p>
+  </section>
+
+  <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; padding-bottom: 60px;">
+    
+    <div>
+      <h3 class="skill-group-title">{t('skills.technicalTitle')}</h3>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        {technical.map(s => (
+          <div class="card" style="padding: 16px 20px; display: flex; align-items: center; gap: 16px;">
+            <div style={`width: 10px; height: 10px; border-radius: 50%; background: ${s.color}; flex-shrink: 0;`}></div>
+            <div>
+              <div style="font-weight: 600; font-size: 0.95rem;">{s.name}</div>
+              <div style="font-size: 0.8rem; color: var(--muted);">{s.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div>
+      <h3 class="skill-group-title">{t('skills.transversalTitle')}</h3>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        {transversal.map(s => (
+          <div class="card" style="padding: 16px 20px; display: flex; align-items: center; gap: 16px;">
+            <div style={`width: 10px; height: 10px; border-radius: 50%; background: ${s.color}; flex-shrink: 0;`}></div>
+            <div>
+              <div style="font-weight: 600; font-size: 0.95rem;">{s.name}</div>
+              <div style="font-size: 0.8rem; color: var(--muted);">{s.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+  </section>
+
+  <section style="padding: 0 0 60px; max-width: 620px;">
+    <h3 class="skill-group-title">{t('skills.languagesTitle')}</h3>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 600;">Français</span><span style="font-size: 0.85rem; color: var(--muted);">{lang === 'fr' ? 'Langue maternelle' : 'Native Speaker'}</span>
+      </div>
+      <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 600;">Anglais / English</span><span style="font-size: 0.85rem; color: var(--muted);">{lang === 'fr' ? 'Courant — C1' : 'Fluent — C1'}</span>
+      </div>
+      <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 600;">Allemand / Deutsch</span><span style="font-size: 0.85rem; color: var(--muted);">{lang === 'fr' ? 'Intermédiaire — B1' : 'Intermediate — B1'}</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 0 0 80px;">
+    <h3 class="skill-group-title">{t('skills.toolsTitle')}</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+      {tools.map(tool => <span class="skill-tag" style="font-size: 0.85rem; padding: 8px 16px;">{tool}</span>)}
+    </div>
+  </section>
+</Layout>
