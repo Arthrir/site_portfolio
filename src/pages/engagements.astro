@@ -122,7 +122,7 @@ const others = [
         <div class="impact-card" style={`--dot-color: ${item.color};`}>
           <span class="impact-tag">{item.date}</span>
           <div class="item-head" style="margin-bottom: 10px;">
-            <img class="item-logo" src={item.logo} alt="" />
+            <img class="item-logo force-white-bg" src={item.logo} alt="" />
             <div>
               <h3 class="role-name">{item.title}</h3>
               <span class="org-name-sub" style={`color: ${item.color};`}>{item.role}</span>
@@ -142,7 +142,7 @@ const others = [
         <details class="accordion-item">
           <summary>
             <span class="item-head">
-              <img class="item-logo" src={item.logo} alt="" />
+              <img class="item-logo force-white-bg" src={item.logo} alt="" />
               <span>{item.title}</span>
             </span>
             <span class="accordion-meta">
@@ -161,6 +161,19 @@ const others = [
     </div>
   </section>
   
+  <style>
+    /* Forcer la taille propre des logos dans les cartes d'engagement */
+    .item-logo {
+      width: 38px !important;
+      height: 38px !important;
+      object-exit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 4px;
+      flex-shrink: 0;
+    }
+  </style>
+
   <style is:global>
     /* Styling pour les listes dans les descriptions d'engagements */
     .impact-card ul, .accordion-body-inner ul {
