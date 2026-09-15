@@ -29,7 +29,21 @@ const theme = Astro.cookies.get('theme')?.value === 'dark' ? 'dark' : 'light';
 
 		<script is:inline define:vars={{ theme }}>
 			document.documentElement.dataset.themeInit = theme;
-      console.log("%c🏎️ IN LAP - Telemetry Connected", "color: #FF5500; font-weight: bold; font-size: 14px; background: #101114; padding: 4px 8px; border-radius: 4px;");
+
+      // Easter Egg F1 : Fan de F1 & Télémétrie des performances
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const perfData = window.performance.timing;
+          const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+          const renderTime = perfData.domComplete - perfData.domInteractive;
+
+          console.log("%c🏎️ IN LAP - Telemetry Connected", "color: #FF5500; font-weight: bold; font-size: 14px; background: #101114; padding: 4px 8px; border-radius: 4px;");
+          console.log("%c[PADDOCK NOTE] Grand fan de F1 dans les stands ! Un véritable Easter Egg interactif plus complet sera bientôt déployé... 🚦", "color: #0A6CFF; font-style: italic; font-size: 11px; margin-top: 4px;");
+          console.log(`%c⏱️ Track Time (Temps de chargement) : ${pageLoadTime}ms`, "color: #39FF14; font-weight: bold; margin-top: 4px;");
+          console.log(`%c⚙️ Aero Rendering (Rendu DOM) : ${renderTime}ms`, "color: #6B6D76;");
+          console.log("%c✅ Setup validé. Product Owner mindset engagé.", "color: #6B6D76;");
+        }, 0);
+      });
 		</script>
 	</head>
 	<body class={theme === 'dark' ? 'theme-dark' : 'theme-light'}>
