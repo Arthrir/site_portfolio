@@ -7,81 +7,128 @@ const t = makeT(lang);
 
 const featured = [
   {
-    logo: "/logo/minitel.png",
-    color: "var(--accent-bright)",
-    date: "Mar 2025 — Mar 2026",
-    role: "MINITEL", // Le nom de l'orga devient le sous-titre
-    title: "Association President", // Le poste devient le gros titre
-    desc: "Student association focused on IT, networking and gaming. Leadership of a 16-member team, management of campus Wi-Fi/wired infrastructure (150+ apartments), LAN events with Riot Games and Red Bull, and budgeting (>€10k). Elected honorary member.",
-    tags: ["Team Management", "Network Administration", "Budget Management"]
+    logo: "/logo/emse.png", color: "var(--school-emse)", date: lang === 'fr' ? "Fév 2026 — Aujourd'hui" : "Feb 2026 — Pres.",
+    role: "ISMIN & ICM", title: lang === 'fr' ? "Élu au comité de l'enseignement" : "Elected Member of the Academic Committee",
+    desc: lang === 'fr' ? `
+      <ul>
+        <li>Participation aux réunions de comité de l'enseignement où sont discutés, décidés et présentés les grands changements des programmes pédagogiques de l'école.</li>
+        <li>Représentant et porte-parole des promotions ISMIN et ICM.</li>
+      </ul>
+    ` : `
+      <ul>
+        <li>Participation in Academic Committee meetings where major changes to the school's academic programs are discussed, decided upon and presented.</li>
+        <li>Representative and spokesperson for the ISMIN and ICM cohorts.</li>
+      </ul>
+    `,
+    tags: ["Communication Institutionnelle", "Médiation", "Gestion des Parties Prenantes"]
   },
   {
-    logo: "/logo/emse.png",
-    color: "var(--school-emse)",
-    date: "Feb 2026 — Pres.",
-    role: "ISMIN & ICM Cohorts",
-    title: "Elected Member of the Academic Committee",
-    desc: "Participation in Academic Committee meetings where major changes to the school's academic programs are discussed, decided upon and presented. Representative and spokesperson.",
-    tags: ["Institutional Communication", "Mediation", "Stakeholder Management"]
+    logo: "/logo/minitel.png", color: "var(--accent-bright)", date: lang === 'fr' ? "Mars 2025 — Mars 2026" : "Mar 2025 — Mar 2026",
+    role: "MINITEL", title: lang === 'fr' ? "Président" : "President",
+    desc: lang === 'fr' ? `
+      <p style="margin-bottom:8px">Association étudiante d'informatique, réseau et gaming. Direction de l'association (16 membres) et gestion des projets majeurs :</p>
+      <ul>
+        <li>Gestion et maintenance du réseau internet Wi-Fi et filaire du campus (150+ appartements étudiants).</li>
+        <li>Organisation d'événements et de LAN en partenariat avec Riot Games et Red Bull.</li>
+        <li>Coordination des équipes, planification d'événements et gestion d'un budget > 10 000€.</li>
+      </ul>
+      <p style="margin-top:8px"><i>Élu membre d'honneur de l'association à la fin de mon mandat.</i></p>
+    ` : `
+      <p style="margin-bottom:8px">Student association focused on IT, networking and gaming. Leadership of a 16-member team :</p>
+      <ul>
+        <li>Management and maintenance of the campus Wi-Fi and wired Internet network (150+ student apartments).</li>
+        <li>Organization of events and LAN parties in partnership with Riot Games and Red Bull.</li>
+        <li>Team coordination, event planning and management of a budget exceeding €10k.</li>
+      </ul>
+      <p style="margin-top:8px"><i>Elected honorary member of the association at the end of my term.</i></p>
+    `,
+    tags: ["Management d'équipe", "Administration Réseau", "Budget"]
   }
 ];
 
 const others = [
-  {
-    logo: "/logo/emse.png",
-    date: "Sep 2024 — Pres.",
-    role: "1st & 2nd Year",
-    title: "Class Representative",
-    desc: "Active liaison and mediation between students and the administration for all academic, logistical and social matters. Monthly meetings with campus leadership.",
+  { 
+    logo: "/logo/emse.png", date: lang === 'fr' ? "Sep 2024 — Aujourd'hui" : "Sep 2024 — Pres.", role: "1A & 2A", 
+    title: lang === 'fr' ? "Représentant de Promotion" : "Class Representative", 
+    desc: lang === 'fr' ? `
+      <ul>
+        <li>Réunions mensuelles avec l'équipe de direction du campus pour remonter les points clés de la promotion.</li>
+        <li>Liaison active avec les professeurs pour des ajustements de cours ou d'évaluations.</li>
+        <li>Création de questionnaires et centralisation des avis et ressentis.</li>
+      </ul>
+    ` : `
+      <ul>
+        <li>Monthly meetings with the campus leadership team to report key issues.</li>
+        <li>Active liaison with course instructors regarding course adjustments.</li>
+        <li>Advocacy for students’ academic interests with the academic administration.</li>
+      </ul>
+    ` 
   },
-  {
-    logo: "/logo/bde.jpeg",
-    date: "Apr 2025 — Mar 2026",
-    role: "Student Union",
-    title: "Merchandising and Uniforms Manager",
-    desc: "Management of orders, inventory, and distribution of uniforms and merchandise for the school's students.",
+  { 
+    logo: "/logo/emse.png", date: lang === 'fr' ? "Janvier 2025 — Aujourd'hui" : "Jan 2025 — Pres.", role: "Communication", 
+    title: lang === 'fr' ? "Ambassadeur Communication" : "School Ambassador", 
+    desc: lang === 'fr' ? `
+      <ul>
+        <li>Mise à jour et refonte intégrale de la plaquette Alpha du cursus ISMIN pour les futurs élèves ingénieurs.</li>
+        <li>Participation à l'écriture de scripts pour des capsules vidéos destinées aux réseaux sociaux de l'école.</li>
+        <li>Réalisation d'une vidéo de présentation de l'uniforme de Mines Saint-Etienne.</li>
+      </ul>
+    ` : `
+      <ul>
+        <li>Update and complete redesign of the ISMIN Alpha brochure.</li>
+        <li>Contribution to scriptwriting for short video capsules intended for social media.</li>
+        <li>Production of a presentation video of the Mines Saint-Étienne uniform.</li>
+      </ul>
+    ` 
   },
-  {
-    logo: "/logo/emse.png",
-    date: "Jan 2025 — Pres.",
-    role: "Communication Department",
-    title: "School Ambassador",
-    desc: "Collaboration on updating the ISMIN Alpha brochure, scriptwriting social media video capsules, and producing presentation videos.",
+  { 
+    logo: "/logo/alumni.png", date: lang === 'fr' ? "Rôle à vie" : "Lifetime", role: "Alumni", 
+    title: lang === 'fr' ? "Relai de la Promotion" : "Class Representative for Alumni", 
+    desc: lang === 'fr' ? "Représentation de la promotion auprès du réseau des anciens élèves pour assurer la communication, organiser des événements de networking et faciliter la collaboration professionnelle." : "Representation of the class within the alumni network to ensure communication, organize networking events and facilitate professional collaboration." 
   },
-  {
-    logo: "/logo/comif.jpeg",
-    date: "Mar 2025 — Pres.",
-    role: "Student Bar & Café",
-    title: "COMIF Staff Member",
-    desc: "Daily service of drinks and snacks during breaks and student events, handling transactions, customer service.",
+  { 
+    logo: "/logo/bde.jpeg", date: lang === 'fr' ? "Avril 2025 — Mars 2026" : "Apr 2025 — Mar 2026", role: "BDE", 
+    title: lang === 'fr' ? "Responsable Merchandising et Uniformes" : "Merchandising and Uniforms Manager", 
+    desc: lang === 'fr' ? "Gestion des commandes et de la distribution des uniformes et produits dérivés pour les élèves de l'école." : "Management of orders and distribution of uniforms and merchandise for the school’s students." 
+  },
+  { 
+    logo: "/logo/fei.jpeg", date: lang === 'fr' ? "Avril 2025 — Nov 2025" : "Apr 2025 — Nov 2025", role: "FEI", 
+    title: lang === 'fr' ? "Chargé Logistique" : "Logistics Officer", 
+    desc: lang === 'fr' ? "Soutien à l'accueil et au guidage des entreprises. Gestion du bon déroulement des conférences et résolution des problèmes logistiques sur site." : "Support for welcoming and guiding companies. Ensuring the smooth running of conferences and solving on-site logistical issues." 
+  },
+  { 
+    logo: "/logo/comif.jpeg", date: lang === 'fr' ? "Mars 2025 — Mars 2026" : "Mar 2025 — Mar 2026", role: "COMIF", 
+    title: lang === 'fr' ? "Serveur au Bar Étudiant" : "Student Bar Staff", 
+    desc: lang === 'fr' ? "Service quotidien de boissons et de collations pendant les pauses et les soirées associatives, incluant la gestion des transactions et le service client." : "Daily service of drinks and snacks during breaks and student events, handling transactions and customer service." 
+  },
+  { 
+    logo: "/logo/solidar-ismin.jpg", date: lang === 'fr' ? "Mars 2025 — Mars 2026" : "Mar 2025 — Mar 2026", role: "Solidar'ISMIN", 
+    title: lang === 'fr' ? "Pôle Prévention HVSSD" : "HVSSD Prevention Team", 
+    desc: lang === 'fr' ? "Formation de tous les bureaux associatifs du campus aux enjeux de Harcèlement et Violences (HVSSD) à travers une formation en réalité virtuelle." : "Active participation in training sessions and development of awareness campaigns against harassment and violence." 
   }
 ];
 ---
 
-<Layout title="Arthur Doradoux | Student Engagements">
+<Layout title={lang === 'fr' ? "Arthur Doradoux | Engagements" : "Arthur Doradoux | Engagements"}>
   <section style="padding: 40px 0 80px; max-width: 900px; margin: 0 auto;">
     <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); margin-bottom: 40px;">
       <div class="stacked-bg">{t('engagements.kicker')}</div>
-      <h2 class="stacked-main">{t('engagements.title')}</h2>
+      <h2 class="stacked-main">{lang === 'fr' ? 'Engagements étudiants' : 'Student Engagements'}</h2>
     </div>
 
-    <p style="color: var(--muted); margin-bottom: 40px; max-width: 620px;">
-      {t('engagements.subtitle')}
-    </p>
-
-    <div class="section-subhead" style="margin-top: 0;">{t('engagements.featuredLabel')}</div>
+    <div class="section-subhead" style="margin-top: 0;">{lang === 'fr' ? 'Temps forts' : 'Highlights'}</div>
     <div>
       {featured.map(item => (
         <div class="impact-card" style={`--dot-color: ${item.color};`}>
           <span class="impact-tag">{item.date}</span>
           <div class="item-head" style="margin-bottom: 10px;">
-            {item.logo && <img class="item-logo" src={item.logo} alt="" />}
+            <img class="item-logo" src={item.logo} alt="" />
             <div>
               <h3 class="role-name">{item.title}</h3>
-              <span class="org-name-sub" style={`--dot-color: ${item.color};`}>{item.role}</span>
+              <span class="org-name-sub" style={`color: ${item.color};`}>{item.role}</span>
             </div>
           </div>
-          <p style="font-size: 0.96rem; line-height: 1.7; max-width: 640px;">{item.desc}</p>
+          <div style="font-size: 0.96rem; line-height: 1.7; max-width: 640px;" set:html={item.desc} />
           <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
             {item.tags.map(tag => <span class="skill-tag">{tag}</span>)}
           </div>
@@ -89,13 +136,13 @@ const others = [
       ))}
     </div>
 
-    <div class="section-subhead">{t('engagements.othersLabel')}</div>
+    <div class="section-subhead">{lang === 'fr' ? 'Autres missions' : 'Other Roles'}</div>
     <div>
       {others.map(item => (
         <details class="accordion-item">
           <summary>
             <span class="item-head">
-              {item.logo && <img class="item-logo" src={item.logo} alt="" />}
+              <img class="item-logo" src={item.logo} alt="" />
               <span>{item.title}</span>
             </span>
             <span class="accordion-meta">
@@ -105,12 +152,23 @@ const others = [
           </summary>
           <div class="accordion-body">
             <div class="accordion-body-inner">
-              <p class="org-name-sub" style="margin-bottom: 8px;">{item.role}</p>
-              <p style="font-size: 0.92rem;">{item.desc}</p>
+              <p class="org-name-sub" style="margin-bottom: 12px;">{item.role}</p>
+              <div style="font-size: 0.92rem;" set:html={item.desc} />
             </div>
           </div>
         </details>
       ))}
     </div>
   </section>
+  
+  <style is:global>
+    /* Styling pour les listes dans les descriptions d'engagements */
+    .impact-card ul, .accordion-body-inner ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+    .impact-card li, .accordion-body-inner li {
+      margin-bottom: 4px;
+    }
+  </style>
 </Layout>
