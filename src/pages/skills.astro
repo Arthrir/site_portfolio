@@ -49,37 +49,37 @@ const sections = [
     </div>
   </section>
 
-  <!-- NOUVEAU DESIGN : Cartes de Langues & Certifications centrées et fun -->
+  <!-- NOUVEAU DESIGN : Cartes avec barres "drapeaux" pour contourner le bug Windows -->
   <section style="padding: 0 0 60px; max-width: 900px; margin: 0 auto;">
     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
       
       <!-- Français -->
-      <div class="cred-card" style="--card-accent: var(--pop-blue);">
-        <div class="cred-icon">🇫🇷</div>
-        <div class="cred-title">Français</div>
+      <div class="cred-card">
+        <div class="flag-bar fr-flag"></div>
+        <div class="cred-title">{lang === 'fr' ? 'Français' : 'French'}</div>
         <div class="cred-desc">{lang === 'fr' ? 'Langue maternelle' : 'Native Speaker'}</div>
       </div>
 
       <!-- Anglais -->
-      <div class="cred-card" style="--card-accent: var(--pop-orange);">
-        <div class="cred-icon">🇬🇧</div>
-        <div class="cred-title">English</div>
+      <div class="cred-card">
+        <div class="flag-bar en-flag"></div>
+        <div class="cred-title">{lang === 'fr' ? 'Anglais' : 'English'}</div>
         <div class="cred-desc">
           {lang === 'fr' ? 'Courant — C1' : 'Fluent — C1'}<br/>
-          <strong style="color: var(--text); font-weight: 700;">TOEIC 955/990</strong>, TOEFL, Cambridge
+          <strong style="color: var(--text); font-weight: 600;">TOEIC 955/990</strong>, TOEFL, Cambridge
         </div>
       </div>
 
       <!-- Allemand -->
-      <div class="cred-card" style="--card-accent: var(--pop-yellow);">
-        <div class="cred-icon">🇩🇪</div>
-        <div class="cred-title">Deutsch</div>
+      <div class="cred-card">
+        <div class="flag-bar de-flag"></div>
+        <div class="cred-title">{lang === 'fr' ? 'Allemand' : 'German'}</div>
         <div class="cred-desc">{lang === 'fr' ? 'Intermédiaire — B1' : 'Intermediate — B1'}</div>
       </div>
 
       <!-- Certifications -->
-      <div class="cred-card" style="--card-accent: var(--pop-fuchsia);">
-        <div class="cred-icon">🏅</div>
+      <div class="cred-card">
+        <div class="flag-bar cert-flag"></div>
         <div class="cred-title">Certifications</div>
         <div class="cred-desc">
           Label HandiManagement<br/>
@@ -109,8 +109,7 @@ const sections = [
     .cred-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-top: 3px solid var(--card-accent);
-      border-radius: 16px;
+      border-radius: 12px;
       padding: 20px 24px;
       text-align: center;
       flex: 1 1 200px;
@@ -124,12 +123,25 @@ const sections = [
     .cred-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-lift);
-      border-color: var(--card-accent);
+      border-color: var(--text);
     }
-    .cred-icon {
-      font-size: 2rem;
-      margin-bottom: 4px;
+    
+    /* Barres Drapeaux CSS pures */
+    .flag-bar {
+      width: 42px;
+      height: 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
     }
+    /* France : Bleu Blanc Rouge */
+    .fr-flag { background: linear-gradient(90deg, #0055A4 33.3%, #e2e2e2 33.3%, #e2e2e2 66.6%, #EF4135 66.6%); }
+    /* Anglais (Mix Bleu/Rouge) */
+    .en-flag { background: linear-gradient(90deg, #012169 50%, #C8102E 50%); }
+    /* Allemagne : Noir Rouge Or */
+    .de-flag { background: linear-gradient(90deg, #111111 33.3%, #DD0000 33.3%, #DD0000 66.6%, #FFCE00 66.6%); }
+    /* Certifs : Gradient Premium */
+    .cert-flag { background: linear-gradient(90deg, var(--pop-fuchsia), var(--pop-purple)); }
+
     .cred-title {
       font-family: var(--font-serif);
       font-weight: 600;
