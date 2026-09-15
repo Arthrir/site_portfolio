@@ -31,7 +31,7 @@ const sections = [
     skills: ["Design of Engineering", "Design Strategy", "Design Ergonomics", "Material Selection", "Design Integration", "Product Lifecycle Management"]
   },
   {
-    title: "Toolbox", // Reste Toolbox en FR et EN comme demandé
+    title: "Toolbox", 
     skills: ["STM32CubeIDE", "Vivado", "ModelSim", "MATLAB / Simulink", "LTSpice", "Logisim Evolution", "Vector CANalyzer", "Oscilloscope", "GBF", "VS Code", "Figma", "Unity"]
   },
   {
@@ -48,19 +48,24 @@ const sections = [
     </div>
   </section>
 
+  <!-- Lignes épurées exactes comme ta capture d'écran -->
   <section style="padding: 0 0 40px; max-width: 800px;">
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-      <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <span style="font-weight: 600;">Français</span><span style="font-size: 0.85rem; color: var(--muted);">{lang === 'fr' ? 'Langue maternelle' : 'Native Speaker'}</span>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div class="lang-item-card">
+        <span class="lang-title">{lang === 'fr' ? 'Français' : 'French'}</span>
+        <span class="lang-desc">{lang === 'fr' ? 'Langue maternelle' : 'Native Speaker'}</span>
       </div>
-      <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <span style="font-weight: 600;">Anglais</span><span style="font-size: 0.85rem; color: var(--muted);">{lang === 'fr' ? 'Courant — C1 (TOEIC 955/990, TOEFL, Cambridge)' : 'Fluent — C1'}</span>
+      <div class="lang-item-card">
+        <span class="lang-title">{lang === 'fr' ? 'Anglais' : 'English'}</span>
+        <span class="lang-desc">{lang === 'fr' ? 'Courant — C1 (TOEIC 955/990, TOEFL, Cambridge)' : 'Fluent — C1'}</span>
       </div>
-      <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <span style="font-weight: 600;">Allemand</span><span style="font-size: 0.85rem; color: var(--muted);">{lang === 'fr' ? 'Intermédiaire — B1' : 'Intermediate — B1'}</span>
+      <div class="lang-item-card">
+        <span class="lang-title">{lang === 'fr' ? 'Allemand' : 'German'}</span>
+        <span class="lang-desc">{lang === 'fr' ? 'Intermédiaire — B1' : 'Intermediate — B1'}</span>
       </div>
-      <div class="card" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <span style="font-weight: 600;">Certifications</span><span style="font-size: 0.85rem; color: var(--muted); text-align: right;">{lang === 'fr' ? 'Label HandiManagement (Companieros/Carrefour), PSC1 (Secourisme)' : 'HandiManagement Label, First Aid (PSC1)'}</span>
+      <div class="lang-item-card">
+        <span class="lang-title">Certifications</span>
+        <span class="lang-desc">{lang === 'fr' ? 'Label HandiManagement, PSC1 (Secourisme)' : 'HandiManagement Label, First Aid (PSC1)'}</span>
       </div>
     </div>
   </section>
@@ -77,4 +82,23 @@ const sections = [
       </div>
     ))}
   </section>
+
+  <style>
+    .lang-item-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .lang-title { font-weight: 600; font-size: 1.05rem; color: var(--text); }
+    .lang-desc { font-size: 0.95rem; color: var(--muted); text-align: right; }
+    
+    @media (max-width: 600px) {
+      .lang-item-card { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .lang-desc { text-align: left; }
+    }
+  </style>
 </Layout>

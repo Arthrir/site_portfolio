@@ -78,7 +78,7 @@ const projects = [
     title: lang === 'fr' ? "Projet IoT - Qualité de l’air" : "Terrariot IoT Box", 
     date: lang === 'fr' ? "Nov. 2025 - Fév. 2026" : "Nov. 2025 – Feb. 2026", 
     desc: lang === 'fr' ? "Conception d’un boîtier de mesure de la qualité de l’air destiné aux zoos afin de réguler et contrôler des microclimats spécifiques." : "Design of an air quality measurement enclosure intended for zoos in order to regulate and better control microclimates.", 
-    tags: { hardware: ["STM32", "Sensors", "3D Printing"], software: ["C"], soft: [], tools: [] }, link: "#" 
+    tags: { hardware: ["STM32", "Sensors", "3D Printing"], software: ["C"], soft: [], tools: ["Inventor"] }, link: "#" 
   },
   { 
     title: lang === 'fr' ? "Ventilateur à capteur capacitif" : "Capacitive Sensor Fan", 
@@ -94,7 +94,7 @@ const projects = [
         <li>Sliding control interaction using two electrodes.</li>
       </ul>
     `, 
-    tags: { hardware: ["STM32", "Sensors", "PCB"], software: ["C"], soft: [], tools: [] }, link: "#" 
+    tags: { hardware: ["STM32", "Sensors", "PCB"], software: ["C"], soft: [], tools: ["KiCad"] }, link: "#" 
   },
   { 
     title: lang === 'fr' ? "Robot autonome (STM32)" : "Autonomous Robot (STM32)", 
@@ -112,7 +112,7 @@ const projects = [
     title: lang === 'fr' ? "Implémentation chiffrement ASCON" : "ASCON128 Encryption", 
     date: lang === 'fr' ? "Fév. 2025 - Mai 2025" : "Feb. 2025 – May 2025", 
     desc: lang === 'fr' ? "Création d'une machine d'état en SystemVerilog pour chiffrer et déchiffrer des données selon l'algorithme ASCON128." : "Design of a SystemVerilog state machine to perform encryption/decryption using ASCON128.", 
-    tags: { hardware: ["Cryptography"], software: ["SystemVerilog"], soft: [], tools: [] }, link: "https://github.com/Arthrir/ISMIN-ASCON-CSN" 
+    tags: { hardware: ["Cryptography"], software: ["SystemVerilog"], soft: [], tools: ["Typst"] }, link: "https://github.com/Arthrir/ISMIN-ASCON-CSN" 
   },
   { 
     title: lang === 'fr' ? "Jeu State.io" : "State.io Game", 
@@ -137,44 +137,59 @@ const projects = [
     date: lang === 'fr' ? "Jan. 2023 - Juil. 2024" : "Jan. 2023 – Jul. 2024", 
     desc: lang === 'fr' ? "Simulation Python modélisant le bonheur du joueur pour optimiser les gains du casino." : "Python simulation modeling player happiness to optimize casino gains.", 
     tags: { hardware: [], software: ["Python"], soft: [], tools: ["Matplotlib"] }, link: "#" 
+  },
+  { 
+    title: lang === 'fr' ? "Site Web Portfolio" : "Portfolio Website", 
+    date: lang === 'fr' ? "2024 - 2026" : "2024 – 2026", 
+    desc: lang === 'fr' ? "Design et développement de ce portfolio personnel. Focus sur l'UI/UX, le responsive design et les performances." : "Design and development of this personal portfolio. Focus on UI/UX, responsive design, and performance.", 
+    tags: { hardware: [], software: ["HTML", "CSS", "JavaScript", "Astro"], soft: ["UI/UX Design"], tools: ["Figma"] }, link: "#" 
+  },
+  { 
+    title: lang === 'fr' ? "Labs Académiques & Mini-Projets" : "Academic Labs & Mini-Projects", 
+    date: "2024 - 2026", 
+    desc: lang === 'fr' ? "Divers travaux pratiques et projets académiques explorant différents langages et environnements industriels." : "Various academic labs and mini-projects exploring different languages and industrial environments.", 
+    tags: { hardware: ["Arduino"], software: ["Rust", "OCaml", "MATLAB", "C++"], soft: [], tools: ["Vector CANalyzer", "LaTeX"] }, link: "#" 
   }
 ];
 
-// Extraction dynamique des filtres pour les menus
-const extractTags = (cat: 'hardware' | 'software' | 'soft' | 'tools') => Array.from(new Set(projects.flatMap(p => p.tags[cat]))).sort();
-
-const hardwareTags = extractTags('hardware');
-const softwareTags = extractTags('software');
-const softTags = extractTags('soft');
-const toolsTags = extractTags('tools');
+const domTags = ["FPGA", "STM32", "RISC-V", "Sensors", "3D Printing", "PCB", "Robotics", "Cryptography", "Electronics", "Arduino"];
+const techTags = ["Python", "SystemVerilog", "C", "C++", "Linux", "HTML", "CSS", "JavaScript", "Astro", "Rust", "OCaml", "MATLAB"];
+const softTags = ["Dev Lead", "Event Management", "Communication", "Entrepreneurship", "Tech Lead", "UI/UX Design"];
+const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "Matplotlib", "Figma", "Vector CANalyzer", "LaTeX"];
 ---
 
 <Layout title={lang === 'fr' ? "Arthur Doradoux | Projets" : "Arthur Doradoux | Projects Hub"}>
   <section style="padding: 20px 0 60px;">
     <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-purple); --dot-color: var(--pop-purple); margin-bottom: 30px;">
+      <!-- Texte d'arrière plan dynamique (Hub / Showcase) -->
+      <div class="stacked-bg">{lang === 'fr' ? 'Réalisations' : 'Showcase'}</div>
       <h2 class="stacked-main">{t('projects.title')}</h2>
     </div>
 
-    <!-- Menus Déroulants de Filtres -->
+    <p style="color: var(--muted); margin-bottom: 24px; max-width: 600px;">
+      {lang === 'fr' ? "Utilisez les menus déroulants pour croiser les filtres et cibler vos recherches :" : "Use the dropdown menus below to cross-filter projects:"}
+    </p>
+
+    <!-- Système de Filtres Pro (Dropdowns) -->
     <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;" class="filter-controls">
       <select id="hwSelect" class="pro-select">
         <option value="">{lang === 'fr' ? "+ Hardware" : "+ Hardware"}</option>
-        {hardwareTags.map(tag => <option value={tag}>{tag}</option>)}
+        {domTags.sort().map(tag => <option value={tag}>{tag}</option>)}
       </select>
       
       <select id="swSelect" class="pro-select">
         <option value="">{lang === 'fr' ? "+ Langages & Software" : "+ Languages & Software"}</option>
-        {softwareTags.map(tag => <option value={tag}>{tag}</option>)}
+        {techTags.sort().map(tag => <option value={tag}>{tag}</option>)}
       </select>
 
       <select id="toolSelect" class="pro-select">
         <option value="">{lang === 'fr' ? "+ Outils" : "+ Tools"}</option>
-        {toolsTags.map(tag => <option value={tag}>{tag}</option>)}
+        {toolsTags.sort().map(tag => <option value={tag}>{tag}</option>)}
       </select>
 
       <select id="softSelect" class="pro-select">
         <option value="">{lang === 'fr' ? "+ Soft Skills" : "+ Soft Skills"}</option>
-        {softTags.map(tag => <option value={tag}>{tag}</option>)}
+        {softTags.sort().map(tag => <option value={tag}>{tag}</option>)}
       </select>
     </div>
 
@@ -246,7 +261,7 @@ const toolsTags = extractTags('tools');
       activeTags.forEach(tag => {
         const chip = document.createElement('div');
         chip.className = 'active-filter-chip';
-        chip.innerHTML = `${tag} <span>✕</span>`;
+        chip.innerHTML = `${tag} <span style="opacity: 0.6">✕</span>`;
         chip.addEventListener('click', () => {
           activeTags.delete(tag);
           renderFilters();
@@ -259,7 +274,6 @@ const toolsTags = extractTags('tools');
     function applyFilters() {
       projectCards.forEach(card => {
         const cardTags = JSON.parse(card.getAttribute('data-tags') || '[]');
-        // Un projet s'affiche si AUCUN filtre n'est actif, OU s'il possède TOUS les tags sélectionnés
         const isMatch = activeTags.size === 0 || Array.from(activeTags).every(t => cardTags.includes(t as string));
         card.style.display = isMatch ? 'flex' : 'none';
       });
@@ -270,7 +284,7 @@ const toolsTags = extractTags('tools');
         const val = (e.target as HTMLSelectElement).value;
         if (val) {
           activeTags.add(val);
-          select.value = ""; // Reset dropdown
+          select.value = ""; 
           renderFilters();
           applyFilters();
         }
