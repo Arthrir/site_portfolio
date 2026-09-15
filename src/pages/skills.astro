@@ -42,41 +42,56 @@ const sections = [
 ---
 
 <Layout title={lang === 'fr' ? "Arthur Doradoux | Compétences" : "Arthur Doradoux | Skills"}>
-  <section style="padding: 20px 0 40px; max-width: 800px;">
-    <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue);">
-      <div class="stacked-bg">{lang === 'fr' ? 'Boîte à outils' : 'Toolbox'}</div>
-      <h2 class="stacked-main">{lang === 'fr' ? 'Compétences & Langues' : 'Skills & Languages'}</h2>
+  <section style="padding: 20px 0 40px; max-width: 800px; margin: 0 auto; text-align: center;">
+    <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); display: inline-block;">
+      <div class="stacked-bg" style="left: 50%; transform: translateX(-50%); width: 100%;">{lang === 'fr' ? 'Boîte à outils' : 'Toolbox'}</div>
+      <h2 class="stacked-main" style="margin-left: 0;">{lang === 'fr' ? 'Compétences & Langues' : 'Skills & Languages'}</h2>
     </div>
   </section>
 
-  <!-- Bloc Premium : Langues & Certifications -->
-  <section style="padding: 0 0 40px; max-width: 800px;">
-    <div class="lang-container card" style="padding: 0; overflow: hidden; border: 1px solid var(--border-strong);">
+  <!-- NOUVEAU DESIGN : Cartes de Langues & Certifications centrées et fun -->
+  <section style="padding: 0 0 60px; max-width: 900px; margin: 0 auto;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
       
-      <div class="lang-row">
-        <span class="lang-name">Français</span>
-        <span class="lang-level">{lang === 'fr' ? 'Langue maternelle' : 'Native Speaker'}</span>
-      </div>
-      
-      <div class="lang-row">
-        <span class="lang-name">Anglais / English</span>
-        <span class="lang-level">{lang === 'fr' ? 'Courant — C1 (TOEIC 955/990, TOEFL, Cambridge)' : 'Fluent — C1 (TOEIC 955/990, TOEFL, Cambridge)'}</span>
-      </div>
-      
-      <div class="lang-row">
-        <span class="lang-name">Allemand / Deutsch</span>
-        <span class="lang-level">{lang === 'fr' ? 'Intermédiaire — B1' : 'Intermediate — B1'}</span>
+      <!-- Français -->
+      <div class="cred-card" style="--card-accent: var(--pop-blue);">
+        <div class="cred-icon">🇫🇷</div>
+        <div class="cred-title">Français</div>
+        <div class="cred-desc">{lang === 'fr' ? 'Langue maternelle' : 'Native Speaker'}</div>
       </div>
 
-      <div class="lang-row" style="background: rgba(15,23,42,0.02); border-bottom: none;">
-        <span class="lang-name">Certifications</span>
-        <span class="lang-level" style="text-align: right;">{lang === 'fr' ? 'Label HandiManagement, PSC1 (Secourisme)' : 'HandiManagement Label, First Aid (PSC1)'}</span>
+      <!-- Anglais -->
+      <div class="cred-card" style="--card-accent: var(--pop-orange);">
+        <div class="cred-icon">🇬🇧</div>
+        <div class="cred-title">English</div>
+        <div class="cred-desc">
+          {lang === 'fr' ? 'Courant — C1' : 'Fluent — C1'}<br/>
+          <strong style="color: var(--text); font-weight: 700;">TOEIC 955/990</strong>, TOEFL, Cambridge
+        </div>
       </div>
+
+      <!-- Allemand -->
+      <div class="cred-card" style="--card-accent: var(--pop-yellow);">
+        <div class="cred-icon">🇩🇪</div>
+        <div class="cred-title">Deutsch</div>
+        <div class="cred-desc">{lang === 'fr' ? 'Intermédiaire — B1' : 'Intermediate — B1'}</div>
+      </div>
+
+      <!-- Certifications -->
+      <div class="cred-card" style="--card-accent: var(--pop-fuchsia);">
+        <div class="cred-icon">🏅</div>
+        <div class="cred-title">Certifications</div>
+        <div class="cred-desc">
+          Label HandiManagement<br/>
+          {lang === 'fr' ? 'PSC1 (Secourisme)' : 'First Aid (PSC1)'}
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- Nouvelle grille de compétences (Style Bento / Ghost Tags) -->
-  <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; padding-bottom: 60px;">
+  <!-- Grille de compétences (Style Bento / Ghost Tags) -->
+  <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; padding-bottom: 60px;">
     {sections.map(section => (
       <div class="skill-category">
         <h3 class="skill-cat-title">{section.title}</h3>
@@ -90,18 +105,47 @@ const sections = [
   </section>
 
   <style>
-    /* Design Premium du bloc Langues (Lignes propres, pas de grosses boîtes) */
-    .lang-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 16px 24px; border-bottom: 1px solid var(--border);
+    /* Design des Cartes Fun (Langues/Certifs) */
+    .cred-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--card-accent);
+      border-radius: 16px;
+      padding: 20px 24px;
+      text-align: center;
+      flex: 1 1 200px;
+      max-width: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.25s var(--ease-premium), box-shadow 0.25s var(--ease-premium), border-color 0.2s;
     }
-    .lang-name { font-weight: 600; font-size: 1.05rem; color: var(--text); }
-    .lang-level { font-size: 0.95rem; color: var(--muted); }
+    .cred-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lift);
+      border-color: var(--card-accent);
+    }
+    .cred-icon {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+    .cred-title {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .cred-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
 
     /* Design Épuré des Compétences */
     .skill-category {
       background: transparent;
-      padding: 16px 0;
     }
     .skill-cat-title {
       font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; color: var(--text);
@@ -118,11 +162,6 @@ const sections = [
     }
     .ghost-tag:hover {
       border-color: var(--text); color: var(--text);
-    }
-
-    @media (max-width: 600px) {
-      .lang-row { flex-direction: column; align-items: flex-start; gap: 4px; }
-      .lang-level { text-align: left; }
     }
   </style>
 </Layout>
