@@ -112,24 +112,26 @@ const others = [
 <Layout title={lang === 'fr' ? "Arthur Doradoux | Engagements" : "Arthur Doradoux | Engagements"}>
   <section style="padding: 40px 0 80px; max-width: 900px; margin: 0 auto;">
     <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); margin-bottom: 40px;">
-      <div class="stacked-bg">{t('engagements.kicker')}</div>
+      <div class="stacked-bg">{lang === 'fr' ? 'Leadership' : 'Leadership'}</div>
       <h2 class="stacked-main">{lang === 'fr' ? 'Engagements étudiants' : 'Student Engagements'}</h2>
     </div>
 
     <div class="section-subhead" style="margin-top: 0;">{lang === 'fr' ? 'Temps forts' : 'Highlights'}</div>
-    <div>
+    
+    <!-- Blocs "Temps forts" avec cartes impactantes -->
+    <div style="display: flex; flex-direction: column; gap: 16px;">
       {featured.map(item => (
         <div class="impact-card" style={`--dot-color: ${item.color};`}>
           <span class="impact-tag">{item.date}</span>
-          <div class="item-head" style="margin-bottom: 10px;">
-            <img class="item-logo force-white-bg" src={item.logo} alt="" />
+          <div class="item-head" style="margin-bottom: 12px;">
+            <img class="org-logo force-white-bg" src={item.logo} alt="" />
             <div>
               <h3 class="role-name">{item.title}</h3>
               <span class="org-name-sub" style={`color: ${item.color};`}>{item.role}</span>
             </div>
           </div>
-          <div style="font-size: 0.96rem; line-height: 1.7; max-width: 640px;" set:html={item.desc} />
-          <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+          <div style="font-size: 0.96rem; line-height: 1.7; max-width: 740px;" set:html={item.desc} />
+          <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
             {item.tags.map(tag => <span class="skill-tag">{tag}</span>)}
           </div>
         </div>
@@ -142,7 +144,7 @@ const others = [
         <details class="accordion-item">
           <summary>
             <span class="item-head">
-              <img class="item-logo force-white-bg" src={item.logo} alt="" />
+              <img class="org-logo force-white-bg" src={item.logo} alt="" />
               <span>{item.title}</span>
             </span>
             <span class="accordion-meta">
@@ -162,20 +164,28 @@ const others = [
   </section>
   
   <style>
-    /* Forcer la taille propre des logos dans les cartes d'engagement */
-    .item-logo {
-      width: 38px !important;
-      height: 38px !important;
-      object-exit: contain;
-      border-radius: 8px;
+    /* Carte impact spécifique pour les temps forts */
+    .impact-card {
       border: 1px solid var(--border);
-      padding: 4px;
-      flex-shrink: 0;
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      padding: 26px 28px;
+      position: relative;
+      border-left: 3px solid var(--dot-color, var(--accent));
+      box-shadow: var(--shadow);
+    }
+    .impact-tag {
+      position: absolute;
+      top: 26px;
+      right: 28px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--dot-color, var(--accent));
     }
   </style>
 
   <style is:global>
-    /* Styling pour les listes dans les descriptions d'engagements */
     .impact-card ul, .accordion-body-inner ul {
       padding-left: 20px;
       margin-top: 8px;
