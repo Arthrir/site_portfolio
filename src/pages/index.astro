@@ -25,7 +25,7 @@ const t = makeT(lang);
 
 				<div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
 					<a href="/projects" class="btn btn-primary">{t('home.ctaProjects')}</a>
-					<a href="mailto:arthur.doradoux@etu.emse.fr" class="btn btn-secondary">{t('common.getInTouch')}</a>
+					<a href="#contact" class="btn btn-secondary">{lang === 'fr' ? "Me contacter" : "Get in Touch"}</a>
 				</div>
 			</div>
 
@@ -100,7 +100,6 @@ const t = makeT(lang);
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
-            <!-- Ajout de la classe logo-phinia pour gérer le contraste -->
 						<img class="org-logo logo-phinia" src="/logo/phinia.png" alt="PHINIA Delphi" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? 'Stage Ingénieur Systèmes Hardware' : 'Hardware Systems Engineering Intern'}</h3>
@@ -179,7 +178,7 @@ const t = makeT(lang);
 				<div class="timeline-dot" style="border-color: var(--school-polimi);"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
-						<img class="org-logo" src="/logo/polimi.png" alt="Politecnico di Milano" />
+						<img class="org-logo force-white-bg" src="/logo/polimi.png" alt="Politecnico di Milano" />
 						<div>
 							<h3 class="role-name">Master in Design & Engineering</h3>
               <span class="org-name-sub" style="color: var(--school-polimi);">Politecnico di Milano</span>
@@ -205,7 +204,7 @@ const t = makeT(lang);
 				<div class="timeline-dot" style="border-color: var(--school-emse);"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
-						<img class="org-logo" src="/logo/emse.png" alt="Mines Saint-Étienne" />
+						<img class="org-logo force-white-bg" src="/logo/emse.png" alt="Mines Saint-Étienne" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? "Diplôme d'ingénieur (Cursus ISMIN)" : "Engineering Degree (ISMIN Program)"}</h3>
               <span class="org-name-sub" style="color: var(--school-emse);">Mines de Saint-Étienne</span>
@@ -233,7 +232,6 @@ const t = makeT(lang);
 				<div class="timeline-dot" style="border-color: var(--muted);"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
-            <!-- Ajout du logo Pothier -->
             <img class="org-logo" src="/logo/pothier.png" alt="Lycée Pothier" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? "Classes Préparatoires (MPSI / MP*)" : "Intensive Preparatory Classes (CPGE)"}</h3>
@@ -250,7 +248,6 @@ const t = makeT(lang);
 				<div class="timeline-dot" style="border-color: var(--muted);"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
-            <!-- Ajout du logo NDA -->
             <img class="org-logo" src="/logo/nda.png" alt="Lycée Notre-Dame des Aydes" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? "Baccalauréat Mention Bien (Section Européenne)" : "High School Diploma with Honors"}</h3>
@@ -264,10 +261,97 @@ const t = makeT(lang);
 		</div>
 	</section>
 
-  <style is:global>
-    /* Gestion du logo blanc PHINIA en mode clair */
-    body.theme-light .logo-phinia {
-      background-color: var(--ink);
+	<!-- NOUVELLE SECTION CONTACT EN BAS DE PAGE -->
+	<section id="contact" style="padding: 60px 0 40px; max-width: 1000px; margin: 0 auto;">
+		<div class="card contact-wrapper" style="padding: 40px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: center;">
+			
+			<!-- Infos à gauche -->
+			<div>
+				<span style="font-size: 0.8rem; font-weight: 700; color: var(--pop-blue); text-transform: uppercase; letter-spacing: 0.05em;">
+					{lang === 'fr' ? "Contact" : "Get In Touch"}
+				</span>
+				<h2 style="font-family: var(--font-serif); font-size: 2.2rem; font-weight: 600; margin: 10px 0 20px; line-height: 1.1;">
+					{lang === 'fr' ? "Travaillons ensemble !" : "Let's Work Together"}
+				</h2>
+				<p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 30px; line-height: 1.6;">
+					{lang === 'fr' ? "À la recherche d'une opportunité en tant que Product Owner ou en développement hardware/software. Écrivez-moi directement !" : "Looking for an opportunity as a Product Owner or in hardware/software development. Drop me a line!"}
+				</p>
+
+				<div style="display: flex; flex-direction: column; gap: 20px;">
+					<div style="display: flex; align-items: center; gap: 14px;">
+						<div class="contact-icon-box">📞</div>
+						<div>
+							<div style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">PHONE & WHATSAPP</div>
+							<div style="font-size: 0.95rem; font-weight: 600;">+33 6 27 88 34 83</div>
+						</div>
+					</div>
+
+					<div style="display: flex; align-items: center; gap: 14px;">
+						<div class="contact-icon-box">in</div>
+						<div>
+							<div style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">LINKEDIN</div>
+							<a href="https://linkedin.com/in/arthur-doradoux/" target="_blank" style="font-size: 0.95rem; font-weight: 600; text-decoration: underline;">arthur-doradoux</a>
+						</div>
+					</div>
+
+					<div style="display: flex; align-items: center; gap: 14px;">
+						<div class="contact-icon-box">✉️</div>
+						<div>
+							<div style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">EMAIL</div>
+							<a href="mailto:arthur.doradoux@etu.emse.fr" style="font-size: 0.95rem; font-weight: 600; text-decoration: underline;">arthur.doradoux@etu.emse.fr</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Formulaire à droite -->
+			<form action="https://api.web3forms.com/submit" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+				<!-- Remplace par ta clé Web3Forms gratuite si tu veux recevoir les mails directement -->
+				<input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY" />
+				
+				<div>
+					<label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">{lang === 'fr' ? "Nom" : "Name"}</label>
+					<input type="text" name="name" required class="contact-input" placeholder={lang === 'fr' ? "Votre nom" : "Your name"} />
+				</div>
+
+				<div>
+					<label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">Email</label>
+					<input type="email" name="email" required class="contact-input" placeholder={lang === 'fr' ? "votre@email.com" : "your@email.com"} />
+				</div>
+
+				<div>
+					<label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">Message</label>
+					<textarea name="message" required class="contact-textarea" placeholder={lang === 'fr' ? "Votre message..." : "Your message..."}></textarea>
+				</div>
+
+				<button type="submit" class="btn btn-primary" style="justify-content: center; margin-top: 6px; cursor: pointer;">
+					{lang === 'fr' ? "Envoyer le message" : "Send Message"} →
+				</button>
+			</form>
+
+		</div>
+	</section>
+
+  <style>
+    .contact-icon-box {
+      width: 38px; height: 38px; border-radius: 10px; background: var(--bg);
+      border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
     }
+    .contact-input, .contact-textarea {
+      width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-strong);
+      background: var(--bg); color: var(--text); font-family: inherit; font-size: 0.95rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .contact-input:focus, .contact-textarea:focus { border-color: var(--text); }
+    .contact-textarea { min-height: 120px; resize: vertical; }
+
+    @media (max-width: 800px) {
+      .contact-wrapper { grid-template-columns: 1fr !important; padding: 24px !important; }
+    }
+  </style>
+
+  <style is:global>
+    body.theme-light .logo-phinia { background-color: var(--ink); }
   </style>
 </Layout>
