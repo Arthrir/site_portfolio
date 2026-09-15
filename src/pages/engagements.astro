@@ -164,6 +164,22 @@ const others = [
   </section>
   
   <style>
+    /* Forcer l'alignement horizontal propre : Logo à gauche, Titre à droite */
+    .item-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .org-logo {
+      width: 38px !important;
+      height: 38px !important;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
     /* Carte impact spécifique pour les temps forts */
     .impact-card {
       border: 1px solid var(--border);
@@ -182,16 +198,6 @@ const others = [
       font-weight: 700;
       letter-spacing: 0.03em;
       color: var(--dot-color, var(--accent));
-    }
-  </style>
-
-  <style is:global>
-    .impact-card ul, .accordion-body-inner ul {
-      padding-left: 20px;
-      margin-top: 8px;
-    }
-    .impact-card li, .accordion-body-inner li {
-      margin-bottom: 4px;
     }
   </style>
 </Layout>
