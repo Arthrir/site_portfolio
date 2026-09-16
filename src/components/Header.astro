@@ -103,29 +103,49 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
     width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; 
     border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 2px solid transparent;
   }
-  /* EN a désormais un contour plein et sobre de la couleur du texte */
-  .lang-toggle.en-flag {
-    border: 2px solid var(--text);
-    background-image: none;
-  }
-  /* FR garde son liseré tricolore dynamique */
+  .lang-toggle.en-flag { border: 2px solid var(--text); background-image: none; }
   .lang-toggle.fr-flag {
     background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(90deg, #0055A4 33%, #fff 33%, #fff 66%, #EF4135 66%);
     background-origin: border-box; background-clip: padding-box, border-box;
   }
   .lang-toggle:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(15, 23, 42, 0.1); }
 
+  /* GESTION DU MENU CV */
   .cv-menu { position: relative; }
   .cv-trigger { display: inline-flex; align-items: center; gap: 4px; background: var(--ink); color: var(--bg); border: 1px solid var(--ink); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: transform 0.2s ease, background 0.2s; }
   .cv-trigger:hover { background: transparent; color: var(--text); }
   .cv-trigger .chev { transition: transform 0.2s ease; }
   .cv-menu:hover .chev { transform: translateY(2px); }
-  .cv-dropdown { opacity: 0; visibility: hidden; transform: translateY(-6px); position: absolute; top: calc(100% + 8px); right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px; min-width: 170px; z-index: 10; box-shadow: var(--shadow-lift); }
   
-  /* LE PONT INVISIBLE EST ICI 👇 */
-  .cv-dropdown::before { content: ''; position: absolute; top: -12px; left: 0; right: 0; height: 12px; }
+  .cv-dropdown { 
+    opacity: 0; 
+    visibility: hidden; 
+    transform: translateY(-6px); 
+    position: absolute; 
+    top: calc(100% + 8px); 
+    right: 0; 
+    background: var(--card-bg); 
+    border: 1px solid var(--border); 
+    border-radius: 8px; 
+    padding: 6px; 
+    min-width: 170px; 
+    z-index: 10; 
+    box-shadow: var(--shadow-lift); 
+    /* Délai de 0.5s à la sortie */
+    transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0.5s;
+  }
   
-  .cv-menu:hover .cv-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+  /* Pont invisible élargi */
+  .cv-dropdown::before { content: ''; position: absolute; top: -16px; left: -20px; right: -20px; height: 16px; }
+  
+  .cv-menu:hover .cv-dropdown { 
+    opacity: 1; 
+    visibility: visible; 
+    transform: translateY(0); 
+    /* Animation d'entrée instantanée */
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s;
+  }
+  
   .cv-dropdown a { display: block; padding: 8px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 500; text-decoration: none; }
   .cv-dropdown a:hover { background: var(--accent-soft); }
 
