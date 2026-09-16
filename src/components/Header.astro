@@ -12,8 +12,9 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
 <header class="site-header">
   <div class="header-inner">
     <a href="/" class="header-logo-link" aria-label="Arthur Doradoux — Home">
-      <img src="/logo/icone_gray.png" alt="Logo" class="nav-logo logo-light" />
-      <img src="/logo/icone_white.png" alt="Logo" class="nav-logo logo-dark" />
+      <!-- Appels propres de tes fichiers SVG vectoriels -->
+      <img src="/logo/logo-black.svg" alt="Logo" class="nav-logo logo-light" />
+      <img src="/logo/logo-white.svg" alt="Logo" class="nav-logo logo-dark" />
     </a>
 
     <nav class="nav" id="mainNav" aria-label="Main Navigation">
@@ -59,7 +60,10 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
   body.theme-dark .site-header { background: rgba(12, 13, 15, 0.78); }
   .header-inner { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
   
-  .nav-logo { height: 28px; width: auto; object-fit: contain; }
+  /* Paramètres du Logo SVG */
+  .header-logo-link { display: flex; align-items: center; }
+  .nav-logo { height: 32px; width: auto; object-fit: contain; transition: transform 0.2s ease; }
+  .nav-logo:hover { transform: scale(1.05); }
   .logo-dark { display: none; }
   body.theme-dark .logo-light { display: none; }
   body.theme-dark .logo-dark { display: block; }
@@ -131,18 +135,15 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
     min-width: 170px; 
     z-index: 10; 
     box-shadow: var(--shadow-lift); 
-    /* Délai de 0.5s à la sortie */
     transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0.5s;
   }
   
-  /* Pont invisible élargi */
   .cv-dropdown::before { content: ''; position: absolute; top: -16px; left: -20px; right: -20px; height: 16px; }
   
   .cv-menu:hover .cv-dropdown { 
     opacity: 1; 
     visibility: visible; 
     transform: translateY(0); 
-    /* Animation d'entrée instantanée */
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s;
   }
   
