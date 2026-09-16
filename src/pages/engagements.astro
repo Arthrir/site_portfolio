@@ -116,20 +116,17 @@ const others = [
       <h2 class="stacked-main">{lang === 'fr' ? 'Engagements étudiants' : 'Student Engagements'}</h2>
     </div>
 
-    <!-- Titre modifié et espacé -->
     <div class="section-subhead" style="margin-top: 0; margin-bottom: 24px; font-size: 0.95rem;">{lang === 'fr' ? 'Engagements les plus marquants' : 'Key Student Engagements'}</div>
     
     <div style="display: flex; flex-direction: column; gap: 16px;">
       {featured.map(item => (
         <div class="impact-card" style={`--dot-color: ${item.color};`}>
-          <!-- Date alignée avec le titre grâce à item-head modifiée -->
           <div class="item-head" style="margin-bottom: 12px;">
             <img class="org-logo force-white-bg" src={item.logo} alt="" />
             <div>
               <h3 class="role-name">{item.title}</h3>
               <span class="org-name-sub" style={`color: ${item.color};`}>{item.role}</span>
             </div>
-            <!-- Date alignée tout à droite -->
             <div style="margin-left: auto; font-size: 0.85rem; font-weight: 600; color: var(--muted); text-align: right;">{item.date}</div>
           </div>
           <div style="font-size: 0.96rem; line-height: 1.7; max-width: 740px;" set:html={item.desc} />
@@ -140,11 +137,13 @@ const others = [
       ))}
     </div>
 
-    <div class="section-subhead" style="margin-top: 48px; margin-bottom: 24px; font-size: 0.95rem;">{lang === 'fr' ? 'Autres missions' : 'Other Roles'}</div>
+    <!-- Le titre est bien passé à "Autres rôles" -->
+    <div class="section-subhead" style="margin-top: 48px; margin-bottom: 24px; font-size: 0.95rem;">{lang === 'fr' ? 'Autres rôles' : 'Other Roles'}</div>
     <div>
       {others.map(item => (
         <details class="accordion-item">
-          <summary>
+          <!-- Ajout d'une classe spécifique pour l'alignement de l'accordéon -->
+          <summary class="accordion-summary-align">
             <span class="item-head">
               <img class="org-logo force-white-bg" src={item.logo} alt="" />
               <span>{item.title}</span>
@@ -166,11 +165,20 @@ const others = [
   </section>
   
   <style>
+    /* Force l'alignement horizontal propre pour tout */
     .item-head {
       display: flex;
       align-items: center;
       gap: 14px;
     }
+    
+    /* Force l'alignement vertical parfait dans l'accordéon "Autres rôles" */
+    .accordion-summary-align {
+      display: flex;
+      justify-content: space-between;
+      align-items: center; /* Ligne magique qui aligne la date au centre de la ligne avec le logo et le titre */
+    }
+
     .org-logo {
       width: 38px !important;
       height: 38px !important;
@@ -188,6 +196,18 @@ const others = [
       position: relative;
       border-left: 3px solid var(--dot-color, var(--accent));
       box-shadow: var(--shadow);
+    }
+  </style>
+
+  <style is:global>
+    /* Décalage propre des listes à puces pour aérer */
+    .impact-card ul, .accordion-body-inner ul {
+      padding-left: 24px;
+      margin-left: 4px;
+      margin-top: 8px;
+    }
+    .impact-card li, .accordion-body-inner li {
+      margin-bottom: 6px;
     }
   </style>
 </Layout>

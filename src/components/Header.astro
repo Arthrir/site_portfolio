@@ -43,7 +43,6 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
         <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
 
-      <!-- Bouton Langue affiche la CIBLE et le drapeau CIBLE -->
       <button class={`lang-toggle ${targetFlag}`} id="langToggle" data-current={lang}>
         {targetLang}
       </button>
@@ -60,7 +59,6 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
   body.theme-dark .site-header { background: rgba(12, 13, 15, 0.78); }
   .header-inner { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
   
-  /* Logo agrandi */
   .nav-logo { height: 28px; width: auto; object-fit: contain; }
   .logo-dark { display: none; }
   body.theme-dark .logo-light { display: none; }
@@ -76,12 +74,24 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
 
   .header-controls { display: flex; gap: 12px; align-items: center; }
 
+  /* Animation RGB Cyclique pour le bouton Soleil/Lune */
+  @keyframes icon-rgb-cycle {
+    0% { color: #ff0080; }
+    25% { color: #ffaa00; }
+    50% { color: #00ff88; }
+    75% { color: #0088ff; }
+    100% { color: #ff0080; }
+  }
+
   .theme-toggle {
     background: transparent; border: none; color: var(--text); cursor: pointer; 
     width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; 
-    position: relative; transition: transform 0.2s ease, color 0.2s ease;
+    position: relative; transition: transform 0.2s ease;
   }
-  .theme-toggle:hover { color: var(--accent); transform: scale(1.05); }
+  .theme-toggle:hover { 
+    transform: scale(1.05); 
+    animation: icon-rgb-cycle 2.5s linear infinite;
+  }
   .theme-toggle svg { position: absolute; transition: opacity 0.3s ease, transform 0.3s ease; }
   .icon-sun { opacity: 1; transform: scale(1); }
   .icon-moon { opacity: 0; transform: scale(0.5) rotate(-45deg); }
@@ -93,10 +103,12 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
     width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; 
     border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 2px solid transparent;
   }
+  /* EN a désormais un contour plein et sobre de la couleur du texte */
   .lang-toggle.en-flag {
-    background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(90deg, #012169 50%, #C8102E 50%);
-    background-origin: border-box; background-clip: padding-box, border-box;
+    border: 2px solid var(--text);
+    background-image: none;
   }
+  /* FR garde son liseré tricolore dynamique */
   .lang-toggle.fr-flag {
     background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(90deg, #0055A4 33%, #fff 33%, #fff 66%, #EF4135 66%);
     background-origin: border-box; background-clip: padding-box, border-box;
