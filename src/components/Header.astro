@@ -20,7 +20,7 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
     <nav class="nav" id="mainNav" aria-label="Main Navigation">
       <ul class="nav-list">
         <li><a href="/" class:list={{ active: Astro.url.pathname === '/' }}>{t('nav.home')}</a></li>
-        <li><a href="/about" class:list={{ active: Astro.url.pathname.startsWith('/about') }}>{t('nav.about')}</a></li>
+        <!-- <li><a href="/about" class:list={{ active: Astro.url.pathname.startsWith('/about') }}>{t('nav.about')}</a></li> -->
         <li><a href="/projects" class:list={{ active: Astro.url.pathname.startsWith('/projects') }}>{t('nav.projects')}</a></li>
         <li><a href="/skills" class:list={{ active: Astro.url.pathname.startsWith('/skills') }}>{t('nav.skills')}</a></li>
         <li><a href="/engagements" class:list={{ active: Astro.url.pathname.startsWith('/engagements') }}>{t('nav.engagements')}</a></li>
