@@ -137,10 +137,11 @@ const t = makeT(lang);
 			<h2 class="stacked-main">{lang === 'fr' ? 'Formation' : 'Education'}</h2>
 		</div>
 
-		<div class="timeline" style="--dot-color: var(--pop-orange);">
-			<div class="timeline-item">
+		<div class="timeline">
+			<!-- Application de la couleur de l'école directement sur le timeline-item -->
+			<div class="timeline-item" style="--dot-color: var(--school-emlyon);">
 				<div class="timeline-date">2027 — 2028</div>
-				<div class="timeline-dot" style="border-color: var(--school-emlyon);"></div>
+				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
 						<img class="org-logo" src="/logo/emlyon.png" alt="emlyon" />
@@ -169,9 +170,9 @@ const t = makeT(lang);
 				</div>
 			</div>
 
-			<div class="timeline-item">
+			<div class="timeline-item" style="--dot-color: var(--school-polimi);">
 				<div class="timeline-date">{lang === 'fr' ? 'Sep. 2026 — Fév. 2027' : 'Sep. 2026 — Feb. 2027'}</div>
-				<div class="timeline-dot" style="border-color: var(--school-polimi);"></div>
+				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
 						<img class="org-logo force-white-bg" src="/logo/polimi.png" alt="Politecnico di Milano" />
@@ -194,9 +195,9 @@ const t = makeT(lang);
 				</div>
 			</div>
 
-			<div class="timeline-item">
+			<div class="timeline-item" style="--dot-color: var(--school-emse);">
 				<div class="timeline-date">2024 — 2027</div>
-				<div class="timeline-dot" style="border-color: var(--school-emse);"></div>
+				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
 						<img class="org-logo force-white-bg" src="/logo/emse.png" alt="Mines Saint-Étienne" />
@@ -221,9 +222,9 @@ const t = makeT(lang);
 				</div>
 			</div>
 
-      <div class="timeline-item">
+      <div class="timeline-item" style="--dot-color: var(--muted);">
 				<div class="timeline-date">2022 — 2024</div>
-				<div class="timeline-dot" style="border-color: var(--muted);"></div>
+				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
             <img class="org-logo" src="/logo/pothier.png" alt="Lycée Pothier" />
@@ -236,9 +237,9 @@ const t = makeT(lang);
 				</div>
 			</div>
 
-      <div class="timeline-item">
+      <div class="timeline-item" style="--dot-color: var(--muted);">
 				<div class="timeline-date">2019 — 2022</div>
-				<div class="timeline-dot" style="border-color: var(--muted);"></div>
+				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
             <img class="org-logo" src="/logo/nda.png" alt="Lycée Notre-Dame des Aydes" />
@@ -254,7 +255,6 @@ const t = makeT(lang);
 	</section>
 
 	<section id="contact" style="padding: 60px 0 40px; max-width: 1000px; margin: 0 auto;">
-    <!-- Titre de la section de contact -->
     <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); margin-bottom: 40px; text-align: center;">
       <div class="stacked-bg" style="left: 50%; transform: translateX(-50%); width: 100%;">Contact</div>
       <h2 class="stacked-main" style="margin-left: 0;">{lang === 'fr' ? 'Me contacter' : 'Get in Touch'}</h2>
@@ -297,11 +297,10 @@ const t = makeT(lang);
 				</div>
 			</div>
 
-      <!-- Le Formulaire Web3Forms -->
 			<form action="https://api.web3forms.com/submit" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
-				<!-- Remplace cette valeur par ta clé d'accès Web3Forms -->
 				<input type="hidden" name="access_key" value="87fde94b-7057-4663-9e22-63385526c25a" />
-        <input type="hidden" name="subject" value="Nouveau message depuis le portfolio !" />
+        <input type="hidden" name="subject" value="Nouveau contact depuis le portfolio !" />
+        <input type="hidden" name="from_name" value="Arthur Doradoux - Portfolio" />
 				
 				<div>
 					<label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">{lang === 'fr' ? "Nom" : "Name"}</label>
@@ -347,7 +346,6 @@ const t = makeT(lang);
 
   <style is:global>
     body.theme-light .logo-phinia { background-color: var(--ink); }
-    /* Décalage propre des listes à puces pour ne pas coller aux bords */
     .mission-list, .impact-card ul, .accordion-body-inner ul {
       padding-left: 24px;
       margin-left: 4px;
