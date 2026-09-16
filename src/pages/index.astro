@@ -20,11 +20,10 @@ const t = makeT(lang);
 					Arthur Doradoux
 				</h1>
 				<p style="font-size: 1.1rem; color: var(--muted); margin-bottom: 32px; max-width: 520px;">
-					{lang === 'fr' ? "Étudiant en microélectronique et informatique, passionné par les innovations technologiques. Actuellement à la recherche d'un stage de fin d'études." : "Microelectronics and Computer Science student. Currently looking for an end-of-studies internship."}
+					{lang === 'fr' ? "Étudiant en microélectronique et informatique, passionné par les innovations technologiques. À la recherche d'un stage de fin d'études (5+ mois) à partir d'avril 2027." : "Microelectronics and Computer Science student. Currently looking for a 5+ month end-of-studies internship starting in April 2027."}
 				</p>
 
 				<div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-					<!-- Remplacement explicite pour "mes" projets -->
 					<a href="/projects" class="btn btn-primary">{lang === 'fr' ? "Explorer mes projets" : "Explore my projects"}</a>
 					<a href="#contact" class="btn btn-secondary">{lang === 'fr' ? "Me contacter" : "Get in Touch"}</a>
 				</div>
@@ -63,7 +62,7 @@ const t = makeT(lang);
 
 		<div class="timeline" style="--dot-color: var(--pop-blue);">
 			<div class="timeline-item">
-				<div class="timeline-date">{lang === 'fr' ? 'Avr. 2026 - Juil. 2026' : 'Apr. 2026 - Jul. 2026'}</div>
+				<div class="timeline-date" set:html={lang === 'fr' ? 'Avr. 2026 -<br>Juil. 2026' : 'Apr. 2026 -<br>Jul. 2026'}></div>
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
@@ -96,7 +95,7 @@ const t = makeT(lang);
 			</div>
 
 			<div class="timeline-item">
-				<div class="timeline-date">{lang === 'fr' ? 'Jan. 2025 - Fév. 2025' : 'Jan. 2025 - Feb. 2025'}</div>
+				<div class="timeline-date" set:html={lang === 'fr' ? 'Jan. 2025 -<br>Fév. 2025' : 'Jan. 2025 -<br>Feb. 2025'}></div>
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
@@ -140,26 +139,26 @@ const t = makeT(lang);
 
 		<div class="timeline">
 			<div class="timeline-item" style="--dot-color: var(--school-emlyon);">
-				<div class="timeline-date">{lang === 'fr' ? 'Sep. 2027 - Juil. 2028' : 'Sep. 2027 - Jul. 2028'}</div>
+				<div class="timeline-date" set:html={lang === 'fr' ? 'Sep. 2027 -<br>Juin 2028' : 'Sep. 2027 -<br>Jun. 2028'}></div>
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
 						<img class="org-logo" src="/logo/emlyon.png" alt="emlyon" />
 						<div>
-							<h3 class="role-name">{lang === 'fr' ? 'Double Diplôme (Accepté)' : 'Double Degree (Accepted)'}</h3>
+							<h3 class="role-name">{lang === 'fr' ? 'Double Diplôme PGE (Accepté)' : 'PGE Double Degree (Accepted)'}</h3>
 							<span class="org-name-sub" style="color: var(--school-emlyon);"><strong>emlyon business school</strong> <span style="color: var(--muted); font-weight: 500; text-transform: none;">- Lyon, France</span></span>
 						</div>
 					</div>
 					<div class="mission-list" style="--dot-color: var(--school-emlyon);" set:html={lang === 'fr' ? `
 						<ul>
-							<li><strong>Programme :</strong> Double Diplôme "Business Mediation".</li>
-							<li><strong>Objectif :</strong> Compléter mon socle ingénieur/design par les outils financiers, stratégiques et managériaux nécessaires pour évoluer vers un rôle de Product Owner global.</li>
+							<li><strong>Programme :</strong> Programme Grande École (PGE) en Double Diplôme avec le cursus ISMIN.</li>
+							<li><strong>Objectif :</strong> Compléter mon socle technique par les outils financiers, stratégiques et managériaux nécessaires pour évoluer vers un rôle de Product Owner global.</li>
 						</ul>
             <p style="margin-top: 12px; font-size: 0.85rem; font-style: italic; color: var(--muted);">* Ma candidature complète est disponible en français via le lien ci-dessous.</p>
 					` : `
 						<ul>
-							<li><strong>Program:</strong> "Business Mediation" Double Degree.</li>
-							<li><strong>Goal:</strong> Complement my engineering and design background with the financial, strategic, and managerial tools required for a global Product Owner role.</li>
+							<li><strong>Program:</strong> Master in Management (PGE) Double Degree with ISMIN.</li>
+							<li><strong>Goal:</strong> Complement my technical background with the financial, strategic, and managerial tools required for a global Product Owner role.</li>
 						</ul>
             <p style="margin-top: 12px; font-size: 0.85rem; font-style: italic; color: var(--muted);">* Note: My full application file is available in French via the link below.</p>
 					`} />
@@ -171,7 +170,7 @@ const t = makeT(lang);
 			</div>
 
 			<div class="timeline-item" style="--dot-color: var(--school-polimi);">
-				<div class="timeline-date">{lang === 'fr' ? 'Sep. 2026 - Fév. 2027' : 'Sep. 2026 - Feb. 2027'}</div>
+				<div class="timeline-date" set:html={lang === 'fr' ? 'Sep. 2026 -<br>Fév. 2027' : 'Sep. 2026 -<br>Feb. 2027'}></div>
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
@@ -196,34 +195,34 @@ const t = makeT(lang);
 			</div>
 
 			<div class="timeline-item" style="--dot-color: var(--school-emse);">
-				<div class="timeline-date">2024 - 2027</div>
+				<div class="timeline-date" set:html={lang === 'fr' ? 'Sep. 2024 -<br>Juin 2027' : 'Sep. 2024 -<br>Jun. 2027'}></div>
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
 						<img class="org-logo force-white-bg" src="/logo/emse.png" alt="Mines Saint-Étienne" />
 						<div>
-							<h3 class="role-name">{lang === 'fr' ? "Diplôme d'ingénieur (Cursus ISMIN)" : "Engineering Degree (ISMIN Program)"}</h3>
+							<h3 class="role-name">{lang === 'fr' ? "Diplôme d'ingénieur ISMIN" : "ISMIN Engineering Degree"}</h3>
               <span class="org-name-sub" style="color: var(--school-emse);"><strong>Mines de Saint-Étienne</strong> <span style="color: var(--muted); font-weight: 500; text-transform: none;">- Gardanne, France</span></span>
 						</div>
 					</div>
           <div class="mission-list" style="--dot-color: var(--school-emse);" set:html={lang === 'fr' ? `
             <ul>
-              <li><strong>Tronc commun :</strong> Microcontrôleurs, Électronique Numérique/Analogique, Systèmes Embarqués, Traitement du Signal, Architecture CPU, Cryptographie.</li>
+              <li><strong>Formation :</strong> Microélectronique et Informatique, principalement appliquées aux Systèmes Embarqués.</li>
+              <li><strong>Tronc commun :</strong> Microcontrôleurs, Traitement du Signal, Architecture CPU, Électronique Numérique/Analogique, Cryptographie.</li>
               <li><strong>Électifs :</strong> IA pour la Production, FPGA & Sécurité, Entrepreneuriat.</li>
-              <li><strong>Projet :</strong> Gagnant du hackathon robotique (programmation STM32).</li>
             </ul>
           ` : `
             <ul>
-              <li><strong>Core curriculum:</strong> Microcontrollers, Digital and Analog Electronics, Embedded Systems, Signal Processing, CPU Architecture, Cryptography.</li>
+              <li><strong>Major:</strong> Microelectronics and Computer Science, applied to Embedded Systems.</li>
+              <li><strong>Core curriculum:</strong> Microcontrollers, Signal Processing, CPU Architecture, Digital/Analog Electronics, Cryptography.</li>
               <li><strong>Electives:</strong> AI for Production, FPGA and Security, Entrepreneurship.</li>
-              <li><strong>Project:</strong> Robotics hackathon winner (programmed using STM32 microcontroller).</li>
             </ul>
           `} />
 				</div>
 			</div>
 
       <div class="timeline-item" style="--dot-color: var(--muted);">
-				<div class="timeline-date">2022 - 2024</div>
+				<div class="timeline-date" set:html={lang === 'fr' ? 'Sep. 2022 -<br>Juin 2024' : 'Sep. 2022 -<br>Jun. 2024'}></div>
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
@@ -238,7 +237,7 @@ const t = makeT(lang);
 			</div>
 
       <div class="timeline-item" style="--dot-color: var(--muted);">
-				<div class="timeline-date">2019 - 2022</div>
+				<div class="timeline-date" set:html={lang === 'fr' ? 'Sep. 2019 -<br>Juin 2022' : 'Sep. 2019 -<br>Jun. 2022'}></div>
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
@@ -267,7 +266,7 @@ const t = makeT(lang);
 					{lang === 'fr' ? "Travaillons ensemble !" : "Let's Work Together"}
 				</h2>
 				<p style="color: var(--muted); font-size: 0.95rem; margin-bottom: 30px; line-height: 1.6;">
-					{lang === 'fr' ? "À la recherche d'un stage de fin d'études en tant que Product Owner ou en développement hardware/software. Écrivez-moi directement !" : "Looking for an end-of-studies internship as a Product Owner or in hardware/software development. Drop me a line!"}
+					{lang === 'fr' ? "À la recherche d'un stage de fin d'études (5+ mois à partir d'avril 2027) en tant que Product Owner ou en développement hardware/software. Écrivez-moi directement !" : "Looking for a 5+ month end-of-studies internship starting in April 2027 as a Product Owner or in hardware/software development. Drop me a line!"}
 				</p>
 
 				<div style="display: flex; flex-direction: column; gap: 20px;">
@@ -336,17 +335,12 @@ const t = makeT(lang);
 	</section>
 
   <style>
-    /* Nouveau design des icônes de contact (Noir & Blanc simple) */
     .contact-icon-box {
       width: 42px; height: 42px; border-radius: 8px; background: transparent;
       border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center;
       color: var(--text); flex-shrink: 0; transition: border-color 0.2s, background 0.2s, color 0.2s;
     }
-    .contact-icon-box:hover {
-      border-color: var(--text);
-      background: var(--text);
-      color: var(--bg);
-    }
+    .contact-icon-box:hover { border-color: var(--text); background: var(--text); color: var(--bg); }
 
     .contact-input, .contact-textarea {
       width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-strong);
@@ -363,9 +357,6 @@ const t = makeT(lang);
 
   <style is:global>
     body.theme-light .logo-phinia { background-color: var(--ink); }
-    .mission-list, .impact-card ul, .accordion-body-inner ul {
-      padding-left: 24px;
-      margin-left: 4px;
-    }
+    .mission-list, .impact-card ul, .accordion-body-inner ul { padding-left: 24px; margin-left: 4px; }
   </style>
 </Layout>
