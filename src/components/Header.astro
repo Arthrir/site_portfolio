@@ -121,6 +121,10 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
   .cv-trigger .chev { transition: transform 0.2s ease; }
   .cv-menu:hover .chev { transform: translateY(2px); }
   .cv-dropdown { opacity: 0; visibility: hidden; transform: translateY(-6px); position: absolute; top: calc(100% + 8px); right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px; min-width: 170px; z-index: 10; box-shadow: var(--shadow-lift); }
+  
+  /* LE PONT INVISIBLE EST ICI 👇 */
+  .cv-dropdown::before { content: ''; position: absolute; top: -12px; left: 0; right: 0; height: 12px; }
+  
   .cv-menu:hover .cv-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
   .cv-dropdown a { display: block; padding: 8px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 500; text-decoration: none; }
   .cv-dropdown a:hover { background: var(--accent-soft); }
