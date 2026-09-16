@@ -116,19 +116,21 @@ const others = [
       <h2 class="stacked-main">{lang === 'fr' ? 'Engagements étudiants' : 'Student Engagements'}</h2>
     </div>
 
-    <div class="section-subhead" style="margin-top: 0;">{lang === 'fr' ? 'Temps forts' : 'Highlights'}</div>
+    <!-- Titre modifié et espacé -->
+    <div class="section-subhead" style="margin-top: 0; margin-bottom: 24px; font-size: 0.95rem;">{lang === 'fr' ? 'Engagements les plus marquants' : 'Key Student Engagements'}</div>
     
-    <!-- Blocs "Temps forts" avec cartes impactantes -->
     <div style="display: flex; flex-direction: column; gap: 16px;">
       {featured.map(item => (
         <div class="impact-card" style={`--dot-color: ${item.color};`}>
-          <span class="impact-tag">{item.date}</span>
+          <!-- Date alignée avec le titre grâce à item-head modifiée -->
           <div class="item-head" style="margin-bottom: 12px;">
             <img class="org-logo force-white-bg" src={item.logo} alt="" />
             <div>
               <h3 class="role-name">{item.title}</h3>
               <span class="org-name-sub" style={`color: ${item.color};`}>{item.role}</span>
             </div>
+            <!-- Date alignée tout à droite -->
+            <div style="margin-left: auto; font-size: 0.85rem; font-weight: 600; color: var(--muted); text-align: right;">{item.date}</div>
           </div>
           <div style="font-size: 0.96rem; line-height: 1.7; max-width: 740px;" set:html={item.desc} />
           <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
@@ -138,7 +140,7 @@ const others = [
       ))}
     </div>
 
-    <div class="section-subhead">{lang === 'fr' ? 'Autres missions' : 'Other Roles'}</div>
+    <div class="section-subhead" style="margin-top: 48px; margin-bottom: 24px; font-size: 0.95rem;">{lang === 'fr' ? 'Autres missions' : 'Other Roles'}</div>
     <div>
       {others.map(item => (
         <details class="accordion-item">
@@ -164,7 +166,6 @@ const others = [
   </section>
   
   <style>
-    /* Forcer l'alignement horizontal propre : Logo à gauche, Titre à droite */
     .item-head {
       display: flex;
       align-items: center;
@@ -179,8 +180,6 @@ const others = [
       padding: 4px;
       flex-shrink: 0;
     }
-
-    /* Carte impact spécifique pour les temps forts */
     .impact-card {
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -189,15 +188,6 @@ const others = [
       position: relative;
       border-left: 3px solid var(--dot-color, var(--accent));
       box-shadow: var(--shadow);
-    }
-    .impact-tag {
-      position: absolute;
-      top: 26px;
-      right: 28px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      color: var(--dot-color, var(--accent));
     }
   </style>
 </Layout>

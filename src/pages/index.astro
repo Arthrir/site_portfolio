@@ -20,7 +20,7 @@ const t = makeT(lang);
 					Arthur Doradoux
 				</h1>
 				<p style="font-size: 1.1rem; color: var(--muted); margin-bottom: 32px; max-width: 520px;">
-					{lang === 'fr' ? "Étudiant en microélectronique et en informatique, passionné par la technologie et les défis techniques." : "Microelectronics and Computer Science student, passionate about tackling technological challenges."}
+					{lang === 'fr' ? "Étudiant en microélectronique et en informatique, passionné par les innovations technologiques." : "Microelectronics and Computer Science student, passionate about technology and innovation."}
 				</p>
 
 				<div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
@@ -45,7 +45,7 @@ const t = makeT(lang);
 		<div class="card" style="padding: 36px;">
 			<div style="font-size: 1.02rem; line-height: 1.8; display: flex; flex-direction: column; gap: 20px;">
 				<p>{lang === 'fr' ? "Actuellement élève ingénieur à Mines Saint-Étienne (ISMIN), je construis un profil à la croisée de l’ingénierie, du design et du management. Ma formation m’a permis d’acquérir une solide rigueur technique à travers des projets en systèmes embarqués, hardware, architecture des processeurs et intelligence artificielle." : "Currently an engineering student at Mines Saint-Étienne (ISMIN), I am building a profile at the intersection of engineering, design and management."}</p>
-				<p>{lang === 'fr' ? "Au fil de mes expériences, j’ai compris que ce qui me motive ne se limite pas à la conception technique d’un système. Ce qui m’intéresse, c’est de comprendre pourquoi une technologie est développée, pour qui elle crée de la valeur, et comment la transformer en un produit utile et pertinent." : "Over time, I realized that what drives me most is not only the technical design of a system, but why a technology is developed and for whom it creates value."}</p>
+				<p>{lang === 'fr' ? "Au fil de mes expériences associatives et professionnelles, j’ai compris que ce qui me motive ne se limite pas à la conception technique d’un système. Ce qui m’intéresse, c’est de comprendre pourquoi une technologie est développée, pour qui elle crée de la valeur, et comment la transformer en un produit utile et pertinent." : "Over time, I realized that what drives me most is not only the technical design of a system, but why a technology is developed and for whom it creates value."}</p>
 				<p>{lang === 'fr' ? "À terme, je souhaite évoluer vers des fonctions de Product Owner / Product Manager, au croisement de la technique, de l’expérience utilisateur et de la stratégie." : "In the long term, I aim to grow into Product Owner / Product Manager roles."}</p>
 				<div style="border-left: 2px solid var(--pop-fuchsia); padding-left: 16px; margin: 6px 0; font-style: italic; color: var(--text);">
 					{lang === 'fr' ? "Mon objectif est de développer une véritable triple compétence entre ingénierie, design et management pour concevoir et piloter des produits technologiques innovants." : "My goal is to build a genuine triple competency across engineering, design and management."}
@@ -69,10 +69,9 @@ const t = makeT(lang);
 						<img class="org-logo" src="/logo/advantest.png" alt="Advantest" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? 'Stage Ingénieur R&D Test Cell Integration' : 'R&D Test Cell Integration Engineering Intern'}</h3>
-              <span class="org-name-sub" style="color: var(--pop-blue);">Advantest</span>
+              <span class="org-name-sub" style="color: var(--pop-blue);">Advantest <span style="color: var(--muted); font-weight: 500; text-transform: none;">— {lang === 'fr' ? 'Böblingen, Allemagne' : 'Böblingen, Germany'}</span></span>
 						</div>
 					</div>
-					<p class="muted">{lang === 'fr' ? 'Böblingen, Allemagne' : 'Böblingen, Germany'}</p>
 					<div class="mission-list" style="--dot-color: var(--pop-blue);" set:html={lang === 'fr' ? `
             <ul>
               <li>Tests de PCBs de calibration destinés au test de puces IA/GPU.</li>
@@ -103,10 +102,9 @@ const t = makeT(lang);
 						<img class="org-logo logo-phinia" src="/logo/phinia.png" alt="PHINIA Delphi" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? 'Stage Ingénieur Systèmes Hardware' : 'Hardware Systems Engineering Intern'}</h3>
-              <span class="org-name-sub" style="color: var(--pop-blue);">PHINIA Delphi France</span>
+              <span class="org-name-sub" style="color: var(--pop-blue);">PHINIA Delphi France <span style="color: var(--muted); font-weight: 500; text-transform: none;">— Blois, France</span></span>
 						</div>
 					</div>
-					<p class="muted">Blois, France</p>
 					<div class="mission-list" style="--dot-color: var(--pop-blue);" set:html={lang === 'fr' ? `
             <ul>
               <li>Configuration et tests de systèmes d'injection (plateforme ECU 24V).</li>
@@ -148,11 +146,9 @@ const t = makeT(lang);
 						<img class="org-logo" src="/logo/emlyon.png" alt="emlyon" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? 'Double Diplôme (Accepté)' : 'Double Degree (Accepted)'}</h3>
-							<span class="org-name-sub" style="color: var(--school-emlyon);">emlyon business school</span>
+							<span class="org-name-sub" style="color: var(--school-emlyon);">emlyon business school <span style="color: var(--muted); font-weight: 500; text-transform: none;">— Lyon, France</span></span>
 						</div>
 					</div>
-					<p class="muted">Lyon, France</p>
-					
 					<div class="mission-list" style="--dot-color: var(--school-emlyon);" set:html={lang === 'fr' ? `
 						<ul>
 							<li><strong>Programme :</strong> Double Diplôme "Business Mediation".</li>
@@ -181,10 +177,9 @@ const t = makeT(lang);
 						<img class="org-logo force-white-bg" src="/logo/polimi.png" alt="Politecnico di Milano" />
 						<div>
 							<h3 class="role-name">Master in Design & Engineering</h3>
-              <span class="org-name-sub" style="color: var(--school-polimi);">Politecnico di Milano</span>
+              <span class="org-name-sub" style="color: var(--school-polimi);">Politecnico di Milano <span style="color: var(--muted); font-weight: 500; text-transform: none;">— Milan, Italie</span></span>
 						</div>
 					</div>
-					<p class="muted">Milan, Italie</p>
           <div class="mission-list" style="--dot-color: var(--school-polimi);" set:html={lang === 'fr' ? `
             <ul>
               <li><strong>Cours :</strong> Product Design Studio 1, UX Design, Design and Manufacturing, Virtual and Physical Prototyping.</li>
@@ -207,10 +202,9 @@ const t = makeT(lang);
 						<img class="org-logo force-white-bg" src="/logo/emse.png" alt="Mines Saint-Étienne" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? "Diplôme d'ingénieur (Cursus ISMIN)" : "Engineering Degree (ISMIN Program)"}</h3>
-              <span class="org-name-sub" style="color: var(--school-emse);">Mines de Saint-Étienne</span>
+              <span class="org-name-sub" style="color: var(--school-emse);">Mines de Saint-Étienne <span style="color: var(--muted); font-weight: 500; text-transform: none;">— Gardanne, France</span></span>
 						</div>
 					</div>
-					<p class="muted">Gardanne, France</p>
           <div class="mission-list" style="--dot-color: var(--school-emse);" set:html={lang === 'fr' ? `
             <ul>
               <li><strong>Tronc commun :</strong> Microcontrôleurs, Électronique Numérique/Analogique, Systèmes Embarqués, Traitement du Signal, Architecture CPU, Cryptographie.</li>
@@ -235,11 +229,10 @@ const t = makeT(lang);
             <img class="org-logo" src="/logo/pothier.png" alt="Lycée Pothier" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? "Classes Préparatoires (MPSI / MP*)" : "Intensive Preparatory Classes (CPGE)"}</h3>
-              <span class="org-name-sub" style="color: var(--muted);">Lycée Pothier</span>
+              <span class="org-name-sub" style="color: var(--muted);">Lycée Pothier <span style="color: var(--muted); font-weight: 500; text-transform: none;">— Orléans, France</span></span>
 						</div>
 					</div>
-					<p class="muted">Orléans, France</p>
-          <p>{lang === 'fr' ? "Spécialités : Mathématiques, Physique, Informatique." : "Mathematics, Physics, Computer Science."}</p>
+          <p style="margin-top: 10px;">{lang === 'fr' ? "Spécialités : Mathématiques, Physique, Informatique." : "Mathematics, Physics, Computer Science."}</p>
 				</div>
 			</div>
 
@@ -251,25 +244,25 @@ const t = makeT(lang);
             <img class="org-logo" src="/logo/nda.png" alt="Lycée Notre-Dame des Aydes" />
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? "Baccalauréat Mention Bien (Section Européenne)" : "High School Diploma with Honors"}</h3>
-              <span class="org-name-sub" style="color: var(--muted);">Lycée Notre-Dame des Aydes</span>
+              <span class="org-name-sub" style="color: var(--muted);">Lycée Notre-Dame des Aydes <span style="color: var(--muted); font-weight: 500; text-transform: none;">— Blois, France</span></span>
 						</div>
 					</div>
-					<p class="muted">Blois, France</p>
-          <p>{lang === 'fr' ? "Spécialités : Mathématiques, Physique-Chimie, HGGSP. Option Maths Expertes." : "Mathematics, Physics, Chemistry, Geopolitics, Advanced Mathematics option, European Track."}</p>
+          <p style="margin-top: 10px;">{lang === 'fr' ? "Spécialités : Mathématiques, Physique-Chimie, HGGSP. Option Maths Expertes." : "Mathematics, Physics, Chemistry, Geopolitics, Advanced Mathematics option, European Track."}</p>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- NOUVELLE SECTION CONTACT EN BAS DE PAGE -->
 	<section id="contact" style="padding: 60px 0 40px; max-width: 1000px; margin: 0 auto;">
+    <!-- Titre de la section de contact -->
+    <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); margin-bottom: 40px; text-align: center;">
+      <div class="stacked-bg" style="left: 50%; transform: translateX(-50%); width: 100%;">Contact</div>
+      <h2 class="stacked-main" style="margin-left: 0;">{lang === 'fr' ? 'Me contacter' : 'Get in Touch'}</h2>
+    </div>
+
 		<div class="card contact-wrapper" style="padding: 40px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: center;">
 			
-			<!-- Infos à gauche -->
 			<div>
-				<span style="font-size: 0.8rem; font-weight: 700; color: var(--pop-blue); text-transform: uppercase; letter-spacing: 0.05em;">
-					{lang === 'fr' ? "Contact" : "Get In Touch"}
-				</span>
 				<h2 style="font-family: var(--font-serif); font-size: 2.2rem; font-weight: 600; margin: 10px 0 20px; line-height: 1.1;">
 					{lang === 'fr' ? "Travaillons ensemble !" : "Let's Work Together"}
 				</h2>
@@ -304,10 +297,11 @@ const t = makeT(lang);
 				</div>
 			</div>
 
-			<!-- Formulaire à droite -->
+      <!-- Le Formulaire Web3Forms -->
 			<form action="https://api.web3forms.com/submit" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
-				<!-- Remplace par ta clé Web3Forms gratuite si tu veux recevoir les mails directement -->
-				<input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY" />
+				<!-- Remplace cette valeur par ta clé d'accès Web3Forms -->
+				<input type="hidden" name="access_key" value="87fde94b-7057-4663-9e22-63385526c25a" />
+        <input type="hidden" name="subject" value="Nouveau message depuis le portfolio !" />
 				
 				<div>
 					<label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">{lang === 'fr' ? "Nom" : "Name"}</label>
@@ -353,5 +347,10 @@ const t = makeT(lang);
 
   <style is:global>
     body.theme-light .logo-phinia { background-color: var(--ink); }
+    /* Décalage propre des listes à puces pour ne pas coller aux bords */
+    .mission-list, .impact-card ul, .accordion-body-inner ul {
+      padding-left: 24px;
+      margin-left: 4px;
+    }
   </style>
 </Layout>

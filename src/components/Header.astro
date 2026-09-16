@@ -4,6 +4,10 @@ import { makeT, type Lang } from '../i18n/translations';
 interface Props { lang: Lang; }
 const { lang } = Astro.props;
 const t = makeT(lang);
+
+// Logique de switch : on affiche la langue vers laquelle on va aller
+const targetLang = lang === 'fr' ? 'EN' : 'FR';
+const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
 ---
 <header class="site-header">
   <div class="header-inner">
@@ -24,22 +28,24 @@ const t = makeT(lang);
 
     <div class="header-controls">
       <div class="cv-menu">
-        <button class="cv-trigger" aria-haspopup="true">{t('common.resume')} <span class="chev">↓</span></button>
+        <button class="cv-trigger" aria-haspopup="true">
+          {t('common.resume')} 
+          <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
         <div class="cv-dropdown">
           <a href="/assets/CV-Arthur_DORADOUX-ENG.pdf" download>{t('common.resumeEn')}</a>
           <a href="/assets/CV-Arthur_DORADOUX-FR.pdf" download>{t('common.resumeFr')}</a>
         </div>
       </div>
 
-      <!-- Theme Toggle épuré (Style ancien site) -->
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" type="button">
         <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
 
-      <!-- Bouton Langue avec classe dynamique pour le drapeau -->
-      <button class={`lang-toggle ${lang === 'fr' ? 'is-fr' : 'is-en'}`} id="langToggle" data-current={lang}>
-        {lang === 'fr' ? 'FR' : 'EN'}
+      <!-- Bouton Langue affiche la CIBLE et le drapeau CIBLE -->
+      <button class={`lang-toggle ${targetFlag}`} id="langToggle" data-current={lang}>
+        {targetLang}
       </button>
 
       <button class="mobile-toggle" id="mobileToggle" aria-label="Menu principal">
@@ -54,7 +60,8 @@ const t = makeT(lang);
   body.theme-dark .site-header { background: rgba(12, 13, 15, 0.78); }
   .header-inner { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
   
-  .nav-logo { height: 22px; width: auto; object-fit: contain; }
+  /* Logo agrandi */
+  .nav-logo { height: 28px; width: auto; object-fit: contain; }
   .logo-dark { display: none; }
   body.theme-dark .logo-light { display: none; }
   body.theme-dark .logo-dark { display: block; }
@@ -69,7 +76,6 @@ const t = makeT(lang);
 
   .header-controls { display: flex; gap: 12px; align-items: center; }
 
-  /* Theme Toggle épuré */
   .theme-toggle {
     background: transparent; border: none; color: var(--text); cursor: pointer; 
     width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; 
@@ -82,31 +88,27 @@ const t = makeT(lang);
   body.theme-dark .icon-sun { opacity: 0; transform: scale(0.5) rotate(45deg); }
   body.theme-dark .icon-moon { opacity: 1; transform: scale(1) rotate(0); }
 
-  /* Bouton Langue Dynamique */
   .lang-toggle {
     background: var(--card-bg); color: var(--text); cursor: pointer; font-weight: 600; font-size: 0.8rem; 
     width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; 
-    border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 2px solid transparent;
   }
-  .lang-toggle.is-en {
-    border: 1px solid var(--border-strong);
-  }
-  .lang-toggle.is-fr {
-    border: 2px solid transparent;
-    background-image: linear-gradient(var(--card-bg), var(--card-bg)), 
-                      linear-gradient(90deg, #0059b3 0%, #0059b3 33.3%, #ffffff 33.3%, #ffffff 66.6%, #cc0000 66.6%, #cc0000 100%);
+  .lang-toggle.en-flag {
+    background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(90deg, #012169 50%, #C8102E 50%);
     background-origin: border-box; background-clip: padding-box, border-box;
   }
-  body.theme-dark .lang-toggle.is-fr {
-    background-image: linear-gradient(var(--card-bg), var(--card-bg)), 
-                      linear-gradient(90deg, #007aff 0%, #007aff 33.3%, #f0f0f0 33.3%, #f0f0f0 66.6%, #ff4040 66.6%, #ff4040 100%);
+  .lang-toggle.fr-flag {
+    background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(90deg, #0055A4 33%, #fff 33%, #fff 66%, #EF4135 66%);
+    background-origin: border-box; background-clip: padding-box, border-box;
   }
   .lang-toggle:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(15, 23, 42, 0.1); }
 
   .cv-menu { position: relative; }
-  .cv-trigger { display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--bg); border: 1px solid var(--ink); padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: transform 0.2s ease; }
+  .cv-trigger { display: inline-flex; align-items: center; gap: 4px; background: var(--ink); color: var(--bg); border: 1px solid var(--ink); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: transform 0.2s ease, background 0.2s; }
   .cv-trigger:hover { background: transparent; color: var(--text); }
-  .cv-dropdown { opacity: 0; visibility: hidden; transform: translateY(-6px); position: absolute; top: calc(100% + 8px); right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px; min-width: 170px; z-index: 10; }
+  .cv-trigger .chev { transition: transform 0.2s ease; }
+  .cv-menu:hover .chev { transform: translateY(2px); }
+  .cv-dropdown { opacity: 0; visibility: hidden; transform: translateY(-6px); position: absolute; top: calc(100% + 8px); right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px; min-width: 170px; z-index: 10; box-shadow: var(--shadow-lift); }
   .cv-menu:hover .cv-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
   .cv-dropdown a { display: block; padding: 8px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 500; text-decoration: none; }
   .cv-dropdown a:hover { background: var(--accent-soft); }
