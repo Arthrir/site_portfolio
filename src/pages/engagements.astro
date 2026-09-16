@@ -7,7 +7,7 @@ const t = makeT(lang);
 
 const featured = [
   {
-    logo: "/logo/emse.png", color: "var(--school-emse)", date: lang === 'fr' ? "Fév 2026 — Aujourd'hui" : "Feb 2026 — Pres.",
+    logo: "/logo/emse.png", color: "var(--school-emse)", date: lang === 'fr' ? "Fév 2026 - Aujourd'hui" : "Feb 2026 - Pres.",
     role: "ISMIN & ICM", title: lang === 'fr' ? "Élu au comité de l'enseignement" : "Elected Member of the Academic Committee",
     desc: lang === 'fr' ? `
       <ul>
@@ -23,7 +23,7 @@ const featured = [
     tags: ["Communication Institutionnelle", "Médiation", "Gestion des Parties Prenantes"]
   },
   {
-    logo: "/logo/minitel.png", color: "var(--accent-bright)", date: lang === 'fr' ? "Mars 2025 — Mars 2026" : "Mar 2025 — Mar 2026",
+    logo: "/logo/minitel.png", color: "var(--accent-bright)", date: lang === 'fr' ? "Mars 2025 - Mars 2026" : "Mar 2025 - Mar 2026",
     role: "MINITEL", title: lang === 'fr' ? "Président" : "President",
     desc: lang === 'fr' ? `
       <p style="margin-bottom:8px">Association étudiante d'informatique, réseau et gaming. Direction de l'association (16 membres) et gestion des projets majeurs :</p>
@@ -48,7 +48,7 @@ const featured = [
 
 const others = [
   { 
-    logo: "/logo/emse.png", date: lang === 'fr' ? "Sep 2024 — Aujourd'hui" : "Sep 2024 — Pres.", role: "1A & 2A", 
+    logo: "/logo/emse.png", date: lang === 'fr' ? "Sep 2024 - Aujourd'hui" : "Sep 2024 - Pres.", role: "1A & 2A", 
     title: lang === 'fr' ? "Représentant de Promotion" : "Class Representative", 
     desc: lang === 'fr' ? `
       <ul>
@@ -65,7 +65,7 @@ const others = [
     ` 
   },
   { 
-    logo: "/logo/emse.png", date: lang === 'fr' ? "Janvier 2025 — Aujourd'hui" : "Jan 2025 — Pres.", role: "Communication", 
+    logo: "/logo/emse.png", date: lang === 'fr' ? "Janvier 2025 - Aujourd'hui" : "Jan 2025 - Pres.", role: "Communication", 
     title: lang === 'fr' ? "Ambassadeur Communication" : "School Ambassador", 
     desc: lang === 'fr' ? `
       <ul>
@@ -87,22 +87,22 @@ const others = [
     desc: lang === 'fr' ? "Représentation de la promotion auprès du réseau des anciens élèves pour assurer la communication, organiser des événements de networking et faciliter la collaboration professionnelle." : "Representation of the class within the alumni network to ensure communication, organize networking events and facilitate professional collaboration." 
   },
   { 
-    logo: "/logo/bde.jpeg", date: lang === 'fr' ? "Avril 2025 — Mars 2026" : "Apr 2025 — Mar 2026", role: "BDE", 
+    logo: "/logo/bde.jpeg", date: lang === 'fr' ? "Avril 2025 - Mars 2026" : "Apr 2025 - Mar 2026", role: "BDE", 
     title: lang === 'fr' ? "Responsable Merchandising et Uniformes" : "Merchandising and Uniforms Manager", 
     desc: lang === 'fr' ? "Gestion des commandes et de la distribution des uniformes et produits dérivés pour les élèves de l'école." : "Management of orders and distribution of uniforms and merchandise for the school’s students." 
   },
   { 
-    logo: "/logo/fei.jpeg", date: lang === 'fr' ? "Avril 2025 — Nov 2025" : "Apr 2025 — Nov 2025", role: "FEI", 
+    logo: "/logo/fei.jpeg", date: lang === 'fr' ? "Avril 2025 - Nov 2025" : "Apr 2025 - Nov 2025", role: "FEI", 
     title: lang === 'fr' ? "Chargé Logistique" : "Logistics Officer", 
     desc: lang === 'fr' ? "Soutien à l'accueil et au guidage des entreprises. Gestion du bon déroulement des conférences et résolution des problèmes logistiques sur site." : "Support for welcoming and guiding companies. Ensuring the smooth running of conferences and solving on-site logistical issues." 
   },
   { 
-    logo: "/logo/comif.jpeg", date: lang === 'fr' ? "Mars 2025 — Mars 2026" : "Mar 2025 — Mar 2026", role: "COMIF", 
+    logo: "/logo/comif.jpeg", date: lang === 'fr' ? "Mars 2025 - Mars 2026" : "Mar 2025 - Mar 2026", role: "COMIF", 
     title: lang === 'fr' ? "Serveur au Bar Étudiant" : "Student Bar Staff", 
     desc: lang === 'fr' ? "Service quotidien de boissons et de collations pendant les pauses et les soirées associatives, incluant la gestion des transactions et le service client." : "Daily service of drinks and snacks during breaks and student events, handling transactions and customer service." 
   },
   { 
-    logo: "/logo/solidar-ismin.jpg", date: lang === 'fr' ? "Mars 2025 — Mars 2026" : "Mar 2025 — Mar 2026", role: "Solidar'ISMIN", 
+    logo: "/logo/solidar-ismin.jpg", date: lang === 'fr' ? "Mars 2025 - Mars 2026" : "Mar 2025 - Mar 2026", role: "Solidar'ISMIN", 
     title: lang === 'fr' ? "Pôle Prévention HVSSD" : "HVSSD Prevention Team", 
     desc: lang === 'fr' ? "Formation de tous les bureaux associatifs du campus aux enjeux de Harcèlement et Violences (HVSSD) à travers une formation en réalité virtuelle." : "Active participation in training sessions and development of awareness campaigns against harassment and violence." 
   }
@@ -137,12 +137,10 @@ const others = [
       ))}
     </div>
 
-    <!-- Le titre est bien passé à "Autres rôles" -->
     <div class="section-subhead" style="margin-top: 48px; margin-bottom: 24px; font-size: 0.95rem;">{lang === 'fr' ? 'Autres rôles' : 'Other Roles'}</div>
     <div>
       {others.map(item => (
         <details class="accordion-item">
-          <!-- Ajout d'une classe spécifique pour l'alignement de l'accordéon -->
           <summary class="accordion-summary-align">
             <span class="item-head">
               <img class="org-logo force-white-bg" src={item.logo} alt="" />
@@ -165,49 +163,14 @@ const others = [
   </section>
   
   <style>
-    /* Force l'alignement horizontal propre pour tout */
-    .item-head {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    
-    /* Force l'alignement vertical parfait dans l'accordéon "Autres rôles" */
-    .accordion-summary-align {
-      display: flex;
-      justify-content: space-between;
-      align-items: center; /* Ligne magique qui aligne la date au centre de la ligne avec le logo et le titre */
-    }
-
-    .org-logo {
-      width: 38px !important;
-      height: 38px !important;
-      object-fit: contain;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      padding: 4px;
-      flex-shrink: 0;
-    }
-    .impact-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--card-bg);
-      padding: 26px 28px;
-      position: relative;
-      border-left: 3px solid var(--dot-color, var(--accent));
-      box-shadow: var(--shadow);
-    }
+    .item-head { display: flex; align-items: center; gap: 14px; }
+    .accordion-summary-align { display: flex; justify-content: space-between; align-items: center; }
+    .org-logo { width: 38px !important; height: 38px !important; object-fit: contain; border-radius: 8px; border: 1px solid var(--border); padding: 4px; flex-shrink: 0; }
+    .impact-card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--card-bg); padding: 26px 28px; position: relative; border-left: 3px solid var(--dot-color, var(--accent)); box-shadow: var(--shadow); }
   </style>
 
   <style is:global>
-    /* Décalage propre des listes à puces pour aérer */
-    .impact-card ul, .accordion-body-inner ul {
-      padding-left: 24px;
-      margin-left: 4px;
-      margin-top: 8px;
-    }
-    .impact-card li, .accordion-body-inner li {
-      margin-bottom: 6px;
-    }
+    .impact-card ul, .accordion-body-inner ul { padding-left: 24px; margin-left: 4px; margin-top: 8px; }
+    .impact-card li, .accordion-body-inner li { margin-bottom: 6px; }
   </style>
 </Layout>
