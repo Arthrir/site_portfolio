@@ -263,6 +263,57 @@ const t = makeT(lang);
 		</div>
 	</section>
 
+	<!-- ============================================================================== -->
+	<!-- SECTION RECOMMANDATIONS / TÉMOIGNAGES (PRÉPARÉE ET MASQUÉE - PRÊTE À ACTIVER) -->
+	<!-- Pour l'activer, retirer simplement style="display: none;" ci-dessous          -->
+	<!-- ============================================================================== -->
+	<section id="recommendations" style="display: none; padding: 60px 0 20px; max-width: 1000px; margin: 0 auto;">
+		<div class="stacked-title-wrapper" style="--stacked-color: var(--pop-purple); --dot-color: var(--pop-purple); margin-bottom: 40px; text-align: center;">
+			<div class="stacked-bg" style="left: 50%; transform: translateX(-50%); width: 100%;">{lang === 'fr' ? 'Témoignages' : 'Endorsements'}</div>
+			<h2 class="stacked-main" style="margin-left: 0;">{lang === 'fr' ? 'Recommandations' : 'Recommendations'}</h2>
+		</div>
+
+		<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+			<!-- Carte 1 : Tuteur de stage (Advantest / PHINIA) -->
+			<div class="card" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between;">
+				<div>
+					<div style="font-size: 1.8rem; color: var(--pop-blue); line-height: 1; margin-bottom: 12px; font-family: var(--font-serif);">“</div>
+					<p style="font-size: 0.95rem; line-height: 1.6; color: var(--text); font-style: italic; margin-bottom: 20px;">
+						{lang === 'fr' 
+							? "Arthur a démontré une rigueur technique exemplaire et une grande autonomie dans la caractérisation des systèmes. Sa capacité à faire le pont entre contraintes hardware et vision globale a été un vrai atout pour l'équipe."
+							: "Arthur showed remarkable technical rigor and strong autonomy in systems characterization. His ability to bridge hardware constraints and overall product vision was a real asset to our team."}
+					</p>
+				</div>
+				<div style="display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border); padding-top: 16px;">
+					<img class="org-logo" src="/logo/advantest.png" alt="Advantest" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px;" />
+					<div>
+						<div style="font-weight: 600; font-size: 0.95rem;">Nom du Tuteur / Mentor</div>
+						<div style="font-size: 0.8rem; color: var(--muted);">Senior Hardware Engineer — Advantest</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Carte 2 : Direction Associative / École -->
+			<div class="card" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between;">
+				<div>
+					<div style="font-size: 1.8rem; color: var(--pop-orange); line-height: 1; margin-bottom: 12px; font-family: var(--font-serif);">“</div>
+					<p style="font-size: 0.95rem; line-height: 1.6; color: var(--text); font-style: italic; margin-bottom: 20px;">
+						{lang === 'fr' 
+							? "En tant que président de Minitel et représentant de promotion, Arthur sait fédérer des équipes, structurer des projets complexes et dialoguer avec des parties prenantes exigeantes."
+							: "As President of Minitel and class representative, Arthur excels at rallying teams, structuring ambitious initiatives, and engaging with demanding stakeholders."}
+					</p>
+				</div>
+				<div style="display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border); padding-top: 16px;">
+					<img class="org-logo force-white-bg" src="/logo/emse.png" alt="Mines Saint-Étienne" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px;" />
+					<div>
+						<div style="font-weight: 600; font-size: 0.95rem;">Responsable Pédagogique / Associatif</div>
+						<div style="font-size: 0.8rem; color: var(--muted);">Mines Saint-Étienne (ISMIN)</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<section id="contact" style="padding: 60px 0 40px; max-width: 1000px; margin: 0 auto;">
     <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); margin-bottom: 40px; text-align: center;">
       <div class="stacked-bg" style="left: 50%; transform: translateX(-50%); width: 100%;">Contact</div>
@@ -307,7 +358,12 @@ const t = makeT(lang);
 						</a>
 						<div>
 							<div style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">EMAIL</div>
-							<a href="mailto:contact@arthurdx.com" style="font-size: 0.95rem; font-weight: 600; text-decoration: underline;">contact@arthurdx.com</a>
+							<div style="display: flex; align-items: center; gap: 8px;">
+								<a href="mailto:contact@arthurdx.com" style="font-size: 0.95rem; font-weight: 600; text-decoration: underline;">contact@arthurdx.com</a>
+								<button type="button" id="copyEmailBtn" class="copy-email-btn" title={lang === 'fr' ? "Copier l'adresse email" : "Copy email address"} aria-label="Copy email">
+									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -368,4 +424,31 @@ const t = makeT(lang);
     body.theme-light .logo-phinia { background-color: var(--ink); }
     .mission-list, .impact-card ul, .accordion-body-inner ul { padding-left: 24px; margin-left: 4px; }
   </style>
+
+	<!-- Mini Toast Notification -->
+	<div id="copyToast" class="copy-toast" role="status" aria-live="polite">
+		<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+		<span>{lang === 'fr' ? "Email copié dans le presse-papier !" : "Email copied to clipboard!"}</span>
+	</div>
+
+	<script is:inline>
+		const copyBtn = document.getElementById('copyEmailBtn');
+		const toast = document.getElementById('copyToast');
+		let toastTimeout;
+		copyBtn?.addEventListener('click', async (e) => {
+			e.preventDefault();
+			try {
+				await navigator.clipboard.writeText('contact@arthurdx.com');
+				if (toast) {
+					clearTimeout(toastTimeout);
+					toast.classList.add('show');
+					toastTimeout = setTimeout(() => {
+						toast.classList.remove('show');
+					}, 2500);
+				}
+			} catch (err) {
+				console.error('Clipboard copy failed:', err);
+			}
+		});
+	</script>
 </Layout>

@@ -177,3 +177,61 @@ body.theme-dark .theme-toggle-pro .toggle-thumb { transform: translateX(20px); }
   background-color: #FFFFFF !important;
   padding: 4px;
 }
+
+/* Bouton Copier Email & Mini Toast */
+.copy-email-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.copy-email-btn:hover {
+  background: var(--accent-soft);
+  color: var(--text);
+  border-color: var(--border-strong);
+  transform: scale(1.08);
+}
+.copy-email-btn:active {
+  transform: scale(0.92);
+}
+
+.copy-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lift);
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(16px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(12px);
+}
+.copy-toast.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.copy-toast svg {
+  color: var(--accent-bright);
+}
+body.theme-light .copy-toast svg {
+  color: var(--pop-blue);
+}
