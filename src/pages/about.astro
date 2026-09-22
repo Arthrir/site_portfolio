@@ -121,17 +121,77 @@ const t = makeT(lang);
         </p>
       </div>
 
-      <!-- Voyages -->
-      <div>
+      <!-- Voyages & Découvertes Interactif -->
+      <div class="travels-interactive-wrap">
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-fuchsia);">Travel</span>
           <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{lang === 'fr' ? "Voyages & Découvertes" : "Travel & Discovery"}</h4>
         </div>
-        <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
+        
+        <p style="font-size: 1rem; line-height: 1.75; color: var(--text); margin-bottom: 20px;">
           {lang === 'fr' ? 
             "L'exploration est pour moi une source d'inspiration constante. De l'Égypte aux États-Unis, en passant par de nombreux pays d'Europe, voyager me permet d'élargir ma perspective. Observer comment différentes cultures interagissent avec le monde et la technologie nourrit directement ma vision de ce que doit être un bon design produit : universel et adapté." : 
             "Exploration is a constant source of inspiration for me. From Egypt to the USA and across many European countries, traveling allows me to broaden my perspective. Observing how different cultures interact with the world and technology directly feeds my vision of what good product design should be: universal and adaptable."}
         </p>
+
+        <!-- Destination Selector Buttons -->
+        <div class="travel-tabs" id="travelTabs" role="tablist" aria-label="Destinations de voyage">
+          <button class="travel-tab active" data-dest="egypt" role="tab" aria-selected="true">
+            <span class="tab-flag">🇪🇬</span>
+            <span class="tab-name">{lang === 'fr' ? 'Égypte' : 'Egypt'}</span>
+          </button>
+          <button class="travel-tab" data-dest="nyc" role="tab" aria-selected="false">
+            <span class="tab-flag">🇺🇸</span>
+            <span class="tab-name">New York</span>
+          </button>
+          <button class="travel-tab" data-dest="spain" role="tab" aria-selected="false">
+            <span class="tab-flag">🇪🇸</span>
+            <span class="tab-name">{lang === 'fr' ? 'Espagne' : 'Spain'}</span>
+          </button>
+          <button class="travel-tab" data-dest="france" role="tab" aria-selected="false">
+            <span class="tab-flag">🇫🇷</span>
+            <span class="tab-name">France</span>
+          </button>
+          <button class="travel-tab" data-dest="italy" role="tab" aria-selected="false">
+            <span class="tab-flag">🇮🇹</span>
+            <span class="tab-name">{lang === 'fr' ? 'Italie' : 'Italy'}</span>
+          </button>
+        </div>
+
+        <!-- Travel Showcase Card -->
+        <div class="travel-card" id="travelCard">
+          <div class="travel-card-header">
+            <div>
+              <span class="travel-pill" id="travelPill">🇪🇬 Le Caire & Louxor</span>
+              <h5 class="travel-title" id="travelTitle">
+                {lang === 'fr' ? "L'épreuve du temps et la monumentalité" : "The test of time and monumentality"}
+              </h5>
+            </div>
+            <span class="travel-tag" id="travelTheme">Architecture & Proportions</span>
+          </div>
+
+          <p class="travel-body" id="travelBody">
+            {lang === 'fr' ? 
+              "Découvrir les temples et pyramides d'Égypte rappelle que les plus grands accomplissements d'ingénierie allient rigueur mathématique, pérennité absolue et intention symbolique. Une véritable leçon de proportions qui inspire la conception d'objets conçus pour durer." : 
+              "Discovering the temples and pyramids of Egypt reminds us that the greatest engineering feats combine mathematical rigor, ultimate durability, and symbolic intention. A true lesson in proportions that inspires designing products built to last."}
+          </p>
+
+          <!-- Photo Slot Placeholder (Prêt pour recevoir les photos d'Arthur) -->
+          <div class="travel-photo-slot">
+            <div class="photo-placeholder-inner">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.6; margin-bottom: 6px;">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+              <span class="photo-placeholder-txt" id="photoPlaceholderTxt">
+                {lang === 'fr' ? "Emplacement photo — Carnet de voyage Égypte" : "Photo spot — Egypt Travel Journal"}
+              </span>
+              <span class="photo-placeholder-sub">
+                {lang === 'fr' ? "(Photos en cours de sélection)" : "(Photos coming soon)"}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -140,5 +200,193 @@ const t = makeT(lang);
   <style>
     body.theme-dark .logo-light { display: none !important; }
     body.theme-dark .logo-dark { display: block !important; }
+
+    /* Interactive Travel Section */
+    .travel-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .travel-tab {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 999px;
+      background: var(--card-bg, #181A20);
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+      color: var(--muted, #8F9198); font-size: 0.88rem; font-weight: 500;
+      cursor: pointer; transition: all 0.15s ease; font-family: inherit;
+    }
+    .travel-tab:hover {
+      color: var(--text); border-color: var(--pop-blue);
+    }
+    .travel-tab.active {
+      background: rgba(91, 157, 255, 0.12);
+      border-color: var(--pop-blue);
+      color: var(--pop-blue); font-weight: 600;
+    }
+    .tab-flag { font-size: 1.05rem; }
+
+    .travel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius, 12px);
+      padding: 22px 24px;
+      box-shadow: var(--shadow, 0 4px 16px rgba(0,0,0,0.06));
+      transition: border-color 0.2s;
+    }
+    .travel-card-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 12px; margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .travel-pill {
+      font-size: 0.75rem; font-weight: 700; color: var(--pop-blue);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      display: block; margin-bottom: 4px;
+    }
+    .travel-title {
+      font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;
+      color: var(--text); line-height: 1.3;
+    }
+    .travel-tag {
+      font-size: 0.75rem; font-weight: 600; color: var(--muted);
+      background: rgba(255, 255, 255, 0.05); padding: 4px 10px; border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .travel-body {
+      font-size: 0.96rem; line-height: 1.7; color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    /* Photo Frame Placeholder */
+    .travel-photo-slot {
+      height: 180px; width: 100%; border-radius: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1.5px dashed var(--border);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .photo-placeholder-inner {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      color: var(--muted); padding: 12px;
+    }
+    .photo-placeholder-txt {
+      font-size: 0.88rem; font-weight: 600; color: var(--text); margin-bottom: 2px;
+    }
+    .photo-placeholder-sub {
+      font-size: 0.75rem; color: var(--muted);
+    }
   </style>
+
+  <script is:inline define:vars={{ lang }}>
+    (function initTravelExplorer() {
+      const travelData = {
+        egypt: {
+          pill: "🇪🇬 Le Caire, Louxor & Pyramides",
+          title: {
+            fr: "L'épreuve du temps et la monumentalité",
+            en: "The test of time and monumentality"
+          },
+          theme: { fr: "Architecture & Proportions", en: "Architecture & Proportions" },
+          body: {
+            fr: "Découvrir les temples et pyramides d'Égypte rappelle que les plus grands accomplissements d'ingénierie allient rigueur mathématique, pérennité absolue et intention symbolique. Une véritable leçon de proportions qui inspire la conception d'objets conçus pour durer.",
+            en: "Discovering the temples and pyramids of Egypt reminds us that the greatest engineering feats combine mathematical rigor, ultimate durability, and symbolic intention. A true lesson in proportions that inspires designing products built to last."
+          },
+          photoTxt: {
+            fr: "Emplacement photo — Carnet de voyage Égypte",
+            en: "Photo spot — Egypt Travel Journal"
+          }
+        },
+        nyc: {
+          pill: "🇺🇸 New York • Manhattan & Brooklyn",
+          title: {
+            fr: "L'énergie brute, la verticalité et le flux urbain",
+            en: "Raw energy, verticality and urban flow"
+          },
+          theme: { fr: "Consumer Tech & Dynamisme", en: "Consumer Tech & Flow" },
+          body: {
+            fr: "New York est une masterclass sur la gestion des flux, la densité et l'adoption technologique au quotidien. Observer l'interaction constante entre les utilisateurs et les produits tech dans un environnement urbain ultra-rapide éclaire les besoins réels en fluidité et en ergonomie.",
+            en: "New York is a masterclass in urban density, user flow, and rapid tech adoption. Seeing how city dwellers seamlessly interact with consumer products in a fast-paced environment reinforces the necessity of zero-friction user experiences."
+          },
+          photoTxt: {
+            fr: "Emplacement photo — New York City Highlights",
+            en: "Photo spot — New York City Highlights"
+          }
+        },
+        spain: {
+          pill: "🇪🇸 Barcelone, Madrid & Méditerranée",
+          title: {
+            fr: "La vitalité méditerranéenne et l'audace des formes",
+            en: "Mediterranean vitality and bold organic forms"
+          },
+          theme: { fr: "Design & Espaces de vie", en: "Design & Living Spaces" },
+          body: {
+            fr: "De l'architecture organique catalane à l'énergie des places madrilènes, l'Espagne inspire par sa capacité à concevoir des espaces et des formes qui invitent au partage. Un rappel que la technologie doit avant tout rapprocher les gens.",
+            en: "From organic Catalan architecture to the vibrancy of Madrid squares, Spain inspires through forms and spaces that foster community. A reminder that product design should always bring people together."
+          },
+          photoTxt: {
+            fr: "Emplacement photo — Espagne & Méditerranée",
+            en: "Photo spot — Spain & Mediterranean"
+          }
+        },
+        france: {
+          pill: "🇫🇷 Lyon, Provence, Paris & Alpes",
+          title: {
+            fr: "Le berceau de la rigueur et de l'excellence industrielle",
+            en: "The roots of industrial rigor and elegance"
+          },
+          theme: { fr: "Savoir-faire & Précision", en: "Craft & Precision" },
+          body: {
+            fr: "De mon cursus ISMIN en Provence à l'écosystème d'innovation lyonnais, explorer la diversité des terroirs et des pôles industriels français m'a inculqué le respect du savoir-faire d'excellence, de la précision des composants et du sens du détail intemporel.",
+            en: "From my engineering studies in Provence to the industrial tech hubs of Lyon and Paris, exploring France instilled in me a deep respect for industrial excellence, component precision, and timeless attention to detail."
+          },
+          photoTxt: {
+            fr: "Emplacement photo — France & Parcours Mines",
+            en: "Photo spot — France & Engineering Journey"
+          }
+        },
+        italy: {
+          pill: "🇮🇹 Milan, Politecnico & Toscane",
+          title: {
+            fr: "Le temple du design industriel et de l'ergonomie",
+            en: "The heart of industrial design and ergonomics"
+          },
+          theme: { fr: "Design & Matériaux", en: "Design & Materials" },
+          body: {
+            fr: "Mon semestre au Politecnico di Milano a été une révélation sur la symbiose entre ingénierie et design. En Italie, chaque matériau, chaque rayon de courbure et chaque texture ont une raison d'être, au service de l'émotion et de l'usage.",
+            en: "My semester at Politecnico di Milano was a defining experience in blending engineering with design thinking. In Italy, every material, curvature radius, and texture serves both emotion and functional usability."
+          },
+          photoTxt: {
+            fr: "Emplacement photo — Milan & Design Semestre",
+            en: "Photo spot — Milan & Design Semester"
+          }
+        }
+      };
+
+      const tabs = document.querySelectorAll('.travel-tab');
+      const pillEl = document.getElementById('travelPill');
+      const titleEl = document.getElementById('travelTitle');
+      const themeEl = document.getElementById('travelTheme');
+      const bodyEl = document.getElementById('travelBody');
+      const photoTxtEl = document.getElementById('photoPlaceholderTxt');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+
+          const key = tab.getAttribute('data-dest');
+          const item = travelData[key];
+          if (!item) return;
+
+          const currentLang = lang === 'en' ? 'en' : 'fr';
+          if (pillEl) pillEl.textContent = item.pill;
+          if (titleEl) titleEl.textContent = item.title[currentLang];
+          if (themeEl) themeEl.textContent = item.theme[currentLang];
+          if (bodyEl) bodyEl.textContent = item.body[currentLang];
+          if (photoTxtEl) photoTxtEl.textContent = item.photoTxt[currentLang];
+        });
+      });
+    })();
+  </script>
 </Layout>
