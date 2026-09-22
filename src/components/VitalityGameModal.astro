@@ -1,0 +1,381 @@
+---
+// src/components/VitalityGameModal.astro
+// Easter Egg Esport / Vitality : Déclenché par le Konami Code (↑ ↑ ↓ ↓ ← → ← → B A) ou en tapant "vitality"
+---
+
+<div id="vitalityModal" class="vit-modal" style="display: none;" role="dialog" aria-modal="true" aria-label="Vitality Aim Lab">
+  <div class="vit-backdrop" id="vitBackdrop"></div>
+
+  <div class="vit-container">
+    <button class="vit-close-btn" id="vitCloseBtn" aria-label="Fermer" title="Fermer (Échap)">✕</button>
+
+    <div class="vit-header">
+      <div class="vit-logo-badge">🐝 TEAM VITALITY x ARTHUR DORADOUX</div>
+      <h2 class="vit-title">V FOR VICTORY — AIM & REFLEX LAB</h2>
+      <p class="vit-sub">Testez votre précision et votre vitesse en 15 secondes. Cliquez sur un maximum de cibles ZywOo-tier !</p>
+    </div>
+
+    <!-- HUD Stats Bar -->
+    <div class="vit-hud">
+      <div class="hud-item">
+        <span class="hud-label">TEMPS RESTANT</span>
+        <span class="hud-val" id="vitTimer">15.0s</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">SCORE</span>
+        <span class="hud-val" id="vitScore">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">PRÉCISION</span>
+        <span class="hud-val" id="vitAccuracy">100%</span>
+      </div>
+    </div>
+
+    <!-- Arène de jeu -->
+    <div class="vit-arena" id="vitArena">
+      <div class="vit-start-overlay" id="vitStartOverlay">
+        <button class="vit-btn-main" id="vitStartGameBtn">LANCER LA PARTIE 🐝</button>
+      </div>
+
+      <div class="vit-end-overlay" id="vitEndOverlay" style="display: none;">
+        <div class="vit-end-rank" id="vitEndRank">🏆 MAJOR CHAMPION</div>
+        <div class="vit-end-stats" id="vitEndStats">Score : 0 • Cibles : 0</div>
+        <button class="vit-btn-main" id="vitRestartBtn">REJOUER</button>
+      </div>
+    </div>
+
+    <div class="vit-footer-info">
+      <span>Meilleur score : <strong id="vitBestScore">0</strong> pts</span>
+      <span class="vit-exit-hint">Appuyez sur <strong>Échap</strong> pour quitter</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .vit-modal {
+    position: fixed; inset: 0; z-index: 10001;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; font-family: monospace, sans-serif;
+  }
+  .vit-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(8, 8, 10, 0.94);
+    backdrop-filter: blur(16px);
+  }
+  .vit-container {
+    position: relative; z-index: 2;
+    background: #0F0F12;
+    border: 2px solid #F2E800;
+    border-radius: 16px;
+    width: 100%; max-width: 720px;
+    padding: 30px;
+    color: #F2E800;
+    box-shadow: 0 0 50px rgba(242, 232, 0, 0.25), 0 20px 60px rgba(0, 0, 0, 0.8);
+    text-align: center;
+  }
+  .vit-close-btn {
+    position: absolute; top: 16px; right: 16px;
+    background: transparent; border: 1px solid rgba(242, 232, 0, 0.4);
+    color: #F2E800; width: 32px; height: 32px; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; font-size: 14px;
+  }
+  .vit-close-btn:hover { background: #F2E800; color: #000; }
+
+  .vit-logo-badge {
+    display: inline-block; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.1em; color: #000; background: #F2E800;
+    padding: 4px 14px; border-radius: 4px; margin-bottom: 10px;
+  }
+  .vit-title {
+    font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 6px; letter-spacing: 0.05em;
+  }
+  .vit-sub {
+    font-size: 0.85rem; color: #a0a2ab; margin-bottom: 20px; font-family: var(--font-sans, system-ui, sans-serif);
+  }
+
+  /* HUD */
+  .vit-hud {
+    display: flex; justify-content: space-around;
+    background: rgba(242, 232, 0, 0.06);
+    border: 1px solid rgba(242, 232, 0, 0.2);
+    border-radius: 8px; padding: 10px 16px; margin-bottom: 16px;
+  }
+  .hud-item { display: flex; flex-direction: column; gap: 2px; }
+  .hud-label { font-size: 0.7rem; color: #888; letter-spacing: 0.08em; }
+  .hud-val { font-size: 1.4rem; font-weight: 800; color: #fff; }
+
+  /* Arène */
+  .vit-arena {
+    position: relative;
+    width: 100%; height: 320px;
+    background: #09090b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: crosshair;
+    user-select: none;
+    background-image: radial-gradient(rgba(242, 232, 0, 0.15) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Cible */
+  .vit-target {
+    position: absolute;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #F2E800 30%, #ffd700 70%);
+    border: 3px solid #fff;
+    box-shadow: 0 0 20px #F2E800, inset 0 0 8px rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transform: translate(-50%, -50%) scale(0);
+    animation: targetPop 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes targetPop {
+    0% { transform: translate(-50%, -50%) scale(0); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+  }
+  .vit-target::after {
+    content: '🐝'; font-size: 18px; line-height: 1;
+  }
+
+  .vit-start-overlay, .vit-end-overlay {
+    position: absolute; inset: 0;
+    background: rgba(15, 15, 18, 0.85);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 14px; z-index: 5;
+  }
+  .vit-btn-main {
+    background: #F2E800; color: #000; border: none;
+    padding: 14px 32px; border-radius: 6px; font-weight: 800; font-size: 1rem;
+    cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; font-family: monospace;
+  }
+  .vit-btn-main:hover {
+    transform: scale(1.05); box-shadow: 0 0 25px rgba(242, 232, 0, 0.6);
+  }
+
+  .vit-end-rank { font-size: 1.4rem; font-weight: 800; color: #F2E800; }
+  .vit-end-stats { font-size: 0.95rem; color: #fff; }
+
+  .vit-footer-info {
+    margin-top: 16px; display: flex; justify-content: space-between;
+    font-size: 0.8rem; color: #777;
+  }
+  .vit-footer-info strong { color: #F2E800; }
+  .vit-exit-hint strong { color: #fff; }
+</style>
+
+<script is:inline>
+  (function initVitalityGame() {
+    let keySequence = [];
+    let textBuffer = '';
+    const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+    const modal = document.getElementById('vitalityModal');
+    const closeBtn = document.getElementById('vitCloseBtn');
+    const backdrop = document.getElementById('vitBackdrop');
+    const arena = document.getElementById('vitArena');
+    const startOverlay = document.getElementById('vitStartOverlay');
+    const endOverlay = document.getElementById('vitEndOverlay');
+    const startBtn = document.getElementById('vitStartGameBtn');
+    const restartBtn = document.getElementById('vitRestartBtn');
+    const timerEl = document.getElementById('vitTimer');
+    const scoreEl = document.getElementById('vitScore');
+    const accEl = document.getElementById('vitAccuracy');
+    const bestScoreEl = document.getElementById('vitBestScore');
+    const endRankEl = document.getElementById('vitEndRank');
+    const endStatsEl = document.getElementById('vitEndStats');
+
+    let isPlaying = false;
+    let score = 0;
+    let totalClicks = 0;
+    let hits = 0;
+    let timeLeft = 15.0;
+    let gameInterval = null;
+    let currentTarget = null;
+    let savedBest = localStorage.getItem('vit_best_score') ? parseInt(localStorage.getItem('vit_best_score')) : 0;
+    if (bestScoreEl) bestScoreEl.textContent = savedBest;
+
+    function playSound(freq = 600, duration = 0.06) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function openModal() {
+      if (modal) {
+        modal.style.display = 'flex';
+        resetGameUI();
+      }
+    }
+
+    function closeModal() {
+      if (modal) {
+        stopGame();
+        modal.style.display = 'none';
+      }
+    }
+
+    function resetGameUI() {
+      stopGame();
+      if (startOverlay) startOverlay.style.display = 'flex';
+      if (endOverlay) endOverlay.style.display = 'none';
+      if (timerEl) timerEl.textContent = '15.0s';
+      if (scoreEl) scoreEl.textContent = '0';
+      if (accEl) accEl.textContent = '100%';
+    }
+
+    function spawnTarget() {
+      if (!isPlaying || !arena) return;
+      if (currentTarget) currentTarget.remove();
+
+      const target = document.createElement('div');
+      target.className = 'vit-target';
+
+      const padding = 35;
+      const arenaWidth = arena.clientWidth;
+      const arenaHeight = arena.clientHeight;
+
+      const randomX = padding + Math.random() * (arenaWidth - padding * 2);
+      const randomY = padding + Math.random() * (arenaHeight - padding * 2);
+
+      target.style.left = `${randomX}px`;
+      target.style.top = `${randomY}px`;
+
+      target.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        if (!isPlaying) return;
+        hits++;
+        totalClicks++;
+        score += 100;
+        playSound(880, 0.08);
+        updateHUD();
+        spawnTarget();
+      });
+
+      arena.appendChild(target);
+      currentTarget = target;
+    }
+
+    function updateHUD() {
+      if (scoreEl) scoreEl.textContent = score;
+      if (timerEl) timerEl.textContent = `${Math.max(0, timeLeft).toFixed(1)}s`;
+      const acc = totalClicks > 0 ? Math.round((hits / totalClicks) * 100) : 100;
+      if (accEl) accEl.textContent = `${acc}%`;
+    }
+
+    function startGame() {
+      score = 0;
+      hits = 0;
+      totalClicks = 0;
+      timeLeft = 15.0;
+      isPlaying = true;
+
+      if (startOverlay) startOverlay.style.display = 'none';
+      if (endOverlay) endOverlay.style.display = 'none';
+      updateHUD();
+      spawnTarget();
+
+      const startTime = performance.now();
+      const initialTime = timeLeft;
+
+      gameInterval = setInterval(() => {
+        const elapsed = (performance.now() - startTime) / 1000;
+        timeLeft = initialTime - elapsed;
+        if (timeLeft <= 0) {
+          endGame();
+        } else {
+          updateHUD();
+        }
+      }, 50);
+    }
+
+    function stopGame() {
+      isPlaying = false;
+      if (gameInterval) clearInterval(gameInterval);
+      if (currentTarget) currentTarget.remove();
+      currentTarget = null;
+    }
+
+    function endGame() {
+      stopGame();
+      playSound(300, 0.2);
+      if (timerEl) timerEl.textContent = '0.0s';
+
+      let rank = '🥉 SILVER';
+      if (hits >= 28) {
+        rank = '🏆 MAJOR CHAMPION — ZywOo Tier ! 🐝';
+      } else if (hits >= 20) {
+        rank = '🥇 GLOBAL ELITE — Pro Player';
+      } else if (hits >= 12) {
+        rank = '🥈 MASTER GUARDIAN — Bon réflexe';
+      } else {
+        rank = '🥉 SILVER 1 — Entraîne-toi encore !';
+      }
+
+      if (score > savedBest) {
+        savedBest = score;
+        localStorage.setItem('vit_best_score', savedBest);
+        if (bestScoreEl) bestScoreEl.textContent = savedBest;
+      }
+
+      if (endRankEl) endRankEl.textContent = rank;
+      if (endStatsEl) endStatsEl.textContent = `Score : ${score} pts • Cibles touchées : ${hits}`;
+      if (endOverlay) endOverlay.style.display = 'flex';
+    }
+
+    arena?.addEventListener('mousedown', () => {
+      if (isPlaying) {
+        totalClicks++;
+        playSound(220, 0.05); // Bip raté
+        updateHUD();
+      }
+    });
+
+    startBtn?.addEventListener('click', startGame);
+    restartBtn?.addEventListener('click', startGame);
+    closeBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+
+    // Déclenchement via Konami code ou frappe "vitality"
+    window.addEventListener('keydown', (e) => {
+      if (modal && modal.style.display === 'flex') {
+        if (e.key === 'Escape') closeModal();
+        return;
+      }
+
+      // Konami Code check
+      keySequence.push(e.key);
+      if (keySequence.length > konami.length) keySequence.shift();
+      if (keySequence.join(',') === konami.join(',')) {
+        openModal();
+        keySequence = [];
+        return;
+      }
+
+      // Buffer texte pour "vitality"
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        textBuffer += e.key.toLowerCase();
+        if (textBuffer.length > 15) textBuffer = textBuffer.slice(-15);
+        if (textBuffer.endsWith('vitality') || textBuffer.endsWith('esport')) {
+          openModal();
+          textBuffer = '';
+        }
+      }
+    });
+
+    // Rendre disponible en console
+    window.startVitality = openModal;
+  })();
+</script>

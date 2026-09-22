@@ -1,0 +1,348 @@
+---
+// src/components/F1GameModal.astro
+// Easter Egg F1 : Déclenché en tapant "formula1", "formule1" ou "f1" au clavier
+---
+
+<div id="f1Modal" class="f1-modal" style="display: none;" role="dialog" aria-modal="true" aria-label="F1 Reaction Test">
+  <div class="f1-backdrop" id="f1Backdrop"></div>
+  
+  <div class="f1-content">
+    <button class="f1-close-btn" id="f1CloseBtn" aria-label="Fermer" title="Fermer (Échap)">✕</button>
+    
+    <div class="f1-header">
+      <div class="f1-badge">🏎️ FORMULA 1 EASTER EGG</div>
+      <h2 class="f1-title">FIA Starting Lights Reaction Test</h2>
+      <p class="f1-subtitle">Les 5 feux s'allument à intervalle régulier. Dès qu'ils s'éteignent tous, cliquez ou appuyez sur Espace le plus vite possible !</p>
+    </div>
+
+    <!-- Pique / Portique des 5 feux F1 -->
+    <div class="f1-gantry" id="f1Gantry">
+      <div class="f1-light-pod"><div class="f1-light" id="f1L1"></div></div>
+      <div class="f1-light-pod"><div class="f1-light" id="f1L2"></div></div>
+      <div class="f1-light-pod"><div class="f1-light" id="f1L3"></div></div>
+      <div class="f1-light-pod"><div class="f1-light" id="f1L4"></div></div>
+      <div class="f1-light-pod"><div class="f1-light" id="f1L5"></div></div>
+    </div>
+
+    <!-- Zone de clic et résultat -->
+    <div class="f1-action-area" id="f1ActionArea">
+      <div class="f1-timer-display" id="f1TimerDisplay">--- ms</div>
+      <div class="f1-status-msg" id="f1StatusMsg">Prêt sur la grille de départ</div>
+      
+      <div class="f1-buttons">
+        <button class="f1-btn f1-btn-start" id="f1StartBtn">
+          🚦 Démarrer la procédure
+        </button>
+      </div>
+      <div class="f1-hint">Astuce : vous pouvez aussi taper la barre <strong>Espace</strong> pour réagir !</div>
+    </div>
+
+    <div class="f1-best-score" id="f1BestScore">Meilleur réflexe : -- ms</div>
+  </div>
+</div>
+
+<style>
+  .f1-modal {
+    position: fixed; inset: 0; z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .f1-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(8, 9, 11, 0.88);
+    backdrop-filter: blur(14px);
+  }
+  .f1-content {
+    position: relative; z-index: 2;
+    background: #111215;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    width: 100%; max-width: 680px;
+    padding: 36px 32px;
+    color: #f1f1ec;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(255, 85, 0, 0.15);
+    text-align: center;
+    font-family: var(--font-sans, system-ui, sans-serif);
+  }
+  .f1-close-btn {
+    position: absolute; top: 16px; right: 16px;
+    background: transparent; border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #a0a2ab; width: 32px; height: 32px; border-radius: 50%;
+    font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .f1-close-btn:hover { color: #fff; border-color: #fff; background: rgba(255, 255, 255, 0.08); }
+
+  .f1-badge {
+    display: inline-block; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: #ff5500; background: rgba(255, 85, 0, 0.12);
+    border: 1px solid rgba(255, 85, 0, 0.3); padding: 4px 12px; border-radius: 999px; margin-bottom: 12px;
+  }
+  .f1-title {
+    font-family: var(--font-serif, serif); font-size: 1.8rem; font-weight: 600;
+    margin-bottom: 8px; color: #fff;
+  }
+  .f1-subtitle {
+    font-size: 0.9rem; color: #8f9198; max-width: 520px; margin: 0 auto 28px; line-height: 1.5;
+  }
+
+  /* Portique F1 */
+  .f1-gantry {
+    display: flex; justify-content: center; gap: 14px;
+    background: #08090b; padding: 20px 24px; border-radius: 12px;
+    border: 2px solid #22242a; margin-bottom: 24px;
+  }
+  .f1-light-pod {
+    width: 60px; height: 90px; background: #15171c;
+    border-radius: 8px; border: 1px solid #2b2e36;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .f1-light {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: #252830;
+    border: 2px solid #1a1b20;
+    transition: background-color 0.05s ease, box-shadow 0.05s ease;
+  }
+  .f1-light.on {
+    background: #ff1801;
+    box-shadow: 0 0 20px #ff1801, 0 0 40px rgba(255, 24, 1, 0.6);
+  }
+
+  /* Zone d'action */
+  .f1-action-area {
+    padding: 20px; border-radius: 10px; background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07); cursor: pointer;
+    user-select: none;
+  }
+  .f1-timer-display {
+    font-family: monospace; font-size: 3rem; font-weight: 700;
+    color: #69ff0a; margin-bottom: 6px; letter-spacing: -0.02em;
+  }
+  .f1-status-msg {
+    font-size: 1.05rem; font-weight: 600; color: #fff; min-height: 28px; margin-bottom: 16px;
+  }
+  .f1-btn {
+    padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 0.95rem;
+    border: none; cursor: pointer; transition: all 0.2s;
+  }
+  .f1-btn-start {
+    background: #ff5500; color: #fff;
+    box-shadow: 0 4px 14px rgba(255, 85, 0, 0.4);
+  }
+  .f1-btn-start:hover {
+    background: #ff6b1a; transform: translateY(-1px);
+  }
+  .f1-hint {
+    margin-top: 14px; font-size: 0.8rem; color: #6b6d76;
+  }
+  .f1-best-score {
+    margin-top: 20px; font-size: 0.85rem; font-weight: 600; color: #8f9198;
+  }
+</style>
+
+<script is:inline>
+  (function initF1Game() {
+    let keyBuffer = '';
+    const modal = document.getElementById('f1Modal');
+    const closeBtn = document.getElementById('f1CloseBtn');
+    const backdrop = document.getElementById('f1Backdrop');
+    const startBtn = document.getElementById('f1StartBtn');
+    const actionArea = document.getElementById('f1ActionArea');
+    const timerDisplay = document.getElementById('f1TimerDisplay');
+    const statusMsg = document.getElementById('f1StatusMsg');
+    const bestScoreDisplay = document.getElementById('f1BestScore');
+    
+    const lights = [
+      document.getElementById('f1L1'),
+      document.getElementById('f1L2'),
+      document.getElementById('f1L3'),
+      document.getElementById('f1L4'),
+      document.getElementById('f1L5')
+    ];
+
+    let gameState = 'IDLE'; // IDLE | SEQUENCE | WAITING | FINISHED
+    let sequenceTimeouts = [];
+    let lightOutTimestamp = 0;
+    let bestScore = localStorage.getItem('f1_best_reaction') ? parseInt(localStorage.getItem('f1_best_reaction')) : null;
+    if (bestScore && bestScoreDisplay) {
+      bestScoreDisplay.textContent = `Meilleur réflexe : ${bestScore} ms`;
+    }
+
+    // Audio bips synthétiques via Web Audio API (0 fichier à télécharger)
+    function playBeep(freq = 440, duration = 0.08) {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function openF1Modal() {
+      if (modal) {
+        modal.style.display = 'flex';
+        resetGame();
+      }
+    }
+
+    function closeF1Modal() {
+      if (modal) {
+        modal.style.display = 'none';
+        resetGame();
+      }
+    }
+
+    function resetGame() {
+      gameState = 'IDLE';
+      sequenceTimeouts.forEach(clearTimeout);
+      sequenceTimeouts = [];
+      lights.forEach(l => l?.classList.remove('on'));
+      if (timerDisplay) timerDisplay.textContent = '--- ms';
+      if (statusMsg) {
+        statusMsg.textContent = 'Prêt sur la grille de départ';
+        statusMsg.style.color = '#fff';
+      }
+      if (startBtn) {
+        startBtn.style.display = 'inline-block';
+        startBtn.textContent = '🚦 Démarrer la procédure';
+      }
+    }
+
+    function startSequence() {
+      if (gameState === 'SEQUENCE' || gameState === 'WAITING') return;
+      resetGame();
+      gameState = 'SEQUENCE';
+      if (startBtn) startBtn.style.display = 'none';
+      if (statusMsg) statusMsg.textContent = 'Feux en cours d\'allumage... Attendez l\'extinction !';
+
+      // 5 feux s'allument à 1 seconde d'intervalle
+      lights.forEach((light, index) => {
+        const t = setTimeout(() => {
+          light.classList.add('on');
+          playBeep(440, 0.09);
+        }, (index + 1) * 900);
+        sequenceTimeouts.push(t);
+      });
+
+      // Extinction aléatoire (entre 0.8s et 3.2s après le 5e feu - règle officielle FIA)
+      const randomHold = 800 + Math.random() * 2400;
+      const totalDelay = (5 * 900) + randomHold;
+
+      const finishTimeout = setTimeout(() => {
+        lights.forEach(l => l.classList.remove('on'));
+        playBeep(880, 0.12);
+        lightOutTimestamp = performance.now();
+        gameState = 'WAITING';
+        if (statusMsg) {
+          statusMsg.textContent = 'PARTEZ ! 🏎️';
+          statusMsg.style.color = '#69ff0a';
+        }
+      }, totalDelay);
+      sequenceTimeouts.push(finishTimeout);
+    }
+
+    function triggerReaction() {
+      if (gameState === 'SEQUENCE') {
+        // Faux départ
+        sequenceTimeouts.forEach(clearTimeout);
+        sequenceTimeouts = [];
+        gameState = 'FINISHED';
+        lights.forEach(l => l.classList.add('on'));
+        playBeep(200, 0.3);
+        if (timerDisplay) timerDisplay.textContent = 'JUMP START';
+        if (statusMsg) {
+          statusMsg.textContent = '🚨 FAUX DÉPART ! +5s de pénalité.';
+          statusMsg.style.color = '#ff1801';
+        }
+        if (startBtn) {
+          startBtn.style.display = 'inline-block';
+          startBtn.textContent = 'Réessayer';
+        }
+      } else if (gameState === 'WAITING') {
+        const reactionTime = Math.round(performance.now() - lightOutTimestamp);
+        gameState = 'FINISHED';
+        if (timerDisplay) timerDisplay.textContent = `${reactionTime} ms`;
+
+        let feedback = '';
+        if (reactionTime < 200) {
+          feedback = '🏆 INCROYABLE ! Réflexes niveau Max Verstappen / Fernando Alonso !';
+        } else if (reactionTime < 260) {
+          feedback = '⚡ EXCELLENT DÉPART ! Niveau pilote F1 / F2.';
+        } else if (reactionTime < 320) {
+          feedback = '🏎️ BON DÉPART ! En plein dans le peloton.';
+        } else {
+          feedback = '🐢 DÉPART ENDORMI ! Le peloton est déjà au premier virage.';
+        }
+
+        if (statusMsg) {
+          statusMsg.textContent = feedback;
+          statusMsg.style.color = reactionTime < 260 ? '#69ff0a' : '#5b9dff';
+        }
+
+        if (!bestScore || reactionTime < bestScore) {
+          bestScore = reactionTime;
+          localStorage.setItem('f1_best_reaction', bestScore);
+          if (bestScoreDisplay) bestScoreDisplay.textContent = `Nouveau record personnel : ${bestScore} ms ! ⭐`;
+        }
+
+        if (startBtn) {
+          startBtn.style.display = 'inline-block';
+          startBtn.textContent = 'Rejouer';
+        }
+      }
+    }
+
+    // Écoute des touches pour le mot-clé secret "formula1" ou "formule1" ou "f1"
+    window.addEventListener('keydown', (e) => {
+      if (modal && modal.style.display === 'flex') {
+        if (e.key === 'Escape') {
+          closeF1Modal();
+        } else if (e.code === 'Space') {
+          e.preventDefault();
+          if (gameState === 'IDLE' || gameState === 'FINISHED') {
+            startSequence();
+          } else {
+            triggerReaction();
+          }
+        }
+        return;
+      }
+
+      // Buffer des lettres tapées
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        keyBuffer += e.key.toLowerCase();
+        if (keyBuffer.length > 20) keyBuffer = keyBuffer.slice(-20);
+
+        if (keyBuffer.endsWith('formula1') || keyBuffer.endsWith('formule1') || keyBuffer.endsWith('f1game')) {
+          openF1Modal();
+          keyBuffer = '';
+        }
+      }
+    });
+
+    closeBtn?.addEventListener('click', closeF1Modal);
+    backdrop?.addEventListener('click', closeF1Modal);
+    startBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      startSequence();
+    });
+    actionArea?.addEventListener('click', () => {
+      if (gameState === 'IDLE' || gameState === 'FINISHED') {
+        startSequence();
+      } else {
+        triggerReaction();
+      }
+    });
+
+    // Rendre disponible globalement pour la console F12
+    window.startF1 = openF1Modal;
+  })();
+</script>

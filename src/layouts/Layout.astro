@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import Analytics from '@vercel/analytics/astro';
 import Header from '../components/Header.astro';
+import F1GameModal from '../components/F1GameModal.astro';
+import VitalityGameModal from '../components/VitalityGameModal.astro';
 import { getLangFromCookie, makeT } from '../i18n/translations';
 
 interface Props {
@@ -121,31 +123,8 @@ const schemaJson = {
 			</div>
 		</footer>
 
-    <script is:inline>
-      const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-      let konamiPosition = 0;
-      document.addEventListener('keydown', (e) => {
-        if (e.key === konamiCode[konamiPosition]) {
-          konamiPosition++;
-          if (konamiPosition === konamiCode.length) {
-            document.querySelector('.site-header').style.display = 'none';
-            document.body.style.background = '#0F0F0F';
-            document.body.style.color = '#F2E800'; 
-            document.body.style.fontFamily = 'monospace';
-            document.querySelector('main').innerHTML = `
-              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center;">
-                <h1 style="font-size: 4rem; margin-bottom: 20px;">🐝 V FOR VICTORY</h1>
-                <p style="font-size: 1.2rem;">Terminal Override. Esports Mode Activated.</p>
-                <button onclick="window.location.reload()" style="margin-top:30px; padding:12px 24px; background:#F2E800; color:#000; border:none; cursor:pointer; font-weight:bold; font-size: 1rem; border-radius: 4px;">REBOOT SYSTEM</button>
-              </div>
-            `;
-            konamiPosition = 0;
-          }
-        } else {
-          konamiPosition = 0;
-        }
-      });
-    </script>
+		<F1GameModal />
+		<VitalityGameModal />
     <Analytics />
 	</body>
 </html>
