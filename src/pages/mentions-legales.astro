@@ -61,11 +61,11 @@ const pageDescription = lang === 'fr'
         <div>
           <strong style="color: var(--text);">{lang === 'fr' ? 'Propriété intellectuelle :' : 'Intellectual Property:'}</strong>
           <p style="color: var(--muted); margin-top: 4px;">
-            {lang === 'fr' ? `
-              L’ensemble de ce site (structure, textes, graphismes, logos personnels, photographies, réalisations et code source) est protégé par les lois relatives à la propriété intellectuelle et au droit d’auteur. Toute reproduction, représentation, modification ou diffusion, totale ou partielle, sans l’autorisation écrite préalable d'Arthur Doradoux est strictement interdite. Les logos des entreprises, écoles ou associations mentionnées demeurent la propriété exclusive de leurs détenteurs respectifs.
-            ` : `
-              All contents of this site (structure, texts, graphics, personal logos, photos, project showcases, and source code) are protected under copyright and intellectual property laws. Any reproduction, adaptation, or distribution, whether partial or complete, without prior written consent from Arthur Doradoux is strictly prohibited. Corporate, university, and association trademarks and logos belong to their respective owners.
-            `}
+            {lang === 'fr' ? (
+              <>L’ensemble de ce site (structure, textes, graphismes, logos personnels, photographies, réalisations et code source) est protégé par les lois relatives à la propriété intellectuelle et au droit d’auteur. Toute reproduction, représentation, modification ou diffusion, totale ou partielle, sans l’autorisation écrite préalable d'Arthur Doradoux est strictement interdite. Les logos des entreprises, écoles ou associations mentionnées demeurent la propriété exclusive de leurs détenteurs respectifs.</>
+            ) : (
+              <>All contents of this site (structure, texts, graphics, personal logos, photos, project showcases, and source code) are protected under copyright and intellectual property laws. Any reproduction, adaptation, or distribution, whether partial or complete, without prior written consent from Arthur Doradoux is strictly prohibited. Corporate, university, and association trademarks and logos belong to their respective owners.</>
+            )}
           </p>
         </div>
       </div>
@@ -117,11 +117,15 @@ const pageDescription = lang === 'fr'
         <div>
           <strong style="color: var(--text);">{lang === 'fr' ? 'Vos droits (CNIL / RGPD) :' : 'Your Rights (GDPR):'}</strong>
           <p style="color: var(--muted); margin-top: 4px;">
-            {lang === 'fr' ? `
-              Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi française « Informatique et Libertés », vous disposez d’un droit d’accès, de rectification, de limitation et de suppression de vos données personnelles. Vous pouvez exercer ce droit à tout moment en envoyant un e-mail à <a href="mailto:contact@arthurdx.com" style="color: var(--text); text-decoration: underline;">contact@arthurdx.com</a>. Vous avez également le droit d'introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés - cnil.fr).
-            ` : `
-              In compliance with the General Data Protection Regulation (GDPR), you hold the right to access, rectify, restrict, and request deletion of your personal data. You can exercise these rights at any time by sending an email to <a href="mailto:contact@arthurdx.com" style="color: var(--text); text-decoration: underline;">contact@arthurdx.com</a>. You may also lodge a complaint with the competent supervisory authority (CNIL in France).
-            `}
+            {lang === 'fr' ? (
+              <>
+                Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi française « Informatique et Libertés », vous disposez d’un droit d’accès, de rectification, de limitation et de suppression de vos données personnelles. Vous pouvez exercer ce droit à tout moment en envoyant un e-mail à <a href="mailto:contact@arthurdx.com" style="color: var(--text); text-decoration: underline;">contact@arthurdx.com</a>. Vous avez également le droit d'introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés — cnil.fr).
+              </>
+            ) : (
+              <>
+                In compliance with the General Data Protection Regulation (GDPR), you hold the right to access, rectify, restrict, and request deletion of your personal data. You can exercise these rights at any time by sending an email to <a href="mailto:contact@arthurdx.com" style="color: var(--text); text-decoration: underline;">contact@arthurdx.com</a>. You may also lodge a complaint with the competent supervisory authority (CNIL in France).
+              </>
+            )}
           </p>
         </div>
       </div>
@@ -134,28 +138,31 @@ const pageDescription = lang === 'fr'
       </h2>
 
       <div style="font-size: 0.95rem; line-height: 1.7; color: var(--muted);">
-        {lang === 'fr' ? `
-          <p style="margin-bottom: 12px;">
-            Ce site web respecte scrupuleusement la vie privée de ses visiteurs :
-          </p>
-          <ul style="padding-left: 20px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
-            <li><strong>Cookies techniques strictement nécessaires :</strong> Deux cookies techniques sont utilisés pour mémoriser vos préférences d'affichage (choix de la langue <code>lang</code> et thème clair/sombre <code>theme</code>). Conformément aux recommandations de la CNIL, ces cookies fonctionnels ne nécessitent pas de recueil préalable de consentement.</li>
-            <li><strong>Mesure d'audience respectueuse (sans cookie) :</strong> Le site utilise Vercel Web Analytics. Cet outil est <em>cookieless</em> (sans cookie), ne dépose aucun traceur persistant sur votre terminal, anonymise les données et ne permet aucun suivi inter-sites ni profilage publicitaire.</li>
-            <li><strong>Aucun cookie publicitaire ou tiers :</strong> Aucun cookie de réseau social, traceur publicitaire ou pixel marketing n'est déposé sur votre équipement.</li>
-          </ul>
-        ` : `
-          <p style="margin-bottom: 12px;">
-            This website strictly respects the privacy of its visitors:
-          </p>
-          <ul style="padding-left: 20px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
-            <li><strong>Strictly necessary technical cookies:</strong> Only two functional cookies are used to preserve user preferences (language selection <code>lang</code> and theme toggle <code>theme</code>). Under ePrivacy & GDPR regulations, these functional cookies do not require prior consent.</li>
-            <li><strong>Privacy-friendly cookieless analytics:</strong> The site utilizes Vercel Web Analytics, which operates entirely without cookies, does not store persistent identifiers on your device, hashes traffic data anonymously, and never performs cross-site tracking.</li>
-            <li><strong>Zero advertising or third-party marketing cookies:</strong> No advertising trackers, social network cookies, or profiling scripts are installed.</li>
-          </ul>
-        `}
+        {lang === 'fr' ? (
+          <>
+            <p style="margin-bottom: 12px;">
+              Ce site web respecte scrupuleusement la vie privée de ses visiteurs :
+            </p>
+            <ul style="padding-left: 20px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
+              <li><strong>Cookies techniques strictement nécessaires :</strong> Deux cookies techniques sont utilisés pour mémoriser vos préférences d'affichage (choix de la langue <code>lang</code> et thème clair/sombre <code>theme</code>). Conformément aux recommandations de la CNIL, ces cookies fonctionnels ne nécessitent pas de recueil préalable de consentement.</li>
+              <li><strong>Mesure d'audience respectueuse (sans cookie) :</strong> Le site utilise Vercel Web Analytics. Cet outil est <em>cookieless</em> (sans cookie), ne dépose aucun traceur persistant sur votre terminal, anonymise les données et ne permet aucun suivi inter-sites ni profilage publicitaire.</li>
+              <li><strong>Aucun cookie publicitaire ou tiers :</strong> Aucun cookie de réseau social, traceur publicitaire ou pixel marketing n'est déposé sur votre équipement.</li>
+            </ul>
+          </>
+        ) : (
+          <>
+            <p style="margin-bottom: 12px;">
+              This website strictly respects the privacy of its visitors:
+            </p>
+            <ul style="padding-left: 20px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
+              <li><strong>Strictly necessary technical cookies:</strong> Only two functional cookies are used to preserve user preferences (language selection <code>lang</code> and theme toggle <code>theme</code>). Under ePrivacy & GDPR regulations, these functional cookies do not require prior consent.</li>
+              <li><strong>Privacy-friendly cookieless analytics:</strong> The site utilizes Vercel Web Analytics, which operates entirely without cookies, does not store persistent identifiers on your device, hashes traffic data anonymously, and never performs cross-site tracking.</li>
+              <li><strong>Zero advertising or third-party marketing cookies:</strong> No advertising trackers, social network cookies, or profiling scripts are installed.</li>
+            </ul>
+          </>
+        )}
       </div>
     </article>
 
   </section>
 </Layout>
-
