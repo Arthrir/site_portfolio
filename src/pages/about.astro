@@ -7,77 +7,43 @@ const t = makeT(lang);
 ---
 
 <Layout 
-  title={lang === 'fr' ? "Arthur Doradoux | À propos" : "Arthur Doradoux | About"}
-  description={lang === 'fr' ? "Découvrez le parcours d'Arthur Doradoux : élève-ingénieur aux Mines Saint-Étienne et au Politecnico di Milano, profil hybride alliant ingénierie, design et vision produit." : "Discover Arthur Doradoux's journey: engineering student at Mines Saint-Étienne and Politecnico di Milano, combining engineering, design, and product vision."}
+  title={lang === 'fr' ? 'Arthur Doradoux | À propos' : 'Arthur Doradoux | About'}
+  description={lang === 'fr' ? 'Découvrez le parcours d\\'Arthur Doradoux : ingénierie, design, management, passions esport et F1.' : 'Discover Arthur Doradoux\\'s journey: engineering, design, management, esports, and F1 passions.'}
 >
   
-  <!-- EN-TÊTE CENTRÉ -->
   <section style="padding: 40px 0; max-width: 720px; margin: 0 auto; text-align: center;">
-    
-    <!-- Logos Colorés agrandis pour affirmer ton identité -->
     <img src="/logo/logo-color-black.svg" alt="Logo Arthur Doradoux" class="logo-light" style="width: 120px; height: auto; margin: 0 auto 32px; display: block; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));" />
     <img src="/logo/logo-color-white.svg" alt="Logo Arthur Doradoux" class="logo-dark" style="width: 120px; height: auto; margin: 0 auto 32px; display: none; filter: drop-shadow(0 4px 12px rgba(255,255,255,0.05));" />
 
     <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); display: inline-block;">
-      <h2 class="stacked-main" style="margin-left: 0;">{lang === 'fr' ? 'Profil & Ambitions' : 'Profile & Ambitions'}</h2>
+      <h2 class="stacked-main" style="margin-left: 0;">{lang === 'fr' ? 'Pourquoi Product Owner ?' : 'Why Product Owner?'}</h2>
     </div>
 
-    <!-- Intro centrée mais texte aligné à gauche pour la lisibilité -->
     <div style="font-size: 1.05rem; line-height: 1.8; color: var(--text); text-align: left; display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
       <p set:html={lang === 'fr' ? `
-        Actuellement élève ingénieur à <strong>Mines Saint-Étienne (ISMIN)</strong>, je construis un profil à la croisée de <strong>l’ingénierie, du design et du management</strong>. 
-        Ma formation en microélectronique et en informatique m’a permis d’acquérir une solide rigueur technique, à travers des projets en systèmes embarqués, hardware, architecture des processeurs et intelligence artificielle.
+        Mon parcours académique (Mines Saint-Étienne, Politecnico di Milano, emlyon) m'a donné un bagage solide en microélectronique, informatique, design et management. Mais ce qui m'anime réellement dépasse la simple technique. <strong>Le code, le hardware, les circuits, ce sont des moyens. Le produit fini et son impact, c'est la finalité.</strong>
       ` : `
-        Currently an engineering student at <strong>Mines Saint-Étienne (ISMIN)</strong>, I am building a profile at the intersection of <strong>engineering, design and management</strong>. 
-        My background in microelectronics and computer science has given me strong technical foundations through projects in embedded systems, hardware, processor architecture and artificial intelligence.
+        My academic background (Mines Saint-Étienne, Politecnico di Milano, emlyon) has given me a strong foundation in microelectronics, computer science, design, and management. But what truly drives me goes beyond pure tech. <strong>Code, hardware, and circuits are the means. The finished product and its impact are the end goal.</strong>
       `} />
 
       <p set:html={lang === 'fr' ? `
-        Au fil de mes expériences académiques et associatives, j’ai cependant compris que ce qui me motive le plus ne se limite pas à la conception technique d’un système. 
-        Ce qui m’intéresse aussi, c’est de comprendre <em>pourquoi</em> une technologie est développée, <em>pour qui</em> elle crée de la valeur, et <em>comment</em> la transformer en un produit utile, cohérent et pertinent.
+        Mes expériences, notamment en tant que président d'associations et lors de mes stages, ont été des révélateurs. Organiser des événements d'envergure (comme la LAN MINITEL avec Riot Games et Red Bull) et coordonner des pôles de compétences m'a prouvé une chose : <strong>mon élément naturel, c'est de diriger un projet et d'orchestrer une équipe.</strong> C'est là que je suis le plus à l'aise et le plus performant.
       ` : `
-        Over time, through both academic projects and student leadership experiences, I realized that what drives me most is not only the technical design of a system. 
-        I am equally interested in understanding <em>why</em> a technology is developed, <em>for whom</em> it creates value, and <em>how</em> it can be turned into a relevant, coherent and impactful product.
+        My experiences, especially leading student associations and during my internships, have been an eye-opener. Organizing large-scale events (like the MINITEL LAN with Riot Games and Red Bull) and coordinating teams proved one thing to me: <strong>my natural element is leading a project and orchestrating a team.</strong> This is where I am most comfortable and most effective.
+      `} />
+      
+      <p set:html={lang === 'fr' ? `
+        Je suis passionné par l'innovation technique, mais je ne veux pas me limiter à exécuter. Je veux comprendre <em>pourquoi</em> on développe une technologie, définir la stratégie, jongler entre les parties prenantes et m'assurer que le produit crée une vraie valeur. C'est pour cela que je veux être <strong>Product Owner</strong>.
+      ` : `
+        I am passionate about technical innovation, but I don't want to just execute. I want to understand <em>why</em> a technology is developed, define the strategy, juggle stakeholders, and ensure the product creates real value. That is why I want to be a <strong>Product Owner</strong>.
       `} />
     </div>
   </section>
 
-  <!-- CE QUE JE VEUX CONSTRUIRE & TRIPLE COMPÉTENCE -->
-  <section style="padding: 20px 0 60px; max-width: 720px; margin: 0 auto;">
-    <h3 style="font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; margin-bottom: 18px;">
-      {lang === 'fr' ? "La Triple Compétence" : "Triple Competency"}
-    </h3>
-    
-    <div style="font-size: 1.02rem; line-height: 1.8; color: var(--text); display: flex; flex-direction: column; gap: 20px;">
-      <p set:html={lang === 'fr' ? `
-        Je n'ai jamais été le plus passionné par un seul composant ou un seul langage de programmation. Ce qui m'a toujours fasciné, c'est le moment où une technologie cesse d'être un exercice de laboratoire pour devenir un objet que quelqu'un utilise. Le FPGA, le RISC-V, le PCB, c'est le moyen. Le produit fini dans les mains de l'utilisateur, c'est la fin.
-      ` : `
-        I have never been most passionate about a single component or programming language. What has always fascinated me is the moment when a technology stops being a lab exercise and becomes an object someone uses. FPGA, RISC-V, PCBs are the means. The finished product in the user's hands is the end.
-      `} />
-
-      <div style="border-left: 3px solid var(--pop-blue); padding-left: 16px; margin: 12px 0; font-weight: 500; font-style: italic;">
-        {lang === 'fr' ? "Je ne veux pas choisir entre comprendre comment un produit fonctionne et comprendre pourquoi il existe. Je veux faire les deux, au même endroit." : "I don't want to choose between understanding how a product works and understanding why it exists. I want to do both, in the same place."}
-      </div>
-
-      <div class="card" style="border-top: 3px solid var(--pop-blue); margin-top: 10px;">
-        <p style="font-size: 1.02rem; line-height: 1.7; margin-bottom: 16px;" set:html={lang === 'fr' ? `
-          C'est pourquoi j'ai été sélectionné par mon école pour réaliser un semestre au <strong>Politecnico di Milano</strong> dans le <strong>Master Design & Engineering</strong> afin d'étudier le design produit (ergonomie, matériaux, intégration) dans une université d'exception.
-        ` : `
-          This is why I was selected by my school to complete a semester at <strong>Politecnico di Milano</strong> in the <strong>Master's Degree in Design & Engineering</strong> to study product design (ergonomics, materials, integration).
-        `} />
-        <p style="font-size: 1.02rem; line-height: 1.7;" set:html={lang === 'fr' ? `
-          Par la suite, je vais poursuivre par le <strong>Double Diplôme "Business Mediation"</strong> de l'<strong>emlyon business school</strong> afin d'acquérir les outils financiers, stratégiques et managériaux nécessaires pour devenir Product Owner / Manager.
-        ` : `
-          Following this, I will pursue the <strong>"Business Mediation" Double Degree</strong> at <strong>emlyon business school</strong> to acquire the financial, strategic, and managerial tools necessary to become a Product Owner / Manager.
-        `} />
-      </div>
-    </div>
-  </section>
-
-  <!-- PASSIONS ET VOYAGES -->
+  <!-- PASSIONS ET EXTRA-CV -->
   <section style="padding: 20px 0 80px; max-width: 720px; margin: 0 auto;">
     <div class="stacked-title-wrapper" style="--stacked-color: var(--muted); --dot-color: var(--muted); margin-bottom: 30px;">
-      <h2 class="stacked-main" style="margin-left: 0; font-size: 1.8rem;">{lang === 'fr' ? "En dehors des salles de cours" : "Outside the classroom"}</h2>
+      <h2 class="stacked-main" style="margin-left: 0; font-size: 1.8rem;">{lang === 'fr' ? 'En dehors des salles de cours' : 'Outside the classroom'}</h2>
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 36px;">
@@ -90,12 +56,12 @@ const t = makeT(lang);
         </div>
         <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
           {lang === 'fr' ? 
-            "Je suis chaque session, pas seulement les courses. La stratégie en qualifications, les choix de pneumatiques et la rivalité d'ingénierie entre les écuries m'intéressent autant que la course elle-même. C'est d'ailleurs cette même exigence qui m'attire vers le hardware : une quantité énorme de précision et de développement cachée derrière un objet qui a l'air simple, où aucune décision n'est gratuite." : 
-            "I follow every session, not just the races. The qualifying strategies, tire choices, and the engineering rivalries between teams interest me as much as the track itself. It's the same demand for excellence that draws me to hardware: an enormous amount of precision and development hidden behind a sleek final product, where no decision is made without a reason."}
+            "La F1 combine tout ce que j'aime. Bien sûr, il y a la pure innovation technique, l'aérodynamisme et l'ingénierie extrême. Mais ce qui me fascine tout autant, c'est l'importance de la stratégie, la dimension médiatique qui est primordiale aujourd'hui, et même l'aspect quasi-politique entre les écuries. C'est un écosystème ultra-compétitif où chaque détail technique ou stratégique compte." : 
+            "F1 combines everything I love. Of course, there is the pure technical innovation, aerodynamics, and extreme engineering. But what fascinates me just as much is the importance of strategy, the massive media dimension today, and even the quasi-political aspect between teams. It's an ultra-competitive ecosystem where every technical or strategic detail matters."}
         </p>
       </div>
 
-      <!-- Vitality -->
+      <!-- Esport -->
       <div>
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-purple);">Esport</span>
@@ -103,35 +69,35 @@ const t = makeT(lang);
         </div>
         <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
           {lang === 'fr' ? 
-            "Supporter de longue date de la Team Vitality, que ce soit sur League of Legends ou Counter-Strike. Organiser les LAN de MINITEL avec Riot Games et Red Bull a été ma manière la plus concrète de me rapprocher de ce monde-là en tant qu'organisateur, et cela m'a confirmé que je veux rester lié à cette industrie." : 
-            "A long-time supporter of Team Vitality, whether on League of Legends or Counter-Strike. Organizing MINITEL's LAN parties in partnership with Riot Games and Red Bull was my most concrete way of getting involved in this environment as an organizer, confirming my desire to stay connected to this industry."}
+            "Le développement de la scène esport mondiale est génial à observer, tant sur l'aspect communautaire que sur l'évolution du hardware et des infrastructures qui l'accompagnent. Je suis un grand supporter de la Team Vitality. Organiser des tournois pour MINITEL a été ma façon de m'impliquer concrètement dans cet univers en tant qu'organisateur, et de toucher à la logistique événementielle." : 
+            "The growth of the global esports scene is amazing to watch, both in terms of community and the evolution of hardware and infrastructures that support it. I am a huge supporter of Team Vitality. Organizing tournaments for MINITEL was my way of getting concretely involved in this universe as an organizer, managing event logistics."}
         </p>
       </div>
 
-      <!-- Sport -->
+      <!-- Sports -->
       <div>
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
-          <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-blue);">Lifestyle</span>
-          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{lang === 'fr' ? "Sport & Équilibre" : "Sports & Balance"}</h4>
+          <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-blue);">Sports</span>
+          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{lang === 'fr' ? 'Diversité & Innovations Sportives' : 'Diversity & Sports Innovations'}</h4>
         </div>
         <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
           {lang === 'fr' ? 
-            "Le sport est l'endroit où je coupe mon cerveau des circuits, du code et des deadlines. Rien de très rigide — un mélange de course à pied, de renforcement musculaire et de sports de combat — mais c'est une partie non négociable de ma semaine pour maintenir un équilibre de vie sain." : 
-            "Sports are where I turn my brain off from circuits, code, and deadlines. Nothing too rigid—a mix of running, strength training, and combat sports—but it's a non-negotiable part of my week to maintain a healthy work-life balance."}
+            "Je suis passionné par de très nombreux sports, que ce soit à pratiquer ou à regarder : le cyclisme, le judo, le ping pong, le football, le MMA... Au-delà de l'effort et du spectacle, je suis toujours très attentif aux innovations technologiques qui s'introduisent dans ces disciplines (data analysis, nouveaux matériaux, arbitrage vidéo, etc.)." : 
+            "I am passionate about a wide variety of sports, whether practicing or watching: cycling, judo, table tennis, football/soccer, MMA... Beyond the effort and the spectacle, I always keep a close eye on the technological innovations introduced in these disciplines (data analysis, new materials, video refereeing, etc.)."}
         </p>
       </div>
 
-      <!-- Voyages & Découvertes Interactif -->
+      <!-- Voyages & DǸcouvertes Interactif -->
       <div class="travels-interactive-wrap">
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-fuchsia);">Travel</span>
-          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{lang === 'fr' ? "Voyages & Découvertes" : "Travel & Discovery"}</h4>
+          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{lang === 'fr' ? 'Voyages & Photographie' : 'Travel & Photography'}</h4>
         </div>
         
         <p style="font-size: 1rem; line-height: 1.75; color: var(--text); margin-bottom: 20px;">
           {lang === 'fr' ? 
-            "L'exploration est pour moi une source d'inspiration constante. De l'Égypte aux États-Unis, en passant par de nombreux pays d'Europe, voyager me permet d'élargir ma perspective. Observer comment différentes cultures interagissent avec le monde et la technologie nourrit directement ma vision de ce que doit être un bon design produit : universel et adapté." : 
-            "Exploration is a constant source of inspiration for me. From Egypt to the USA and across many European countries, traveling allows me to broaden my perspective. Observing how different cultures interact with the world and technology directly feeds my vision of what good product design should be: universal and adaptable."}
+            "L'exploration est une énorme source d'inspiration. J'adore voyager, découvrir de nouvelles cultures, architectures et modes de vie. J'immortalise souvent ces moments en photo. Cela nourrit ma vision de ce que doit être un bon design ou un bon produit : universel, adapté à son environnement et esthétiquement juste." : 
+            "Exploration is a massive source of inspiration. I love traveling, discovering new cultures, architecture, and lifestyles. I often capture these moments through photography. This fuels my vision of what good design or a good product should be: universal, adapted to its environment, and aesthetically sound."}
         </p>
 
         <!-- Destination Selector Buttons -->
@@ -176,9 +142,10 @@ const t = makeT(lang);
               "Discovering the temples and pyramids of Egypt reminds us that the greatest engineering feats combine mathematical rigor, ultimate durability, and symbolic intention. A true lesson in proportions that inspires designing products built to last."}
           </p>
 
-          <!-- Photo Slot Placeholder (Prêt pour recevoir les photos d'Arthur) -->
+          <!-- Real Photo Implementation -->
           <div class="travel-photo-slot">
-            <div class="photo-placeholder-inner">
+            <img id="travelImage" src="/assets/voyages/egypt.jpg" alt="Travel Photo" onerror="this.style.display='none'; document.getElementById('travelPlaceholder').style.display='flex';" />
+            <div id="travelPlaceholder" class="photo-placeholder-inner" style="display: none;">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.6; margin-bottom: 6px;">
                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                 <circle cx="12" cy="13" r="4"></circle>
@@ -186,8 +153,8 @@ const t = makeT(lang);
               <span class="photo-placeholder-txt" id="photoPlaceholderTxt">
                 {lang === 'fr' ? "Emplacement photo — Carnet de voyage Égypte" : "Photo spot — Egypt Travel Journal"}
               </span>
-              <span class="photo-placeholder-sub">
-                {lang === 'fr' ? "(Photos en cours de sélection)" : "(Photos coming soon)"}
+              <span class="photo-placeholder-sub" id="photoPlaceholderSub">
+                {lang === 'fr' ? "(Ajoute egypt.jpg dans /assets/voyages/)" : "(Add egypt.jpg to /assets/voyages/)"}
               </span>
             </div>
           </div>
@@ -201,7 +168,6 @@ const t = makeT(lang);
     body.theme-dark .logo-light { display: none !important; }
     body.theme-dark .logo-dark { display: block !important; }
 
-    /* Interactive Travel Section */
     .travel-tabs {
       display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;
     }
@@ -257,17 +223,20 @@ const t = makeT(lang);
       margin-bottom: 18px;
     }
 
-    /* Photo Frame Placeholder */
     .travel-photo-slot {
-      height: 180px; width: 100%; border-radius: 8px;
+      height: 280px; width: 100%; border-radius: 8px;
       background: rgba(255, 255, 255, 0.02);
       border: 1.5px dashed var(--border);
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
     }
+    .travel-photo-slot img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
     .photo-placeholder-inner {
       display: flex; flex-direction: column; align-items: center; text-align: center;
       color: var(--muted); padding: 12px;
+      width: 100%; height: 100%; justify-content: center;
     }
     .photo-placeholder-txt {
       font-size: 0.88rem; font-weight: 600; color: var(--text); margin-bottom: 2px;
@@ -282,83 +251,63 @@ const t = makeT(lang);
       const travelData = {
         egypt: {
           pill: "EGY // Le Caire & Louxor",
-          title: {
-            fr: "L'épreuve du temps et la monumentalité",
-            en: "The test of time and monumentality"
-          },
+          title: { fr: "L'épreuve du temps et la monumentalité", en: "The test of time and monumentality" },
           theme: { fr: "Architecture & Proportions", en: "Architecture & Proportions" },
           body: {
             fr: "Découvrir les temples et pyramides d'Égypte rappelle que les plus grands accomplissements d'ingénierie allient rigueur mathématique, pérennité absolue et intention symbolique. Une véritable leçon de proportions qui inspire la conception d'objets conçus pour durer.",
             en: "Discovering the temples and pyramids of Egypt reminds us that the greatest engineering feats combine mathematical rigor, ultimate durability, and symbolic intention. A true lesson in proportions that inspires designing products built to last."
           },
-          photoTxt: {
-            fr: "Emplacement photo — Carnet de voyage Égypte",
-            en: "Photo spot — Egypt Travel Journal"
-          }
+          photoTxt: { fr: "Emplacement photo — Carnet de voyage Égypte", en: "Photo spot — Egypt Travel Journal" },
+          photoSub: { fr: "(Ajoute egypt.jpg dans /assets/voyages/)", en: "(Add egypt.jpg to /assets/voyages/)" },
+          imgFile: "egypt.jpg"
         },
         nyc: {
-          pill: "USA // New York • Manhattan",
-          title: {
-            fr: "L'énergie brute, la verticalité et le flux urbain",
-            en: "Raw energy, verticality and urban flow"
-          },
+          pill: "USA // New York — Manhattan",
+          title: { fr: "L'énergie brute, la verticalité et le flux urbain", en: "Raw energy, verticality and urban flow" },
           theme: { fr: "Consumer Tech & Dynamisme", en: "Consumer Tech & Flow" },
           body: {
             fr: "New York est une masterclass sur la gestion des flux, la densité et l'adoption technologique au quotidien. Observer l'interaction constante entre les utilisateurs et les produits tech dans un environnement urbain ultra-rapide éclaire les besoins réels en fluidité et en ergonomie.",
             en: "New York is a masterclass in urban density, user flow, and rapid tech adoption. Seeing how city dwellers seamlessly interact with consumer products in a fast-paced environment reinforces the necessity of zero-friction user experiences."
           },
-          photoTxt: {
-            fr: "Emplacement photo — New York City Highlights",
-            en: "Photo spot — New York City Highlights"
-          }
+          photoTxt: { fr: "Emplacement photo — New York City Highlights", en: "Photo spot — New York City Highlights" },
+          photoSub: { fr: "(Ajoute nyc.jpg dans /assets/voyages/)", en: "(Add nyc.jpg to /assets/voyages/)" },
+          imgFile: "nyc.jpg"
         },
         spain: {
           pill: "ESP // Barcelone & Madrid",
-          title: {
-            fr: "La vitalité méditerranéenne et l'audace des formes",
-            en: "Mediterranean vitality and bold organic forms"
-          },
+          title: { fr: "La vitalité méditerranéenne et l'audace des formes", en: "Mediterranean vitality and bold organic forms" },
           theme: { fr: "Design & Espaces de vie", en: "Design & Living Spaces" },
           body: {
             fr: "De l'architecture organique catalane à l'énergie des places madrilènes, l'Espagne inspire par sa capacité à concevoir des espaces et des formes qui invitent au partage. Un rappel que la technologie doit avant tout rapprocher les gens.",
             en: "From organic Catalan architecture to the vibrancy of Madrid squares, Spain inspires through forms and spaces that foster community. A reminder that product design should always bring people together."
           },
-          photoTxt: {
-            fr: "Emplacement photo — Espagne & Méditerranée",
-            en: "Photo spot — Spain & Mediterranean"
-          }
+          photoTxt: { fr: "Emplacement photo — Espagne & Méditerranée", en: "Photo spot — Spain & Mediterranean" },
+          photoSub: { fr: "(Ajoute spain.jpg dans /assets/voyages/)", en: "(Add spain.jpg to /assets/voyages/)" },
+          imgFile: "spain.jpg"
         },
         france: {
           pill: "FRA // Lyon, Provence & Paris",
-          title: {
-            fr: "Le berceau de la rigueur et de l'excellence industrielle",
-            en: "The roots of industrial rigor and elegance"
-          },
+          title: { fr: "Le berceau de la rigueur et de l'excellence industrielle", en: "The roots of industrial rigor and elegance" },
           theme: { fr: "Savoir-faire & Précision", en: "Craft & Precision" },
           body: {
             fr: "De mon cursus ISMIN en Provence à l'écosystème d'innovation lyonnais, explorer la diversité des terroirs et des pôles industriels français m'a inculqué le respect du savoir-faire d'excellence, de la précision des composants et du sens du détail intemporel.",
             en: "From my engineering studies in Provence to the industrial tech hubs of Lyon and Paris, exploring France instilled in me a deep respect for industrial excellence, component precision, and timeless attention to detail."
           },
-          photoTxt: {
-            fr: "Emplacement photo — France & Parcours Mines",
-            en: "Photo spot — France & Engineering Journey"
-          }
+          photoTxt: { fr: "Emplacement photo — France & Parcours", en: "Photo spot — France & Engineering Journey" },
+          photoSub: { fr: "(Ajoute france.jpg dans /assets/voyages/)", en: "(Add france.jpg to /assets/voyages/)" },
+          imgFile: "france.jpg"
         },
         italy: {
           pill: "ITA // Milan & Politecnico",
-          title: {
-            fr: "Le temple du design industriel et de l'ergonomie",
-            en: "The heart of industrial design and ergonomics"
-          },
+          title: { fr: "Le temple du design industriel et de l'ergonomie", en: "The heart of industrial design and ergonomics" },
           theme: { fr: "Design & Matériaux", en: "Design & Materials" },
           body: {
             fr: "Mon semestre au Politecnico di Milano a été une révélation sur la symbiose entre ingénierie et design. En Italie, chaque matériau, chaque rayon de courbure et chaque texture ont une raison d'être, au service de l'émotion et de l'usage.",
             en: "My semester at Politecnico di Milano was a defining experience in blending engineering with design thinking. In Italy, every material, curvature radius, and texture serves both emotion and functional usability."
           },
-          photoTxt: {
-            fr: "Emplacement photo — Milan & Design Semestre",
-            en: "Photo spot — Milan & Design Semester"
-          }
+          photoTxt: { fr: "Emplacement photo — Milan & Design Semestre", en: "Photo spot — Milan & Design Semester" },
+          photoSub: { fr: "(Ajoute italy.jpg dans /assets/voyages/)", en: "(Add italy.jpg to /assets/voyages/)" },
+          imgFile: "italy.jpg"
         }
       };
 
@@ -368,6 +317,15 @@ const t = makeT(lang);
       const themeEl = document.getElementById('travelTheme');
       const bodyEl = document.getElementById('travelBody');
       const photoTxtEl = document.getElementById('photoPlaceholderTxt');
+      const photoSubEl = document.getElementById('photoPlaceholderSub');
+      const imgEl = document.getElementById('travelImage');
+      const placeholderEl = document.getElementById('travelPlaceholder');
+
+      // Initialize the first image failure state manually (if it fails on load before JS attaches)
+      if (imgEl && (imgEl.complete && imgEl.naturalHeight === 0)) {
+        imgEl.style.display = 'none';
+        if(placeholderEl) placeholderEl.style.display = 'flex';
+      }
 
       tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -388,6 +346,22 @@ const t = makeT(lang);
           if (themeEl) themeEl.textContent = item.theme[currentLang];
           if (bodyEl) bodyEl.textContent = item.body[currentLang];
           if (photoTxtEl) photoTxtEl.textContent = item.photoTxt[currentLang];
+          if (photoSubEl) photoSubEl.textContent = item.photoSub[currentLang];
+          
+          if (imgEl) {
+            // Hide placeholder, show image
+            imgEl.style.display = 'block';
+            if (placeholderEl) placeholderEl.style.display = 'none';
+            
+            // Set up error handler
+            imgEl.onerror = () => {
+              imgEl.style.display = 'none';
+              if(placeholderEl) placeholderEl.style.display = 'flex';
+            };
+            
+            // Change source
+            imgEl.src = '/assets/voyages/' + item.imgFile;
+          }
         });
       });
     })();
