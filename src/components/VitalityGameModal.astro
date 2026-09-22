@@ -74,14 +74,18 @@
     text-align: center;
   }
   .vit-close-btn {
-    position: absolute; top: 16px; right: 16px;
+    position: absolute; top: 14px; right: 16px;
     background: transparent; border: 1px solid rgba(242, 232, 0, 0.3);
-    color: #F2E800; width: 30px; height: 30px; border-radius: 6px;
+    color: #F2E800; width: 32px; height: 32px; border-radius: 6px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s ease; font-size: 13px;
+    transition: all 0.15s ease; font-size: 14px;
+    z-index: 10;
   }
   .vit-close-btn:hover { background: #F2E800; color: #000; }
 
+  .vit-header {
+    padding-right: 36px; /* Évite la collision avec le bouton Fermer ✕ */
+  }
   .vit-logo-badge {
     display: inline-block; font-size: 0.75rem; font-weight: 700;
     letter-spacing: 0.1em; color: #000; background: #F2E800;
@@ -117,6 +121,8 @@
     user-select: none;
     background-image: radial-gradient(rgba(242, 232, 0, 0.12) 1px, transparent 1px);
     background-size: 20px 20px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Cibles abeilles ultra visibles */
@@ -134,6 +140,8 @@
     pointer-events: auto !important;
     user-select: none;
     animation: pulseBee 0.8s ease-in-out infinite alternate;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   @keyframes pulseBee {
     0% { transform: translate(-50%, -50%) scale(0.95); }
@@ -154,6 +162,8 @@
     padding: 13px 28px; border-radius: 6px; font-weight: 800; font-size: 0.95rem;
     cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; font-family: monospace;
     letter-spacing: 0.04em;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   .vit-btn-main:hover {
     transform: translateY(-1px); box-shadow: 0 0 20px rgba(242, 232, 0, 0.5);
@@ -168,6 +178,37 @@
   }
   .vit-footer-info strong { color: #F2E800; }
   .vit-exit-hint strong { color: #FFFFFF; }
+
+  /* Optimisation Mobile */
+  @media (max-width: 640px) {
+    .vit-container {
+      padding: 20px 14px 16px;
+    }
+    .vit-header {
+      padding-right: 32px;
+    }
+    .vit-title {
+      font-size: 1.15rem;
+    }
+    .vit-sub {
+      font-size: 0.78rem;
+      margin-bottom: 14px;
+    }
+    .vit-arena {
+      height: 270px;
+    }
+    :global(.vit-target) {
+      width: 48px;
+      height: 48px;
+    }
+    .hud-val {
+      font-size: 1.15rem;
+    }
+    .vit-footer-info {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
 </style>
 
 <script is:inline>
@@ -281,7 +322,6 @@
       }
 
       target.addEventListener('pointerdown', handleHit);
-      target.addEventListener('mousedown', handleHit);
 
       return target;
     }
@@ -381,20 +421,31 @@
     arena?.addEventListener('pointerdown', (e) => {
       // Si on clique dans l'arène mais pas sur une cible
       if (isPlaying && e.target === arena) {
+        if (e.cancelable) e.preventDefault();
         totalClicks++;
         playSound(220, 0.05); // Bip raté
         updateHUD();
       }
     });
 
+    startBtn?.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      if (e.cancelable) e.preventDefault();
+      startGame();
+    });
     startBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
+    });
+
+    restartBtn?.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      if (e.cancelable) e.preventDefault();
       startGame();
     });
     restartBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
-      startGame();
     });
+
     closeBtn?.addEventListener('click', closeModal);
     backdrop?.addEventListener('click', closeModal);
 

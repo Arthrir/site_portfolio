@@ -105,7 +105,7 @@ const schemaJson = {
 
 		<footer id="footerWrap" style="border-top: 1px solid var(--border); padding: 16px 24px; text-align: center; color: var(--muted); font-size: 0.85rem;">
 			<div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-				<p>
+				<p id="footerCopyright" style="user-select: none;">
 					© 2026 Arthur Doradoux. {t('common.rights')} 
 					<span style="margin: 0 6px; opacity: 0.5;">•</span> 
 					<a href="/mentions-legales" style="color: var(--muted); text-decoration: underline; text-underline-offset: 3px;">
@@ -126,5 +126,25 @@ const schemaJson = {
 		<F1GameModal />
 		<VitalityGameModal />
     <Analytics />
+
+    <script is:inline>
+      // Secret mobile trigger : 3 taps rapides sur le copyright = F1, 5 taps = Vitality Aim Lab
+      let secretTapCount = 0;
+      let secretTapTimer = null;
+      const copyrightEl = document.getElementById('footerCopyright');
+      copyrightEl?.addEventListener('pointerdown', (e) => {
+        if (e.target.tagName && e.target.tagName.toLowerCase() === 'a') return;
+        secretTapCount++;
+        clearTimeout(secretTapTimer);
+        secretTapTimer = setTimeout(() => {
+          if (secretTapCount === 3 && window.startF1) {
+            window.startF1();
+          } else if (secretTapCount >= 5 && window.startVitality) {
+            window.startVitality();
+          }
+          secretTapCount = 0;
+        }, 450);
+      });
+    </script>
 	</body>
 </html>
