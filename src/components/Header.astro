@@ -91,10 +91,22 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
     background: transparent; border: none; color: var(--text); cursor: pointer; 
     width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; 
     position: relative; transition: transform 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
-  .theme-toggle:hover { 
-    transform: scale(1.05); 
-    animation: icon-rgb-cycle 2.5s linear infinite;
+  @media (hover: hover) and (pointer: fine) {
+    .theme-toggle:hover { 
+      transform: scale(1.05); 
+      animation: icon-rgb-cycle 2.5s linear infinite;
+    }
+  }
+  .theme-toggle:active {
+    transform: scale(0.92);
+  }
+  .theme-toggle:focus:not(:focus-visible) {
+    outline: none;
+    animation: none;
+    color: var(--text);
   }
   .theme-toggle svg { position: absolute; transition: opacity 0.3s ease, transform 0.3s ease; }
   .icon-sun { opacity: 1; transform: scale(1); }
@@ -106,13 +118,18 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
     background: var(--card-bg); color: var(--text); cursor: pointer; font-weight: 600; font-size: 0.8rem; 
     width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; 
     border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease; border: 2px solid transparent;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
   .lang-toggle.en-flag { border: 2px solid var(--text); background-image: none; }
   .lang-toggle.fr-flag {
     background-image: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(90deg, #0055A4 33%, #fff 33%, #fff 66%, #EF4135 66%);
     background-origin: border-box; background-clip: padding-box, border-box;
   }
-  .lang-toggle:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(15, 23, 42, 0.1); }
+  @media (hover: hover) and (pointer: fine) {
+    .lang-toggle:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(15, 23, 42, 0.1); }
+  }
+  .lang-toggle:active { transform: scale(0.95); }
 
   /* GESTION DU MENU CV */
   .cv-menu { position: relative; }
@@ -164,14 +181,19 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
 <script>
   const themeToggle = document.getElementById('themeToggle');
   themeToggle?.addEventListener('click', () => {
+    themeToggle.blur();
     const isDark = document.body.classList.toggle('theme-dark');
     document.body.classList.toggle('theme-light', !isDark);
     document.cookie = `theme=${isDark ? 'dark' : 'light'}; path=/; max-age=31536000; SameSite=Lax`;
   });
+  themeToggle?.addEventListener('touchend', () => {
+    setTimeout(() => themeToggle.blur(), 50);
+  }, { passive: true });
 
   const langToggle = document.getElementById('langToggle');
   langToggle?.addEventListener('click', (e) => {
     e.preventDefault();
+    langToggle.blur();
     const current = langToggle.getAttribute('data-current');
     const next = current === 'fr' ? 'en' : 'fr';
     document.cookie = `lang=${next}; path=/; max-age=31536000; SameSite=Lax`;
