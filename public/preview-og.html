@@ -1,402 +1,214 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aperçu Carte Open Graph — Arthur Doradoux</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Open Graph Image</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #111216;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      font-family: 'Inter', sans-serif;
-      padding: 40px 20px;
-      color: #fff;
-    }
-    .header-bar {
-      margin-bottom: 24px;
-      text-align: center;
-      max-width: 800px;
-    }
-    .header-bar h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #FFFFFF;
-      margin-bottom: 8px;
-    }
-    .header-bar p {
-      color: #9CA3AF;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-    .controls {
-      display: flex;
-      gap: 12px;
-      margin-top: 14px;
-      justify-content: center;
-    }
-    .btn-toggle {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      color: #fff;
-      padding: 6px 16px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.15s;
-    }
-    .btn-toggle.active {
-      background: #5B9DFF;
-      border-color: #5B9DFF;
-      color: #fff;
-      font-weight: 600;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    /* CADRE EXACT FORMAT STANDARD OPEN GRAPH 1200 x 630 */
-    .og-card {
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
       width: 1200px;
       height: 630px;
-      background: #0D0E12;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
-      position: relative;
       overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      /* Soft Apple-like mesh background */
+      background: radial-gradient(circle at 15% 50%, rgba(228, 233, 242, 1), transparent 50%),
+                  radial-gradient(circle at 85% 30%, rgba(230, 235, 245, 1), transparent 50%),
+                  radial-gradient(circle at 50% 80%, rgba(240, 240, 245, 1), transparent 50%),
+                  #f5f5f7;
       display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Glassmorphism Business Card (More like a real card ratio) */
+    .glass-card {
+      width: 1000px;
+      height: 540px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 32px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 1);
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: stretch;
       padding: 56px 64px;
-      gap: 50px;
-      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.06);
-      transform-origin: center center;
+      position: relative;
     }
 
-    /* Gradients d'ambiance */
-    .bg-glow-blue {
-      position: absolute;
-      top: -160px;
-      left: -120px;
-      width: 650px;
-      height: 650px;
-      background: radial-gradient(circle, rgba(14, 116, 255, 0.18) 0%, rgba(0,0,0,0) 70%);
-      pointer-events: none;
-    }
-    .bg-glow-gold {
-      position: absolute;
-      bottom: -180px;
-      right: -100px;
-      width: 650px;
-      height: 650px;
-      background: radial-gradient(circle, rgba(180, 83, 9, 0.14) 0%, rgba(0,0,0,0) 70%);
-      pointer-events: none;
-    }
-    .bg-grid {
-      position: absolute;
-      inset: 0;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 36px 36px;
-      pointer-events: none;
-      mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
-      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
-    }
-
-    /* COLONNE GAUCHE (INFOS & TYPOGRAPHIE) */
+    /* Left Column */
     .col-left {
-      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
-      z-index: 2;
+      flex: 1;
+      padding-right: 40px;
     }
 
-    .top-row {
+    .header-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .name {
+      font-size: 52px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #111827;
+      line-height: 1.1;
+    }
+
+    .role {
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: #4b5563;
+      margin-bottom: 24px;
+    }
+
+    .education-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .edu-item {
+      font-size: 18px;
+      line-height: 1.4;
+      color: #6b7280;
+      font-weight: 400;
       display: flex;
       align-items: center;
-      gap: 20px;
-    }
-    .brand-logo {
-      height: 44px;
-      width: auto;
-    }
-    .schools-pills {
-      display: flex;
       gap: 8px;
-      flex-wrap: wrap;
-    }
-    .school-tag {
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      padding: 5px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.04);
-      color: #E2E4EB;
-    }
-    .school-tag.emse { border-color: rgba(168, 85, 247, 0.35); color: #C084FC; background: rgba(168, 85, 247, 0.08); }
-    .school-tag.polimi { border-color: rgba(59, 130, 246, 0.35); color: #60A5FA; background: rgba(59, 130, 246, 0.08); }
-    .school-tag.emlyon { border-color: rgba(239, 68, 68, 0.35); color: #F87171; background: rgba(239, 68, 68, 0.08); }
-
-    .center-content {
-      margin: auto 0;
-    }
-    .name-title {
-      font-family: 'Fraunces', serif;
-      font-size: 4.4rem;
-      font-weight: 600;
-      color: #FFFFFF;
-      letter-spacing: -0.025em;
-      line-height: 1.05;
-      margin-bottom: 12px;
-    }
-    .role-kicker {
-      font-size: 1.55rem;
-      font-weight: 600;
-      color: #5B9DFF;
-      margin-bottom: 10px;
-      letter-spacing: -0.01em;
-    }
-    .summary-text {
-      font-size: 1.12rem;
-      color: #9CA3AF;
-      line-height: 1.5;
-      max-width: 620px;
     }
 
-    /* CARTE DE VISITE / CONTACT PINS */
-    .bottom-row {
+    .edu-item b {
+      color: #374151;
+      font-weight: 600;
+    }
+    
+    .school {
+      color: #9ca3af;
+    }
+
+    .footer-section {
       display: flex;
       flex-direction: column;
       gap: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.10);
-      padding-top: 20px;
-    }
-    .contact-chips {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .chip {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.88rem;
-      color: #D1D5DB;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 6px 12px;
-      border-radius: 6px;
-    }
-    .chip svg {
-      width: 15px;
-      height: 15px;
-      color: #9CA3AF;
-    }
-    .chip.domain {
-      color: #69FF0A;
-      border-color: rgba(105, 255, 10, 0.25);
-      background: rgba(105, 255, 10, 0.06);
-    }
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.92rem;
-      color: #E5E7EB;
-      font-weight: 500;
-    }
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #10B981;
-      box-shadow: 0 0 10px #10B981;
+      width: max-content;
     }
 
-    /* COLONNE DROITE (PORTRAIT & CARD) */
-    .col-right {
-      width: 360px;
+    .contact-row {
+      display: flex;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .badge {
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      z-index: 2;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #374151;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 10px 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      letter-spacing: -0.01em;
     }
-    .photo-frame {
+
+    .badge-top {
+      flex: 1 1 auto;
+    }
+
+    .badge-bottom {
       width: 100%;
-      height: 470px;
-      border-radius: 18px;
-      background: #15161C;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(91, 157, 255, 0.15);
-      overflow: hidden;
-      position: relative;
-      display: flex;
-      flex-direction: column;
     }
-    .photo-img {
+
+    .badge svg {
+      width: 18px;
+      height: 18px;
+      color: #6b7280;
+    }
+
+    /* Right Column - Photo */
+    .col-right {
+      width: 310px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-container {
+      width: 290px;
+      height: 370px;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 6px solid #ffffff;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+      background: #e5e7eb;
+    }
+
+    .photo-container img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center 20%;
-      filter: contrast(1.03) saturate(1.02);
-    }
-    .photo-overlay-tag {
-      position: absolute;
-      bottom: 16px;
-      left: 16px;
-      right: 16px;
-      background: rgba(12, 13, 16, 0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 10px;
-      padding: 10px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .overlay-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #FFFFFF;
-    }
-    .overlay-sub {
-      font-size: 0.72rem;
-      color: #9CA3AF;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .overlay-badge {
-      background: rgba(91, 157, 255, 0.2);
-      border: 1px solid #5B9DFF;
-      color: #5B9DFF;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 4px;
-      letter-spacing: 0.04em;
-    }
-
-    /* Scaling pour écrans standards */
-    @media (max-width: 1260px) {
-      .og-card { transform: scale(0.75); margin: -75px 0; }
-    }
-    @media (max-width: 950px) {
-      .og-card { transform: scale(0.5); margin: -150px 0; }
-    }
-    @media (max-width: 640px) {
-      .og-card { transform: scale(0.28); margin: -220px 0; }
     }
   </style>
 </head>
 <body>
-
-  <div class="header-bar">
-    <h1>📐 Bannière Open Graph Pro (1200 × 630 px)</h1>
-    <p>Cette carte s'affiche automatiquement lorsque le lien <code>https://arthurdx.com</code> est partagé sur <strong>LinkedIn, Twitter / X, WhatsApp, Discord, Slack ou iMessage</strong>.</p>
-    
-    <div class="controls">
-      <button class="btn-toggle active" id="btnFr" onclick="setLang('fr')">Version FR</button>
-      <button class="btn-toggle" id="btnEn" onclick="setLang('en')">Version EN</button>
-      <a href="/og-image.jpg" target="_blank" class="btn-toggle" style="text-decoration: none;">Télécharger / Voir le fichier direct (og-image.jpg)</a>
-    </div>
-  </div>
-
-  <div class="og-card" id="ogCard">
-    <div class="bg-glow-blue"></div>
-    <div class="bg-glow-gold"></div>
-    <div class="bg-grid"></div>
-
-    <!-- COLONNE GAUCHE -->
+  <div class="glass-card">
     <div class="col-left">
-      <div class="top-row">
-        <img src="/logo/logo-white.svg" alt="Arthur Doradoux" class="brand-logo" />
-        <div class="schools-pills">
-          <span class="school-tag emse">Mines Saint-Étienne</span>
-          <span class="school-tag polimi">Politecnico di Milano</span>
-          <span class="school-tag emlyon">emlyon business school</span>
+      <div class="header-section">
+        <h1 class="name">Arthur Doradoux</h1>
+        <div class="role">Aspiring Product Owner in Consumer Tech</div>
+        
+        <div class="education-stack">
+          <div class="edu-item">
+            <span><b>Microelectronics & Computer Science</b> <span class="school">(Mines Saint-Étienne)</span></span>
+          </div>
+          <div class="edu-item">
+            <span><b>Product Design</b> <span class="school">(Politecnico di Milano)</span></span>
+          </div>
+          <div class="edu-item">
+            <span><b>Management, Business Strategy & Innovation</b> <span class="school">(emlyon)</span></span>
+          </div>
         </div>
       </div>
 
-      <div class="center-content">
-        <h1 class="name-title">Arthur Doradoux</h1>
-        <div class="role-kicker" id="txtRole">Futur Product Owner / Manager • Consumer Tech</div>
-        <p class="summary-text" id="txtDesc">
-          Ingénierie matérielle & logicielle (Mines Saint-Étienne) • Design produit (Politecnico di Milano) • Stratégie & Management (emlyon).
-        </p>
-      </div>
-
-      <div class="bottom-row">
-        <div class="contact-chips">
-          <div class="chip domain">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+      <div class="footer-section">
+        <div class="contact-row">
+          <div class="badge badge-top">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             arthurdx.com
           </div>
-          <div class="chip">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            contact@arthurdx.com
-          </div>
-          <div class="chip">
+          <div class="badge badge-top">
             <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
             linkedin.com/in/arthur-doradoux
           </div>
         </div>
-
-        <div class="status-badge" id="txtStatus">
-          <span class="status-dot"></span>
-          Recherche de stage de fin d'études • 6 mois dès Avril 2027
+        <div class="badge badge-bottom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Seeking 6-month Final Year Internship · From April 2027
         </div>
       </div>
     </div>
-
-    <!-- COLONNE DROITE : PORTRAIT -->
+    
     <div class="col-right">
-      <div class="photo-frame">
-        <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" class="photo-img" />
-        <div class="photo-overlay-tag">
-          <div>
-            <div class="overlay-title">Arthur Doradoux</div>
-            <div class="overlay-sub">PRODUCT & TECH</div>
-          </div>
-          <span class="overlay-badge">PRODUCT OWNER</span>
-        </div>
+      <div class="photo-container">
+        <img src="./og-profile.jpg" alt="Arthur Doradoux" />
       </div>
     </div>
   </div>
-
-  <script>
-    const content = {
-      fr: {
-        role: "Futur Product Owner / Manager • Consumer Tech",
-        desc: "Ingénierie matérielle & logicielle (Mines Saint-Étienne) • Design produit (Politecnico di Milano) • Stratégie & Management (emlyon).",
-        status: "Recherche de stage de fin d'études • 6 mois dès Avril 2027"
-      },
-      en: {
-        role: "Aspiring Product Owner / Manager in Consumer Tech Companies",
-        desc: "Hardware & Software Engineering (Mines Saint-Étienne) • Product Design (Politecnico di Milano) • Business Strategy (emlyon).",
-        status: "Seeking 6-month Final Year Internship • From April 2027"
-      }
-    };
-
-    function setLang(lang) {
-      document.getElementById('txtRole').textContent = content[lang].role;
-      document.getElementById('txtDesc').textContent = content[lang].desc;
-      document.getElementById('txtStatus').innerHTML = `<span class="status-dot"></span> ${content[lang].status}`;
-      
-      document.getElementById('btnFr').classList.toggle('active', lang === 'fr');
-      document.getElementById('btnEn').classList.toggle('active', lang === 'en');
-    }
-  </script>
-
 </body>
 </html>
