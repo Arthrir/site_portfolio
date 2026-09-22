@@ -167,8 +167,10 @@ body.theme-dark .theme-toggle-pro .toggle-thumb { transform: translateX(20px); }
 
 @media (max-width: 768px) {
   .timeline::before { left: 8px; }
-  .timeline-item { grid-template-columns: 1fr; gap: 10px; padding-left: 26px; }
-  .timeline-date { text-align: left; padding-top: 0; }
+  .timeline-item { grid-template-columns: 1fr; gap: 8px; padding-left: 26px; }
+  .timeline-date { text-align: left; padding-top: 0; white-space: nowrap; }
+  .timeline-date br,
+  .timeline-date .date-br { display: none; }
   .timeline-dot { left: 3px; top: 4px; }
 }
 
