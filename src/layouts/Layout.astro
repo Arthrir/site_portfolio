@@ -88,11 +88,11 @@ const schemaJson = {
           const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
           const renderTime = perfData.domComplete - perfData.domInteractive;
 
-          console.log("%c🏎️ IN LAP - Telemetry Connected", "color: #FF5500; font-weight: bold; font-size: 14px; background: #101114; padding: 4px 8px; border-radius: 4px;");
-          console.log("%c[PADDOCK NOTE] Etant un grand fan de F1, voici un petit easter egg ! Un véritable Easter Egg interactif plus complet sera bientôt déployé... 🚦", "color: #0A6CFF; font-style: italic; font-size: 11px; margin-top: 4px;");
-          console.log(`%c⏱️ Track Time (Temps de chargement) : ${pageLoadTime}ms`, "color: #39FF14; font-weight: bold; margin-top: 4px;");
-          console.log(`%c⚙️ Aero Rendering (Rendu DOM) : ${renderTime}ms`, "color: #6B6D76;");
-          console.log("%c✅ Setup validé.", "color: #6B6D76;");
+          console.log("%c// TELEMETRY ACTIVE — Arthur Doradoux", "color: #FF5500; font-weight: bold; font-size: 13px; background: #101114; padding: 4px 8px; border-radius: 4px;");
+          console.log("%c[PIT NOTE] Tapez 'f1' ou 'vitality' n'importe où sur le site pour lancer les labs interactifs.", "color: #0A6CFF; font-style: italic; font-size: 11px; margin-top: 4px;");
+          console.log(`%c[METRICS] Page Load Time : ${pageLoadTime}ms`, "color: #39FF14; font-weight: bold; margin-top: 4px;");
+          console.log(`%c[METRICS] DOM Interactive : ${renderTime}ms`, "color: #8F9198;");
+          console.log("%c[STATUS] Systems nominal.", "color: #8F9198;");
         }, 0);
       });
 		</script>

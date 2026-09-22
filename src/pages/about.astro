@@ -137,23 +137,23 @@ const t = makeT(lang);
         <!-- Destination Selector Buttons -->
         <div class="travel-tabs" id="travelTabs" role="tablist" aria-label="Destinations de voyage">
           <button class="travel-tab active" data-dest="egypt" role="tab" aria-selected="true">
-            <span class="tab-flag">🇪🇬</span>
+            <span class="tab-code">EGY</span>
             <span class="tab-name">{lang === 'fr' ? 'Égypte' : 'Egypt'}</span>
           </button>
           <button class="travel-tab" data-dest="nyc" role="tab" aria-selected="false">
-            <span class="tab-flag">🇺🇸</span>
+            <span class="tab-code">USA</span>
             <span class="tab-name">New York</span>
           </button>
           <button class="travel-tab" data-dest="spain" role="tab" aria-selected="false">
-            <span class="tab-flag">🇪🇸</span>
+            <span class="tab-code">ESP</span>
             <span class="tab-name">{lang === 'fr' ? 'Espagne' : 'Spain'}</span>
           </button>
           <button class="travel-tab" data-dest="france" role="tab" aria-selected="false">
-            <span class="tab-flag">🇫🇷</span>
+            <span class="tab-code">FRA</span>
             <span class="tab-name">France</span>
           </button>
           <button class="travel-tab" data-dest="italy" role="tab" aria-selected="false">
-            <span class="tab-flag">🇮🇹</span>
+            <span class="tab-code">ITA</span>
             <span class="tab-name">{lang === 'fr' ? 'Italie' : 'Italy'}</span>
           </button>
         </div>
@@ -162,7 +162,7 @@ const t = makeT(lang);
         <div class="travel-card" id="travelCard">
           <div class="travel-card-header">
             <div>
-              <span class="travel-pill" id="travelPill">🇪🇬 Le Caire & Louxor</span>
+              <span class="travel-pill" id="travelPill">EGY // Le Caire & Louxor</span>
               <h5 class="travel-title" id="travelTitle">
                 {lang === 'fr' ? "L'épreuve du temps et la monumentalité" : "The test of time and monumentality"}
               </h5>
@@ -221,7 +221,10 @@ const t = makeT(lang);
       border-color: var(--pop-blue);
       color: var(--pop-blue); font-weight: 600;
     }
-    .tab-flag { font-size: 1.05rem; }
+    .tab-code {
+      font-family: monospace; font-size: 0.72rem; font-weight: 700;
+      color: var(--pop-blue); opacity: 0.9;
+    }
 
     .travel-card {
       background: var(--card-bg);
@@ -278,7 +281,7 @@ const t = makeT(lang);
     (function initTravelExplorer() {
       const travelData = {
         egypt: {
-          pill: "🇪🇬 Le Caire, Louxor & Pyramides",
+          pill: "EGY // Le Caire & Louxor",
           title: {
             fr: "L'épreuve du temps et la monumentalité",
             en: "The test of time and monumentality"
@@ -294,7 +297,7 @@ const t = makeT(lang);
           }
         },
         nyc: {
-          pill: "🇺🇸 New York • Manhattan & Brooklyn",
+          pill: "USA // New York • Manhattan",
           title: {
             fr: "L'énergie brute, la verticalité et le flux urbain",
             en: "Raw energy, verticality and urban flow"
@@ -310,7 +313,7 @@ const t = makeT(lang);
           }
         },
         spain: {
-          pill: "🇪🇸 Barcelone, Madrid & Méditerranée",
+          pill: "ESP // Barcelone & Madrid",
           title: {
             fr: "La vitalité méditerranéenne et l'audace des formes",
             en: "Mediterranean vitality and bold organic forms"
@@ -326,7 +329,7 @@ const t = makeT(lang);
           }
         },
         france: {
-          pill: "🇫🇷 Lyon, Provence, Paris & Alpes",
+          pill: "FRA // Lyon, Provence & Paris",
           title: {
             fr: "Le berceau de la rigueur et de l'excellence industrielle",
             en: "The roots of industrial rigor and elegance"
@@ -342,7 +345,7 @@ const t = makeT(lang);
           }
         },
         italy: {
-          pill: "🇮🇹 Milan, Politecnico & Toscane",
+          pill: "ITA // Milan & Politecnico",
           title: {
             fr: "Le temple du design industriel et de l'ergonomie",
             en: "The heart of industrial design and ergonomics"
