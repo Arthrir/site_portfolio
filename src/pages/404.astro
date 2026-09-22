@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getLangFromCookie, makeT } from '../i18n/translations';
+
+const lang = getLangFromCookie(Astro.cookies.get('lang')?.value);
+const t = makeT(lang);
+
+const pageTitle = lang === 'fr' ? "404 — Page introuvable | Arthur Doradoux" : "404 — Page Not Found | Arthur Doradoux";
+const pageDesc = lang === 'fr' ? "La page que vous recherchez n'existe pas ou a été déplacée." : "The page you are looking for does not exist or has been moved.";
+---
+
+<Layout title={pageTitle} description={pageDesc}>
+  <section style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 60px 20px 100px; min-height: 60vh;">
+    
+    <div style="font-family: var(--font-serif); font-size: clamp(5rem, 15vw, 8rem); font-weight: 700; line-height: 1; color: var(--pop-blue); margin-bottom: 12px; letter-spacing: -0.03em;">
+      404
+    </div>
+
+    <div class="stacked-title-wrapper" style="--stacked-color: var(--accent-bright); --dot-color: var(--accent-bright); display: inline-block; margin-bottom: 24px;">
+      <h1 class="stacked-main" style="margin-left: 0; font-size: 1.8rem;">
+        {lang === 'fr' ? "Trajectoire hors-piste 🏎️" : "Track Limit Exceeded 🏎️"}
+      </h1>
+    </div>
+
+    <p style="color: var(--muted); font-size: 1.05rem; max-width: 500px; line-height: 1.7; margin-bottom: 36px;">
+      {lang === 'fr' 
+        ? "La page que vous tentez de rejoindre n'existe pas, a été déplacée ou son URL est incorrecte. Reprenez la trajectoire principale !" 
+        : "The page you are trying to reach does not exist, has been moved, or the link is incorrect. Get back on track!"}
+    </p>
+
+    <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+      <a href="/" class="btn btn-primary" style="padding: 12px 28px;">
+        ← {lang === 'fr' ? "Retour à l'accueil" : "Back to Home"}
+      </a>
+      <a href="/projects" class="btn btn-secondary" style="padding: 12px 28px;">
+        {lang === 'fr' ? "Voir les projets" : "View Projects"}
+      </a>
+    </div>
+
+  </section>
+</Layout>
+

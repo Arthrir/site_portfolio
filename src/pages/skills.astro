@@ -41,7 +41,10 @@ const sections = [
 ];
 ---
 
-<Layout title={lang === 'fr' ? "Arthur Doradoux | Compétences" : "Arthur Doradoux | Skills"}>
+<Layout 
+  title={lang === 'fr' ? "Arthur Doradoux | Compétences & Outils" : "Arthur Doradoux | Skills & Toolbox"}
+  description={lang === 'fr' ? "Compétences techniques et managériales d'Arthur Doradoux : hardware, systèmes embarqués, programmation (Python, C/C++, SystemVerilog), RF, IoT et langues." : "Technical and managerial skills of Arthur Doradoux: hardware, embedded systems, programming (Python, C/C++, SystemVerilog), RF, IoT, and languages."}
+>
   <section style="padding: 20px 0 40px; max-width: 800px; margin: 0 auto; text-align: center;">
     <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); display: inline-block;">
       <div class="stacked-bg" style="left: 50%; transform: translateX(-50%); width: 100%;">{lang === 'fr' ? 'Boîte à outils' : 'Toolbox'}</div>

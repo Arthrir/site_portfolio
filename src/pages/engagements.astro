@@ -109,7 +109,10 @@ const others = [
 ];
 ---
 
-<Layout title={lang === 'fr' ? "Arthur Doradoux | Engagements" : "Arthur Doradoux | Engagements"}>
+<Layout 
+  title={lang === 'fr' ? "Arthur Doradoux | Engagements & Leadership" : "Arthur Doradoux | Leadership & Engagements"}
+  description={lang === 'fr' ? "Engagements associatifs et responsabilités d'Arthur Doradoux : Présidence de Minitel, élu au comité de l'enseignement, représentant de promotion Mines Saint-Étienne." : "Student leadership and community engagements of Arthur Doradoux: President of Minitel, elected academic committee member, class representative at Mines Saint-Étienne."}
+>
   <section style="padding: 40px 0 80px; max-width: 900px; margin: 0 auto;">
     <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); margin-bottom: 40px;">
       <div class="stacked-bg">{lang === 'fr' ? 'Leadership' : 'Leadership'}</div>
@@ -122,7 +125,7 @@ const others = [
       {featured.map(item => (
         <div class="impact-card" style={`--dot-color: ${item.color};`}>
           <div class="item-head" style="margin-bottom: 12px;">
-            <img class="org-logo force-white-bg" src={item.logo} alt="" />
+            <img class="org-logo force-white-bg" src={item.logo} alt={`Logo ${item.role}`} />
             <div>
               <h3 class="role-name">{item.title}</h3>
               <span class="org-name-sub" style={`color: ${item.color};`}>{item.role}</span>
@@ -143,7 +146,7 @@ const others = [
         <details class="accordion-item">
           <summary class="accordion-summary-align">
             <span class="item-head">
-              <img class="org-logo force-white-bg" src={item.logo} alt="" />
+              <img class="org-logo force-white-bg" src={item.logo} alt={`Logo ${item.role}`} />
               <span>{item.title}</span>
             </span>
             <span class="accordion-meta">

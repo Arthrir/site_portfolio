@@ -1,0 +1,7 @@
+# robots.txt for https://arthurdx.com
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://arthurdx.com/sitemap.xml
+

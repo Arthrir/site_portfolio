@@ -1,0 +1,161 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getLangFromCookie, makeT } from '../i18n/translations';
+
+const lang = getLangFromCookie(Astro.cookies.get('lang')?.value);
+const t = makeT(lang);
+
+const pageTitle = lang === 'fr' 
+  ? "Mentions Légales & Politique de Confidentialité | Arthur Doradoux" 
+  : "Legal Notice & Privacy Policy | Arthur Doradoux";
+const pageDescription = lang === 'fr'
+  ? "Mentions légales, politique de confidentialité, RGPD et gestion des cookies du site portfolio d'Arthur Doradoux."
+  : "Legal notice, privacy policy, GDPR compliance and cookie information for Arthur Doradoux's portfolio.";
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <section style="padding: 40px 0 80px; max-width: 760px; margin: 0 auto;">
+    
+    <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-blue); --dot-color: var(--pop-blue); margin-bottom: 30px;">
+      <div class="stacked-bg">{lang === 'fr' ? 'Légal' : 'Legal'}</div>
+      <h1 class="stacked-main" style="margin-left: 0; font-size: 2.2rem;">
+        {lang === 'fr' ? 'Mentions Légales & Confidentialité' : 'Legal Notice & Privacy Policy'}
+      </h1>
+    </div>
+
+    <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 40px;">
+      {lang === 'fr' ? 'Dernière mise à jour : Mars 2026' : 'Last updated: March 2026'}
+    </p>
+
+    <!-- SECTION 1 : MENTIONS LÉGALES -->
+    <article class="card" style="padding: 32px; margin-bottom: 28px;">
+      <h2 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; color: var(--text);">
+        {lang === 'fr' ? '1. Mentions Légales' : '1. Legal Notice'}
+      </h2>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; font-size: 0.95rem; line-height: 1.7; color: var(--text);">
+        <div>
+          <strong style="color: var(--text);">{lang === 'fr' ? 'Éditeur du site :' : 'Site Publisher:'}</strong>
+          <p style="color: var(--muted); margin-top: 4px;">
+            Arthur Doradoux<br />
+            {lang === 'fr' ? 'Élève-ingénieur — Mines Saint-Étienne & Politecnico di Milano' : 'Engineering Student — Mines Saint-Étienne & Politecnico di Milano'}<br />
+            Email : <a href="mailto:contact@arthurdx.com" style="color: var(--text); text-decoration: underline;">contact@arthurdx.com</a><br />
+            {lang === 'fr' ? 'Téléphone :' : 'Phone:'} +33 6 27 88 34 83
+          </p>
+        </div>
+
+        <div>
+          <strong style="color: var(--text);">{lang === 'fr' ? 'Directeur de la publication :' : 'Publication Director:'}</strong>
+          <p style="color: var(--muted); margin-top: 4px;">Arthur Doradoux</p>
+        </div>
+
+        <div>
+          <strong style="color: var(--text);">{lang === 'fr' ? 'Hébergement du site :' : 'Web Hosting:'}</strong>
+          <p style="color: var(--muted); margin-top: 4px;">
+            Vercel Inc.<br />
+            440 N Barranca Ave #4133, Covina, CA 91723, USA<br />
+            Site web : <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" style="color: var(--text); text-decoration: underline;">https://vercel.com</a>
+          </p>
+        </div>
+
+        <div>
+          <strong style="color: var(--text);">{lang === 'fr' ? 'Propriété intellectuelle :' : 'Intellectual Property:'}</strong>
+          <p style="color: var(--muted); margin-top: 4px;">
+            {lang === 'fr' ? `
+              L’ensemble de ce site (structure, textes, graphismes, logos personnels, photographies, réalisations et code source) est protégé par les lois relatives à la propriété intellectuelle et au droit d’auteur. Toute reproduction, représentation, modification ou diffusion, totale ou partielle, sans l’autorisation écrite préalable d'Arthur Doradoux est strictement interdite. Les logos des entreprises, écoles ou associations mentionnées demeurent la propriété exclusive de leurs détenteurs respectifs.
+            ` : `
+              All contents of this site (structure, texts, graphics, personal logos, photos, project showcases, and source code) are protected under copyright and intellectual property laws. Any reproduction, adaptation, or distribution, whether partial or complete, without prior written consent from Arthur Doradoux is strictly prohibited. Corporate, university, and association trademarks and logos belong to their respective owners.
+            `}
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <!-- SECTION 2 : POLITIQUE DE CONFIDENTIALITÉ & RGPD -->
+    <article class="card" style="padding: 32px; margin-bottom: 28px;">
+      <h2 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; color: var(--text);">
+        {lang === 'fr' ? '2. Protection des Données Personnelles (RGPD)' : '2. Personal Data Protection (GDPR)'}
+      </h2>
+
+      <div style="display: flex; flex-direction: column; gap: 18px; font-size: 0.95rem; line-height: 1.7; color: var(--text);">
+        <div>
+          <strong style="color: var(--text);">{lang === 'fr' ? 'Données collectées via le formulaire :' : 'Data collected via the contact form:'}</strong>
+          <p style="color: var(--muted); margin-top: 4px;">
+            {lang === 'fr' 
+              ? "Lorsque vous utilisez le formulaire de contact, les informations suivantes sont transmises : votre nom, votre adresse e-mail et le contenu de votre message."
+              : "When using the contact form, the following details are submitted: your name, email address, and message content."}
+          </p>
+        </div>
+
+        <div>
+          <strong style="color: var(--text);">{lang === 'fr' ? 'Finalité et base légale :' : 'Purpose & Legal Basis:'}</strong>
+          <p style="color: var(--muted); margin-top: 4px;">
+            {lang === 'fr' 
+              ? "Ces données sont collectées uniquement afin de répondre à vos demandes de renseignement, échanges professionnels et propositions de stage ou d'emploi. La base légale repose sur votre consentement (envoi volontaire du formulaire) et l'intérêt légitime."
+              : "These data points are collected exclusively to respond to your inquiries, professional outreach, and internship/job opportunities. The legal basis is your consent (voluntary submission) and legitimate professional interest."}
+          </p>
+        </div>
+
+        <div>
+          <strong style="color: var(--text);">{lang === 'fr' ? 'Sous-traitants techniques :' : 'Technical Processors:'}</strong>
+          <p style="color: var(--muted); margin-top: 4px;">
+            {lang === 'fr' 
+              ? "Les messages du formulaire transitent par le service sécurisé Web3Forms et sont hébergés sur l'infrastructure Vercel. Aucune donnée n'est cédée, louée, échangée ou vendue à des tiers ou à des fins commerciales."
+              : "Form messages safely route via Web3Forms and run on Vercel infrastructure. No personal information is ever rented, shared, or sold to third parties or advertisers."}
+          </p>
+        </div>
+
+        <div>
+          <strong style="color: var(--text);">{lang === 'fr' ? 'Durée de conservation :' : 'Retention Period:'}</strong>
+          <p style="color: var(--muted); margin-top: 4px;">
+            {lang === 'fr' 
+              ? "Les coordonnées et messages sont conservés le temps nécessaire au traitement de l'échange professionnel, et au maximum pour une durée de 2 ans à compter du dernier contact."
+              : "Contact details and messages are kept for the duration of the professional exchange and up to a maximum of 2 years after the last contact."}
+          </p>
+        </div>
+
+        <div>
+          <strong style="color: var(--text);">{lang === 'fr' ? 'Vos droits (CNIL / RGPD) :' : 'Your Rights (GDPR):'}</strong>
+          <p style="color: var(--muted); margin-top: 4px;">
+            {lang === 'fr' ? `
+              Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi française « Informatique et Libertés », vous disposez d’un droit d’accès, de rectification, de limitation et de suppression de vos données personnelles. Vous pouvez exercer ce droit à tout moment en envoyant un e-mail à <a href="mailto:contact@arthurdx.com" style="color: var(--text); text-decoration: underline;">contact@arthurdx.com</a>. Vous avez également le droit d'introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés - cnil.fr).
+            ` : `
+              In compliance with the General Data Protection Regulation (GDPR), you hold the right to access, rectify, restrict, and request deletion of your personal data. You can exercise these rights at any time by sending an email to <a href="mailto:contact@arthurdx.com" style="color: var(--text); text-decoration: underline;">contact@arthurdx.com</a>. You may also lodge a complaint with the competent supervisory authority (CNIL in France).
+            `}
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <!-- SECTION 3 : COOKIES & TRACEURS -->
+    <article class="card" style="padding: 32px;">
+      <h2 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; color: var(--text);">
+        {lang === 'fr' ? '3. Cookies & Traceurs' : '3. Cookies & Tracking'}
+      </h2>
+
+      <div style="font-size: 0.95rem; line-height: 1.7; color: var(--muted);">
+        {lang === 'fr' ? `
+          <p style="margin-bottom: 12px;">
+            Ce site web respecte scrupuleusement la vie privée de ses visiteurs :
+          </p>
+          <ul style="padding-left: 20px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
+            <li><strong>Cookies techniques strictement nécessaires :</strong> Deux cookies techniques sont utilisés pour mémoriser vos préférences d'affichage (choix de la langue <code>lang</code> et thème clair/sombre <code>theme</code>). Conformément aux recommandations de la CNIL, ces cookies fonctionnels ne nécessitent pas de recueil préalable de consentement.</li>
+            <li><strong>Mesure d'audience respectueuse (sans cookie) :</strong> Le site utilise Vercel Web Analytics. Cet outil est <em>cookieless</em> (sans cookie), ne dépose aucun traceur persistant sur votre terminal, anonymise les données et ne permet aucun suivi inter-sites ni profilage publicitaire.</li>
+            <li><strong>Aucun cookie publicitaire ou tiers :</strong> Aucun cookie de réseau social, traceur publicitaire ou pixel marketing n'est déposé sur votre équipement.</li>
+          </ul>
+        ` : `
+          <p style="margin-bottom: 12px;">
+            This website strictly respects the privacy of its visitors:
+          </p>
+          <ul style="padding-left: 20px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
+            <li><strong>Strictly necessary technical cookies:</strong> Only two functional cookies are used to preserve user preferences (language selection <code>lang</code> and theme toggle <code>theme</code>). Under ePrivacy & GDPR regulations, these functional cookies do not require prior consent.</li>
+            <li><strong>Privacy-friendly cookieless analytics:</strong> The site utilizes Vercel Web Analytics, which operates entirely without cookies, does not store persistent identifiers on your device, hashes traffic data anonymously, and never performs cross-site tracking.</li>
+            <li><strong>Zero advertising or third-party marketing cookies:</strong> No advertising trackers, social network cookies, or profiling scripts are installed.</li>
+          </ul>
+        `}
+      </div>
+    </article>
+
+  </section>
+</Layout>
+

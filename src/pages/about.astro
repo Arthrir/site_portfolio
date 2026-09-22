@@ -6,7 +6,10 @@ const lang = getLangFromCookie(Astro.cookies.get('lang')?.value);
 const t = makeT(lang);
 ---
 
-<Layout title={lang === 'fr' ? "Arthur Doradoux | À propos" : "Arthur Doradoux | About"}>
+<Layout 
+  title={lang === 'fr' ? "Arthur Doradoux | À propos" : "Arthur Doradoux | About"}
+  description={lang === 'fr' ? "Découvrez le parcours d'Arthur Doradoux : élève-ingénieur aux Mines Saint-Étienne et au Politecnico di Milano, profil hybride alliant ingénierie, design et vision produit." : "Discover Arthur Doradoux's journey: engineering student at Mines Saint-Étienne and Politecnico di Milano, combining engineering, design, and product vision."}
+>
   
   <!-- EN-TÊTE CENTRÉ -->
   <section style="padding: 40px 0; max-width: 720px; margin: 0 auto; text-align: center;">

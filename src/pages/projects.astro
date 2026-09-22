@@ -152,7 +152,10 @@ const softTags = ["Dev Lead", "Event Management", "Communication", "Entrepreneur
 const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "Matplotlib", "Figma"];
 ---
 
-<Layout title={lang === 'fr' ? "Arthur Doradoux | Projets" : "Arthur Doradoux | Projects Hub"}>
+<Layout 
+  title={lang === 'fr' ? "Arthur Doradoux | Projets & Réalisations" : "Arthur Doradoux | Projects Hub"}
+  description={lang === 'fr' ? "Découvrez les projets d'ingénierie et de développement d'Arthur Doradoux : FPGA, systèmes embarqués, cryptographie ASCON, sécurité réseau, IA et web." : "Explore engineering and software projects by Arthur Doradoux: FPGA, embedded systems, ASCON cryptography, network security, AI, and web development."}
+>
   <section style="padding: 20px 0 60px;">
     <div class="stacked-title-wrapper" style="--stacked-color: var(--pop-purple); --dot-color: var(--pop-purple); margin-bottom: 30px;">
       <div class="stacked-bg">{lang === 'fr' ? 'Réalisations' : 'Showcase'}</div>

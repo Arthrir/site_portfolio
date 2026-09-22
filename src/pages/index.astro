@@ -6,7 +6,10 @@ const lang = getLangFromCookie(Astro.cookies.get('lang')?.value);
 const t = makeT(lang);
 ---
 
-<Layout title="Arthur Doradoux | Engineering & Product Design">
+<Layout 
+	title={lang === 'fr' ? "Arthur Doradoux | Ingénieur & Product Design" : "Arthur Doradoux | Engineering & Product Design"}
+	description={lang === 'fr' ? "Portfolio d'Arthur Doradoux, élève-ingénieur aux Mines Saint-Étienne et au Politecnico di Milano. Recherche de stage de fin d'études (5+ mois) en tant que Product Owner ou Hardware/Software." : "Portfolio of Arthur Doradoux, engineering student at Mines Saint-Étienne and Politecnico di Milano. Seeking an end-of-studies internship as a Product Owner or in Hardware/Software."}
+>
 	<section style="padding: 40px 0 70px;">
 		<div style="display: flex; align-items: center; justify-content: space-between; gap: 60px; flex-wrap: wrap;">
 			<div style="flex: 1; min-width: 300px;">
@@ -30,7 +33,7 @@ const t = makeT(lang);
 			</div>
 
 			<div style="position: relative; width: 260px; height: 330px; flex-shrink: 0; margin: 0 auto;">
-				<img src="/assets/arthur.jpeg" alt="Arthur Doradoux" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); position: relative; z-index: 2;" />
+				<img src="/assets/arthur.jpeg" alt="Arthur Doradoux - Élève-ingénieur Mines Saint-Étienne & Politecnico di Milano" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); position: relative; z-index: 2;" />
 				<div style="position: absolute; bottom: -12px; right: -12px; width: 100%; height: 100%; border: 1px solid var(--pop-blue); border-radius: var(--radius); z-index: 1;"></div>
 			</div>
 		</div>
@@ -314,6 +317,8 @@ const t = makeT(lang);
 				<input type="hidden" name="access_key" value="87fde94b-7057-4663-9e22-63385526c25a" />
         <input type="hidden" name="subject" value="Nouveau contact depuis le portfolio !" />
         <input type="hidden" name="from_name" value="Arthur Doradoux - Portfolio" />
+        <!-- Honeypot anti-spam : invisible pour les humains, filtre les robots -->
+        <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
 				
 				<div>
 					<label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">{lang === 'fr' ? "Nom" : "Name"}</label>
