@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Analytics from '@vercel/analytics/astro';
 import Header from '../components/Header.astro';
+import CommandPalette from '../components/CommandPalette.astro';
 import F1GameModal from '../components/F1GameModal.astro';
 import VitalityGameModal from '../components/VitalityGameModal.astro';
 import { getLangFromCookie, makeT } from '../i18n/translations';
@@ -123,6 +124,7 @@ const schemaJson = {
 			</div>
 		</footer>
 
+		<CommandPalette />
 		<F1GameModal />
 		<VitalityGameModal />
     <Analytics />

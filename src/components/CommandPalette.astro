@@ -1,0 +1,499 @@
+---
+// src/components/CommandPalette.astro
+// Command Palette rapide déclenchée par Cmd+K (Mac) ou Ctrl+K (Windows/Linux)
+---
+
+<div id="cmdPaletteModal" class="cmd-modal" style="display: none;" role="dialog" aria-modal="true" aria-label="Command Palette">
+  <div class="cmd-backdrop" id="cmdBackdrop"></div>
+
+  <div class="cmd-dialog">
+    <div class="cmd-search-wrap">
+      <svg class="cmd-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input 
+        type="text" 
+        id="cmdInput" 
+        class="cmd-input" 
+        placeholder="Rechercher une page, action ou jeu... (ou Échap pour fermer)" 
+        autocomplete="off" 
+        spellcheck="false"
+      />
+      <kbd class="cmd-kbd-esc">ESC</kbd>
+    </div>
+
+    <div class="cmd-list-wrap" id="cmdListWrap">
+      <!-- Groupe Navigation -->
+      <div class="cmd-group-label" data-group="nav">Navigation</div>
+      
+      <div class="cmd-item" data-action="navigate" data-href="/" data-keywords="accueil home index">
+        <span class="cmd-icon">🏠</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Accueil</span>
+          <span class="cmd-item-desc">Page principale, profil et vue d'ensemble</span>
+        </div>
+        <span class="cmd-shortcut">/</span>
+      </div>
+
+      <div class="cmd-item" data-action="navigate" data-href="/projects" data-keywords="projets projects réalisations portfolio hardware code">
+        <span class="cmd-icon">📁</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Projets</span>
+          <span class="cmd-item-desc">Réalisations microélectronique, software et design</span>
+        </div>
+        <span class="cmd-shortcut">P</span>
+      </div>
+
+      <div class="cmd-item" data-action="navigate" data-href="/skills" data-keywords="compétences skills technologies outils fpga c++ python figma">
+        <span class="cmd-icon">🛠️</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Compétences</span>
+          <span class="cmd-item-desc">Stack technique, conception hardware, outils et méthodes</span>
+        </div>
+        <span class="cmd-shortcut">S</span>
+      </div>
+
+      <div class="cmd-item" data-action="navigate" data-href="/engagements" data-keywords="engagements associatif minitel forum lead leadership">
+        <span class="cmd-icon">🤝</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Engagements</span>
+          <span class="cmd-item-desc">Responsabilités associatives, MINITEL, Forum et événements</span>
+        </div>
+        <span class="cmd-shortcut">E</span>
+      </div>
+
+      <div class="cmd-item" data-action="navigate" data-href="/about" data-keywords="à propos about bio parcours voyages profil">
+        <span class="cmd-icon">👤</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">À propos (Secret preview)</span>
+          <span class="cmd-item-desc">Parcours, triple compétence, passions et voyages</span>
+        </div>
+        <span class="cmd-shortcut">A</span>
+      </div>
+
+      <div class="cmd-item" data-action="navigate" data-href="/mentions-legales" data-keywords="mentions légales rgpd privacy confidentialite lcen cookies">
+        <span class="cmd-icon">⚖️</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Mentions légales & Confidentialité</span>
+          <span class="cmd-item-desc">Conformité RGPD, hébergement et transparence analytics</span>
+        </div>
+      </div>
+
+      <!-- Groupe Actions Rapides -->
+      <div class="cmd-group-label" data-group="actions">Actions Rapides</div>
+
+      <div class="cmd-item" data-action="copy-email" data-keywords="email mail contact copier contact@arthurdx.com">
+        <span class="cmd-icon">✉️</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Copier l'email</span>
+          <span class="cmd-item-desc">contact@arthurdx.com</span>
+        </div>
+        <span class="cmd-badge">1-Clic</span>
+      </div>
+
+      <div class="cmd-item" data-action="download-cv-fr" data-keywords="cv resume curriculum vitae pdf francais fr">
+        <span class="cmd-icon">📄</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Télécharger le CV (Français)</span>
+          <span class="cmd-item-desc">Format PDF optimisé</span>
+        </div>
+        <span class="cmd-badge">PDF</span>
+      </div>
+
+      <div class="cmd-item" data-action="download-cv-en" data-keywords="cv resume curriculum vitae pdf english eng">
+        <span class="cmd-icon">📄</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Télécharger le CV (English)</span>
+          <span class="cmd-item-desc">English resume PDF</span>
+        </div>
+        <span class="cmd-badge">PDF</span>
+      </div>
+
+      <div class="cmd-item" data-action="toggle-theme" data-keywords="theme sombre clair dark light mode nuit soleil">
+        <span class="cmd-icon">🌓</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Changer de thème</span>
+          <span class="cmd-item-desc">Basculer entre Mode Clair et Mode Sombre</span>
+        </div>
+        <span class="cmd-shortcut">T</span>
+      </div>
+
+      <div class="cmd-item" data-action="toggle-lang" data-keywords="langue language switch fr en anglais francais">
+        <span class="cmd-icon">🌐</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Changer de langue</span>
+          <span class="cmd-item-desc">Bascule instantanée Français ⇄ English</span>
+        </div>
+        <span class="cmd-shortcut">L</span>
+      </div>
+
+      <div class="cmd-item" data-action="open-url" data-url="https://linkedin.com/in/arthur-doradoux/" data-keywords="linkedin profil social reseau">
+        <span class="cmd-icon">💼</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Ouvrir LinkedIn</span>
+          <span class="cmd-item-desc">linkedin.com/in/arthur-doradoux</span>
+        </div>
+        <span class="cmd-shortcut">↗</span>
+      </div>
+
+      <div class="cmd-item" data-action="open-url" data-url="https://github.com/Arthrir" data-keywords="github code repos git arthrir">
+        <span class="cmd-icon">🐙</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Ouvrir GitHub</span>
+          <span class="cmd-item-desc">github.com/Arthrir</span>
+        </div>
+        <span class="cmd-shortcut">↗</span>
+      </div>
+
+      <!-- Groupe Jeux & Easter Eggs -->
+      <div class="cmd-group-label" data-group="games">Easter Eggs & Mini-Jeux</div>
+
+      <div class="cmd-item" data-action="f1-game" data-keywords="f1 formule 1 formula1 reaction reflexe jeu feux depart racing">
+        <span class="cmd-icon">🏎️</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">F1 Reaction Time Test</span>
+          <span class="cmd-item-desc">Test de réflexe officiel sur les 5 feux FIA</span>
+        </div>
+        <span class="cmd-badge f1">F1 Game</span>
+      </div>
+
+      <div class="cmd-item" data-action="vit-game" data-keywords="vitality esport csgo aim lab cible precision zywoo bee">
+        <span class="cmd-icon">🐝</span>
+        <div class="cmd-item-info">
+          <span class="cmd-item-title">Team Vitality Aim Lab</span>
+          <span class="cmd-item-desc">Entraînement de visée et précision en 15 secondes</span>
+        </div>
+        <span class="cmd-badge vit">Aim Lab</span>
+      </div>
+
+      <!-- No Results State -->
+      <div id="cmdNoResults" class="cmd-no-results" style="display: none;">
+        <span>🔍</span>
+        <p>Aucun résultat correspondant</p>
+      </div>
+    </div>
+
+    <!-- Footer Guide Navigation -->
+    <div class="cmd-footer">
+      <div class="cmd-footer-keys">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> Naviguer</span>
+        <span><kbd>↵</kbd> Valider</span>
+        <span><kbd>ESC</kbd> Fermer</span>
+      </div>
+      <div class="cmd-footer-brand">
+        Arthur Doradoux • Command Palette
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cmd-modal {
+    position: fixed; inset: 0; z-index: 99999;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 12vh 20px 20px;
+  }
+  .cmd-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(10, 11, 14, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .cmd-dialog {
+    position: relative; z-index: 2;
+    width: 100%; max-width: 620px;
+    background: var(--card-bg, #16181D);
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    animation: cmdAppear 0.15s ease-out;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    color: var(--text, #F1F1EC);
+  }
+  @keyframes cmdAppear {
+    from { opacity: 0; transform: scale(0.97) translateY(-8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* Search Header */
+  .cmd-search-wrap {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .cmd-search-icon {
+    color: var(--muted, #8F9198); flex-shrink: 0;
+  }
+  .cmd-input {
+    flex: 1; background: transparent; border: none; outline: none;
+    font-size: 1rem; color: var(--text, #FFF); font-family: inherit;
+  }
+  .cmd-input::placeholder { color: var(--muted, #8F9198); opacity: 0.7; }
+  .cmd-kbd-esc {
+    font-family: monospace; font-size: 0.72rem; font-weight: 600;
+    color: var(--muted, #8F9198); background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px;
+    padding: 2px 6px; flex-shrink: 0;
+  }
+
+  /* List */
+  .cmd-list-wrap {
+    max-height: 380px; overflow-y: auto; padding: 10px 8px;
+  }
+  .cmd-list-wrap::-webkit-scrollbar { width: 6px; }
+  .cmd-list-wrap::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+
+  .cmd-group-label {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted, #8F9198);
+    padding: 8px 12px 4px; margin-top: 4px;
+  }
+
+  .cmd-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 12px; border-radius: 8px;
+    cursor: pointer; user-select: none;
+    transition: background-color 0.1s, color 0.1s;
+    margin-bottom: 2px;
+  }
+  .cmd-item:hover, .cmd-item.selected {
+    background: rgba(91, 157, 255, 0.12);
+    color: var(--pop-blue, #5B9DFF);
+  }
+  body.theme-light .cmd-item:hover, body.theme-light .cmd-item.selected {
+    background: rgba(10, 108, 255, 0.08);
+  }
+  .cmd-icon { font-size: 1.15rem; flex-shrink: 0; width: 24px; text-align: center; }
+  .cmd-item-info { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .cmd-item-title { font-size: 0.92rem; font-weight: 600; color: inherit; }
+  .cmd-item-desc { font-size: 0.78rem; color: var(--muted, #8F9198); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .cmd-shortcut {
+    font-family: monospace; font-size: 0.72rem; font-weight: 700;
+    color: var(--muted, #8F9198); background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 4px;
+    padding: 2px 6px;
+  }
+  .cmd-badge {
+    font-size: 0.7rem; font-weight: 700; border-radius: 4px;
+    padding: 2px 7px; background: rgba(255, 255, 255, 0.06); color: var(--muted, #8F9198);
+  }
+  .cmd-badge.f1 { background: rgba(255, 85, 0, 0.15); color: #FF6A1A; border: 1px solid rgba(255, 85, 0, 0.3); }
+  .cmd-badge.vit { background: rgba(242, 232, 0, 0.15); color: #E5DC00; border: 1px solid rgba(242, 232, 0, 0.3); }
+
+  .cmd-no-results {
+    padding: 36px 20px; text-align: center; color: var(--muted, #8F9198);
+    display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.9rem;
+  }
+  .cmd-no-results span { font-size: 1.6rem; }
+
+  /* Footer */
+  .cmd-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 18px; border-top: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+    background: rgba(0, 0, 0, 0.1); font-size: 0.75rem; color: var(--muted, #8F9198);
+  }
+  .cmd-footer-keys { display: flex; gap: 12px; align-items: center; }
+  .cmd-footer-keys kbd {
+    font-family: monospace; font-size: 0.7rem; font-weight: 600;
+    background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 3px; padding: 1px 4px; color: var(--text, #FFF);
+  }
+  .cmd-footer-brand { font-size: 0.72rem; opacity: 0.8; }
+</style>
+
+<script is:inline>
+  (function initCommandPalette() {
+    const modal = document.getElementById('cmdPaletteModal');
+    const backdrop = document.getElementById('cmdBackdrop');
+    const input = document.getElementById('cmdInput');
+    const listWrap = document.getElementById('cmdListWrap');
+    const noResults = document.getElementById('cmdNoResults');
+    let items = [];
+    let selectedIndex = 0;
+
+    function refreshVisibleItems() {
+      items = Array.from(listWrap.querySelectorAll('.cmd-item')).filter(el => el.style.display !== 'none');
+      if (items.length > 0) {
+        if (selectedIndex >= items.length) selectedIndex = 0;
+        highlightItem(selectedIndex);
+        if (noResults) noResults.style.display = 'none';
+      } else {
+        if (noResults) noResults.style.display = 'flex';
+      }
+    }
+
+    function highlightItem(index) {
+      items.forEach((el, i) => {
+        el.classList.toggle('selected', i === index);
+      });
+      if (items[index]) {
+        items[index].scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    function openPalette() {
+      if (!modal) return;
+      modal.style.display = 'flex';
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      // Reset filter
+      listWrap?.querySelectorAll('.cmd-item, .cmd-group-label').forEach(el => el.style.display = '');
+      selectedIndex = 0;
+      refreshVisibleItems();
+    }
+
+    function closePalette() {
+      if (!modal) return;
+      modal.style.display = 'none';
+    }
+
+    function filterItems(query) {
+      const q = query.trim().toLowerCase();
+      const allItems = listWrap?.querySelectorAll('.cmd-item');
+      allItems?.forEach(item => {
+        const title = item.querySelector('.cmd-item-title')?.textContent.toLowerCase() || '';
+        const desc = item.querySelector('.cmd-item-desc')?.textContent.toLowerCase() || '';
+        const keywords = item.getAttribute('data-keywords')?.toLowerCase() || '';
+        const matches = !q || title.includes(q) || desc.includes(q) || keywords.includes(q);
+        item.style.display = matches ? 'flex' : 'none';
+      });
+
+      // Filter groups
+      listWrap?.querySelectorAll('.cmd-group-label').forEach(label => {
+        const group = label.getAttribute('data-group');
+        let next = label.nextElementSibling;
+        let hasVisible = false;
+        while (next && !next.classList.contains('cmd-group-label')) {
+          if (next.classList.contains('cmd-item') && next.style.display !== 'none') {
+            hasVisible = true;
+            break;
+          }
+          next = next.nextElementSibling;
+        }
+        label.style.display = hasVisible ? 'block' : 'none';
+      });
+
+      selectedIndex = 0;
+      refreshVisibleItems();
+    }
+
+    function executeItem(item) {
+      if (!item) return;
+      const action = item.getAttribute('data-action');
+      closePalette();
+
+      switch (action) {
+        case 'navigate': {
+          const href = item.getAttribute('data-href');
+          if (href) window.location.href = href;
+          break;
+        }
+        case 'open-url': {
+          const url = item.getAttribute('data-url');
+          if (url) window.open(url, '_blank');
+          break;
+        }
+        case 'copy-email': {
+          navigator.clipboard.writeText('contact@arthurdx.com').then(() => {
+            const toast = document.getElementById('copyToast');
+            if (toast) {
+              toast.classList.add('show');
+              setTimeout(() => toast.classList.remove('show'), 2600);
+            } else {
+              alert('Email copié : contact@arthurdx.com');
+            }
+          });
+          break;
+        }
+        case 'download-cv-fr': {
+          const link = document.createElement('a');
+          link.href = '/assets/CV-Arthur_DORADOUX-FR.pdf';
+          link.download = 'CV-Arthur_DORADOUX-FR.pdf';
+          link.click();
+          break;
+        }
+        case 'download-cv-en': {
+          const link = document.createElement('a');
+          link.href = '/assets/CV-Arthur_DORADOUX-ENG.pdf';
+          link.download = 'CV-Arthur_DORADOUX-ENG.pdf';
+          link.click();
+          break;
+        }
+        case 'toggle-theme': {
+          const btn = document.getElementById('themeToggle');
+          btn?.click();
+          break;
+        }
+        case 'toggle-lang': {
+          const btn = document.getElementById('langToggle');
+          btn?.click();
+          break;
+        }
+        case 'f1-game': {
+          if (window.startF1) window.startF1();
+          break;
+        }
+        case 'vit-game': {
+          if (window.startVitality) window.startVitality();
+          break;
+        }
+      }
+    }
+
+    // Keyboard global listener (Cmd+K / Ctrl+K)
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (modal?.style.display === 'flex') {
+          closePalette();
+        } else {
+          openPalette();
+        }
+        return;
+      }
+
+      if (modal && modal.style.display === 'flex') {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closePalette();
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (items.length > 0) {
+            selectedIndex = (selectedIndex + 1) % items.length;
+            highlightItem(selectedIndex);
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (items.length > 0) {
+            selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+            highlightItem(selectedIndex);
+          }
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (items[selectedIndex]) {
+            executeItem(items[selectedIndex]);
+          }
+        }
+      }
+    });
+
+    input?.addEventListener('input', (e) => {
+      filterItems(e.target.value);
+    });
+
+    backdrop?.addEventListener('click', closePalette);
+
+    listWrap?.addEventListener('click', (e) => {
+      const item = e.target.closest('.cmd-item');
+      if (item) executeItem(item);
+    });
+
+    window.openCommandPalette = openPalette;
+  })();
+</script>
