@@ -23,7 +23,7 @@ const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 const metaDescription = description || (lang === 'fr' 
   ? "Portfolio d'Arthur Doradoux, élève-ingénieur à Mines Saint-Étienne et Politecnico di Milano. Projets en microélectronique, hardware, informatique et product management." 
   : "Arthur Doradoux's portfolio, engineering student at Mines Saint-Étienne and Politecnico di Milano. Hardware, microelectronics, computing, and product management projects.");
-const metaImage = image || new URL('/assets/arthur.jpeg', siteUrl).toString();
+const metaImage = image || new URL('/og-image.jpg', siteUrl).toString();
 
 const schemaJson = {
   "@context": "https://schema.org",
@@ -53,7 +53,7 @@ const schemaJson = {
 		<link rel="canonical" href={canonicalURL.toString()} />
 		<meta name="robots" content="index, follow" />
 
-		<!-- Open Graph / Facebook / LinkedIn -->
+		<!-- Open Graph / WhatsApp / Facebook / LinkedIn / Instagram -->
 		<meta property="og:site_name" content="Arthur Doradoux" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={metaDescription} />
@@ -61,8 +61,13 @@ const schemaJson = {
 		<meta property="og:type" content="website" />
 		<meta property="og:locale" content={lang === 'fr' ? 'fr_FR' : 'en_US'} />
 		<meta property="og:image" content={metaImage} />
+		<meta property="og:image:secure_url" content={metaImage} />
+		<meta property="og:image:type" content="image/jpeg" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="Arthur Doradoux — Futur Product Owner / Manager" />
 
-		<!-- Twitter -->
+		<!-- Twitter / X / Discord -->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={metaDescription} />
