@@ -52,18 +52,15 @@ const sections = [
     </div>
   </section>
 
-  <!-- NOUVEAU DESIGN : Cartes avec barres "drapeaux" pour contourner le bug Windows -->
   <section style="padding: 0 0 60px; max-width: 900px; margin: 0 auto;">
     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-      
-      <!-- Français -->
+
       <div class="cred-card">
         <div class="flag-bar fr-flag"></div>
         <div class="cred-title">{lang === 'fr' ? 'Français' : 'French'}</div>
         <div class="cred-desc">{lang === 'fr' ? 'Langue maternelle' : 'Native Speaker'}</div>
       </div>
 
-      <!-- Anglais -->
       <div class="cred-card">
         <div class="flag-bar en-flag"></div>
         <div class="cred-title">{lang === 'fr' ? 'Anglais' : 'English'}</div>
@@ -73,14 +70,12 @@ const sections = [
         </div>
       </div>
 
-      <!-- Allemand -->
       <div class="cred-card">
         <div class="flag-bar de-flag"></div>
         <div class="cred-title">{lang === 'fr' ? 'Allemand' : 'German'}</div>
         <div class="cred-desc">{lang === 'fr' ? 'Intermédiaire : B1' : 'Intermediate : B1'}</div>
       </div>
 
-      <!-- Certifications -->
       <div class="cred-card">
         <div class="flag-bar cert-flag"></div>
         <div class="cred-title">Certifications</div>
@@ -93,7 +88,6 @@ const sections = [
     </div>
   </section>
 
-  <!-- Grille de compétences (Style Bento / Ghost Tags) -->
   <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; padding-bottom: 60px;">
     {sections.map(section => (
       <div class="skill-category">
@@ -124,7 +118,7 @@ const sections = [
       transition: transform 0.25s var(--ease-premium), box-shadow 0.25s var(--ease-premium), border-color 0.2s;
     }
     .cred-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--text); }
-    
+
     .flag-bar { width: 42px; height: 6px; border-radius: 4px; margin-bottom: 6px; }
     .fr-flag { background: linear-gradient(90deg, #0055A4 33.3%, #e2e2e2 33.3%, #e2e2e2 66.6%, #EF4135 66.6%); }
     .en-flag { background: linear-gradient(90deg, #012169 50%, #C8102E 50%); }

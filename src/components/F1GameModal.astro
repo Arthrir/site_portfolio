@@ -5,11 +5,10 @@
 
 <div id="f1Modal" class="f1-modal" style="display: none;" role="dialog" aria-modal="true" aria-label="F1 Reaction Test">
   <div class="f1-backdrop" id="f1Backdrop"></div>
-  
+
   <div class="f1-content">
     <button class="f1-close-btn" id="f1CloseBtn" aria-label="Fermer" title="Fermer (Échap)">✕</button>
-    
-    <!-- Top Telemetry Bar (Design Industriel / F1 Precision) -->
+
     <div class="f1-telemetry-bar">
       <div class="f1-team-stripes">
         <span class="stripe stripe-ferrari" title="Scuderia Ferrari"></span>
@@ -27,7 +26,6 @@
       <p class="f1-subtitle">Les 5 feux rouges s'allument un à un. Dès l'extinction complète des feux, <strong>cliquez (souris ou tactile)</strong> ou appuyez sur <strong>Espace</strong> !</p>
     </div>
 
-    <!-- Portique officiel FIA Start Gantry -->
     <div class="f1-gantry-frame">
       <div class="f1-gantry" id="f1Gantry">
         <div class="f1-light-pod">
@@ -53,7 +51,6 @@
       </div>
     </div>
 
-    <!-- Dashboard & Zone de réaction -->
     <div class="f1-action-area" id="f1ActionArea">
       <div class="f1-timer-wrap">
         <span class="f1-timer-label">DELTA REACTION</span>
@@ -61,7 +58,7 @@
       </div>
 
       <div class="f1-status-pill" id="f1StatusMsg">Prêt sur la grille de départ</div>
-      
+
       <div class="f1-controls">
         <button class="f1-btn f1-btn-start" id="f1StartBtn">
           DÉMARRER LA PROCÉDURE
@@ -297,7 +294,7 @@
     const timerDisplay = document.getElementById('f1TimerDisplay');
     const statusMsg = document.getElementById('f1StatusMsg');
     const bestScoreDisplay = document.getElementById('f1BestScore');
-    
+
     const lights = [
       document.getElementById('f1L1'),
       document.getElementById('f1L2'),

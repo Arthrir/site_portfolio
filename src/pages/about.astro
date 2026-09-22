@@ -10,7 +10,7 @@ const t = makeT(lang);
   title={lang === 'fr' ? 'Arthur Doradoux | À propos' : 'Arthur Doradoux | About'}
   description={lang === 'fr' ? 'Découvrez le parcours d\\'Arthur Doradoux : ingénierie, design, management, passions esport et F1.' : 'Discover Arthur Doradoux\\'s journey: engineering, design, management, esports, and F1 passions.'}
 >
-  
+
   <section style="padding: 40px 0; max-width: 720px; margin: 0 auto; text-align: center;">
     <img src="/logo/logo-color-black.svg" alt="Logo Arthur Doradoux" class="logo-light" style="width: 120px; height: auto; margin: 0 auto 32px; display: block; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));" />
     <img src="/logo/logo-color-white.svg" alt="Logo Arthur Doradoux" class="logo-dark" style="width: 120px; height: auto; margin: 0 auto 32px; display: none; filter: drop-shadow(0 4px 12px rgba(255,255,255,0.05));" />
@@ -31,7 +31,7 @@ const t = makeT(lang);
       ` : `
         My experiences, especially leading student associations and during my internships, have been an eye-opener. Organizing large-scale events (like the MINITEL LAN with Riot Games and Red Bull) and coordinating teams proved one thing to me: <strong>my natural element is leading a project and orchestrating a team.</strong> This is where I am most comfortable and most effective.
       `} />
-      
+
       <p set:html={lang === 'fr' ? `
         Je suis passionné par l'innovation technique, mais je ne veux pas me limiter à exécuter. Je veux comprendre <em>pourquoi</em> on développe une technologie, définir la stratégie, jongler entre les parties prenantes et m'assurer que le produit crée une vraie valeur. C'est pour cela que je veux être <strong>Product Owner</strong>.
       ` : `
@@ -40,15 +40,13 @@ const t = makeT(lang);
     </div>
   </section>
 
-  <!-- PASSIONS ET EXTRA-CV -->
   <section style="padding: 20px 0 80px; max-width: 720px; margin: 0 auto;">
     <div class="stacked-title-wrapper" style="--stacked-color: var(--muted); --dot-color: var(--muted); margin-bottom: 30px;">
       <h2 class="stacked-main" style="margin-left: 0; font-size: 1.8rem;">{lang === 'fr' ? 'En dehors des salles de cours' : 'Outside the classroom'}</h2>
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 36px;">
-      
-      <!-- F1 -->
+
       <div>
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-orange);">Motorsport</span>
@@ -61,7 +59,6 @@ const t = makeT(lang);
         </p>
       </div>
 
-      <!-- Esport -->
       <div>
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-purple);">Esport</span>
@@ -74,7 +71,6 @@ const t = makeT(lang);
         </p>
       </div>
 
-      <!-- Sports -->
       <div>
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-blue);">Sports</span>
@@ -87,20 +83,18 @@ const t = makeT(lang);
         </p>
       </div>
 
-      <!-- Voyages & DǸcouvertes Interactif -->
       <div class="travels-interactive-wrap">
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-fuchsia);">Travel</span>
           <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{lang === 'fr' ? 'Voyages & Photographie' : 'Travel & Photography'}</h4>
         </div>
-        
+
         <p style="font-size: 1rem; line-height: 1.75; color: var(--text); margin-bottom: 20px;">
           {lang === 'fr' ? 
             "L'exploration est une énorme source d'inspiration. J'adore voyager, découvrir de nouvelles cultures, architectures et modes de vie. J'immortalise souvent ces moments en photo. Cela nourrit ma vision de ce que doit être un bon design ou un bon produit : universel, adapté à son environnement et esthétiquement juste." : 
             "Exploration is a massive source of inspiration. I love traveling, discovering new cultures, architecture, and lifestyles. I often capture these moments through photography. This fuels my vision of what good design or a good product should be: universal, adapted to its environment, and aesthetically sound."}
         </p>
 
-        <!-- Destination Selector Buttons -->
         <div class="travel-tabs" id="travelTabs" role="tablist" aria-label="Destinations de voyage">
           <button class="travel-tab active" data-dest="egypt" role="tab" aria-selected="true">
             <span class="tab-code">EGY</span>
@@ -124,7 +118,6 @@ const t = makeT(lang);
           </button>
         </div>
 
-        <!-- Travel Showcase Card -->
         <div class="travel-card" id="travelCard">
           <div class="travel-card-header">
             <div>
@@ -142,7 +135,6 @@ const t = makeT(lang);
               "Discovering the temples and pyramids of Egypt reminds us that the greatest engineering feats combine mathematical rigor, ultimate durability, and symbolic intention. A true lesson in proportions that inspires designing products built to last."}
           </p>
 
-          <!-- Real Photo Implementation -->
           <div class="travel-photo-slot">
             <img id="travelImage" src="/assets/voyages/egypt.jpg" alt="Travel Photo" onerror="this.style.display='none'; document.getElementById('travelPlaceholder').style.display='flex';" />
             <div id="travelPlaceholder" class="photo-placeholder-inner" style="display: none;">
@@ -347,18 +339,18 @@ const t = makeT(lang);
           if (bodyEl) bodyEl.textContent = item.body[currentLang];
           if (photoTxtEl) photoTxtEl.textContent = item.photoTxt[currentLang];
           if (photoSubEl) photoSubEl.textContent = item.photoSub[currentLang];
-          
+
           if (imgEl) {
             // Hide placeholder, show image
             imgEl.style.display = 'block';
             if (placeholderEl) placeholderEl.style.display = 'none';
-            
+
             // Set up error handler
             imgEl.onerror = () => {
               imgEl.style.display = 'none';
               if(placeholderEl) placeholderEl.style.display = 'flex';
             };
-            
+
             // Change source
             imgEl.src = '/assets/voyages/' + item.imgFile;
           }

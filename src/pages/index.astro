@@ -263,10 +263,6 @@ const t = makeT(lang);
 		</div>
 	</section>
 
-	<!-- ============================================================================== -->
-	<!-- SECTION RECOMMANDATIONS / TÉMOIGNAGES (PRÉPARÉE ET MASQUÉE - PRÊTE À ACTIVER) -->
-	<!-- Pour l'activer, retirer simplement style="display: none;" ci-dessous          -->
-	<!-- ============================================================================== -->
 	<section id="recommendations" style="display: none; padding: 60px 0 20px; max-width: 1000px; margin: 0 auto;">
 		<div class="stacked-title-wrapper" style="--stacked-color: var(--pop-purple); --dot-color: var(--pop-purple); margin-bottom: 40px; text-align: center;">
 			<div class="stacked-bg" style="left: 50%; transform: translateX(-50%); width: 100%;">{lang === 'fr' ? 'Témoignages' : 'Endorsements'}</div>
@@ -274,7 +270,7 @@ const t = makeT(lang);
 		</div>
 
 		<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
-			<!-- Carte 1 : Tuteur de stage (Advantest / PHINIA) -->
+
 			<div class="card" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between;">
 				<div>
 					<div style="font-size: 1.8rem; color: var(--pop-blue); line-height: 1; margin-bottom: 12px; font-family: var(--font-serif);">“</div>
@@ -293,7 +289,6 @@ const t = makeT(lang);
 				</div>
 			</div>
 
-			<!-- Carte 2 : Direction Associative / École -->
 			<div class="card" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between;">
 				<div>
 					<div style="font-size: 1.8rem; color: var(--pop-orange); line-height: 1; margin-bottom: 12px; font-family: var(--font-serif);">“</div>
@@ -321,7 +316,7 @@ const t = makeT(lang);
     </div>
 
 		<div class="card contact-wrapper" style="padding: 40px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; align-items: center;">
-			
+
 			<div>
 				<h2 style="font-family: var(--font-serif); font-size: 2.2rem; font-weight: 600; margin: 10px 0 20px; line-height: 1.1;">
 					{lang === 'fr' ? "Travaillons ensemble !" : "Let's Work Together"}
@@ -331,7 +326,7 @@ const t = makeT(lang);
 				</p>
 
 				<div style="display: flex; flex-direction: column; gap: 20px;">
-					
+
           <div style="display: flex; align-items: center; gap: 14px;">
 						<a href="tel:+33627883483" class="contact-icon-box" aria-label="Phone">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
@@ -373,9 +368,9 @@ const t = makeT(lang);
 				<input type="hidden" name="access_key" value="87fde94b-7057-4663-9e22-63385526c25a" />
         <input type="hidden" name="subject" value="Nouveau contact depuis le portfolio !" />
         <input type="hidden" name="from_name" value="Arthur Doradoux - Portfolio" />
-        <!-- Honeypot anti-spam : invisible pour les humains, filtre les robots -->
+
         <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
-				
+
 				<div>
 					<label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">{lang === 'fr' ? "Nom" : "Name"}</label>
 					<input type="text" name="name" required class="contact-input" placeholder={lang === 'fr' ? "Votre nom" : "Your name"} />
@@ -425,7 +420,6 @@ const t = makeT(lang);
     .mission-list, .impact-card ul, .accordion-body-inner ul { padding-left: 24px; margin-left: 4px; }
   </style>
 
-	<!-- Mini Toast Notification -->
 	<div id="copyToast" class="copy-toast" role="status" aria-live="polite">
 		<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
 		<span>{lang === 'fr' ? "Email copié dans le presse-papier !" : "Email copied to clipboard!"}</span>

@@ -12,7 +12,7 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
 <header class="site-header">
   <div class="header-inner">
     <a href="/" class="header-logo-link" aria-label="Arthur Doradoux — Home">
-      <!-- Appels propres de tes fichiers SVG vectoriels -->
+
       <img src="/logo/logo-black.svg" alt="Arthur Doradoux — Accueil" class="nav-logo logo-light" />
       <img src="/logo/logo-white.svg" alt="Arthur Doradoux — Accueil" class="nav-logo logo-dark" />
     </a>
@@ -20,7 +20,7 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
     <nav class="nav" id="mainNav" aria-label="Main Navigation">
       <ul class="nav-list">
         <li><a href="/" class:list={{ active: Astro.url.pathname === '/' }}>{t('nav.home')}</a></li>
-        <!-- <li><a href="/about" class:list={{ active: Astro.url.pathname.startsWith('/about') }}>{t('nav.about')}</a></li> -->
+
         <li><a href="/projects" class:list={{ active: Astro.url.pathname.startsWith('/projects') }}>{t('nav.projects')}</a></li>
         <li><a href="/skills" class:list={{ active: Astro.url.pathname.startsWith('/skills') }}>{t('nav.skills')}</a></li>
         <li><a href="/engagements" class:list={{ active: Astro.url.pathname.startsWith('/engagements') }}>{t('nav.engagements')}</a></li>
@@ -59,7 +59,7 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
   .site-header { position: fixed; top: 0; left: 0; right: 0; backdrop-filter: blur(14px); background: rgba(244, 245, 246, 0.78); border-bottom: 1px solid var(--border); z-index: 1000; height: 58px; display: flex; align-items: center; }
   body.theme-dark .site-header { background: rgba(12, 13, 15, 0.78); }
   .header-inner { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
-  
+
   /* Paramètres du Logo SVG */
   .header-logo-link { display: flex; align-items: center; }
   .nav-logo { height: 32px; width: auto; object-fit: contain; transition: transform 0.2s ease; }
@@ -137,7 +137,7 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
   .cv-trigger:hover { background: transparent; color: var(--text); }
   .cv-trigger .chev { transition: transform 0.2s ease; }
   .cv-menu:hover .chev { transform: translateY(2px); }
-  
+
   .cv-dropdown { 
     opacity: 0; 
     visibility: hidden; 
@@ -154,16 +154,16 @@ const targetFlag = lang === 'fr' ? 'en-flag' : 'fr-flag';
     box-shadow: var(--shadow-lift); 
     transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0.5s;
   }
-  
+
   .cv-dropdown::before { content: ''; position: absolute; top: -16px; left: -20px; right: -20px; height: 16px; }
-  
+
   .cv-menu:hover .cv-dropdown { 
     opacity: 1; 
     visibility: visible; 
     transform: translateY(0); 
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s;
   }
-  
+
   .cv-dropdown a { display: block; padding: 8px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 500; text-decoration: none; }
   .cv-dropdown a:hover { background: var(--accent-soft); }
 

@@ -171,7 +171,7 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
         <option value="">{lang === 'fr' ? "+ Hardware" : "+ Hardware"}</option>
         {domTags.sort().map(tag => <option value={tag}>{tag}</option>)}
       </select>
-      
+
       <select id="swSelect" class="pro-select">
         <option value="">{lang === 'fr' ? "+ Langages & Software" : "+ Languages & Software"}</option>
         {techTags.sort().map(tag => <option value={tag}>{tag}</option>)}
@@ -228,7 +228,7 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
       background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
     }
     .pro-select:hover { border-color: var(--text); }
-    
+
     .active-filter-chip {
       display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
       background: var(--text); color: var(--bg); border-radius: 100px;
@@ -244,13 +244,13 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
     const selects = document.querySelectorAll('.pro-select') as NodeListOf<HTMLSelectElement>;
     const activeContainer = document.getElementById('activeFiltersContainer');
     const projectCards = Array.from(document.querySelectorAll('.project-card')) as HTMLElement[];
-    
+
     let activeTags = new Set<string>();
 
     function renderFilters() {
       if(!activeContainer) return;
       activeContainer.innerHTML = '';
-      
+
       activeTags.forEach(tag => {
         const chip = document.createElement('div');
         chip.className = 'active-filter-chip';
