@@ -10,7 +10,7 @@
     <button class="vit-close-btn" id="vitCloseBtn" aria-label="Fermer" title="Fermer (Échap)">✕</button>
 
     <div class="vit-header">
-      <div class="vit-logo-badge">🐝 TEAM VITALITY x ARTHUR DORADOUX</div>
+      <div class="vit-logo-badge">TEAM VITALITY // AIM & REFLEX LAB</div>
       <h2 class="vit-title">V FOR VICTORY — AIM & REFLEX LAB</h2>
       <p class="vit-sub">Testez vos réflexes et votre précision en 15 secondes. Cliquez sur les cibles ZywOo-tier !</p>
     </div>
@@ -34,11 +34,11 @@
     <!-- Arène de tir -->
     <div class="vit-arena" id="vitArena">
       <div class="vit-start-overlay" id="vitStartOverlay">
-        <button class="vit-btn-main" id="vitStartGameBtn">LANCER LE TEST 🐝</button>
+        <button class="vit-btn-main" id="vitStartGameBtn">LANCER LA SESSION</button>
       </div>
 
       <div class="vit-end-overlay" id="vitEndOverlay" style="display: none;">
-        <div class="vit-end-rank" id="vitEndRank">🏆 MAJOR CHAMPION</div>
+        <div class="vit-end-rank" id="vitEndRank">MAJOR CHAMPION</div>
         <div class="vit-end-stats" id="vitEndStats">Score : 0 • Cibles : 0</div>
         <button class="vit-btn-main" id="vitRestartBtn">REJOUER</button>
       </div>
@@ -301,7 +301,7 @@
 
       const inner = document.createElement('span');
       inner.className = 'vit-target-inner';
-      inner.textContent = '🐝';
+      inner.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0B0C10" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="5" fill="#0B0C10"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>';
       target.appendChild(inner);
 
       function handleHit(e) {
@@ -396,15 +396,15 @@
       playSound(320, 0.25);
       if (timerEl) timerEl.textContent = '0.0s';
 
-      let rank = '🥉 SILVER 1';
+      let rank = 'SILVER 1';
       if (hits >= 28) {
-        rank = '🏆 MAJOR CHAMPION — ZywOo Tier ! 🐝';
+        rank = 'MAJOR CHAMPION // ZywOo Tier';
       } else if (hits >= 20) {
-        rank = '🥇 GLOBAL ELITE — Pro Player';
+        rank = 'GLOBAL ELITE // Pro Tier';
       } else if (hits >= 12) {
-        rank = '🥈 MASTER GUARDIAN — Bon réflexe';
+        rank = 'MASTER GUARDIAN // Bon réflexe';
       } else {
-        rank = '🥉 SILVER 1 — Entraîne-toi encore !';
+        rank = 'SILVER 1 // Entraîne-toi encore';
       }
 
       if (score > savedBest) {

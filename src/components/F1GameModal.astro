@@ -64,11 +64,11 @@
       
       <div class="f1-controls">
         <button class="f1-btn f1-btn-start" id="f1StartBtn">
-          DÉMARRER LA PROCÉDURE 🚦
+          DÉMARRER LA PROCÉDURE
         </button>
       </div>
 
-      <div class="f1-hint">🏁 Contrôles : Barre <strong>Espace</strong>, <strong>clic souris</strong> ou <strong>toucher l'écran</strong> sur mobile</div>
+      <div class="f1-hint">Contrôles : Barre <strong>Espace</strong>, <strong>clic souris</strong> ou <strong>toucher l'écran</strong> sur mobile</div>
     </div>
 
     <div class="f1-footer-bar">
@@ -356,7 +356,7 @@
       }
       if (startBtn) {
         startBtn.style.display = 'inline-block';
-        startBtn.textContent = 'DÉMARRER LA PROCÉDURE 🚦';
+        startBtn.textContent = 'DÉMARRER LA PROCÉDURE';
       }
     }
 
@@ -384,7 +384,7 @@
         lightOutTimestamp = performance.now();
         gameState = 'WAITING';
         if (statusMsg) {
-          statusMsg.textContent = 'PARTEZ ! 🏎️';
+          statusMsg.textContent = 'FEUX ÉTEINTS — PARTEZ !';
           statusMsg.style.color = '#69FF0A';
         }
       }, totalDelay);
@@ -400,7 +400,7 @@
         playBeep(220, 0.25);
         if (timerDisplay) timerDisplay.textContent = 'JUMP START';
         if (statusMsg) {
-          statusMsg.textContent = '🚨 FAUX DÉPART ! +5s de pénalité.';
+          statusMsg.textContent = 'FAUX DÉPART // +5s de pénalité.';
           statusMsg.style.color = '#FF1801';
         }
         if (startBtn) {
@@ -414,13 +414,13 @@
 
         let feedback = '';
         if (reactionTime < 200) {
-          feedback = '🏆 INCROYABLE ! Réflexes niveau Max Verstappen / Fernando Alonso !';
+          feedback = 'TEMPS EXCEPTIONNEL // Réflexes de niveau Formule 1';
         } else if (reactionTime < 260) {
-          feedback = '⚡ EXCELLENT DÉPART ! Niveau pilote F1 / F2.';
+          feedback = 'EXCELLENT DÉPART // Niveau FIA F2 / F3';
         } else if (reactionTime < 320) {
-          feedback = '🏎️ BON DÉPART ! En plein dans le peloton.';
+          feedback = 'DÉPART CORRECT // Dans le peloton';
         } else {
-          feedback = '🐢 DÉPART ENDORMI ! Le peloton est déjà au premier virage.';
+          feedback = 'DÉPART TARDIF // Temps de réaction élevé';
         }
 
         if (statusMsg) {
@@ -431,7 +431,7 @@
         if (!bestScore || reactionTime < bestScore) {
           bestScore = reactionTime;
           localStorage.setItem('f1_best_reaction', bestScore);
-          if (bestScoreDisplay) bestScoreDisplay.textContent = `Nouveau record personnel : ${bestScore} ms ! ⭐`;
+          if (bestScoreDisplay) bestScoreDisplay.textContent = `Nouveau record personnel : ${bestScore} ms !`;
         }
 
         if (startBtn) {
