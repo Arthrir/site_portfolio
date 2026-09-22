@@ -12,7 +12,7 @@
     <div class="vit-header">
       <div class="vit-logo-badge">🐝 TEAM VITALITY x ARTHUR DORADOUX</div>
       <h2 class="vit-title">V FOR VICTORY — AIM & REFLEX LAB</h2>
-      <p class="vit-sub">Testez votre précision et votre vitesse en 15 secondes. Cliquez sur un maximum de cibles ZywOo-tier !</p>
+      <p class="vit-sub">Testez vos réflexes et votre précision en 15 secondes. Cliquez sur les cibles ZywOo-tier !</p>
     </div>
 
     <!-- HUD Stats Bar -->
@@ -31,10 +31,10 @@
       </div>
     </div>
 
-    <!-- Arène de jeu -->
+    <!-- Arène de tir -->
     <div class="vit-arena" id="vitArena">
       <div class="vit-start-overlay" id="vitStartOverlay">
-        <button class="vit-btn-main" id="vitStartGameBtn">LANCER LA PARTIE 🐝</button>
+        <button class="vit-btn-main" id="vitStartGameBtn">LANCER LE TEST 🐝</button>
       </div>
 
       <div class="vit-end-overlay" id="vitEndOverlay" style="display: none;">
@@ -45,8 +45,8 @@
     </div>
 
     <div class="vit-footer-info">
-      <span>Meilleur score : <strong id="vitBestScore">0</strong> pts</span>
-      <span class="vit-exit-hint">Appuyez sur <strong>Échap</strong> pour quitter</span>
+      <span>Record personnel : <strong id="vitBestScore">0</strong> pts</span>
+      <span class="vit-exit-hint">Touche <strong>Échap</strong> pour quitter</span>
     </div>
   </div>
 </div>
@@ -59,111 +59,115 @@
   }
   .vit-backdrop {
     position: absolute; inset: 0;
-    background: rgba(8, 8, 10, 0.94);
-    backdrop-filter: blur(16px);
+    background: rgba(10, 11, 14, 0.88);
+    backdrop-filter: blur(12px);
   }
   .vit-container {
     position: relative; z-index: 2;
-    background: #0F0F12;
-    border: 2px solid #F2E800;
-    border-radius: 16px;
-    width: 100%; max-width: 720px;
-    padding: 30px;
+    background: #111215;
+    border: 1px solid #F2E800;
+    border-radius: 12px;
+    width: 100%; max-width: 680px;
+    padding: 28px;
     color: #F2E800;
-    box-shadow: 0 0 50px rgba(242, 232, 0, 0.25), 0 20px 60px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 24px rgba(242, 232, 0, 0.15);
     text-align: center;
   }
   .vit-close-btn {
     position: absolute; top: 16px; right: 16px;
-    background: transparent; border: 1px solid rgba(242, 232, 0, 0.4);
-    color: #F2E800; width: 32px; height: 32px; border-radius: 50%;
+    background: transparent; border: 1px solid rgba(242, 232, 0, 0.3);
+    color: #F2E800; width: 30px; height: 30px; border-radius: 6px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s; font-size: 14px;
+    transition: all 0.15s ease; font-size: 13px;
   }
   .vit-close-btn:hover { background: #F2E800; color: #000; }
 
   .vit-logo-badge {
     display: inline-block; font-size: 0.75rem; font-weight: 700;
     letter-spacing: 0.1em; color: #000; background: #F2E800;
-    padding: 4px 14px; border-radius: 4px; margin-bottom: 10px;
+    padding: 4px 12px; border-radius: 4px; margin-bottom: 10px;
   }
   .vit-title {
-    font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 6px; letter-spacing: 0.05em;
+    font-size: 1.45rem; font-weight: 800; color: #FFFFFF; margin-bottom: 6px; letter-spacing: 0.04em;
   }
   .vit-sub {
-    font-size: 0.85rem; color: #a0a2ab; margin-bottom: 20px; font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.85rem; color: #8F9198; margin-bottom: 20px; font-family: var(--font-sans, system-ui, sans-serif);
   }
 
   /* HUD */
   .vit-hud {
     display: flex; justify-content: space-around;
-    background: rgba(242, 232, 0, 0.06);
+    background: rgba(242, 232, 0, 0.05);
     border: 1px solid rgba(242, 232, 0, 0.2);
     border-radius: 8px; padding: 10px 16px; margin-bottom: 16px;
   }
   .hud-item { display: flex; flex-direction: column; gap: 2px; }
-  .hud-label { font-size: 0.7rem; color: #888; letter-spacing: 0.08em; }
-  .hud-val { font-size: 1.4rem; font-weight: 800; color: #fff; }
+  .hud-label { font-size: 0.7rem; color: #8F9198; letter-spacing: 0.08em; }
+  .hud-val { font-size: 1.35rem; font-weight: 800; color: #FFFFFF; font-variant-numeric: tabular-nums; }
 
-  /* Arène */
+  /* Arène de tir */
   .vit-arena {
     position: relative;
     width: 100%; height: 320px;
-    background: #09090b;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    background: #0A0B0E;
+    border: 1px solid #23262D;
+    border-radius: 8px;
     overflow: hidden;
     cursor: crosshair;
     user-select: none;
-    background-image: radial-gradient(rgba(242, 232, 0, 0.15) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(rgba(242, 232, 0, 0.12) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 
-  /* Cible */
-  .vit-target {
+  /* Cibles abeilles ultra visibles */
+  :global(.vit-target) {
     position: absolute;
-    width: 44px; height: 44px;
+    width: 54px; height: 54px;
     border-radius: 50%;
-    background: radial-gradient(circle, #F2E800 30%, #ffd700 70%);
-    border: 3px solid #fff;
-    box-shadow: 0 0 20px #F2E800, inset 0 0 8px rgba(0,0,0,0.5);
+    background: radial-gradient(circle, #FFF438 25%, #F2E800 65%, #C2BA00 100%);
+    border: 3px solid #FFFFFF;
+    box-shadow: 0 0 14px rgba(242, 232, 0, 0.8), 0 0 24px rgba(242, 232, 0, 0.4);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    transform: translate(-50%, -50%) scale(0);
-    animation: targetPop 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform: translate(-50%, -50%);
+    z-index: 100 !important;
+    pointer-events: auto !important;
+    user-select: none;
+    animation: pulseBee 0.8s ease-in-out infinite alternate;
   }
-  @keyframes targetPop {
-    0% { transform: translate(-50%, -50%) scale(0); }
-    100% { transform: translate(-50%, -50%) scale(1); }
+  @keyframes pulseBee {
+    0% { transform: translate(-50%, -50%) scale(0.95); }
+    100% { transform: translate(-50%, -50%) scale(1.05); }
   }
-  .vit-target::after {
-    content: '🐝'; font-size: 18px; line-height: 1;
+  :global(.vit-target-inner) {
+    font-size: 22px; line-height: 1; pointer-events: none;
   }
 
   .vit-start-overlay, .vit-end-overlay {
     position: absolute; inset: 0;
-    background: rgba(15, 15, 18, 0.85);
+    background: rgba(10, 11, 14, 0.85);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 14px; z-index: 5;
+    gap: 14px; z-index: 10;
   }
   .vit-btn-main {
     background: #F2E800; color: #000; border: none;
-    padding: 14px 32px; border-radius: 6px; font-weight: 800; font-size: 1rem;
+    padding: 13px 28px; border-radius: 6px; font-weight: 800; font-size: 0.95rem;
     cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; font-family: monospace;
+    letter-spacing: 0.04em;
   }
   .vit-btn-main:hover {
-    transform: scale(1.05); box-shadow: 0 0 25px rgba(242, 232, 0, 0.6);
+    transform: translateY(-1px); box-shadow: 0 0 20px rgba(242, 232, 0, 0.5);
   }
 
-  .vit-end-rank { font-size: 1.4rem; font-weight: 800; color: #F2E800; }
-  .vit-end-stats { font-size: 0.95rem; color: #fff; }
+  .vit-end-rank { font-size: 1.3rem; font-weight: 800; color: #F2E800; }
+  .vit-end-stats { font-size: 0.92rem; color: #FFFFFF; }
 
   .vit-footer-info {
-    margin-top: 16px; display: flex; justify-content: space-between;
-    font-size: 0.8rem; color: #777;
+    margin-top: 14px; display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem; color: #8F9198;
   }
   .vit-footer-info strong { color: #F2E800; }
-  .vit-exit-hint strong { color: #fff; }
+  .vit-exit-hint strong { color: #FFFFFF; }
 </style>
 
 <script is:inline>
@@ -193,7 +197,7 @@
     let hits = 0;
     let timeLeft = 15.0;
     let gameInterval = null;
-    let currentTarget = null;
+    let activeTargets = [];
     let savedBest = localStorage.getItem('vit_best_score') ? parseInt(localStorage.getItem('vit_best_score')) : 0;
     if (bestScoreEl) bestScoreEl.textContent = savedBest;
 
@@ -202,9 +206,9 @@
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'triangle';
+        osc.type = 'sine';
         osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.setValueAtTime(0.06, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -229,43 +233,80 @@
 
     function resetGameUI() {
       stopGame();
-      if (startOverlay) startOverlay.style.display = 'flex';
+      if (startOverlay) {
+        startOverlay.style.display = 'flex';
+        startOverlay.style.pointerEvents = 'auto';
+      }
       if (endOverlay) endOverlay.style.display = 'none';
       if (timerEl) timerEl.textContent = '15.0s';
       if (scoreEl) scoreEl.textContent = '0';
       if (accEl) accEl.textContent = '100%';
     }
 
-    function spawnTarget() {
-      if (!isPlaying || !arena) return;
-      if (currentTarget) currentTarget.remove();
+    function createTargetElement() {
+      if (!arena) return null;
+      const rect = arena.getBoundingClientRect();
+      const arenaW = rect.width > 0 ? rect.width : 600;
+      const arenaH = rect.height > 0 ? rect.height : 320;
+
+      const padding = 45;
+      const x = Math.round(padding + Math.random() * (arenaW - padding * 2));
+      const y = Math.round(padding + Math.random() * (arenaH - padding * 2));
 
       const target = document.createElement('div');
       target.className = 'vit-target';
+      target.style.left = `${x}px`;
+      target.style.top = `${y}px`;
 
-      const padding = 35;
-      const arenaWidth = arena.clientWidth;
-      const arenaHeight = arena.clientHeight;
+      const inner = document.createElement('span');
+      inner.className = 'vit-target-inner';
+      inner.textContent = '🐝';
+      target.appendChild(inner);
 
-      const randomX = padding + Math.random() * (arenaWidth - padding * 2);
-      const randomY = padding + Math.random() * (arenaHeight - padding * 2);
-
-      target.style.left = `${randomX}px`;
-      target.style.top = `${randomY}px`;
-
-      target.addEventListener('mousedown', (e) => {
+      function handleHit(e) {
+        e.preventDefault();
         e.stopPropagation();
         if (!isPlaying) return;
+
         hits++;
         totalClicks++;
         score += 100;
         playSound(880, 0.08);
         updateHUD();
-        spawnTarget();
-      });
 
-      arena.appendChild(target);
-      currentTarget = target;
+        // Enlever la cible et en créer une nouvelle
+        target.remove();
+        activeTargets = activeTargets.filter(t => t !== target);
+        spawnSingleTarget();
+      }
+
+      target.addEventListener('pointerdown', handleHit);
+      target.addEventListener('mousedown', handleHit);
+
+      return target;
+    }
+
+    function spawnSingleTarget() {
+      if (!isPlaying || !arena) return;
+      const target = createTargetElement();
+      if (target) {
+        arena.appendChild(target);
+        activeTargets.push(target);
+      }
+    }
+
+    function spawnInitialTargets() {
+      clearAllTargets();
+      // Toujours avoir 2 cibles simultanément pour du rythme
+      spawnSingleTarget();
+      spawnSingleTarget();
+    }
+
+    function clearAllTargets() {
+      activeTargets.forEach(t => t.remove());
+      activeTargets = [];
+      const leftover = arena?.querySelectorAll('.vit-target');
+      leftover?.forEach(t => t.remove());
     }
 
     function updateHUD() {
@@ -282,10 +323,13 @@
       timeLeft = 15.0;
       isPlaying = true;
 
-      if (startOverlay) startOverlay.style.display = 'none';
+      if (startOverlay) {
+        startOverlay.style.display = 'none';
+        startOverlay.style.pointerEvents = 'none';
+      }
       if (endOverlay) endOverlay.style.display = 'none';
       updateHUD();
-      spawnTarget();
+      spawnInitialTargets();
 
       const startTime = performance.now();
       const initialTime = timeLeft;
@@ -304,16 +348,15 @@
     function stopGame() {
       isPlaying = false;
       if (gameInterval) clearInterval(gameInterval);
-      if (currentTarget) currentTarget.remove();
-      currentTarget = null;
+      clearAllTargets();
     }
 
     function endGame() {
       stopGame();
-      playSound(300, 0.2);
+      playSound(320, 0.25);
       if (timerEl) timerEl.textContent = '0.0s';
 
-      let rank = '🥉 SILVER';
+      let rank = '🥉 SILVER 1';
       if (hits >= 28) {
         rank = '🏆 MAJOR CHAMPION — ZywOo Tier ! 🐝';
       } else if (hits >= 20) {
@@ -335,27 +378,32 @@
       if (endOverlay) endOverlay.style.display = 'flex';
     }
 
-    arena?.addEventListener('mousedown', () => {
-      if (isPlaying) {
+    arena?.addEventListener('pointerdown', (e) => {
+      // Si on clique dans l'arène mais pas sur une cible
+      if (isPlaying && e.target === arena) {
         totalClicks++;
         playSound(220, 0.05); // Bip raté
         updateHUD();
       }
     });
 
-    startBtn?.addEventListener('click', startGame);
-    restartBtn?.addEventListener('click', startGame);
+    startBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      startGame();
+    });
+    restartBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      startGame();
+    });
     closeBtn?.addEventListener('click', closeModal);
     backdrop?.addEventListener('click', closeModal);
 
-    // Déclenchement via Konami code ou frappe "vitality"
     window.addEventListener('keydown', (e) => {
       if (modal && modal.style.display === 'flex') {
         if (e.key === 'Escape') closeModal();
         return;
       }
 
-      // Konami Code check
       keySequence.push(e.key);
       if (keySequence.length > konami.length) keySequence.shift();
       if (keySequence.join(',') === konami.join(',')) {
@@ -364,7 +412,6 @@
         return;
       }
 
-      // Buffer texte pour "vitality"
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
         textBuffer += e.key.toLowerCase();
         if (textBuffer.length > 15) textBuffer = textBuffer.slice(-15);
@@ -375,7 +422,6 @@
       }
     });
 
-    // Rendre disponible en console
     window.startVitality = openModal;
   })();
 </script>
