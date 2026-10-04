@@ -44,8 +44,10 @@ export const dict = {
       en: 'In the long term, my dream is to grow into <strong>Product Owner / Product Manager</strong> roles at the heart of technological innovation, bridging technical feasibility, user experience, and strategy.'
     },
     visionQuote: {
-      fr: "Mon objectif est de construire une véritable triple compétence en ingénierie, en design (via le Politecnico di Milano) et en management (via emlyon business school) pour porter des produits technologiques à fort impact.",
-      en: 'My goal is to build a genuine triple competency across engineering, design (via Politecnico di Milano) and management (via emlyon business school) to lead high-impact technological products.'
+      // fr: "Mon objectif est de construire une véritable triple compétence en ingénierie, en design (via le Politecnico di Milano) et en management (via emlyon business school) pour porter des produits technologiques à fort impact.",
+      // en: 'My goal is to build a genuine triple competency across engineering, design (via Politecnico di Milano) and management (via emlyon business school) to lead high-impact technological products.',
+      fr: "Mon objectif est de construire une véritable triple compétence en ingénierie, en design (via le Politecnico di Milano) et en management pour porter des produits technologiques à fort impact.",
+      en: 'My goal is to build a genuine triple competency across engineering, design (via Politecnico di Milano) and management to lead high-impact technological products.'
     },
     careerKicker: { fr: 'Parcours' },
     careerTitle: { fr: 'Expérience', en: 'Experience' },
