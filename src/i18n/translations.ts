@@ -13,6 +13,7 @@ export const dict = {
     skills: { fr: 'Compétences', en: 'Skills' },
     engagements: { fr: 'Engagements', en: 'Engagements' },
     about: { fr: 'À propos', en: 'About' },
+    contact: { fr: 'Contact', en: 'Contact' },
   },
   common: {
     resume: { fr: 'CV', en: 'Resume' },

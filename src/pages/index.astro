@@ -76,10 +76,12 @@ const t = makeT(lang);
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
-						<img class="org-logo" src="/logo/advantest.png" alt="Advantest" />
+						<a href="https://www.advantest.com/" target="_blank" rel="noopener noreferrer" style="display: flex; text-decoration: none;">
+							<img class="org-logo" src="/logo/advantest.png" alt="Advantest" />
+						</a>
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? 'Stage Ingénieur R&D Test Cell Integration' : 'R&D Test Cell Integration Engineering Intern'}</h3>
-              <span class="org-name-sub" style="color: var(--pop-blue);"><strong>Advantest</strong> <span style="color: var(--muted); font-weight: 500; text-transform: none;">- {lang === 'fr' ? 'Böblingen, Allemagne' : 'Böblingen, Germany'}</span></span>
+              <span class="org-name-sub" style="color: var(--pop-blue);"><a href="https://www.advantest.com/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;"><strong>Advantest</strong></a> <span style="color: var(--muted); font-weight: 500; text-transform: none;">- {lang === 'fr' ? 'Böblingen, Allemagne' : 'Böblingen, Germany'}</span></span>
 						</div>
 					</div>
 					<div class="mission-list" style="--dot-color: var(--pop-blue);" set:html={lang === 'fr' ? `
@@ -109,10 +111,12 @@ const t = makeT(lang);
 				<div class="timeline-dot"></div>
 				<div class="timeline-content">
 					<div class="timeline-org-head">
-						<img class="org-logo logo-phinia" src="/logo/phinia.png" alt="PHINIA Delphi" />
+						<a href="https://www.phinia.com/" target="_blank" rel="noopener noreferrer" style="display: flex; text-decoration: none;">
+							<img class="org-logo logo-phinia" src="/logo/phinia.png" alt="PHINIA Delphi" />
+						</a>
 						<div>
 							<h3 class="role-name">{lang === 'fr' ? 'Stage Ingénieur Systèmes Hardware' : 'Hardware Systems Engineering Intern'}</h3>
-              <span class="org-name-sub" style="color: var(--pop-blue);"><strong>PHINIA Delphi France</strong> <span style="color: var(--muted); font-weight: 500; text-transform: none;">- Blois, France</span></span>
+              <span class="org-name-sub" style="color: var(--pop-blue);"><a href="https://www.phinia.com/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;"><strong>PHINIA Delphi France</strong></a> <span style="color: var(--muted); font-weight: 500; text-transform: none;">- Blois, France</span></span>
 						</div>
 					</div>
 					<div class="mission-list" style="--dot-color: var(--pop-blue);" set:html={lang === 'fr' ? `
@@ -343,8 +347,8 @@ const t = makeT(lang);
 					</div>
 
   					<div style="display: flex; align-items: center; gap: 14px;">
-  						<a href="https://linkedin.com/in/arthur-doradoux/" target="_blank" class="contact-icon-box" aria-label="LinkedIn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg>
+  						<a href="https://linkedin.com/in/arthur-doradoux/" target="_blank" class="contact-icon-box linkedin-icon-box" aria-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg>
   						</a>
   						<div>
   							<div style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">LINKEDIN</div>
@@ -401,11 +405,12 @@ const t = makeT(lang);
 
   <style>
     .contact-icon-box {
-      width: 42px; height: 42px; border-radius: 8px; background: transparent;
+      width: 44px; height: 44px; border-radius: 8px; background: transparent;
       border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center;
       color: var(--text); flex-shrink: 0; transition: border-color 0.2s, background 0.2s, color 0.2s;
     }
     .contact-icon-box:hover { border-color: var(--text); background: var(--text); color: var(--bg); }
+    .linkedin-icon-box:hover { border-color: #0A66C2; background: #0A66C2; color: #FFFFFF; }
 
     .contact-input, .contact-textarea {
       width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-strong);

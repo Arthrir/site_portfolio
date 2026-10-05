@@ -25,7 +25,7 @@ const featured = [
     tags: ["Communication Institutionnelle", "Médiation", "Gestion des Parties Prenantes"]
   },
   {
-    logo: "/logo/minitel.png", color: "var(--accent-bright)", date: lang === 'fr' ? "Mars 2025 - Mars 2026" : "Mar 2025 - Mar 2026",
+    logo: "/logo/minitel.png", logoAction: "window.startMinitel && window.startMinitel()", color: "var(--accent-bright)", date: lang === 'fr' ? "Mars 2025 - Mars 2026" : "Mar 2025 - Mar 2026",
     role: "MINITEL", title: lang === 'fr' ? "Président" : "President",
     site: "https://minitel.emse.fr/",
     desc: lang === 'fr' ? `
@@ -91,6 +91,7 @@ const others = [
     logo: "/logo/alumni.png", date: lang === 'fr' ? "Rôle à vie" : "Lifetime", role: "Alumni", 
     title: lang === 'fr' ? "Relai de la Promotion" : "Class Representative for Alumni", 
     site: "https://www.mines-saint-etienne.org/",
+    team: [{ name: "Laure Rivier", link: "https://linkedin.com/in/laure-rivier-83060a328" }],
     desc: lang === 'fr' ? "Représentation de la promotion auprès du réseau des anciens élèves pour assurer la communication, organiser des événements de networking et faciliter la collaboration professionnelle." : "Representation of the class within the alumni network to ensure communication, organize networking events and facilitate professional collaboration." 
   },
   { 
@@ -150,7 +151,11 @@ const others = [
       {featured.map(item => (
         <div class="impact-card" style={`--dot-color: ${item.color};`}>
           <div class="item-head" style="margin-bottom: 12px;">
-            <img class="org-logo force-white-bg" src={item.logo} alt={`Logo ${item.role}`} />
+            {item.logoAction ? (
+              <img class="org-logo force-white-bg" src={item.logo} alt={`Logo ${item.role}`} onclick={item.logoAction} style="cursor: pointer;" title="Accéder au terminal Minitel" />
+            ) : (
+              <img class="org-logo force-white-bg" src={item.logo} alt={`Logo ${item.role}`} />
+            )}
             <div>
               <h3 class="role-name">{item.title}</h3>
               <span class="org-name-sub" style={`color: ${item.color};`}>{item.role}</span>

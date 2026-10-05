@@ -1,76 +1,23 @@
 ---
 // src/components/F1GameModal.astro
-// Easter Egg F1 : Déclenché en tapant "formula1", "formule1" ou "f1" au clavier
+// Racing Game
 ---
 
-<div id="f1Modal" class="f1-modal" style="display: none;" role="dialog" aria-modal="true" aria-label="F1 Reaction Test">
+<div id="f1Modal" class="f1-modal" style="display: none;" role="dialog" aria-modal="true" aria-label="Racing Game">
   <div class="f1-backdrop" id="f1Backdrop"></div>
 
   <div class="f1-content">
     <button class="f1-close-btn" id="f1CloseBtn" aria-label="Fermer" title="Fermer (Échap)">✕</button>
 
-    <div class="f1-telemetry-bar">
-      <div class="f1-team-stripes">
-        <span class="stripe stripe-ferrari" title="Scuderia Ferrari"></span>
-        <span class="stripe stripe-mclaren" title="McLaren F1"></span>
-        <span class="stripe stripe-mercedes" title="Mercedes-AMG"></span>
-        <span class="stripe stripe-redbull" title="Red Bull Racing"></span>
-        <span class="stripe stripe-alpine" title="Alpine F1"></span>
-        <span class="stripe stripe-aston" title="Aston Martin"></span>
-      </div>
-      <span class="f1-telemetry-tag">FIA STARTING PROTOCOL // SECTOR 1</span>
-    </div>
-
     <div class="f1-header">
-      <h2 class="f1-title">F1 Reaction Time Test</h2>
-      <p class="f1-subtitle">Les 5 feux rouges s'allument un à un. Dès l'extinction complète des feux, <strong>cliquez (souris ou tactile)</strong> ou appuyez sur <strong>Espace</strong> !</p>
+      <h2 class="f1-title">Grand Prix Racing</h2>
+      <p class="f1-subtitle">Flèches directionnelles ou ZQSD pour piloter.</p>
     </div>
 
-    <div class="f1-gantry-frame">
-      <div class="f1-gantry" id="f1Gantry">
-        <div class="f1-light-pod">
-          <div class="f1-light" id="f1L1"></div>
-          <div class="f1-sub-light"></div>
-        </div>
-        <div class="f1-light-pod">
-          <div class="f1-light" id="f1L2"></div>
-          <div class="f1-sub-light"></div>
-        </div>
-        <div class="f1-light-pod">
-          <div class="f1-light" id="f1L3"></div>
-          <div class="f1-sub-light"></div>
-        </div>
-        <div class="f1-light-pod">
-          <div class="f1-light" id="f1L4"></div>
-          <div class="f1-sub-light"></div>
-        </div>
-        <div class="f1-light-pod">
-          <div class="f1-light" id="f1L5"></div>
-          <div class="f1-sub-light"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="f1-action-area" id="f1ActionArea">
-      <div class="f1-timer-wrap">
-        <span class="f1-timer-label">DELTA REACTION</span>
-        <div class="f1-timer-display" id="f1TimerDisplay">--- ms</div>
-      </div>
-
-      <div class="f1-status-pill" id="f1StatusMsg">Prêt sur la grille de départ</div>
-
-      <div class="f1-controls">
-        <button class="f1-btn f1-btn-start" id="f1StartBtn">
-          DÉMARRER LA PROCÉDURE
-        </button>
-      </div>
-
-      <div class="f1-hint">Contrôles : Barre <strong>Espace</strong>, <strong>clic souris</strong> ou <strong>toucher l'écran</strong> sur mobile</div>
-    </div>
-
-    <div class="f1-footer-bar">
-      <span class="f1-score-tag" id="f1BestScore">Record personnel : -- ms</span>
-      <span class="f1-esc-hint">Touche <strong>Échap</strong> pour fermer</span>
+    <div class="f1-game-container">
+      <canvas id="racingCanvas" width="800" height="450"></canvas>
+      <div id="f1LapOverlay">Temps au tour: <span id="f1TimerDisplay">0.00</span>s</div>
+      <div id="f1BestLapOverlay">Meilleur tour: <span id="f1BestTimerDisplay">--</span>s</div>
     </div>
   </div>
 </div>
@@ -83,20 +30,19 @@
   }
   .f1-backdrop {
     position: absolute; inset: 0;
-    background: rgba(12, 13, 16, 0.85);
-    backdrop-filter: blur(12px);
+    background: rgba(12, 13, 16, 0.9);
+    backdrop-filter: blur(8px);
   }
   .f1-content {
     position: relative; z-index: 2;
     background: #14161B;
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 12px;
-    width: 100%; max-width: 650px;
-    padding: 30px 32px 26px;
+    width: 100%; max-width: 860px;
+    padding: 30px;
     color: #F1F1EC;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     text-align: center;
-    font-family: var(--font-sans, system-ui, sans-serif);
   }
   .f1-close-btn {
     position: absolute; top: 14px; right: 16px;
@@ -108,388 +54,276 @@
   }
   .f1-close-btn:hover { color: #fff; border-color: #fff; background: rgba(255, 255, 255, 0.08); }
 
-  /* Telemetry Bar */
-  .f1-telemetry-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding-bottom: 16px; margin-bottom: 20px;
-    padding-right: 48px; /* Évite toute collision avec le bouton Fermer ✕ */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .f1-team-stripes {
-    display: flex; gap: 4px; align-items: center;
-  }
-  .stripe { width: 14px; height: 4px; border-radius: 2px; }
-  .stripe-ferrari { background: #E8002D; }
-  .stripe-mclaren { background: #FF8000; }
-  .stripe-mercedes { background: #00D2BE; }
-  .stripe-redbull { background: #1E41FF; }
-  .stripe-alpine { background: #0093CC; }
-  .stripe-aston { background: #00594F; }
-
-  .f1-telemetry-tag {
-    font-family: monospace; font-size: 0.75rem; font-weight: 700;
-    color: #8F9198; letter-spacing: 0.08em;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-
   .f1-title {
     font-family: var(--font-serif, serif); font-size: 1.85rem; font-weight: 600;
-    margin-bottom: 8px; color: #FFFFFF; letter-spacing: -0.01em;
+    margin-bottom: 8px; color: #FFFFFF;
   }
   .f1-subtitle {
-    font-size: 0.88rem; color: #8F9198; max-width: 500px; margin: 0 auto 24px; line-height: 1.5;
+    font-size: 0.88rem; color: #8F9198; margin-bottom: 20px;
   }
-  .f1-subtitle strong { color: #fff; }
 
-  /* Portique F1 Usiné */
-  .f1-gantry-frame {
-    background: #0B0C0E;
-    border: 1px solid #23262D;
+  .f1-game-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #2b7a2b; /* grass color */
     border-radius: 8px;
-    padding: 16px 20px;
-    margin-bottom: 20px;
+    overflow: hidden;
+    border: 2px solid #333;
   }
-  .f1-gantry {
-    display: flex; justify-content: center; gap: 12px;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
-  .f1-light-pod {
-    width: 62px; height: 95px;
-    background: #181A20;
-    border: 1px solid #2A2E38;
+
+  #f1LapOverlay, #f1BestLapOverlay {
+    position: absolute;
+    top: 15px;
+    background: rgba(0,0,0,0.6);
+    padding: 8px 12px;
     border-radius: 6px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 8px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    font-family: monospace;
+    font-size: 1.1rem;
+    color: #fff;
+    pointer-events: none;
   }
-  .f1-light {
-    width: 38px; height: 38px; border-radius: 50%;
-    background: #242730;
-    border: 2px solid #17181C;
-    transition: background-color 0.05s ease, box-shadow 0.05s ease;
+  #f1LapOverlay {
+    left: 15px;
   }
-  .f1-light.on {
-    background: #FF1801;
-    box-shadow: 0 0 16px #FF1801, 0 0 30px rgba(255, 24, 1, 0.7);
-  }
-  .f1-sub-light {
-    width: 14px; height: 14px; border-radius: 50%;
-    background: #1E2026; border: 1px solid #141518;
-  }
-
-  /* Zone d'action */
-  .f1-action-area {
-    background: #181A21;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px; padding: 20px 24px;
-    cursor: pointer; user-select: none;
-    transition: border-color 0.2s;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .f1-action-area:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-  .f1-timer-wrap { margin-bottom: 12px; }
-  .f1-timer-label {
-    font-family: monospace; font-size: 0.72rem; color: #8F9198; letter-spacing: 0.1em;
-  }
-  .f1-timer-display {
-    font-family: monospace; font-size: 2.8rem; font-weight: 700;
-    color: #69FF0A; font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
-    line-height: 1.1; margin-top: 4px;
-  }
-  .f1-status-pill {
-    display: inline-block; font-size: 0.95rem; font-weight: 600;
-    color: #fff; padding: 6px 14px; border-radius: 6px;
-    background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08);
-    margin-bottom: 16px;
-  }
-  .f1-btn {
-    padding: 11px 26px; border-radius: 6px; font-weight: 700; font-size: 0.9rem;
-    border: none; cursor: pointer; transition: all 0.15s ease;
-    font-family: inherit; letter-spacing: 0.02em;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .f1-btn-start {
-    background: #FF5500; color: #fff;
-    box-shadow: 0 2px 8px rgba(255, 85, 0, 0.3);
-  }
-  .f1-btn-start:hover {
-    background: #FF6A1A; transform: translateY(-1px);
-  }
-  .f1-hint {
-    margin-top: 14px; font-size: 0.78rem; color: #6B6D76;
-  }
-
-  .f1-footer-bar {
-    margin-top: 20px; display: flex; justify-content: space-between; align-items: center;
-    font-size: 0.8rem; color: #8F9198; border-top: 1px solid rgba(255, 255, 255, 0.06);
-    padding-top: 14px;
-  }
-  .f1-score-tag { font-family: monospace; font-weight: 600; color: #5B9DFF; }
-  .f1-esc-hint strong { color: #fff; }
-
-  /* Optimisation Mobile */
-  @media (max-width: 640px) {
-    .f1-content {
-      padding: 20px 14px 18px;
-    }
-    .f1-telemetry-bar {
-      padding-right: 40px;
-      margin-bottom: 14px;
-      padding-bottom: 12px;
-    }
-    .f1-telemetry-tag {
-      font-size: 0.65rem;
-    }
-    .f1-title {
-      font-size: 1.4rem;
-    }
-    .f1-subtitle {
-      font-size: 0.82rem;
-      margin-bottom: 16px;
-    }
-    .f1-gantry-frame {
-      padding: 10px 8px;
-      margin-bottom: 14px;
-    }
-    .f1-gantry {
-      gap: 6px;
-    }
-    .f1-light-pod {
-      width: 48px;
-      height: 74px;
-      gap: 6px;
-    }
-    .f1-light {
-      width: 28px;
-      height: 28px;
-      border-width: 1.5px;
-    }
-    .f1-sub-light {
-      width: 8px;
-      height: 8px;
-    }
-    .f1-action-area {
-      padding: 16px 14px;
-    }
-    .f1-timer-display {
-      font-size: 2.2rem;
-    }
-    .f1-footer-bar {
-      flex-direction: column;
-      gap: 8px;
-    }
+  #f1BestLapOverlay {
+    right: 15px;
+    color: #ffde00;
   }
 </style>
 
 <script is:inline>
-  (function initF1Game() {
-    let keyBuffer = '';
+  (function initRacingGame() {
     const modal = document.getElementById('f1Modal');
     const closeBtn = document.getElementById('f1CloseBtn');
     const backdrop = document.getElementById('f1Backdrop');
-    const startBtn = document.getElementById('f1StartBtn');
-    const actionArea = document.getElementById('f1ActionArea');
+    const canvas = document.getElementById('racingCanvas');
+    const ctx = canvas.getContext('2d');
     const timerDisplay = document.getElementById('f1TimerDisplay');
-    const statusMsg = document.getElementById('f1StatusMsg');
-    const bestScoreDisplay = document.getElementById('f1BestScore');
+    const bestTimerDisplay = document.getElementById('f1BestTimerDisplay');
 
-    const lights = [
-      document.getElementById('f1L1'),
-      document.getElementById('f1L2'),
-      document.getElementById('f1L3'),
-      document.getElementById('f1L4'),
-      document.getElementById('f1L5')
-    ];
+    let isGameRunning = false;
+    let animFrameId = null;
 
-    let gameState = 'IDLE'; // IDLE | SEQUENCE | WAITING | FINISHED
-    let sequenceTimeouts = [];
-    let lightOutTimestamp = 0;
-    let bestScore = localStorage.getItem('f1_best_reaction') ? parseInt(localStorage.getItem('f1_best_reaction')) : null;
-    if (bestScore && bestScoreDisplay) {
-      bestScoreDisplay.textContent = `Meilleur réflexe : ${bestScore} ms`;
-    }
+    const keys = {
+      ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false,
+      w: false, s: false, a: false, d: false
+    };
 
-    function playBeep(freq = 440, duration = 0.08) {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      } catch (e) {}
-    }
+    // Track path (inner and outer boundaries)
+    // Simple oval track
+    const trackOuter = { x: 400, y: 225, rx: 350, ry: 180, width: 80 };
 
-    function openF1Modal() {
-      if (modal) {
-        modal.style.display = 'flex';
-        resetGame();
+    class Car {
+      constructor(x, y, color, isPlayer = false) {
+        this.x = x;
+        this.y = y;
+        this.angle = 0;
+        this.speed = 0;
+        this.maxSpeed = isPlayer ? 6 : 4;
+        this.friction = 0.95;
+        this.acceleration = 0.2;
+        this.turnSpeed = 0.05;
+        this.color = color;
+        this.isPlayer = isPlayer;
+        
+        // Sprite placeholder dimensions (will be replaced by Unity sprites later)
+        this.width = 24;
+        this.height = 12;
+
+        this.lapStartTime = null;
+        this.bestLapTime = null;
+        this.crossedStartLine = false;
+      }
+
+      update() {
+        if (this.isPlayer) {
+          if (keys.ArrowUp || keys.w) this.speed += this.acceleration;
+          if (keys.ArrowDown || keys.s) this.speed -= this.acceleration;
+
+          if (this.speed != 0) {
+            const flip = this.speed > 0 ? 1 : -1;
+            if (keys.ArrowLeft || keys.a) this.angle -= this.turnSpeed * flip;
+            if (keys.ArrowRight || keys.d) this.angle += this.turnSpeed * flip;
+          }
+        } else {
+          // simple AI: follow track ellipse
+          const angleToCenter = Math.atan2(this.y - trackOuter.y, this.x - trackOuter.x);
+          let targetAngle = angleToCenter + Math.PI / 2; // tangent
+          
+          // steering towards tangent
+          let diff = targetAngle - this.angle;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+
+          this.angle += Math.sign(diff) * Math.min(Math.abs(diff), this.turnSpeed * 0.8);
+          this.speed += this.acceleration * 0.8;
+        }
+
+        // Apply friction and speed limits
+        this.speed *= this.friction;
+        if (this.speed > this.maxSpeed) this.speed = this.maxSpeed;
+        if (this.speed < -this.maxSpeed/2) this.speed = -this.maxSpeed/2;
+
+        const prevX = this.x;
+        const prevY = this.y;
+
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+
+        // Collision with grass (slow down)
+        const dx = this.x - trackOuter.x;
+        const dy = this.y - trackOuter.y;
+        // distance from center normalized to ellipse
+        const distSq = (dx*dx)/(trackOuter.rx*trackOuter.rx) + (dy*dy)/(trackOuter.ry*trackOuter.ry);
+        const innerRadiusSq = Math.pow((trackOuter.rx - trackOuter.width)/trackOuter.rx, 2);
+
+        if (distSq > 1 || distSq < innerRadiusSq) {
+           this.speed *= 0.85; // grass friction
+        }
+
+        if (this.isPlayer) {
+          // check start line (x = 400, y < 225)
+          if (prevX <= trackOuter.x && this.x > trackOuter.x && this.y < trackOuter.y) {
+            // crossed start line to the right
+            if (this.crossedStartLine) {
+               const now = performance.now();
+               if (this.lapStartTime) {
+                 const lapTime = (now - this.lapStartTime) / 1000;
+                 if (lapTime > 2) { // prevent double triggers
+                   if (!this.bestLapTime || lapTime < this.bestLapTime) {
+                     this.bestLapTime = lapTime;
+                     bestTimerDisplay.textContent = this.bestLapTime.toFixed(2);
+                   }
+                   this.lapStartTime = now;
+                 }
+               } else {
+                 this.lapStartTime = now;
+               }
+            } else {
+              this.crossedStartLine = true;
+              this.lapStartTime = performance.now();
+            }
+          }
+        }
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+
+        // Placeholder car drawing
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.width/2, -this.height/2, this.width, this.height);
+        
+        // Window/cockpit
+        ctx.fillStyle = '#000';
+        ctx.fillRect(-this.width/4, -this.height/3, this.width/2, this.height/1.5);
+        
+        // Front direction indicator
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(this.width/2 - 4, -this.height/2, 2, this.height);
+
+        ctx.restore();
       }
     }
 
-    function closeF1Modal() {
-      if (modal) {
-        modal.style.display = 'none';
-        resetGame();
+    let cars = [];
+
+    function initGame() {
+      cars = [
+        new Car(400, trackOuter.y - trackOuter.ry + trackOuter.width/2, '#FF1801', true), // Player
+        new Car(400 - 60, trackOuter.y - trackOuter.ry + trackOuter.width/2 + 10, '#00D2BE', false), // AI 1
+        new Car(400 - 120, trackOuter.y - trackOuter.ry + trackOuter.width/2 - 10, '#1E41FF', false) // AI 2
+      ];
+      bestTimerDisplay.textContent = '--';
+    }
+
+    function drawTrack() {
+      // Background grass
+      ctx.fillStyle = '#2b7a2b';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Track Asphalt
+      ctx.beginPath();
+      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx, trackOuter.ry, 0, 0, Math.PI*2);
+      ctx.fillStyle = '#444';
+      ctx.fill();
+
+      // Track Inner Grass
+      ctx.beginPath();
+      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx - trackOuter.width, trackOuter.ry - trackOuter.width, 0, 0, Math.PI*2);
+      ctx.fillStyle = '#2b7a2b';
+      ctx.fill();
+
+      // Start/Finish Line
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(trackOuter.x, trackOuter.y - trackOuter.ry, 6, trackOuter.width);
+      // checkered pattern
+      ctx.fillStyle = '#000';
+      for (let i=0; i<trackOuter.width; i+=10) {
+        ctx.fillRect(trackOuter.x, trackOuter.y - trackOuter.ry + i + (Math.floor(i/10)%2===0?0:5), 3, 5);
+        ctx.fillRect(trackOuter.x+3, trackOuter.y - trackOuter.ry + i + (Math.floor(i/10)%2===0?5:0), 3, 5);
       }
     }
 
-    function resetGame() {
-      gameState = 'IDLE';
-      sequenceTimeouts.forEach(clearTimeout);
-      sequenceTimeouts = [];
-      lights.forEach(l => l?.classList.remove('on'));
-      if (timerDisplay) timerDisplay.textContent = '--- ms';
-      if (statusMsg) {
-        statusMsg.textContent = 'Prêt sur la grille de départ';
-        statusMsg.style.color = '#fff';
-      }
-      if (startBtn) {
-        startBtn.style.display = 'inline-block';
-        startBtn.textContent = 'DÉMARRER LA PROCÉDURE';
-      }
-    }
+    function gameLoop() {
+      if (!isGameRunning) return;
 
-    function startSequence() {
-      if (gameState === 'SEQUENCE' || gameState === 'WAITING') return;
-      resetGame();
-      gameState = 'SEQUENCE';
-      if (startBtn) startBtn.style.display = 'none';
-      if (statusMsg) statusMsg.textContent = 'Feux en cours d\'allumage... Restez concentré !';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawTrack();
 
-      lights.forEach((light, index) => {
-        const t = setTimeout(() => {
-          light.classList.add('on');
-          playBeep(440, 0.08);
-        }, (index + 1) * 900);
-        sequenceTimeouts.push(t);
+      cars.forEach(car => {
+        car.update();
+        car.draw(ctx);
       });
 
-      const randomHold = 800 + Math.random() * 2400;
-      const totalDelay = (5 * 900) + randomHold;
+      // Update player timer
+      if (cars[0].lapStartTime) {
+         const currentLap = (performance.now() - cars[0].lapStartTime) / 1000;
+         timerDisplay.textContent = currentLap.toFixed(2);
+      } else {
+         timerDisplay.textContent = "0.00";
+      }
 
-      const finishTimeout = setTimeout(() => {
-        lights.forEach(l => l.classList.remove('on'));
-        playBeep(880, 0.12);
-        lightOutTimestamp = performance.now();
-        gameState = 'WAITING';
-        if (statusMsg) {
-          statusMsg.textContent = 'FEUX ÉTEINTS — PARTEZ !';
-          statusMsg.style.color = '#69FF0A';
-        }
-      }, totalDelay);
-      sequenceTimeouts.push(finishTimeout);
+      animFrameId = requestAnimationFrame(gameLoop);
     }
 
-    function triggerReaction() {
-      if (gameState === 'SEQUENCE') {
-        sequenceTimeouts.forEach(clearTimeout);
-        sequenceTimeouts = [];
-        gameState = 'FINISHED';
-        lights.forEach(l => l.classList.add('on'));
-        playBeep(220, 0.25);
-        if (timerDisplay) timerDisplay.textContent = 'JUMP START';
-        if (statusMsg) {
-          statusMsg.textContent = 'FAUX DÉPART // +5s de pénalité.';
-          statusMsg.style.color = '#FF1801';
-        }
-        if (startBtn) {
-          startBtn.style.display = 'inline-block';
-          startBtn.textContent = 'Réessayer';
-        }
-      } else if (gameState === 'WAITING') {
-        const reactionTime = Math.round(performance.now() - lightOutTimestamp);
-        gameState = 'FINISHED';
-        if (timerDisplay) timerDisplay.textContent = `${reactionTime} ms`;
+    function openModal() {
+      if (modal) {
+        modal.style.display = 'flex';
+        isGameRunning = true;
+        initGame();
+        gameLoop();
+      }
+    }
 
-        let feedback = '';
-        if (reactionTime < 200) {
-          feedback = 'TEMPS EXCEPTIONNEL // Réflexes de niveau Formule 1';
-        } else if (reactionTime < 260) {
-          feedback = 'EXCELLENT DÉPART // Niveau FIA F2 / F3';
-        } else if (reactionTime < 320) {
-          feedback = 'DÉPART CORRECT // Dans le peloton';
-        } else {
-          feedback = 'DÉPART TARDIF // Temps de réaction élevé';
-        }
-
-        if (statusMsg) {
-          statusMsg.textContent = feedback;
-          statusMsg.style.color = reactionTime < 260 ? '#69FF0A' : '#5B9DFF';
-        }
-
-        if (!bestScore || reactionTime < bestScore) {
-          bestScore = reactionTime;
-          localStorage.setItem('f1_best_reaction', bestScore);
-          if (bestScoreDisplay) bestScoreDisplay.textContent = `Nouveau record personnel : ${bestScore} ms !`;
-        }
-
-        if (startBtn) {
-          startBtn.style.display = 'inline-block';
-          startBtn.textContent = 'Rejouer';
-        }
+    function closeModal() {
+      if (modal) {
+        modal.style.display = 'none';
+        isGameRunning = false;
+        if (animFrameId) cancelAnimationFrame(animFrameId);
       }
     }
 
     window.addEventListener('keydown', (e) => {
-      if (modal && modal.style.display === 'flex') {
-        if (e.key === 'Escape') {
-          closeF1Modal();
-        } else if (e.code === 'Space') {
-          e.preventDefault();
-          if (gameState === 'IDLE' || gameState === 'FINISHED') {
-            startSequence();
-          } else {
-            triggerReaction();
-          }
-        }
-        return;
-      }
-
-      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        keyBuffer += e.key.toLowerCase();
-        if (keyBuffer.length > 20) keyBuffer = keyBuffer.slice(-20);
-
-        if (keyBuffer.endsWith('formula1') || keyBuffer.endsWith('formule1') || keyBuffer.endsWith('f1game')) {
-          openF1Modal();
-          keyBuffer = '';
-        }
-      }
+      if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
+      if (modal && modal.style.display === 'flex' && e.key === 'Escape') closeModal();
+    });
+    window.addEventListener('keyup', (e) => {
+      if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
     });
 
-    closeBtn?.addEventListener('click', closeF1Modal);
-    backdrop?.addEventListener('click', closeF1Modal);
+    closeBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
 
-    function handleReactionTrigger(e) {
-      if (e.type === 'pointerdown' && e.pointerType === 'mouse' && e.button !== 0) return;
-      if (e.target && (e.target.closest('#f1StartBtn') || e.target.closest('#f1CloseBtn'))) return;
-      if (e.cancelable) e.preventDefault();
-
-      if (gameState === 'IDLE' || gameState === 'FINISHED') {
-        startSequence();
-      } else {
-        triggerReaction();
-      }
-    }
-
-    startBtn?.addEventListener('pointerdown', (e) => {
-      e.stopPropagation();
-      if (e.cancelable) e.preventDefault();
-      startSequence();
-    });
-    startBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-
-    actionArea?.addEventListener('pointerdown', handleReactionTrigger);
-
-    window.startF1 = openF1Modal;
+    window.startF1 = openModal;
   })();
 </script>

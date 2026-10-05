@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 import F1GameModal from '../components/F1GameModal.astro';
 import VitalityGameModal from '../components/VitalityGameModal.astro';
+import MinitelTerminal from '../components/MinitelTerminal.astro';
 import { getLangFromCookie, makeT } from '../i18n/translations';
 
 interface Props {
@@ -130,6 +131,7 @@ const schemaJson = {
 		</footer>
 
 		<CommandPalette />
+		<MinitelTerminal />
 		<F1GameModal />
 		<VitalityGameModal />
     <Analytics />

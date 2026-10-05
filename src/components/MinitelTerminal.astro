@@ -1,0 +1,229 @@
+---
+// src/components/MinitelTerminal.astro
+// Retro terminal easter egg
+---
+
+<div id="minitelModal" class="minitel-modal" style="display: none;" role="dialog" aria-modal="true">
+  <div class="minitel-backdrop" id="minitelBackdrop"></div>
+
+  <div class="minitel-container" id="minitelContainer">
+    <div class="minitel-crt">
+      <div class="minitel-screen">
+        <div class="minitel-scanlines"></div>
+        <div class="minitel-content" id="minitelContent">
+          <div class="minitel-line minitel-blink">CONNEXION 3615 MINITEL...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .minitel-modal {
+    position: fixed; inset: 0; z-index: 10000;
+    display: flex; align-items: center; justify-content: center;
+    background: #000;
+  }
+  .minitel-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+  }
+  .minitel-container {
+    position: relative; z-index: 2;
+    width: 90vw; max-width: 800px;
+    height: 70vh; max-height: 600px;
+    background: #111;
+    border: 20px solid #d4d0c8;
+    border-radius: 20px 20px 10px 10px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.8);
+    transform: scale(0.1);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .minitel-container.open {
+    transform: scale(1);
+    opacity: 1;
+  }
+  .minitel-crt {
+    position: relative; width: 100%; height: 100%;
+    background: #0a0a0a;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 10px solid #222;
+  }
+  .minitel-screen {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, #111 0px, #111 1px, #000 1px, #000 2px);
+    background-size: 100% 2px;
+    padding: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    color: #ffd700; /* Minitel yellow-ish orange text */
+    font-size: 1.2rem;
+    line-height: 1.5;
+    text-shadow: 0 0 5px #ffd700;
+    overflow-y: auto;
+  }
+  .minitel-scanlines {
+    position: absolute; inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .minitel-line {
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+  .minitel-blink {
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .minitel-input-line {
+    display: flex;
+    align-items: center;
+  }
+  .minitel-input-line span {
+    margin-right: 8px;
+  }
+  .minitel-input {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    text-shadow: inherit;
+    outline: none;
+    flex: 1;
+    text-transform: uppercase;
+  }
+</style>
+
+<script is:inline>
+  (function initMinitel() {
+    const modal = document.getElementById('minitelModal');
+    const container = document.getElementById('minitelContainer');
+    const content = document.getElementById('minitelContent');
+    const backdrop = document.getElementById('minitelBackdrop');
+
+    let isTyping = false;
+    
+    function writeLine(text, delay = 0) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const div = document.createElement('div');
+          div.className = 'minitel-line';
+          div.textContent = text;
+          content.appendChild(div);
+          content.parentElement.scrollTop = content.parentElement.scrollHeight;
+          resolve();
+        }, delay);
+      });
+    }
+
+    function createInput() {
+      const div = document.createElement('div');
+      div.className = 'minitel-input-line';
+      div.innerHTML = `<span>></span><input type="text" class="minitel-input" autocomplete="off" spellcheck="false" autofocus />`;
+      content.appendChild(div);
+      const input = div.querySelector('input');
+      
+      // Ensure click focuses input
+      content.parentElement.onclick = () => input.focus();
+      input.focus();
+      
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = input.value.trim().toUpperCase();
+          input.disabled = true;
+          input.style.opacity = '0.7';
+          processCommand(val);
+        } else if (e.key === 'Escape') {
+          closeMinitel();
+        }
+      });
+    }
+
+    async function processCommand(cmd) {
+      if (cmd === 'F1') {
+        await writeLine('LANCEMENT MODULE COURSE...', 500);
+        setTimeout(() => {
+          closeMinitel();
+          if (window.startF1) window.startF1();
+        }, 1000);
+      } else if (cmd === 'VITALITY') {
+        await writeLine('LANCEMENT MODULE AIM LAB...', 500);
+        setTimeout(() => {
+          closeMinitel();
+          if (window.startVitality) window.startVitality();
+        }, 1000);
+      } else if (cmd === 'EXIT' || cmd === 'QUITTER') {
+        closeMinitel();
+      } else if (cmd === 'HELP' || cmd === '?') {
+        await writeLine('COMMANDES DISPONIBLES :', 200);
+        await writeLine('- F1 : JEU DE COURSE TOP-DOWN', 200);
+        await writeLine('- VITALITY : AIM LAB', 200);
+        await writeLine('- EXIT / QUITTER : FERMER', 200);
+        createInput();
+      } else if (cmd !== '') {
+        await writeLine('COMMANDE INCONNUE. TAPEZ "HELP" POUR LA LISTE.', 300);
+        createInput();
+      } else {
+        createInput();
+      }
+    }
+
+    async function startBootSequence() {
+      content.innerHTML = '';
+      await writeLine('CONNEXION...', 500);
+      await writeLine('3615 MINITEL EST EN LIGNE.', 800);
+      await writeLine('BIENVENUE SUR LE RESEAU ARTHUR DORADOUX.', 400);
+      await writeLine('TAPEZ VOTRE CHOIX :', 200);
+      await writeLine('- F1', 100);
+      await writeLine('- VITALITY', 100);
+      await writeLine('- QUITTER', 100);
+      createInput();
+    }
+
+    function openMinitel() {
+      if (modal) {
+        modal.style.display = 'flex';
+        // force reflow
+        void container.offsetWidth;
+        container.classList.add('open');
+        startBootSequence();
+      }
+    }
+
+    function closeMinitel() {
+      if (modal) {
+        container.classList.remove('open');
+        setTimeout(() => {
+          modal.style.display = 'none';
+        }, 500); // match transition
+      }
+    }
+
+    window.startMinitel = openMinitel;
+
+    backdrop?.addEventListener('click', closeMinitel);
+    
+    // Easter egg triggers via keyboard
+    let keyBuffer = '';
+    window.addEventListener('keydown', (e) => {
+      if (modal && modal.style.display === 'flex') return;
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        keyBuffer += e.key.toLowerCase();
+        if (keyBuffer.length > 20) keyBuffer = keyBuffer.slice(-20);
+        if (keyBuffer.endsWith('minitel') || keyBuffer.endsWith('3615')) {
+          openMinitel();
+          keyBuffer = '';
+        }
+      }
+    });
+
+  })();
+</script>

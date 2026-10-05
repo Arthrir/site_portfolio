@@ -196,7 +196,7 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
     <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;" class="filter-controls">
       <select id="hwSelect" class="pro-select">
         <option value="">{lang === 'fr' ? "+ Hardware" : "+ Hardware"}</option>
-        {domTags.sort().map(tag => <option value={tag}>{tag}</option>)}
+        {domTags.sort().map(tag => <option value={tag}>{lang === 'fr' ? ({'Sensors': 'Capteurs', '3D Printing': 'Impression 3D', 'Robotics': 'Robotique', 'Cryptography': 'Cryptographie', 'Electronics': 'Électronique'}[tag] || tag) : tag}</option>)}
       </select>
 
       <select id="swSelect" class="pro-select">
@@ -211,7 +211,7 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
 
       <select id="softSelect" class="pro-select">
         <option value="">{lang === 'fr' ? "+ Soft Skills" : "+ Soft Skills"}</option>
-        {softTags.sort().map(tag => <option value={tag}>{tag}</option>)}
+        {softTags.sort().map(tag => <option value={tag}>{lang === 'fr' ? ({'Event Management': 'Gestion d\'événements', 'Entrepreneurship': 'Entrepreneuriat', 'Dev Lead': 'Gestion de projet', 'Communication': 'Communication'}[tag] || tag) : tag}</option>)}
       </select>
     </div>
 
@@ -249,7 +249,7 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
             <div>
               <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;">
                 {flatTags.map(tag => (
-                  <span class="skill-tag" style="font-size: 0.7rem; pointer-events: none; background: transparent; border: 1px solid var(--border); color: var(--text); padding: 4px 10px; border-radius: 6px;">{tag}</span>
+                  <span class="skill-tag" style="font-size: 0.7rem; pointer-events: none; background: transparent; border: 1px solid var(--border); color: var(--text); padding: 4px 10px; border-radius: 6px;">{lang === 'fr' ? ({'Sensors': 'Capteurs', '3D Printing': 'Impression 3D', 'Robotics': 'Robotique', 'Cryptography': 'Cryptographie', 'Electronics': 'Électronique', 'Event Management': 'Gestion d\'événements', 'Entrepreneurship': 'Entrepreneuriat', 'Dev Lead': 'Gestion de projet', 'Communication': 'Communication'}[tag] || tag) : tag}</span>
                 ))}
               </div>
               {project.link !== "#" && (
@@ -296,10 +296,26 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
       if(!activeContainer) return;
       activeContainer.innerHTML = '';
 
+      const translations: Record<string, string> = {
+        'Sensors': 'Capteurs',
+        '3D Printing': 'Impression 3D',
+        'Robotics': 'Robotique',
+        'Cryptography': 'Cryptographie',
+        'Electronics': 'Électronique',
+        'Event Management': 'Gestion d\'événements',
+        'Entrepreneurship': 'Entrepreneuriat',
+        'Dev Lead': 'Lead Dev',
+        'Tech Lead': 'Tech Lead',
+        'Communication': 'Communication',
+        'UI/UX Design': 'Design UI/UX'
+      };
+
       activeTags.forEach(tag => {
         const chip = document.createElement('div');
         chip.className = 'active-filter-chip';
-        chip.innerHTML = `${tag} <span style="opacity: 0.6">✕</span>`;
+        const isFr = document.documentElement.lang === 'fr';
+        const displayTag = isFr && translations[tag] ? translations[tag] : tag;
+        chip.innerHTML = `${displayTag} <span style="opacity: 0.6">✕</span>`;
         chip.addEventListener('click', () => {
           activeTags.delete(tag);
           renderFilters();
