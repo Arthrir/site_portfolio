@@ -23,6 +23,7 @@
   --pop-fuchsia: #FF0055;  
   --pop-purple: #7000FF;   
   --pop-yellow: #FFB800;
+  --pop-emerald: #059669;
 
   --school-emse: #7B1FA2;
   --school-polimi: #004EE6;
@@ -53,6 +54,7 @@ body.theme-dark {
   --pop-orange: #FF7733;
   --pop-fuchsia: #FF3377;
   --pop-purple: #A055FF;
+  --pop-emerald: #10B981;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
