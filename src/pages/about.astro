@@ -96,12 +96,28 @@ const t = makeT(lang);
 
         <p style="font-size: 1rem; line-height: 1.75; color: var(--text); margin-bottom: 20px;">
           {lang === 'fr' ? 
-            "L'exploration est une énorme source d'inspiration. J'adore voyager, découvrir de nouvelles cultures, architectures et modes de vie. J'immortalise souvent ces moments en photo. Cela nourrit ma vision de ce que doit être un bon design ou un bon produit : universel, adapté à son environnement et esthétiquement juste." : 
-            "Exploration is a massive source of inspiration. I love traveling, discovering new cultures, architecture, and lifestyles. I often capture these moments through photography. This fuels my vision of what good design or a good product should be: universal, adapted to its environment, and aesthetically sound."}
+            "L'exploration est une immense source d'inspiration. Découvrir de nouvelles cultures, architectures et modes de vie nourrit ma vision du design produit : universel, pérenne et ancré dans l'usage réel. J'immortalise chaque voyage en photographie." : 
+            "Exploration is a massive source of inspiration. Discovering new cultures, architectures, and lifestyles fuels my vision of product design: universal, durable, and grounded in real-world human usage. I capture each journey through photography."}
         </p>
 
+        <!-- Globe 3D Interactif -->
+        <div class="travel-globe-container" id="travelGlobeContainer">
+          <canvas id="travelGlobeCanvas"></canvas>
+          <div class="globe-overlay-hint">
+            <span class="globe-hint-pill">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+              {lang === 'fr' ? 'Faites tourner le globe • Cliquez sur un repère' : 'Drag to rotate globe • Click any marker'}
+            </span>
+          </div>
+        </div>
+
+        <!-- Onglets des destinations -->
         <div class="travel-tabs" id="travelTabs" role="tablist" aria-label="Destinations de voyage">
-          <button class="travel-tab active" data-dest="egypt" role="tab" aria-selected="true">
+          <button class="travel-tab active" data-dest="france" role="tab" aria-selected="true">
+            <span class="tab-code">FRA</span>
+            <span class="tab-name">France (3 étapes)</span>
+          </button>
+          <button class="travel-tab" data-dest="egypt" role="tab" aria-selected="false">
             <span class="tab-code">EGY</span>
             <span class="tab-name">{lang === 'fr' ? 'Égypte' : 'Egypt'}</span>
           </button>
@@ -109,51 +125,74 @@ const t = makeT(lang);
             <span class="tab-code">USA</span>
             <span class="tab-name">New York</span>
           </button>
-          <button class="travel-tab" data-dest="spain" role="tab" aria-selected="false">
-            <span class="tab-code">ESP</span>
-            <span class="tab-name">{lang === 'fr' ? 'Espagne' : 'Spain'}</span>
-          </button>
-          <button class="travel-tab" data-dest="france" role="tab" aria-selected="false">
-            <span class="tab-code">FRA</span>
-            <span class="tab-name">France</span>
+          <button class="travel-tab" data-dest="uk" role="tab" aria-selected="false">
+            <span class="tab-code">GBR</span>
+            <span class="tab-name">{lang === 'fr' ? 'Royaume-Uni' : 'United Kingdom'}</span>
           </button>
           <button class="travel-tab" data-dest="italy" role="tab" aria-selected="false">
             <span class="tab-code">ITA</span>
             <span class="tab-name">{lang === 'fr' ? 'Italie' : 'Italy'}</span>
           </button>
+          <button class="travel-tab" data-dest="spain" role="tab" aria-selected="false">
+            <span class="tab-code">ESP</span>
+            <span class="tab-name">{lang === 'fr' ? 'Espagne & Barcelone' : 'Spain & Barcelona'}</span>
+          </button>
         </div>
 
+        <!-- Carte de la destination sélectionnée -->
         <div class="travel-card" id="travelCard">
           <div class="travel-card-header">
             <div>
-              <span class="travel-pill" id="travelPill">EGY // Le Caire & Louxor</span>
+              <span class="travel-pill" id="travelPill">FRA // Paris, Lyon & Provence</span>
               <h5 class="travel-title" id="travelTitle">
-                {lang === 'fr' ? "L'épreuve du temps et la monumentalité" : "The test of time and monumentality"}
+                {lang === 'fr' ? "L'excellence industrielle, le design et les terroirs d'innovation" : "Industrial excellence, design and tech hubs"}
               </h5>
             </div>
-            <span class="travel-tag" id="travelTheme">Architecture & Proportions</span>
+            <span class="travel-tag" id="travelTheme">Savoir-faire & Microélectronique</span>
+          </div>
+
+          <!-- Puces des étapes / villes clés -->
+          <div class="travel-subspots" id="travelSubspots">
+            <span class="subspot-chip">📍 Paris</span>
+            <span class="subspot-chip">📍 Lyon</span>
+            <span class="subspot-chip">📍 Provence (Mines Saint-Étienne)</span>
           </div>
 
           <p class="travel-body" id="travelBody">
             {lang === 'fr' ? 
-              "Découvrir les temples et pyramides d'Égypte rappelle que les plus grands accomplissements d'ingénierie allient rigueur mathématique, pérennité absolue et intention symbolique. Une véritable leçon de proportions qui inspire la conception d'objets conçus pour durer." : 
-              "Discovering the temples and pyramids of Egypt reminds us that the greatest engineering feats combine mathematical rigor, ultimate durability, and symbolic intention. A true lesson in proportions that inspires designing products built to last."}
+              "De mon cursus d'ingénieur en microélectronique aux Mines Saint-Étienne en Provence jusqu'aux pôles industriels et technologiques de Lyon et de Paris, la France m'a forgé le sens de la rigueur scientifique, du détail bien pensé et de l'excellence produit." : 
+              "From my microelectronics engineering studies at Mines Saint-Étienne in Provence to the tech and industrial hubs of Lyon and Paris, France shaped my commitment to scientific rigor, meticulous attention to detail, and product excellence."}
           </p>
 
           <div class="travel-photo-slot">
-            <img id="travelImage" src="/assets/voyages/egypt.jpg" alt="Travel Photo" onerror="this.style.display='none'; document.getElementById('travelPlaceholder').style.display='flex';" />
+            <img id="travelImage" src="/assets/voyages/france.jpg" alt="Travel Photo" onerror="this.style.display='none'; document.getElementById('travelPlaceholder').style.display='flex';" />
             <div id="travelPlaceholder" class="photo-placeholder-inner" style="display: none;">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.6; margin-bottom: 6px;">
                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                 <circle cx="12" cy="13" r="4"></circle>
               </svg>
               <span class="photo-placeholder-txt" id="photoPlaceholderTxt">
-                {lang === 'fr' ? "Emplacement photo — Carnet de voyage Égypte" : "Photo spot — Egypt Travel Journal"}
+                {lang === 'fr' ? "Emplacement photo — Carnet de voyage France" : "Photo spot — France Travel Journal"}
               </span>
               <span class="photo-placeholder-sub" id="photoPlaceholderSub">
-                {lang === 'fr' ? "(Ajoute egypt.jpg dans /assets/voyages/)" : "(Add egypt.jpg to /assets/voyages/)"}
+                {lang === 'fr' ? "(Ajoute france.jpg dans /assets/voyages/)" : "(Add france.jpg to /assets/voyages/)"}
               </span>
             </div>
+          </div>
+
+          <!-- Mentions légales & licence d'auteur sous chaque photo -->
+          <div class="travel-license-banner">
+            <div class="license-left">
+              <span class="license-tag">© DROIT D'AUTEUR</span>
+              <span class="license-text">
+                {lang === 'fr' 
+                  ? "Photographies originales sous licence stricte • Tous droits réservés." 
+                  : "Original photographs under copyright protection • All rights reserved."}
+              </span>
+            </div>
+            <a href="/mentions-legales" class="license-link" title="Consulter les mentions légales">
+              {lang === 'fr' ? "Mentions légales" : "Legal notice"} →
+            </a>
           </div>
         </div>
       </div>
@@ -165,6 +204,58 @@ const t = makeT(lang);
     body.theme-dark .logo-light { display: none !important; }
     body.theme-dark .logo-dark { display: block !important; }
 
+    /* Globe 3D Canvas */
+    .travel-globe-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      margin-bottom: 18px;
+      border-radius: var(--radius, 12px);
+      background: radial-gradient(circle at 50% 50%, rgba(91, 157, 255, 0.08) 0%, rgba(0, 0, 0, 0.03) 70%);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: none;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.05);
+    }
+    body.theme-dark .travel-globe-container {
+      background: radial-gradient(circle at 50% 50%, rgba(10, 30, 60, 0.45) 0%, rgba(10, 12, 16, 0.85) 80%);
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+    }
+    #travelGlobeCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    #travelGlobeCanvas:active {
+      cursor: grabbing;
+    }
+    .globe-overlay-hint {
+      position: absolute;
+      bottom: 10px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .globe-hint-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(18, 20, 24, 0.75);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #e0e2eb;
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
     .travel-tabs {
       display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;
     }
@@ -173,7 +264,7 @@ const t = makeT(lang);
       padding: 7px 14px; border-radius: 999px;
       background: var(--card-bg, #181A20);
       border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
-      color: var(--muted, #8F9198); font-size: 0.88rem; font-weight: 500;
+      color: var(--muted, #8F9198); font-size: 0.86rem; font-weight: 500;
       cursor: pointer; transition: all 0.15s ease; font-family: inherit;
     }
     .travel-tab:hover {
@@ -199,7 +290,7 @@ const t = makeT(lang);
     }
     .travel-card-header {
       display: flex; justify-content: space-between; align-items: flex-start;
-      gap: 12px; margin-bottom: 12px; flex-wrap: wrap;
+      gap: 12px; margin-bottom: 10px; flex-wrap: wrap;
     }
     .travel-pill {
       font-size: 0.75rem; font-weight: 700; color: var(--pop-blue);
@@ -215,6 +306,18 @@ const t = makeT(lang);
       background: rgba(255, 255, 255, 0.05); padding: 4px 10px; border-radius: 6px;
       border: 1px solid var(--border);
     }
+
+    .travel-subspots {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+    }
+    .subspot-chip {
+      font-size: 0.75rem; font-weight: 600;
+      padding: 3px 9px; border-radius: 4px;
+      background: rgba(91, 157, 255, 0.08);
+      border: 1px solid rgba(91, 157, 255, 0.25);
+      color: var(--pop-blue);
+    }
+
     .travel-body {
       font-size: 0.96rem; line-height: 1.7; color: var(--text);
       margin-bottom: 18px;
@@ -226,6 +329,7 @@ const t = makeT(lang);
       border: 1.5px dashed var(--border);
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
+      margin-bottom: 12px;
     }
     .travel-photo-slot img {
       width: 100%; height: 100%; object-fit: cover;
@@ -241,126 +345,661 @@ const t = makeT(lang);
     .photo-placeholder-sub {
       font-size: 0.75rem; color: var(--muted);
     }
+
+    /* Bannière de licence d'auteur pour les photos */
+    .travel-license-banner {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 10px; flex-wrap: wrap;
+      padding: 8px 12px; border-radius: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+    }
+    .license-left {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .license-tag {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 2px 6px; border-radius: 3px;
+      background: var(--pop-blue); color: #fff;
+    }
+    .license-text {
+      color: var(--muted);
+    }
+    .license-link {
+      color: var(--text); font-weight: 500; text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.15s;
+    }
+    .license-link:hover {
+      color: var(--pop-blue);
+    }
+
+    @media (max-width: 640px) {
+      .travel-globe-container {
+        height: 240px;
+      }
+      .travel-card {
+        padding: 16px;
+      }
+      .travel-photo-slot {
+        height: 220px;
+      }
+      .travel-license-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 
   <script is:inline define:vars={{ lang }}>
     (function initTravelExplorer() {
       const travelData = {
-        egypt: {
-          pill: "EGY // Le Caire & Louxor",
-          title: { fr: "L'épreuve du temps et la monumentalité", en: "The test of time and monumentality" },
-          theme: { fr: "Architecture & Proportions", en: "Architecture & Proportions" },
-          body: {
-            fr: "Découvrir les temples et pyramides d'Égypte rappelle que les plus grands accomplissements d'ingénierie allient rigueur mathématique, pérennité absolue et intention symbolique. Une véritable leçon de proportions qui inspire la conception d'objets conçus pour durer.",
-            en: "Discovering the temples and pyramids of Egypt reminds us that the greatest engineering feats combine mathematical rigor, ultimate durability, and symbolic intention. A true lesson in proportions that inspires designing products built to last."
+        france: {
+          pill: "FRA // Paris, Lyon & Provence",
+          title: {
+            fr: "L'excellence industrielle, le design et les terroirs d'innovation",
+            en: "Industrial excellence, design and tech hubs"
           },
-          photoTxt: { fr: "Emplacement photo — Carnet de voyage Égypte", en: "Photo spot — Egypt Travel Journal" },
-          photoSub: { fr: "(Ajoute egypt.jpg dans /assets/voyages/)", en: "(Add egypt.jpg to /assets/voyages/)" },
-          imgFile: "egypt.jpg"
+          theme: {
+            fr: "Savoir-faire & Microélectronique",
+            en: "Craft & Microelectronics"
+          },
+          subspots: [
+            "📍 Paris (Design, Culture & Services)",
+            "📍 Lyon (Pôle Deeptech & Santé)",
+            "📍 Provence (Mines Saint-Étienne / ISMIN)"
+          ],
+          body: {
+            fr: "De mon cursus d'ingénieur en microélectronique aux Mines Saint-Étienne en Provence jusqu'aux pôles industriels et technologiques de Lyon et de Paris, la France m'a forgé le sens de la rigueur scientifique, du détail bien pensé et de l'excellence produit.",
+            en: "From my microelectronics engineering studies at Mines Saint-Étienne in Provence to the tech and industrial hubs of Lyon and Paris, France shaped my commitment to scientific rigor, meticulous attention to detail, and product excellence."
+          },
+          photoTxt: {
+            fr: "Emplacement photo — Carnet de voyage France",
+            en: "Photo spot — France Travel Journal"
+          },
+          photoSub: {
+            fr: "(Ajoute france.jpg dans /assets/voyages/)",
+            en: "(Add france.jpg to /assets/voyages/)"
+          },
+          imgFile: "france.jpg",
+          centerLat: 46.5,
+          centerLon: 2.5
+        },
+        egypt: {
+          pill: "EGY // Le Caire, Gizeh & Louxor",
+          title: {
+            fr: "L'épreuve du millénaire et la monumentalité",
+            en: "The test of time and monumentality"
+          },
+          theme: {
+            fr: "Architecture & Proportions",
+            en: "Architecture & Proportions"
+          },
+          subspots: [
+            "📍 Le Caire & Pyramides de Gizeh",
+            "📍 Louxor & Vallée des Rois"
+          ],
+          body: {
+            fr: "Découvrir les pyramides de Gizeh et les temples de Louxor rappelle que les plus grands accomplissements d'ingénierie allient rigueur géométrique, pérennité absolue et intention symbolique. Une véritable leçon de proportions qui inspire la conception d'objets conçus pour durer.",
+            en: "Discovering the pyramids of Giza and the temples of Luxor reminds us that the greatest engineering feats combine mathematical rigor, ultimate durability, and symbolic intention. A true lesson in proportions that inspires designing products built to last."
+          },
+          photoTxt: {
+            fr: "Emplacement photo — Carnet de voyage Égypte",
+            en: "Photo spot — Egypt Travel Journal"
+          },
+          photoSub: {
+            fr: "(Ajoute egypt.jpg dans /assets/voyages/)",
+            en: "(Add egypt.jpg to /assets/voyages/)"
+          },
+          imgFile: "egypt.jpg",
+          centerLat: 27.5,
+          centerLon: 31.5
         },
         nyc: {
-          pill: "USA // New York — Manhattan",
-          title: { fr: "L'énergie brute, la verticalité et le flux urbain", en: "Raw energy, verticality and urban flow" },
-          theme: { fr: "Consumer Tech & Dynamisme", en: "Consumer Tech & Flow" },
+          pill: "USA // New York — Manhattan & Brooklyn",
+          title: {
+            fr: "L'énergie brute, la verticalité et le flux urbain",
+            en: "Raw energy, verticality and urban flow"
+          },
+          theme: {
+            fr: "Consumer Tech & Dynamisme",
+            en: "Consumer Tech & Flow"
+          },
+          subspots: [
+            "📍 Manhattan (Verticalité & Flux)",
+            "📍 Brooklyn (Design & Créativité)"
+          ],
           body: {
             fr: "New York est une masterclass sur la gestion des flux, la densité et l'adoption technologique au quotidien. Observer l'interaction constante entre les utilisateurs et les produits tech dans un environnement urbain ultra-rapide éclaire les besoins réels en fluidité et en ergonomie.",
             en: "New York is a masterclass in urban density, user flow, and rapid tech adoption. Seeing how city dwellers seamlessly interact with consumer products in a fast-paced environment reinforces the necessity of zero-friction user experiences."
           },
-          photoTxt: { fr: "Emplacement photo — New York City Highlights", en: "Photo spot — New York City Highlights" },
-          photoSub: { fr: "(Ajoute nyc.jpg dans /assets/voyages/)", en: "(Add nyc.jpg to /assets/voyages/)" },
-          imgFile: "nyc.jpg"
-        },
-        spain: {
-          pill: "ESP // Barcelone & Madrid",
-          title: { fr: "La vitalité méditerranéenne et l'audace des formes", en: "Mediterranean vitality and bold organic forms" },
-          theme: { fr: "Design & Espaces de vie", en: "Design & Living Spaces" },
-          body: {
-            fr: "De l'architecture organique catalane à l'énergie des places madrilènes, l'Espagne inspire par sa capacité à concevoir des espaces et des formes qui invitent au partage. Un rappel que la technologie doit avant tout rapprocher les gens.",
-            en: "From organic Catalan architecture to the vibrancy of Madrid squares, Spain inspires through forms and spaces that foster community. A reminder that product design should always bring people together."
+          photoTxt: {
+            fr: "Emplacement photo — New York City Highlights",
+            en: "Photo spot — New York City Highlights"
           },
-          photoTxt: { fr: "Emplacement photo — Espagne & Méditerranée", en: "Photo spot — Spain & Mediterranean" },
-          photoSub: { fr: "(Ajoute spain.jpg dans /assets/voyages/)", en: "(Add spain.jpg to /assets/voyages/)" },
-          imgFile: "spain.jpg"
-        },
-        france: {
-          pill: "FRA // Lyon, Provence & Paris",
-          title: { fr: "Le berceau de la rigueur et de l'excellence industrielle", en: "The roots of industrial rigor and elegance" },
-          theme: { fr: "Savoir-faire & Précision", en: "Craft & Precision" },
-          body: {
-            fr: "De mon cursus ISMIN en Provence à l'écosystème d'innovation lyonnais, explorer la diversité des terroirs et des pôles industriels français m'a inculqué le respect du savoir-faire d'excellence, de la précision des composants et du sens du détail intemporel.",
-            en: "From my engineering studies in Provence to the industrial tech hubs of Lyon and Paris, exploring France instilled in me a deep respect for industrial excellence, component precision, and timeless attention to detail."
+          photoSub: {
+            fr: "(Ajoute nyc.jpg dans /assets/voyages/)",
+            en: "(Add nyc.jpg to /assets/voyages/)"
           },
-          photoTxt: { fr: "Emplacement photo — France & Parcours", en: "Photo spot — France & Engineering Journey" },
-          photoSub: { fr: "(Ajoute france.jpg dans /assets/voyages/)", en: "(Add france.jpg to /assets/voyages/)" },
-          imgFile: "france.jpg"
+          imgFile: "nyc.jpg",
+          centerLat: 40.71,
+          centerLon: -74.00
+        },
+        uk: {
+          pill: "GBR // Londres & Royaume-Uni",
+          title: {
+            fr: "L'avant-garde du design de services et l'énergie cosmopolite",
+            en: "Cutting-edge service design and global energy"
+          },
+          theme: {
+            fr: "Design de Services & Ergonomie",
+            en: "Service Design & Usability"
+          },
+          subspots: [
+            "📍 Londres (Écosystèmes Tech, Musées & Interfaces)"
+          ],
+          body: {
+            fr: "Londres réunit tradition institutionnelle, modernité architecturale et effervescence internationale. C'est un terrain d'inspiration unique pour le design de services, l'accessibilité des interfaces et la création d'expériences fluides pour des millions d'utilisateurs divers.",
+            en: "London bridges institutional heritage, architectural daring, and international energy. It is an inspiring reference for service design, interface accessibility, and crafting seamless product journeys for diverse global audiences."
+          },
+          photoTxt: {
+            fr: "Emplacement photo — Royaume-Uni & Londres",
+            en: "Photo spot — United Kingdom & London"
+          },
+          photoSub: {
+            fr: "(Ajoute uk.jpg dans /assets/voyages/)",
+            en: "(Add uk.jpg to /assets/voyages/)"
+          },
+          imgFile: "uk.jpg",
+          centerLat: 51.5,
+          centerLon: -0.12
         },
         italy: {
           pill: "ITA // Milan & Politecnico",
-          title: { fr: "Le temple du design industriel et de l'ergonomie", en: "The heart of industrial design and ergonomics" },
-          theme: { fr: "Design & Matériaux", en: "Design & Materials" },
+          title: {
+            fr: "Le temple du design industriel et de l'ergonomie",
+            en: "The heart of industrial design and ergonomics"
+          },
+          theme: {
+            fr: "Design & Matériaux",
+            en: "Design & Materials"
+          },
+          subspots: [
+            "📍 Milan (Politecnico di Milano & Ateliers de Design)"
+          ],
           body: {
             fr: "Mon semestre au Politecnico di Milano a été une révélation sur la symbiose entre ingénierie et design. En Italie, chaque matériau, chaque rayon de courbure et chaque texture ont une raison d'être, au service de l'émotion et de l'usage.",
             en: "My semester at Politecnico di Milano was a defining experience in blending engineering with design thinking. In Italy, every material, curvature radius, and texture serves both emotion and functional usability."
           },
-          photoTxt: { fr: "Emplacement photo — Milan & Design Semestre", en: "Photo spot — Milan & Design Semester" },
-          photoSub: { fr: "(Ajoute italy.jpg dans /assets/voyages/)", en: "(Add italy.jpg to /assets/voyages/)" },
-          imgFile: "italy.jpg"
+          photoTxt: {
+            fr: "Emplacement photo — Milan & Design Semestre",
+            en: "Photo spot — Milan & Design Semester"
+          },
+          photoSub: {
+            fr: "(Ajoute italy.jpg dans /assets/voyages/)",
+            en: "(Add italy.jpg to /assets/voyages/)"
+          },
+          imgFile: "italy.jpg",
+          centerLat: 45.46,
+          centerLon: 9.19
+        },
+        spain: {
+          pill: "ESP // Barcelone & Madrid",
+          title: {
+            fr: "Barcelone & l'audace des formes organiques et des espaces de vie",
+            en: "Barcelona & bold organic forms and community spaces"
+          },
+          theme: {
+            fr: "Architecture Organique & Espaces Publics",
+            en: "Organic Architecture & Living Spaces"
+          },
+          subspots: [
+            "📍 Barcelone (Architecture de Gaudí & Urbanisme)",
+            "📍 Madrid (Places vivantes & Espaces de rencontre)"
+          ],
+          body: {
+            fr: "De l'audace architecturale de Barcelone (Gaudí et urbanisme d'avant-garde) à l'énergie des places madrilènes, l'Espagne inspire par sa capacité à concevoir des espaces et des formes qui invitent au partage. Un rappel que la technologie doit avant tout rapprocher les gens.",
+            en: "From Gaudí's visionary organic architecture in Barcelona to the vibrancy of Madrid squares, Spain inspires through forms and spaces that foster community. A reminder that product design should always bring people together."
+          },
+          photoTxt: {
+            fr: "Emplacement photo — Espagne & Méditerranée",
+            en: "Photo spot — Spain & Mediterranean"
+          },
+          photoSub: {
+            fr: "(Ajoute spain.jpg dans /assets/voyages/)",
+            en: "(Add spain.jpg to /assets/voyages/)"
+          },
+          imgFile: "spain.jpg",
+          centerLat: 40.8,
+          centerLon: 0.5
         }
       };
+
+      // Points d'intérêt géographiques (latitude, longitude, label, clé de destination)
+      const geoLocations = [
+        // France (3 points)
+        { key: 'france', name: 'Paris', lat: 48.8566, lon: 2.3522 },
+        { key: 'france', name: 'Lyon', lat: 45.7640, lon: 4.8357 },
+        { key: 'france', name: 'Provence', lat: 43.4550, lon: 5.4700 },
+        // Égypte (2 points)
+        { key: 'egypt', name: 'Le Caire', lat: 30.0444, lon: 31.2357 },
+        { key: 'egypt', name: 'Louxor', lat: 25.6872, lon: 32.6396 },
+        // New York
+        { key: 'nyc', name: 'New York', lat: 40.7128, lon: -74.0060 },
+        // UK
+        { key: 'uk', name: 'Londres', lat: 51.5074, lon: -0.1278 },
+        // Italie
+        { key: 'italy', name: 'Milan', lat: 45.4642, lon: 9.1900 },
+        // Espagne (2 points dont Barcelone)
+        { key: 'spain', name: 'Barcelone', lat: 41.3851, lon: 2.1734 },
+        { key: 'spain', name: 'Madrid', lat: 40.4168, lon: -3.7038 }
+      ];
+
+      // Points de terre simplifiés pour tracer la silhouette des continents
+      const landDots = [
+        // Europe & France
+        [48.8, 2.3], [45.7, 4.8], [43.5, 5.4], [51.5, -0.1], [53.4, -2.2], [55.9, -3.2],
+        [41.4, 2.2], [40.4, -3.7], [37.3, -5.9], [39.4, -0.4], [43.2, -8.4],
+        [45.4, 9.2], [41.9, 12.5], [40.8, 14.2], [45.4, 12.3], [43.7, 11.2],
+        [52.5, 13.4], [50.1, 8.6], [48.1, 11.5], [50.8, 4.3], [52.3, 4.9],
+        [46.9, 7.4], [47.3, 8.5], [48.2, 16.3], [50.0, 14.4], [52.2, 21.0],
+        [59.3, 18.0], [59.9, 10.7], [60.1, 24.9], [55.6, 12.5], [37.9, 23.7],
+        // Égypte & Afrique du Nord
+        [30.0, 31.2], [25.7, 32.6], [31.2, 29.9], [24.0, 32.9], [27.2, 33.8],
+        [36.8, 10.1], [36.7, 3.0], [33.5, -7.6], [31.6, -8.0], [32.8, 13.1],
+        [15.5, 32.5], [9.0, 38.7], [6.5, 3.3], [-1.2, 36.8], [-26.2, 28.0],
+        // Amérique du Nord & USA
+        [40.7, -74.0], [42.3, -71.0], [39.9, -75.1], [38.9, -77.0], [33.7, -84.3],
+        [25.7, -80.2], [41.8, -87.6], [45.5, -73.5], [43.6, -79.3], [29.9, -90.0],
+        [29.7, -95.3], [32.7, -96.7], [39.7, -104.9], [34.0, -118.2], [37.7, -122.4],
+        [47.6, -122.3], [49.2, -123.1], [19.4, -99.1],
+        // Asie & Moyen-Orient
+        [35.6, 51.3], [24.7, 46.6], [25.2, 55.2], [32.0, 34.7], [39.9, 32.8],
+        [28.6, 77.2], [19.0, 72.8], [13.0, 80.2], [39.9, 116.4], [31.2, 121.4],
+        [22.3, 114.1], [35.6, 139.6], [37.5, 126.9], [1.3, 103.8], [13.7, 100.5]
+      ];
 
       const tabs = document.querySelectorAll('.travel-tab');
       const pillEl = document.getElementById('travelPill');
       const titleEl = document.getElementById('travelTitle');
       const themeEl = document.getElementById('travelTheme');
       const bodyEl = document.getElementById('travelBody');
+      const subspotsEl = document.getElementById('travelSubspots');
       const photoTxtEl = document.getElementById('photoPlaceholderTxt');
       const photoSubEl = document.getElementById('photoPlaceholderSub');
       const imgEl = document.getElementById('travelImage');
       const placeholderEl = document.getElementById('travelPlaceholder');
+      const canvas = document.getElementById('travelGlobeCanvas');
 
-      // Initialize the first image failure state manually (if it fails on load before JS attaches)
-      if (imgEl && (imgEl.complete && imgEl.naturalHeight === 0)) {
-        imgEl.style.display = 'none';
-        if(placeholderEl) placeholderEl.style.display = 'flex';
+      let currentDest = 'france';
+
+      // Met à jour la carte d'information
+      function selectDestination(key, syncGlobe = true) {
+        currentDest = key;
+        const item = travelData[key];
+        if (!item) return;
+
+        tabs.forEach(t => {
+          const isActive = t.getAttribute('data-dest') === key;
+          t.classList.toggle('active', isActive);
+          t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        const currentLang = lang === 'en' ? 'en' : 'fr';
+        if (pillEl) pillEl.textContent = item.pill;
+        if (titleEl) titleEl.textContent = item.title[currentLang];
+        if (themeEl) themeEl.textContent = item.theme[currentLang];
+        if (bodyEl) bodyEl.textContent = item.body[currentLang];
+        if (photoTxtEl) photoTxtEl.textContent = item.photoTxt[currentLang];
+        if (photoSubEl) photoSubEl.textContent = item.photoSub[currentLang];
+
+        if (subspotsEl) {
+          subspotsEl.innerHTML = '';
+          (item.subspots || []).forEach(spot => {
+            const chip = document.createElement('span');
+            chip.className = 'subspot-chip';
+            chip.textContent = spot;
+            subspotsEl.appendChild(chip);
+          });
+        }
+
+        if (imgEl) {
+          imgEl.style.display = 'block';
+          if (placeholderEl) placeholderEl.style.display = 'none';
+          imgEl.onerror = () => {
+            imgEl.style.display = 'none';
+            if (placeholderEl) placeholderEl.style.display = 'flex';
+          };
+          imgEl.src = '/assets/voyages/' + item.imgFile;
+        }
+
+        if (syncGlobe && window.rotateGlobeTo) {
+          window.rotateGlobeTo(item.centerLat, item.centerLon);
+        }
       }
 
       tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-          tabs.forEach(t => {
-            t.classList.remove('active');
-            t.setAttribute('aria-selected', 'false');
-          });
-          tab.classList.add('active');
-          tab.setAttribute('aria-selected', 'true');
-
           const key = tab.getAttribute('data-dest');
-          const item = travelData[key];
-          if (!item) return;
-
-          const currentLang = lang === 'en' ? 'en' : 'fr';
-          if (pillEl) pillEl.textContent = item.pill;
-          if (titleEl) titleEl.textContent = item.title[currentLang];
-          if (themeEl) themeEl.textContent = item.theme[currentLang];
-          if (bodyEl) bodyEl.textContent = item.body[currentLang];
-          if (photoTxtEl) photoTxtEl.textContent = item.photoTxt[currentLang];
-          if (photoSubEl) photoSubEl.textContent = item.photoSub[currentLang];
-
-          if (imgEl) {
-            // Hide placeholder, show image
-            imgEl.style.display = 'block';
-            if (placeholderEl) placeholderEl.style.display = 'none';
-
-            // Set up error handler
-            imgEl.onerror = () => {
-              imgEl.style.display = 'none';
-              if(placeholderEl) placeholderEl.style.display = 'flex';
-            };
-
-            // Change source
-            imgEl.src = '/assets/voyages/' + item.imgFile;
-          }
+          selectDestination(key, true);
         });
       });
+
+      // --- MOTEUR DU GLOBE 3D CANVAS INTERACTIF ---
+      if (canvas && canvas.getContext) {
+        const ctx = canvas.getContext('2d');
+        let width = canvas.clientWidth || 600;
+        let height = canvas.clientHeight || 300;
+
+        function resizeCanvas() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          width = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
+          height = canvas.parentElement ? canvas.parentElement.clientHeight : 300;
+          canvas.width = width * dpr;
+          canvas.height = height * dpr;
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.scale(dpr, dpr);
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let rotY = 0.05; // longitude rotation radians
+        let rotX = 0.42; // tilt radians
+        let targetRotY = 0.05;
+        let targetRotX = 0.42;
+
+        let isDragging = false;
+        let startX = 0, startY = 0;
+        let lastMoveX = 0, lastMoveY = 0;
+        let velX = 0, velY = 0;
+        let autoSpin = true;
+        let pulseTimer = 0;
+
+        window.rotateGlobeTo = function(lat, lon) {
+          autoSpin = false;
+          targetRotY = (lon * Math.PI) / 180;
+          targetRotX = Math.max(-0.6, Math.min(0.8, (lat * Math.PI) / 180 * 0.7));
+          setTimeout(() => { autoSpin = true; }, 3500);
+        };
+
+        // Gestion du drag à la souris et au toucher
+        canvas.addEventListener('pointerdown', (e) => {
+          isDragging = true;
+          autoSpin = false;
+          startX = e.clientX;
+          startY = e.clientY;
+          lastMoveX = e.clientX;
+          lastMoveY = e.clientY;
+          velX = 0;
+          velY = 0;
+          canvas.setPointerCapture(e.pointerId);
+        });
+
+        window.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          const dx = e.clientX - lastMoveX;
+          const dy = e.clientY - lastMoveY;
+          lastMoveX = e.clientX;
+          lastMoveY = e.clientY;
+
+          velX = dx * 0.005;
+          velY = dy * 0.005;
+
+          rotY += velX;
+          targetRotY = rotY;
+          rotX = Math.max(-0.7, Math.min(0.9, rotX - velY));
+          targetRotX = rotX;
+        });
+
+        function endDrag(e) {
+          if (!isDragging) return;
+          isDragging = false;
+          try { canvas.releasePointerCapture(e.pointerId); } catch(err){}
+          // Si petit clic sans bouger, vérifier si on a cliqué sur un repère
+          if (Math.abs(e.clientX - startX) < 6 && Math.abs(e.clientY - startY) < 6) {
+            checkMarkerClick(e);
+          }
+          setTimeout(() => { autoSpin = true; }, 4000);
+        }
+
+        canvas.addEventListener('pointerup', endDrag);
+        canvas.addEventListener('pointercancel', endDrag);
+
+        function checkMarkerClick(e) {
+          const rect = canvas.getBoundingClientRect();
+          const clickX = e.clientX - rect.left;
+          const clickY = e.clientY - rect.top;
+          const R = Math.min(width, height) * 0.42;
+          const cx = width / 2;
+          const cy = height / 2;
+
+          for (const loc of geoLocations) {
+            const p = project3D(loc.lat, loc.lon, R, rotX, rotY, cx, cy);
+            if (p.z > 0) {
+              const dist = Math.hypot(p.x - clickX, p.y - clickY);
+              if (dist < 22) {
+                selectDestination(loc.key, true);
+                break;
+              }
+            }
+          }
+        }
+
+        // Projection 3D sphérique orthographique
+        function project3D(latDeg, lonDeg, R, rx, ry, cx, cy) {
+          const lat = (latDeg * Math.PI) / 180;
+          const lon = (lonDeg * Math.PI) / 180;
+          const cosLat = Math.cos(lat);
+          const sinLat = Math.sin(lat);
+          const cosLon = Math.cos(lon - ry);
+          const sinLon = Math.sin(lon - ry);
+
+          const x3 = R * cosLat * sinLon;
+          const y3 = -R * (sinLat * Math.cos(rx) - cosLat * cosLon * Math.sin(rx));
+          const z3 = R * (sinLat * Math.sin(rx) + cosLat * cosLon * Math.cos(rx));
+
+          return { x: cx + x3, y: cy + y3, z: z3 };
+        }
+
+        // Boucle de rendu
+        function drawGlobe() {
+          ctx.clearRect(0, 0, width, height);
+
+          pulseTimer += 0.035;
+
+          // Inertie et animation douce
+          if (!isDragging) {
+            rotY += (targetRotY - rotY) * 0.08;
+            rotX += (targetRotX - rotX) * 0.08;
+            if (autoSpin) {
+              targetRotY += 0.0018;
+              rotY += 0.0018;
+            }
+          }
+
+          const R = Math.min(width, height) * 0.42;
+          const cx = width / 2;
+          const cy = height / 2;
+          const isDark = document.body.classList.contains('theme-dark');
+
+          // 1. Halo atmosphérique externe
+          const atmosphere = ctx.createRadialGradient(cx, cy, R * 0.85, cx, cy, R * 1.18);
+          atmosphere.addColorStop(0, isDark ? 'rgba(91, 157, 255, 0.22)' : 'rgba(91, 157, 255, 0.14)');
+          atmosphere.addColorStop(1, 'rgba(91, 157, 255, 0)');
+          ctx.fillStyle = atmosphere;
+          ctx.beginPath();
+          ctx.arc(cx, cy, R * 1.18, 0, Math.PI * 2);
+          ctx.fill();
+
+          // 2. Sphère de la Terre (disque de base)
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, R, 0, Math.PI * 2);
+          ctx.clip();
+
+          const sphereGrad = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, R * 0.1, cx, cy, R);
+          if (isDark) {
+            sphereGrad.addColorStop(0, '#101c30');
+            sphereGrad.addColorStop(0.7, '#080d17');
+            sphereGrad.addColorStop(1, '#030508');
+          } else {
+            sphereGrad.addColorStop(0, '#f0f4fa');
+            sphereGrad.addColorStop(0.7, '#e2ebf6');
+            sphereGrad.addColorStop(1, '#cbd8e8');
+          }
+          ctx.fillStyle = sphereGrad;
+          ctx.fill();
+
+          // 3. Grille des méridiens et parallèles
+          ctx.strokeStyle = isDark ? 'rgba(91, 157, 255, 0.16)' : 'rgba(70, 120, 200, 0.16)';
+          ctx.lineWidth = 1;
+
+          // Parallèles (latitudes -60°, -30°, 0°, 30°, 60°)
+          for (let lat = -60; lat <= 60; lat += 30) {
+            ctx.beginPath();
+            let first = true;
+            for (let lon = -180; lon <= 180; lon += 8) {
+              const p = project3D(lat, lon, R, rotX, rotY, cx, cy);
+              if (p.z > 0) {
+                if (first) { ctx.moveTo(p.x, p.y); first = false; }
+                else ctx.lineTo(p.x, p.y);
+              } else {
+                first = true;
+              }
+            }
+            ctx.stroke();
+          }
+
+          // Méridiens (longitudes tous les 30°)
+          for (let lon = -180; lon < 180; lon += 30) {
+            ctx.beginPath();
+            let first = true;
+            for (let lat = -80; lat <= 80; lat += 6) {
+              const p = project3D(lat, lon, R, rotX, rotY, cx, cy);
+              if (p.z > 0) {
+                if (first) { ctx.moveTo(p.x, p.y); first = false; }
+                else ctx.lineTo(p.x, p.y);
+              } else {
+                first = true;
+              }
+            }
+            ctx.stroke();
+          }
+
+          // 4. Points des continents (landmass silhouette)
+          ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.28)' : 'rgba(40, 80, 160, 0.32)';
+          for (let i = 0; i < landDots.length; i++) {
+            const p = project3D(landDots[i][0], landDots[i][1], R, rotX, rotY, cx, cy);
+            if (p.z > 5) {
+              const alpha = Math.min(1, p.z / (R * 0.4));
+              ctx.globalAlpha = alpha;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+          ctx.globalAlpha = 1.0;
+
+          // 5. Arcs de voyage depuis la France (Paris) vers les autres destinations
+          const parisLoc = geoLocations[0];
+          const parisPt = project3D(parisLoc.lat, parisLoc.lon, R, rotX, rotY, cx, cy);
+
+          for (const loc of geoLocations) {
+            if (loc.key !== 'france') {
+              const targetPt = project3D(loc.lat, loc.lon, R, rotX, rotY, cx, cy);
+              const isActive = (loc.key === currentDest);
+              if (parisPt.z > -10 || targetPt.z > -10) {
+                const midLat = (parisLoc.lat + loc.lat) / 2 + 10;
+                const midLon = (parisLoc.lon + loc.lon) / 2;
+                const midPt = project3D(midLat, midLon, R * 1.12, rotX, rotY, cx, cy);
+
+                ctx.beginPath();
+                ctx.moveTo(parisPt.x, parisPt.y);
+                ctx.quadraticCurveTo(midPt.x, midPt.y, targetPt.x, targetPt.y);
+                ctx.strokeStyle = isActive 
+                  ? 'rgba(255, 170, 0, 0.75)' 
+                  : (isDark ? 'rgba(91, 157, 255, 0.18)' : 'rgba(70, 120, 200, 0.18)');
+                ctx.lineWidth = isActive ? 2 : 1;
+                ctx.setLineDash(isActive ? [4, 4] : []);
+                ctx.stroke();
+                ctx.setLineDash([]);
+              }
+            }
+          }
+
+          // 6. Si la France est sélectionnée, dessiner le triangle reliant Paris, Lyon et Provence
+          if (currentDest === 'france') {
+            const pParis = project3D(geoLocations[0].lat, geoLocations[0].lon, R, rotX, rotY, cx, cy);
+            const pLyon = project3D(geoLocations[1].lat, geoLocations[1].lon, R, rotX, rotY, cx, cy);
+            const pProv = project3D(geoLocations[2].lat, geoLocations[2].lon, R, rotX, rotY, cx, cy);
+
+            if (pParis.z > 0 && pLyon.z > 0 && pProv.z > 0) {
+              ctx.beginPath();
+              ctx.moveTo(pParis.x, pParis.y);
+              ctx.lineTo(pLyon.x, pLyon.y);
+              ctx.lineTo(pProv.x, pProv.y);
+              ctx.closePath();
+              ctx.fillStyle = 'rgba(91, 157, 255, 0.12)';
+              ctx.fill();
+              ctx.strokeStyle = 'rgba(91, 157, 255, 0.6)';
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
+            }
+          }
+
+          // 7. Repères / Beacons interactifs sur les villes
+          for (const loc of geoLocations) {
+            const p = project3D(loc.lat, loc.lon, R, rotX, rotY, cx, cy);
+            if (p.z > 0) {
+              const isActive = (loc.key === currentDest);
+              const baseColor = isActive ? '#FFAA00' : '#5B9DFF';
+
+              // Radar pulse animé pour le pays actif
+              if (isActive) {
+                const pulseR = 6 + (Math.sin(pulseTimer * 3) + 1) * 6;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, pulseR, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255, 170, 0, ' + (0.8 - pulseR / 18) + ')';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+              }
+
+              // Point central
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, isActive ? 4.5 : 3, 0, Math.PI * 2);
+              ctx.fillStyle = baseColor;
+              ctx.fill();
+              ctx.strokeStyle = '#FFFFFF';
+              ctx.lineWidth = 1.2;
+              ctx.stroke();
+
+              // Étiquette du nom (si actif ou visible de face)
+              if (isActive || p.z > R * 0.45) {
+                ctx.font = isActive ? 'bold 10px monospace' : '9px monospace';
+                ctx.fillStyle = isActive ? '#FFFFFF' : (isDark ? '#BAC2D1' : '#334155');
+                ctx.fillText(loc.name, p.x + 7, p.y + 3);
+              }
+            }
+          }
+
+          ctx.restore();
+
+          // Anneau extérieur fin
+          ctx.beginPath();
+          ctx.arc(cx, cy, R, 0, Math.PI * 2);
+          ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.16)' : 'rgba(0, 0, 0, 0.12)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          requestAnimationFrame(drawGlobe);
+        }
+
+        drawGlobe();
+      }
+
+      // Initialiser par défaut sur la France
+      selectDestination('france', false);
 
       // Secret mobile triggers sur les passions
       let f1Tap = 0, f1Timer = null;
