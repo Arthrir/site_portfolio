@@ -8,7 +8,7 @@ const t = makeT(lang);
 const projects = [
   { 
     title: lang === 'fr' ? "Site Web Portfolio" : "Portfolio Website", 
-    date: lang === 'fr' ? "2024 - Présent (En cours)" : "2024 - Present (Current)", 
+    date: lang === 'fr' ? "2024 - Présent" : "2024 - Present", 
     isCurrent: true,
     desc: lang === 'fr' ? "Design et développement de ce portfolio personnel. Focus sur l'UI/UX, le responsive design et les performances." : "Design and development of this personal portfolio. Focus on UI/UX, responsive design, and performance.", 
     tags: { hardware: [], software: ["HTML", "CSS", "JavaScript", "Astro"], soft: ["UI/UX Design"], tools: ["Figma"] }, link: "#" 
@@ -226,15 +226,13 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
         return (
           <article class="card project-card" data-tags={JSON.stringify(flatTags)} style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px;">
-                <h3 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{project.title}</h3>
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; margin-bottom: 6px;">{project.title}</h3>
+              <p class="muted" style="font-size: 0.85rem; margin-bottom: 12px; display: flex; align-items: center; gap: 7px;">
                 {project.isCurrent && (
-                  <span style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 100px; background: rgba(59, 130, 246, 0.12); color: var(--pop-blue); border: 1px solid rgba(59, 130, 246, 0.3); white-space: nowrap;">
-                    {lang === 'fr' ? 'En cours' : 'Current'}
-                  </span>
+                  <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #10B981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.7); flex-shrink: 0;" title={lang === 'fr' ? "Projet en cours" : "Ongoing project"}></span>
                 )}
-              </div>
-              <p class="muted" style="font-size: 0.85rem; margin-bottom: 12px;">{project.date}</p>
+                <span>{project.date}</span>
+              </p>
               {project.team && project.team.length > 0 && (
                 <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px; font-size: 0.82rem; color: var(--muted); flex-wrap: wrap;">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
