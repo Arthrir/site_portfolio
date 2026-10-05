@@ -100,13 +100,17 @@ const t = makeT(lang);
             "Exploration is a massive source of inspiration. Discovering new cultures, architectures, and lifestyles fuels my vision of product design: universal, durable, and grounded in real-world human usage. I capture each journey through photography."}
         </p>
 
-        <!-- Globe 3D Interactif -->
+        <!-- Globe 3D Interactif (COBE WebGL) -->
         <div class="travel-globe-container" id="travelGlobeContainer">
           <canvas id="travelGlobeCanvas"></canvas>
+          <div class="globe-active-badge" id="globeActiveBadge">
+            <span class="globe-badge-dot"></span>
+            <span id="globeBadgeTxt">France • Paris, Lyon, Provence</span>
+          </div>
           <div class="globe-overlay-hint">
             <span class="globe-hint-pill">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-              {lang === 'fr' ? 'Faites tourner le globe • Cliquez sur un repère' : 'Drag to rotate globe • Click any marker'}
+              {lang === 'fr' ? 'Faites tourner le globe • 6 destinations explorées' : 'Drag to rotate globe • 6 destinations explored'}
             </span>
           </div>
         </div>
@@ -204,56 +208,109 @@ const t = makeT(lang);
     body.theme-dark .logo-light { display: none !important; }
     body.theme-dark .logo-dark { display: block !important; }
 
-    /* Globe 3D Canvas */
+    /* Globe 3D Canvas (COBE WebGL) */
     .travel-globe-container {
       position: relative;
       width: 100%;
-      height: 300px;
+      height: 380px;
       margin-bottom: 18px;
       border-radius: var(--radius, 12px);
-      background: radial-gradient(circle at 50% 50%, rgba(91, 157, 255, 0.08) 0%, rgba(0, 0, 0, 0.03) 70%);
+      background: radial-gradient(circle at 50% 50%, rgba(91, 157, 255, 0.08) 0%, rgba(0, 0, 0, 0.02) 75%);
       border: 1px solid var(--border);
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       touch-action: none;
-      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.05);
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.04);
     }
     body.theme-dark .travel-globe-container {
-      background: radial-gradient(circle at 50% 50%, rgba(10, 30, 60, 0.45) 0%, rgba(10, 12, 16, 0.85) 80%);
+      background: radial-gradient(circle at 50% 50%, rgba(14, 28, 54, 0.5) 0%, rgba(8, 10, 15, 0.9) 80%);
       box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
     }
     #travelGlobeCanvas {
       display: block;
-      width: 100%;
-      height: 100%;
+      width: 350px;
+      height: 350px;
+      max-width: 100%;
+      aspect-ratio: 1 / 1;
       cursor: grab;
+      touch-action: none;
+      user-select: none;
     }
     #travelGlobeCanvas:active {
       cursor: grabbing;
     }
+    .globe-active-badge {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(18, 20, 26, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      pointer-events: none;
+      letter-spacing: 0.02em;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      z-index: 5;
+    }
+    .globe-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #FFAA00;
+      box-shadow: 0 0 8px #FFAA00;
+      animation: globePulse 2s infinite ease-in-out;
+    }
+    @keyframes globePulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.75; }
+    }
     .globe-overlay-hint {
       position: absolute;
-      bottom: 10px;
+      bottom: 12px;
       left: 0; right: 0;
       display: flex;
       justify-content: center;
       pointer-events: none;
+      z-index: 5;
     }
     .globe-hint-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(18, 20, 24, 0.75);
+      background: rgba(18, 20, 24, 0.8);
       backdrop-filter: blur(6px);
       border: 1px solid rgba(255, 255, 255, 0.14);
       color: #e0e2eb;
       font-size: 0.72rem;
       font-weight: 500;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 999px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    @media (max-width: 640px) {
+      .travel-globe-container {
+        height: 310px;
+      }
+      #travelGlobeCanvas {
+        width: 280px;
+        height: 280px;
+      }
+      .globe-active-badge {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        top: 10px;
+        left: 10px;
+      }
     }
 
     .travel-tabs {
@@ -576,50 +633,6 @@ const t = makeT(lang);
         }
       };
 
-      // Points d'intérêt géographiques (latitude, longitude, label, clé de destination)
-      const geoLocations = [
-        // France (3 points)
-        { key: 'france', name: 'Paris', lat: 48.8566, lon: 2.3522 },
-        { key: 'france', name: 'Lyon', lat: 45.7640, lon: 4.8357 },
-        { key: 'france', name: 'Provence', lat: 43.4550, lon: 5.4700 },
-        // Égypte (2 points)
-        { key: 'egypt', name: 'Le Caire', lat: 30.0444, lon: 31.2357 },
-        { key: 'egypt', name: 'Louxor', lat: 25.6872, lon: 32.6396 },
-        // New York
-        { key: 'nyc', name: 'New York', lat: 40.7128, lon: -74.0060 },
-        // UK
-        { key: 'uk', name: 'Londres', lat: 51.5074, lon: -0.1278 },
-        // Italie
-        { key: 'italy', name: 'Milan', lat: 45.4642, lon: 9.1900 },
-        // Espagne (2 points dont Barcelone)
-        { key: 'spain', name: 'Barcelone', lat: 41.3851, lon: 2.1734 },
-        { key: 'spain', name: 'Madrid', lat: 40.4168, lon: -3.7038 }
-      ];
-
-      // Points de terre simplifiés pour tracer la silhouette des continents
-      const landDots = [
-        // Europe & France
-        [48.8, 2.3], [45.7, 4.8], [43.5, 5.4], [51.5, -0.1], [53.4, -2.2], [55.9, -3.2],
-        [41.4, 2.2], [40.4, -3.7], [37.3, -5.9], [39.4, -0.4], [43.2, -8.4],
-        [45.4, 9.2], [41.9, 12.5], [40.8, 14.2], [45.4, 12.3], [43.7, 11.2],
-        [52.5, 13.4], [50.1, 8.6], [48.1, 11.5], [50.8, 4.3], [52.3, 4.9],
-        [46.9, 7.4], [47.3, 8.5], [48.2, 16.3], [50.0, 14.4], [52.2, 21.0],
-        [59.3, 18.0], [59.9, 10.7], [60.1, 24.9], [55.6, 12.5], [37.9, 23.7],
-        // Égypte & Afrique du Nord
-        [30.0, 31.2], [25.7, 32.6], [31.2, 29.9], [24.0, 32.9], [27.2, 33.8],
-        [36.8, 10.1], [36.7, 3.0], [33.5, -7.6], [31.6, -8.0], [32.8, 13.1],
-        [15.5, 32.5], [9.0, 38.7], [6.5, 3.3], [-1.2, 36.8], [-26.2, 28.0],
-        // Amérique du Nord & USA
-        [40.7, -74.0], [42.3, -71.0], [39.9, -75.1], [38.9, -77.0], [33.7, -84.3],
-        [25.7, -80.2], [41.8, -87.6], [45.5, -73.5], [43.6, -79.3], [29.9, -90.0],
-        [29.7, -95.3], [32.7, -96.7], [39.7, -104.9], [34.0, -118.2], [37.7, -122.4],
-        [47.6, -122.3], [49.2, -123.1], [19.4, -99.1],
-        // Asie & Moyen-Orient
-        [35.6, 51.3], [24.7, 46.6], [25.2, 55.2], [32.0, 34.7], [39.9, 32.8],
-        [28.6, 77.2], [19.0, 72.8], [13.0, 80.2], [39.9, 116.4], [31.2, 121.4],
-        [22.3, 114.1], [35.6, 139.6], [37.5, 126.9], [1.3, 103.8], [13.7, 100.5]
-      ];
-
       const tabs = document.querySelectorAll('.travel-tab');
       const pillEl = document.getElementById('travelPill');
       const titleEl = document.getElementById('travelTitle');
@@ -630,11 +643,55 @@ const t = makeT(lang);
       const photoSubEl = document.getElementById('photoPlaceholderSub');
       const imgEl = document.getElementById('travelImage');
       const placeholderEl = document.getElementById('travelPlaceholder');
+      const badgeTxtEl = document.getElementById('globeBadgeTxt');
       const canvas = document.getElementById('travelGlobeCanvas');
 
       let currentDest = 'france';
 
-      // Met à jour la carte d'information
+      const badgeLabels = {
+        france: 'France // Paris • Lyon • Provence',
+        egypt: lang === 'fr' ? 'Égypte // Le Caire • Louxor' : 'Egypt // Cairo • Luxor',
+        nyc: 'United States // New York City',
+        uk: lang === 'fr' ? 'Royaume-Uni // Londres' : 'United Kingdom // London',
+        italy: lang === 'fr' ? 'Italie // Milan' : 'Italy // Milan',
+        spain: lang === 'fr' ? 'Espagne // Barcelone • Madrid' : 'Spain // Barcelona • Madrid'
+      };
+
+      // Repères géographiques avec mise en valeur de la destination sélectionnée
+      function getMarkers(activeKey) {
+        return [
+          // France (Paris, Lyon, Provence)
+          { location: [48.8566, 2.3522], size: activeKey === 'france' ? 0.095 : 0.05, color: activeKey === 'france' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] },
+          { location: [45.7640, 4.8357], size: activeKey === 'france' ? 0.075 : 0.045, color: activeKey === 'france' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] },
+          { location: [43.4550, 5.4700], size: activeKey === 'france' ? 0.075 : 0.045, color: activeKey === 'france' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] },
+          // Égypte (Le Caire, Louxor)
+          { location: [30.0444, 31.2357], size: activeKey === 'egypt' ? 0.095 : 0.05, color: activeKey === 'egypt' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] },
+          { location: [25.6872, 32.6396], size: activeKey === 'egypt' ? 0.075 : 0.045, color: activeKey === 'egypt' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] },
+          // New York (USA)
+          { location: [40.7128, -74.0060], size: activeKey === 'nyc' ? 0.095 : 0.05, color: activeKey === 'nyc' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] },
+          // Londres (UK)
+          { location: [51.5074, -0.1278], size: activeKey === 'uk' ? 0.095 : 0.05, color: activeKey === 'uk' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] },
+          // Italie (Milan)
+          { location: [45.4642, 9.1900], size: activeKey === 'italy' ? 0.095 : 0.05, color: activeKey === 'italy' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] },
+          // Espagne (Barcelone, Madrid)
+          { location: [41.3851, 2.1734], size: activeKey === 'spain' ? 0.095 : 0.05, color: activeKey === 'spain' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] },
+          { location: [40.4168, -3.7038], size: activeKey === 'spain' ? 0.075 : 0.045, color: activeKey === 'spain' ? [1, 0.75, 0.1] : [0.35, 0.65, 1] }
+        ];
+      }
+
+      // Arcs de voyage depuis la France (Paris) vers les autres destinations
+      const flightArcs = [
+        { from: [48.8566, 2.3522], to: [40.7128, -74.0060], color: [1, 0.6, 0.2] }, // Paris -> NYC
+        { from: [48.8566, 2.3522], to: [30.0444, 31.2357], color: [1, 0.7, 0.2] },  // Paris -> Le Caire
+        { from: [48.8566, 2.3522], to: [51.5074, -0.1278], color: [0.4, 0.7, 1.0] }, // Paris -> Londres
+        { from: [48.8566, 2.3522], to: [41.3851, 2.1734], color: [1, 0.5, 0.3] },  // Paris -> Barcelone
+        { from: [48.8566, 2.3522], to: [45.4642, 9.1900], color: [0.4, 0.8, 0.9] },  // Paris -> Milan
+        { from: [30.0444, 31.2357], to: [25.6872, 32.6396], color: [1, 0.7, 0.2] }, // Le Caire -> Louxor
+        { from: [48.8566, 2.3522], to: [45.7640, 4.8357], color: [0.5, 0.8, 1.0] },  // Paris -> Lyon
+        { from: [45.7640, 4.8357], to: [43.4550, 5.4700], color: [0.5, 0.8, 1.0] },  // Lyon -> Provence
+      ];
+
+      // Met à jour la carte d'information et synchronise le globe
       function selectDestination(key, syncGlobe = true) {
         currentDest = key;
         const item = travelData[key];
@@ -653,6 +710,10 @@ const t = makeT(lang);
         if (bodyEl) bodyEl.textContent = item.body[currentLang];
         if (photoTxtEl) photoTxtEl.textContent = item.photoTxt[currentLang];
         if (photoSubEl) photoSubEl.textContent = item.photoSub[currentLang];
+
+        if (badgeTxtEl && badgeLabels[key]) {
+          badgeTxtEl.textContent = badgeLabels[key];
+        }
 
         if (subspotsEl) {
           subspotsEl.innerHTML = '';
@@ -675,7 +736,7 @@ const t = makeT(lang);
         }
 
         if (syncGlobe && window.rotateGlobeTo) {
-          window.rotateGlobeTo(item.centerLat, item.centerLon);
+          window.rotateGlobeTo(item.centerLat, item.centerLon, key);
         }
       }
 
@@ -686,317 +747,116 @@ const t = makeT(lang);
         });
       });
 
-      // --- MOTEUR DU GLOBE 3D CANVAS INTERACTIF ---
-      if (canvas && canvas.getContext) {
-        const ctx = canvas.getContext('2d');
-        let width = canvas.clientWidth || 600;
-        let height = canvas.clientHeight || 300;
+      // --- MOTEUR DU GLOBE 3D COBE WEBGL (Continents détaillés, rotation fluide et repères) ---
+      async function initCobeGlobe() {
+        if (!canvas) return;
+        try {
+          const { default: createGlobe } = await import('/scripts/cobe.js');
 
-        function resizeCanvas() {
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
-          width = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
-          height = canvas.parentElement ? canvas.parentElement.clientHeight : 300;
-          canvas.width = width * dpr;
-          canvas.height = height * dpr;
-          ctx.setTransform(1, 0, 0, 1, 0, 0);
-          ctx.scale(dpr, dpr);
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+          // Orientation initiale sur la France
+          let phi = -1.61;
+          let theta = 0.55;
+          let targetPhi = -1.61;
+          let targetTheta = 0.55;
+          let isDragging = false;
+          let lastX = 0, lastY = 0;
+          let autoSpin = true;
+          let autoSpinTimer = null;
 
-        let rotY = 0.05; // longitude rotation radians
-        let rotX = 0.42; // tilt radians
-        let targetRotY = 0.05;
-        let targetRotX = 0.42;
-
-        let isDragging = false;
-        let startX = 0, startY = 0;
-        let lastMoveX = 0, lastMoveY = 0;
-        let velX = 0, velY = 0;
-        let autoSpin = true;
-        let pulseTimer = 0;
-
-        window.rotateGlobeTo = function(lat, lon) {
-          autoSpin = false;
-          targetRotY = (lon * Math.PI) / 180;
-          targetRotX = Math.max(-0.6, Math.min(0.8, (lat * Math.PI) / 180 * 0.7));
-          setTimeout(() => { autoSpin = true; }, 3500);
-        };
-
-        // Gestion du drag à la souris et au toucher
-        canvas.addEventListener('pointerdown', (e) => {
-          isDragging = true;
-          autoSpin = false;
-          startX = e.clientX;
-          startY = e.clientY;
-          lastMoveX = e.clientX;
-          lastMoveY = e.clientY;
-          velX = 0;
-          velY = 0;
-          canvas.setPointerCapture(e.pointerId);
-        });
-
-        window.addEventListener('pointermove', (e) => {
-          if (!isDragging) return;
-          const dx = e.clientX - lastMoveX;
-          const dy = e.clientY - lastMoveY;
-          lastMoveX = e.clientX;
-          lastMoveY = e.clientY;
-
-          velX = dx * 0.005;
-          velY = dy * 0.005;
-
-          rotY += velX;
-          targetRotY = rotY;
-          rotX = Math.max(-0.7, Math.min(0.9, rotX - velY));
-          targetRotX = rotX;
-        });
-
-        function endDrag(e) {
-          if (!isDragging) return;
-          isDragging = false;
-          try { canvas.releasePointerCapture(e.pointerId); } catch(err){}
-          // Si petit clic sans bouger, vérifier si on a cliqué sur un repère
-          if (Math.abs(e.clientX - startX) < 6 && Math.abs(e.clientY - startY) < 6) {
-            checkMarkerClick(e);
-          }
-          setTimeout(() => { autoSpin = true; }, 4000);
-        }
-
-        canvas.addEventListener('pointerup', endDrag);
-        canvas.addEventListener('pointercancel', endDrag);
-
-        function checkMarkerClick(e) {
-          const rect = canvas.getBoundingClientRect();
-          const clickX = e.clientX - rect.left;
-          const clickY = e.clientY - rect.top;
-          const R = Math.min(width, height) * 0.42;
-          const cx = width / 2;
-          const cy = height / 2;
-
-          for (const loc of geoLocations) {
-            const p = project3D(loc.lat, loc.lon, R, rotX, rotY, cx, cy);
-            if (p.z > 0) {
-              const dist = Math.hypot(p.x - clickX, p.y - clickY);
-              if (dist < 22) {
-                selectDestination(loc.key, true);
-                break;
-              }
-            }
-          }
-        }
-
-        // Projection 3D sphérique orthographique
-        function project3D(latDeg, lonDeg, R, rx, ry, cx, cy) {
-          const lat = (latDeg * Math.PI) / 180;
-          const lon = (lonDeg * Math.PI) / 180;
-          const cosLat = Math.cos(lat);
-          const sinLat = Math.sin(lat);
-          const cosLon = Math.cos(lon - ry);
-          const sinLon = Math.sin(lon - ry);
-
-          const x3 = R * cosLat * sinLon;
-          const y3 = -R * (sinLat * Math.cos(rx) - cosLat * cosLon * Math.sin(rx));
-          const z3 = R * (sinLat * Math.sin(rx) + cosLat * cosLon * Math.cos(rx));
-
-          return { x: cx + x3, y: cy + y3, z: z3 };
-        }
-
-        // Boucle de rendu
-        function drawGlobe() {
-          ctx.clearRect(0, 0, width, height);
-
-          pulseTimer += 0.035;
-
-          // Inertie et animation douce
-          if (!isDragging) {
-            rotY += (targetRotY - rotY) * 0.08;
-            rotX += (targetRotX - rotX) * 0.08;
-            if (autoSpin) {
-              targetRotY += 0.0018;
-              rotY += 0.0018;
-            }
-          }
-
-          const R = Math.min(width, height) * 0.42;
-          const cx = width / 2;
-          const cy = height / 2;
           const isDark = document.body.classList.contains('theme-dark');
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const size = 350;
 
-          // 1. Halo atmosphérique externe
-          const atmosphere = ctx.createRadialGradient(cx, cy, R * 0.85, cx, cy, R * 1.18);
-          atmosphere.addColorStop(0, isDark ? 'rgba(91, 157, 255, 0.22)' : 'rgba(91, 157, 255, 0.14)');
-          atmosphere.addColorStop(1, 'rgba(91, 157, 255, 0)');
-          ctx.fillStyle = atmosphere;
-          ctx.beginPath();
-          ctx.arc(cx, cy, R * 1.18, 0, Math.PI * 2);
-          ctx.fill();
-
-          // 2. Sphère de la Terre (disque de base)
-          ctx.save();
-          ctx.beginPath();
-          ctx.arc(cx, cy, R, 0, Math.PI * 2);
-          ctx.clip();
-
-          const sphereGrad = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, R * 0.1, cx, cy, R);
-          if (isDark) {
-            sphereGrad.addColorStop(0, '#101c30');
-            sphereGrad.addColorStop(0.7, '#080d17');
-            sphereGrad.addColorStop(1, '#030508');
-          } else {
-            sphereGrad.addColorStop(0, '#f0f4fa');
-            sphereGrad.addColorStop(0.7, '#e2ebf6');
-            sphereGrad.addColorStop(1, '#cbd8e8');
-          }
-          ctx.fillStyle = sphereGrad;
-          ctx.fill();
-
-          // 3. Grille des méridiens et parallèles
-          ctx.strokeStyle = isDark ? 'rgba(91, 157, 255, 0.16)' : 'rgba(70, 120, 200, 0.16)';
-          ctx.lineWidth = 1;
-
-          // Parallèles (latitudes -60°, -30°, 0°, 30°, 60°)
-          for (let lat = -60; lat <= 60; lat += 30) {
-            ctx.beginPath();
-            let first = true;
-            for (let lon = -180; lon <= 180; lon += 8) {
-              const p = project3D(lat, lon, R, rotX, rotY, cx, cy);
-              if (p.z > 0) {
-                if (first) { ctx.moveTo(p.x, p.y); first = false; }
-                else ctx.lineTo(p.x, p.y);
-              } else {
-                first = true;
+          const globe = createGlobe(canvas, {
+            devicePixelRatio: dpr,
+            width: size * dpr,
+            height: size * dpr,
+            phi: phi,
+            theta: theta,
+            dark: isDark ? 1 : 0,
+            diffuse: isDark ? 1.3 : 1.4,
+            scale: 1.05,
+            mapSamples: 22000,
+            mapBrightness: isDark ? 8 : 4.5,
+            baseColor: isDark ? [0.1, 0.15, 0.24] : [0.92, 0.94, 0.98],
+            markerColor: [1, 0.65, 0.1],
+            glowColor: isDark ? [0.18, 0.32, 0.58] : [0.85, 0.9, 1.0],
+            arcColor: [0.35, 0.65, 1.0],
+            arcWidth: 0.6,
+            arcHeight: 0.25,
+            markerElevation: 0.03,
+            markers: getMarkers(currentDest),
+            arcs: flightArcs,
+            onRender: (state) => {
+              if (autoSpin) {
+                targetPhi += 0.0022;
               }
+              phi += (targetPhi - phi) * 0.07;
+              theta += (targetTheta - theta) * 0.07;
+              state.phi = phi;
+              state.theta = theta;
             }
-            ctx.stroke();
+          });
+
+          // Méthode globale pour faire pivoter le globe sur la destination sélectionnée
+          window.rotateGlobeTo = function(lat, lon, key) {
+            autoSpin = false;
+            clearTimeout(autoSpinTimer);
+            targetPhi = -Math.PI / 2 - (lon * Math.PI) / 180;
+            targetTheta = Math.max(-0.6, Math.min(0.8, (lat * Math.PI) / 180));
+            globe.update({ markers: getMarkers(key || currentDest) });
+            autoSpinTimer = setTimeout(() => { autoSpin = true; }, 5000);
+          };
+
+          // Gestion du drag interactif à la souris et au toucher
+          canvas.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            autoSpin = false;
+            clearTimeout(autoSpinTimer);
+            lastX = e.clientX;
+            lastY = e.clientY;
+            canvas.setPointerCapture(e.pointerId);
+          });
+
+          window.addEventListener('pointermove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - lastX;
+            const dy = e.clientY - lastY;
+            lastX = e.clientX;
+            lastY = e.clientY;
+
+            targetPhi += dx * 0.007;
+            targetTheta = Math.max(-0.7, Math.min(0.85, targetTheta - dy * 0.007));
+          });
+
+          function handlePointerEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            try { canvas.releasePointerCapture(e.pointerId); } catch(err){}
+            autoSpinTimer = setTimeout(() => { autoSpin = true; }, 4000);
           }
+          window.addEventListener('pointerup', handlePointerEnd);
+          window.addEventListener('pointercancel', handlePointerEnd);
 
-          // Méridiens (longitudes tous les 30°)
-          for (let lon = -180; lon < 180; lon += 30) {
-            ctx.beginPath();
-            let first = true;
-            for (let lat = -80; lat <= 80; lat += 6) {
-              const p = project3D(lat, lon, R, rotX, rotY, cx, cy);
-              if (p.z > 0) {
-                if (first) { ctx.moveTo(p.x, p.y); first = false; }
-                else ctx.lineTo(p.x, p.y);
-              } else {
-                first = true;
-              }
-            }
-            ctx.stroke();
-          }
+          // Support dynamique du changement de thème sombre / clair
+          const themeObserver = new MutationObserver(() => {
+            const darkNow = document.body.classList.contains('theme-dark');
+            globe.update({
+              dark: darkNow ? 1 : 0,
+              diffuse: darkNow ? 1.3 : 1.4,
+              mapBrightness: darkNow ? 8 : 4.5,
+              baseColor: darkNow ? [0.1, 0.15, 0.24] : [0.92, 0.94, 0.98],
+              glowColor: darkNow ? [0.18, 0.32, 0.58] : [0.85, 0.9, 1.0],
+            });
+          });
+          themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
-          // 4. Points des continents (landmass silhouette)
-          ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.28)' : 'rgba(40, 80, 160, 0.32)';
-          for (let i = 0; i < landDots.length; i++) {
-            const p = project3D(landDots[i][0], landDots[i][1], R, rotX, rotY, cx, cy);
-            if (p.z > 5) {
-              const alpha = Math.min(1, p.z / (R * 0.4));
-              ctx.globalAlpha = alpha;
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-          ctx.globalAlpha = 1.0;
-
-          // 5. Arcs de voyage depuis la France (Paris) vers les autres destinations
-          const parisLoc = geoLocations[0];
-          const parisPt = project3D(parisLoc.lat, parisLoc.lon, R, rotX, rotY, cx, cy);
-
-          for (const loc of geoLocations) {
-            if (loc.key !== 'france') {
-              const targetPt = project3D(loc.lat, loc.lon, R, rotX, rotY, cx, cy);
-              const isActive = (loc.key === currentDest);
-              if (parisPt.z > -10 || targetPt.z > -10) {
-                const midLat = (parisLoc.lat + loc.lat) / 2 + 10;
-                const midLon = (parisLoc.lon + loc.lon) / 2;
-                const midPt = project3D(midLat, midLon, R * 1.12, rotX, rotY, cx, cy);
-
-                ctx.beginPath();
-                ctx.moveTo(parisPt.x, parisPt.y);
-                ctx.quadraticCurveTo(midPt.x, midPt.y, targetPt.x, targetPt.y);
-                ctx.strokeStyle = isActive 
-                  ? 'rgba(255, 170, 0, 0.75)' 
-                  : (isDark ? 'rgba(91, 157, 255, 0.18)' : 'rgba(70, 120, 200, 0.18)');
-                ctx.lineWidth = isActive ? 2 : 1;
-                ctx.setLineDash(isActive ? [4, 4] : []);
-                ctx.stroke();
-                ctx.setLineDash([]);
-              }
-            }
-          }
-
-          // 6. Si la France est sélectionnée, dessiner le triangle reliant Paris, Lyon et Provence
-          if (currentDest === 'france') {
-            const pParis = project3D(geoLocations[0].lat, geoLocations[0].lon, R, rotX, rotY, cx, cy);
-            const pLyon = project3D(geoLocations[1].lat, geoLocations[1].lon, R, rotX, rotY, cx, cy);
-            const pProv = project3D(geoLocations[2].lat, geoLocations[2].lon, R, rotX, rotY, cx, cy);
-
-            if (pParis.z > 0 && pLyon.z > 0 && pProv.z > 0) {
-              ctx.beginPath();
-              ctx.moveTo(pParis.x, pParis.y);
-              ctx.lineTo(pLyon.x, pLyon.y);
-              ctx.lineTo(pProv.x, pProv.y);
-              ctx.closePath();
-              ctx.fillStyle = 'rgba(91, 157, 255, 0.12)';
-              ctx.fill();
-              ctx.strokeStyle = 'rgba(91, 157, 255, 0.6)';
-              ctx.lineWidth = 1.5;
-              ctx.stroke();
-            }
-          }
-
-          // 7. Repères / Beacons interactifs sur les villes
-          for (const loc of geoLocations) {
-            const p = project3D(loc.lat, loc.lon, R, rotX, rotY, cx, cy);
-            if (p.z > 0) {
-              const isActive = (loc.key === currentDest);
-              const baseColor = isActive ? '#FFAA00' : '#5B9DFF';
-
-              // Radar pulse animé pour le pays actif
-              if (isActive) {
-                const pulseR = 6 + (Math.sin(pulseTimer * 3) + 1) * 6;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, pulseR, 0, Math.PI * 2);
-                ctx.strokeStyle = 'rgba(255, 170, 0, ' + (0.8 - pulseR / 18) + ')';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-              }
-
-              // Point central
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, isActive ? 4.5 : 3, 0, Math.PI * 2);
-              ctx.fillStyle = baseColor;
-              ctx.fill();
-              ctx.strokeStyle = '#FFFFFF';
-              ctx.lineWidth = 1.2;
-              ctx.stroke();
-
-              // Étiquette du nom (si actif ou visible de face)
-              if (isActive || p.z > R * 0.45) {
-                ctx.font = isActive ? 'bold 10px monospace' : '9px monospace';
-                ctx.fillStyle = isActive ? '#FFFFFF' : (isDark ? '#BAC2D1' : '#334155');
-                ctx.fillText(loc.name, p.x + 7, p.y + 3);
-              }
-            }
-          }
-
-          ctx.restore();
-
-          // Anneau extérieur fin
-          ctx.beginPath();
-          ctx.arc(cx, cy, R, 0, Math.PI * 2);
-          ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.16)' : 'rgba(0, 0, 0, 0.12)';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-
-          requestAnimationFrame(drawGlobe);
+        } catch (err) {
+          console.error('Erreur chargement Cobe globe:', err);
         }
-
-        drawGlobe();
       }
+
+      initCobeGlobe();
 
       // Initialiser par défaut sur la France
       selectDestination('france', false);
