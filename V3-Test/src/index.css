@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --color-paper: #EFEDE7;
+  --color-ink: #121211;
+  --color-mute: #6E6C66;
+  --color-line: #D6D3CB;
+  --color-signal: #FF4D00;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--color-signal); color: white; }
+
+.glass {
+  background: linear-gradient(135deg, rgba(255,255,255,.55), rgba(255,255,255,.18));
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(0,0,0,.06), 0 10px 30px -12px rgba(18,18,17,.25);
+}
+.grid-bg {
+  background-image: linear-gradient(var(--color-line) 1px, transparent 1px), linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.text-outline { color: transparent; -webkit-text-stroke: 1.2px var(--color-ink); }
+.text-outline-paper { color: transparent; -webkit-text-stroke: 1.2px var(--color-paper); }
+
+/* Lentille liquid glass : réfraction SVG (Chromium) + flou en repli (Safari/Firefox) */
+.lens {
+  background: rgba(255,255,255,.35);
+  backdrop-filter: blur(2px) saturate(160%) brightness(1.08);
+  -webkit-backdrop-filter: blur(2px) saturate(160%) brightness(1.08);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.95), inset 0 -1px 1px rgba(0,0,0,.08), inset 0 0 0 .5px rgba(255,255,255,.6), 0 4px 14px -6px rgba(18,18,17,.35);
+}
+@supports (backdrop-filter: url(#x)) {
+  .lens { backdrop-filter: url(#lg-refract) saturate(170%) brightness(1.06); }
+}
+
+/* Vrai verre liquide : quasi transparent, pas de flou, bords qui réfractent le contenu (Chromium) */
+.liquid {
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(6px) saturate(170%);
+  -webkit-backdrop-filter: blur(6px) saturate(170%);
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,.85), inset -1px -1px 0 rgba(255,255,255,.35), inset 0 0 12px rgba(255,255,255,.25), 0 8px 24px -10px rgba(18,18,17,.28);
+}
+@supports (backdrop-filter: url(#x)) {
+  .liquid { backdrop-filter: url(#lg-nav) saturate(180%) brightness(1.04); }
+}
+
+/* Sur ordinateur, la mini F1 remplace la barre de défilement native */
+@media (min-width: 768px) {
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; }
+}

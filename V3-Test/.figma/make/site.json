@@ -1,0 +1,10 @@
+{
+  "description": "This web application connects users with local services, allowing them to easily find and book appointments for various needs, enhancing convenience and accessibility.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

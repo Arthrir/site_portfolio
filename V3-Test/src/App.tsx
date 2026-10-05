@@ -1,0 +1,990 @@
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence, MotionValue } from "motion/react";
+import { ArrowUpRight, Command, Copy, Check, Download, Mail, Search, CornerDownLeft } from "lucide-react";
+import Logo from "./components/Logo";
+import Legal from "./sections/Legal";
+import CvViewer from "./sections/CvViewer";
+import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "./components/Brand";
+import Passions from "./sections/Passions";
+import Circuit from "./sections/Circuit";
+import { LangProvider, LangToggle, loc, useLang, type Lang, type Loc } from "./i18n";
+
+const F1 = lazy(() => import("./games/F1"));
+const AimLab = lazy(() => import("./games/AimLab"));
+const Blackjack = lazy(() => import("./games/Blackjack"));
+const Minitel = lazy(() => import("./games/Minitel"));
+type Game = "minitel" | "f1" | "aim" | "blackjack";
+
+const SOCIALS = [
+  { I: LinkedInIcon, l: "LinkedIn", h: "https://linkedin.com/in/arthur-doradoux" },
+  { I: GitHubIcon, l: "GitHub", h: "https://github.com/Arthrir" },
+  { I: WhatsAppIcon, l: "WhatsApp", h: "https://wa.me/33627883483" },
+];
+
+const ease = [0.22, 1, 0.36, 1] as const;
+
+/* ---------------- Data ---------------- */
+const NAV: Loc<{ id: string; label: string }>[] = [
+  { id: "roadmap", label: "Parcours", en: { label: "Journey" } },
+  { id: "projets", label: "Projets", en: { label: "Projects" } },
+  { id: "engagements", label: "Engagements", en: { label: "Leadership" } },
+  { id: "passions", label: "Passions" },
+  { id: "stack", label: "Stack" },
+  { id: "contact", label: "Contact" },
+];
+
+const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; date: string; idx: string; points: string[]; tags: string[] }>[] = [
+  {
+    co: "Advantest", logo: "/logo/advantest.png", role: "R&D Test Cell Integration Engineer", place: "Böblingen, Allemagne", date: "Avr — Juil 2026", idx: "02",
+    en: { place: "Böblingen, Germany", date: "Apr — Jul 2026", points: ["Testing calibration PCBs for AI / GPU chips", "Designed & 3D-printed a tester ↔ PC interface enclosure", "Precision measurements: microscope, VNA, TDR"] },
+    points: ["Test de PCB de calibration pour puces IA / GPU", "Conception & impression 3D d'une enceinte d'interface testeur ↔ PC", "Mesures de précision : microscope, VNA, TDR"],
+    tags: ["Hardware Testing", "PCB Calibration", "3D Printing", "VNA / TDR"],
+  },
+  {
+    co: "PHINIA Delphi", logo: "/logo/phinia.png", role: "Hardware Systems Engineer", place: "Blois, France", date: "Jan — Fév 2025", idx: "01",
+    en: { date: "Jan — Feb 2025", points: ["Set up injection systems on a 24V ECU platform", "Validated ECU functions for a hydrogen application", "Thermal characterization over CAN after a 12V → 24V adaptation"] },
+    points: ["Mise en place de systèmes d'injection sur plateforme ECU 24V", "Validation de fonctions ECU pour application hydrogène", "Caractérisation thermique via CAN après adaptation 12V → 24V"],
+    tags: ["Embedded", "CAN", "Thermal", "Validation"],
+  },
+];
+
+const STACK: Loc<{ layer: string; n: string; items: string[] }>[] = [
+  { layer: "Outils", n: "06", en: { layer: "Tools", items: ["STM32CubeIDE", "Arduino IDE", "Vivado", "ModelSim", "MATLAB / Simulink", "LTSpice", "Logisim Evolution", "Vector CANalyzer", "KiCad", "Inventor", "Oscilloscope", "Function generator", "VS Code", "Typst", "Figma", "Unity"] }, items: ["STM32CubeIDE", "Arduino IDE", "Vivado", "ModelSim", "MATLAB / Simulink", "LTSpice", "Logisim Evolution", "Vector CANalyzer", "KiCad", "Inventor", "Oscilloscope", "GBF", "VS Code", "Typst", "Figma", "Unity"] },
+  { layer: "Produit", n: "05", en: { layer: "Product", items: ["Product Management", "Project management (V-model / Agile)", "Team leadership", "Technical communication", "Event management", "Budget management (€25k)", "Institutional communication", "Planning"] }, items: ["Product Management", "Gestion de projet (Cycle en V / Agile)", "Leadership d'équipe", "Communication technique", "Organisation d'événements", "Gestion de budget (25k€)", "Communication institutionnelle", "Planification"] },
+  { layer: "Design", n: "04", en: { items: ["UX Design", "Product Design", "Industrial Design", "3D & physical prototyping", "Figma", "Unity"] }, items: ["UX Design", "Design Produit", "Design Industriel", "Prototypage 3D & physique", "Figma", "Unity"] },
+  { layer: "Data & IA", n: "03", en: { layer: "Data & AI", items: ["NumPy", "Pandas", "Matplotlib", "Seaborn", "SciPy", "scikit-learn", "TensorFlow", "Keras", "PyTorch", "Signal processing", "Embedded AI"] }, items: ["NumPy", "Pandas", "Matplotlib", "Seaborn", "SciPy", "scikit-learn", "TensorFlow", "Keras", "PyTorch", "Traitement du signal", "IA embarquée"] },
+  { layer: "Software & Sécu", n: "02", en: { layer: "Software & Security", items: ["Python", "C / C++", "Rust", "OCaml", "SQL", "Linux / Bash", "Git", "CI/CD", "Networking (TCP/IP, Sockets)", "Multithreading", "Cybersecurity", "Cryptography (ASCON)", "Network security", "OSINT", "Social Engineering"] }, items: ["Python", "C / C++", "Rust", "OCaml", "SQL", "Linux / Bash", "Git", "CI/CD", "Réseau (TCP/IP, Sockets)", "Multithreading", "Cybersécurité", "Cryptographie (ASCON)", "Sécurité des réseaux", "OSINT", "Social Engineering"] },
+  { layer: "Hardware & RF", n: "01", en: { items: ["Embedded C / C++", "Assembly", "Arduino", "STM32 (HAL / LL)", "ESP32", "FPGA", "SystemVerilog / VHDL", "RISC-V architecture", "PCB (KiCad)", "Hardware prototyping", "Analog & digital electronics", "Sensors & instrumentation", "I2C · SPI · UART · CAN", "IoT · RF · LoRa · BLE", "Impedance matching", "S-parameters", "VNA / TDR", "EMC"] }, items: ["C / C++ embarqué", "Assembleur", "Arduino", "STM32 (HAL / LL)", "ESP32", "FPGA", "SystemVerilog / VHDL", "Architecture RISC-V", "PCB (KiCad)", "Prototypage matériel", "Électronique analogique & numérique", "Capteurs & instrumentation", "I2C · SPI · UART · CAN", "IoT · RF · LoRa · BLE", "Adaptation d'impédance", "S-parameters", "VNA / TDR", "CEM"] },
+];
+const LANGS: Loc<{ l: string; v: string; p: number }>[] = [
+  { l: "Français", v: "Natif", p: 100, en: { l: "French", v: "Native" } },
+  { l: "Anglais", v: "C1 · TOEIC 955", p: 88, en: { l: "English" } },
+  { l: "Allemand", v: "B1", p: 50, en: { l: "German" } },
+];
+
+type Cat = "Hardware" | "Software" | "IA" | "Produit";
+type Project = Loc<ProjectBase>;
+type ProjectBase = { t: string; d: string; date: string; cat: Cat[]; tags: string[]; desc: string; link?: string; with?: string; current?: boolean; points?: string[]; img?: string[] };
+const PROJECTS: Project[] = [
+  { t: "FPGA — ECG & communication sécurisée", points: ["Développement d'un système FPGA permettant le déchiffrement de trames ECG.", "Déchiffrement matériel de trames chiffrées avec l'algorithme ASCON.", "Implémentation de l'architecture en SystemVerilog.", "Dashboard Python pour le suivi médical en temps réel."], date: "2026", d: "Fév – Mar 2026", cat: ["Hardware"], tags: ["FPGA", "SystemVerilog", "Python", "Vivado"], desc: "Déchiffrement matériel de trames ECG chiffrées en ASCON, architecture SystemVerilog et dashboard Python de suivi médical temps réel.", with: "Yasmin Hadj-Said", en: { t: "FPGA — ECG & secure communication", d: "Feb – Mar 2026", points: ["Built an FPGA system to decrypt ECG frames.", "Hardware decryption of frames encrypted with the ASCON algorithm.", "Architecture implemented in SystemVerilog.", "Python dashboard for real-time medical monitoring."], desc: "Hardware decryption of ASCON-encrypted ECG frames, a SystemVerilog architecture and a Python dashboard for real-time medical monitoring." } },
+  { t: "IA embarquée — détection de défauts", points: ["Entraînement d'un modèle Python pour détecter des défauts sur des machines.", "Intégration et optimisation du modèle sur microcontrôleur STM32 en C."], date: "2026", d: "Fév – Mar 2026", cat: ["IA", "Hardware"], tags: ["STM32", "C", "Python"], desc: "Entraînement d'un modèle de détection de défauts machine, puis intégration et optimisation sur STM32 en C.", link: "https://github.com/Arthrir/ISMIN-IA_Embarquee_Projet", with: "Yasmin Hadj-Said", en: { t: "Embedded AI — fault detection", d: "Feb – Mar 2026", points: ["Trained a Python model to detect machine faults.", "Integrated and optimized the model on an STM32 microcontroller in C."], desc: "Trained a machine fault detection model, then integrated and optimized it on STM32 in C." } },
+  { t: "IA pour le Manufacturing", points: ["Application de modèles de machine learning et deep learning aux processus de fabrication.", "Détection d'anomalies et analyse prédictive sur données de production."], date: "2026", d: "Fév – Mar 2026", cat: ["IA"], tags: ["Python", "ML", "Deep Learning"], desc: "Détection d'anomalies et analyse prédictive sur données de ligne de production.", with: "Yasmin Hadj-Said", en: { t: "AI for Manufacturing", d: "Feb – Mar 2026", points: ["Applied machine learning and deep learning models to manufacturing processes.", "Anomaly detection and predictive analytics on production data."], desc: "Anomaly detection and predictive analytics on production-line data." } },
+  { t: "Terrariot — IoT qualité de l'air", points: ["Boîtier de mesure de qualité de l'air destiné aux zoos.", "Régulation et contrôle de microclimats spécifiques.", "Électronique STM32, capteurs et enceinte imprimée en 3D (Inventor)."], date: "2025", d: "Nov 2025 – Fév 2026", cat: ["Hardware", "Produit"], tags: ["STM32", "Capteurs", "Impression 3D", "Inventor"], desc: "Boîtier de mesure de la qualité de l'air pour zoos, afin de réguler des microclimats spécifiques.", with: "Jade Diouri", en: { t: "Terrariot — air quality IoT", d: "Nov 2025 – Feb 2026", points: ["Air quality monitoring device designed for zoos.", "Regulation and control of specific microclimates.", "STM32 electronics, sensors and a 3D-printed enclosure (Inventor)."], tags: ["STM32", "Sensors", "3D Printing", "Inventor"], desc: "Air quality monitoring device for zoos, built to regulate specific microclimates." } },
+  { t: "Processeur RISC-V en SystemVerilog", points: ["Implémentation complète d'un processeur RISC-V en SystemVerilog.", "Gestion avancée des branchements (jumps & branches)."], date: "2025", d: "Oct 2025 – Jan 2026", cat: ["Hardware"], tags: ["RISC-V", "SystemVerilog"], desc: "Implémentation complète d'un processeur RISC-V avec gestion avancée des jumps & branches.", with: "Yasmin Hadj-Said", en: { t: "RISC-V processor in SystemVerilog", d: "Oct 2025 – Jan 2026", points: ["Full implementation of a RISC-V processor in SystemVerilog.", "Advanced handling of jumps & branches."], desc: "Full implementation of a RISC-V processor with advanced jump & branch handling." } },
+  { t: "CPU RV32I sur Logisim", img: ["/media/ismin-projets.png"], points: ["Conception complète d'un CPU 32 bits RV32I sur Logisim-evolution.", "ALU, banc de registres, mémoire."], date: "2025", d: "Oct – Déc 2025", cat: ["Hardware"], tags: ["RISC-V", "Logisim"], desc: "Conception complète d'un CPU 32 bits : ALU, registres, mémoire.", with: "Inès Lixi", en: { t: "RV32I CPU in Logisim", d: "Oct – Dec 2025", points: ["Designed a complete 32-bit RV32I CPU in Logisim-evolution.", "ALU, register file, memory."], desc: "Complete 32-bit CPU design: ALU, registers, memory." } },
+  { t: "Sécurité des réseaux", points: ["Analyse et exploitation de vulnérabilités sur machine virtuelle isolée.", "Environnement Python regroupant divers outils d'exploitation."], date: "2025", d: "Oct 2025 – Jan 2026", cat: ["Software"], tags: ["Python", "Linux", "OSINT"], desc: "Exploitation de vulnérabilités sur VM isolée et environnement Python d'outils d'exploitation.", with: "Yasmin Hadj-Said", en: { t: "Network security", d: "Oct 2025 – Jan 2026", points: ["Analyzed and exploited vulnerabilities on an isolated virtual machine.", "Python environment bundling various exploitation tools."], desc: "Vulnerability exploitation on an isolated VM and a Python toolkit of exploitation tools." } },
+  { t: "Ventilateur à capteur capacitif", img: ["/media/ismin-projets2.png"], points: ["Acquisition de données via STM32 pour ajuster la vitesse.", "Contrôle glissant (slider) à l'aide de deux électrodes.", "PCB conçu sous KiCad."], date: "2025", d: "Fév – Juin 2025", cat: ["Hardware", "Produit"], tags: ["STM32", "PCB", "KiCad", "C"], desc: "Slider capacitif à deux électrodes pour régler la vitesse, acquisition sur STM32.", with: "Inès Lixi", en: { t: "Capacitive-sensor fan", d: "Feb – Jun 2025", points: ["STM32 data acquisition to adjust fan speed.", "Slider control using two electrodes.", "PCB designed in KiCad."], desc: "Two-electrode capacitive slider to set the speed, with acquisition on STM32." } },
+  { t: "Robot autonome STM32", img: ["/media/ismin-projets.png"], points: ["Programmation d'un robot basé sur STM32.", "Algorithme d'arrêt à exactement 20 cm d'un objet, puis suivi dynamique."], date: "2025", d: "Fév – Juin 2025", cat: ["Hardware"], tags: ["STM32", "Robotique", "C"], desc: "S'arrête exactement à 20 cm d'un objet puis le suit dynamiquement.", with: "Inès Lixi", en: { t: "Autonomous STM32 robot", d: "Feb – Jun 2025", points: ["Programmed an STM32-based robot.", "Algorithm that stops exactly 20 cm from an object, then follows it dynamically."], tags: ["STM32", "Robotics", "C"], desc: "Stops exactly 20 cm from an object, then follows it dynamically." } },
+  { t: "Chiffrement ASCON128", points: ["Machine d'état en SystemVerilog pour chiffrer et déchiffrer selon ASCON128.", "Rapport rédigé en Typst."], date: "2025", d: "Fév – Mai 2025", cat: ["Hardware", "Software"], tags: ["SystemVerilog", "Crypto", "Typst"], desc: "Machine d'état SystemVerilog pour chiffrer / déchiffrer selon ASCON128.", link: "https://github.com/Arthrir/ISMIN-ASCON-CSN", en: { t: "ASCON128 encryption", d: "Feb – May 2025", points: ["SystemVerilog state machine to encrypt and decrypt with ASCON128.", "Report written in Typst."], desc: "SystemVerilog state machine to encrypt / decrypt with ASCON128." } },
+  { t: "Jeu State.io multijoueur", img: ["/media/ismin-projets2.png"], points: ["Jeu multijoueur de conquête de territoires en C.", "Architecture client-serveur (sockets) et interface Ncurses.", "Rôle de lead dev du binôme."], date: "2025", d: "Fév – Avr 2025", cat: ["Software"], tags: ["C", "Sockets", "Ncurses", "Dev Lead"], desc: "Jeu de conquête de territoires en architecture client-serveur.", link: "https://github.com/Arthrir/ISMIN-Jeu_Stateio", with: "Inès Lixi", en: { t: "Multiplayer State.io game", d: "Feb – Apr 2025", points: ["Multiplayer territory-conquest game in C.", "Client-server architecture (sockets) and Ncurses interface.", "Lead developer of the pair."], desc: "Territory-conquest game built on a client-server architecture." } },
+  { t: "Handi'Mines — sensibilisation", points: ["Organisation d'un événement handisport sur le campus.", "Ateliers cécifoot et showdown."], date: "2025", d: "Fév – Juin 2025", cat: ["Produit"], tags: ["Événementiel", "Communication"], desc: "Organisation d'un événement handisport : ateliers cécifoot et showdown.", en: { t: "Handi'Mines — awareness", d: "Feb – Jun 2025", points: ["Organized a disability sports event on campus.", "Blind football and showdown workshops."], tags: ["Events", "Communication"], desc: "Organized a disability sports event: blind football and showdown workshops." } },
+  { t: "Velisud — Programme Entrep'", points: ["Conception technique et électronique d'un véhicule intermédiaire.", "Programme d'entrepreneuriat local, rôle de tech lead."], date: "2024", d: "Oct 2024 – Mar 2025", cat: ["Produit", "Hardware"], tags: ["Entrepreneuriat", "Tech Lead", "Électronique"], desc: "Conception technique et électronique d'un véhicule intermédiaire.", link: "/assets/VELISUD.pdf", en: { t: "Velisud — Entrepreneurship program", d: "Oct 2024 – Mar 2025", points: ["Technical and electronic design of an intermediate vehicle.", "Local entrepreneurship program, tech lead role."], tags: ["Entrepreneurship", "Tech Lead", "Electronics"], desc: "Technical and electronic design of an intermediate vehicle." } },
+  { t: "Portfolio arthurdx.com", points: ["Design et développement de ce portfolio.", "Focus UI/UX, motion design, responsive et performances.", "Easter eggs : terminal Minitel, F1, Aim Lab, Blackjack."], date: "2024", d: "2024 – aujourd'hui", cat: ["Software", "Produit"], tags: ["Astro", "React", "Motion", "Figma"], desc: "Le site que vous lisez. Terrain d'expérimentation UI/UX, motion et performance.", current: true, en: { d: "2024 – present", points: ["Designed and built this portfolio.", "Focus on UI/UX, motion design, responsiveness and performance.", "Easter eggs: Minitel terminal, F1, Aim Lab, Blackjack."], desc: "The site you are reading. A playground for UI/UX, motion and performance." } },
+  { t: "TIPE — Blackjack", points: ["Simulation Python modélisant le bonheur du joueur (aversion à la perte).", "Optimisation des gains du casino à partir de ce modèle.", "Réalisé avec Paul Aubert."], date: "2023", d: "Jan 2023 – Juil 2024", cat: ["Software", "IA"], tags: ["Python", "Matplotlib"], desc: "Simulation modélisant le « bonheur » du joueur (aversion à la perte) pour optimiser les gains du casino.", en: { t: "TIPE research — Blackjack", d: "Jan 2023 – Jul 2024", points: ["Python simulation modeling player happiness (loss aversion).", "Optimized casino earnings based on this model.", "Done with Paul Aubert."], desc: "Simulation modeling player “happiness” (loss aversion) to optimize casino earnings." } },
+];
+
+type Eng = Loc<EngBase>;
+type EngBase = { logo: string; org: string; role: string; date: string; desc: string[]; tags?: string[]; site?: string; with?: string; img?: string[]; action?: "minitel" };
+type Feat = EngBase & { stats: string[][]; points: string[] };
+const FEATURED: Loc<Feat>[] = [
+  { logo: "/logo/minitel.png", org: "MINITEL", role: "Président", date: "Mar 2025 — Mar 2026", action: "minitel", stats: [["16", "membres"], ["150+", "logements connectés"], ["25k€", "budget"]], points: ["Réseau Wi-Fi & filaire du campus", "LAN avec Riot Games & Red Bull", "Élu membre d'honneur en fin de mandat"], site: "https://minitel.emse.fr/",
+    en: { role: "President", date: "Mar 2025 — Mar 2026", stats: [["16", "members"], ["150+", "connected housing units"], ["€25k", "budget"]], points: ["Campus Wi-Fi & wired network", "LAN parties with Riot Games & Red Bull", "Named honorary member at the end of my term"],
+      desc: ["Student association for computing, networking and gaming. Led the association (16 members) and drove its major projects.", "Managed and maintained the campus Wi-Fi and wired internet network serving 150+ student apartments.", "Organized events and LAN parties in partnership with Riot Games and Red Bull.", "Coordinated teams, planned events and managed a budget of over €10,000.", "Named honorary member of the association at the end of my term."],
+      tags: ["Team management", "Network administration", "Budget", "Partnerships"] },
+    desc: ["Association étudiante d'informatique, réseau et gaming. Direction de l'association (16 membres) et pilotage des projets majeurs.", "Gestion et maintenance du réseau internet Wi-Fi et filaire du campus : plus de 150 appartements étudiants.", "Organisation d'événements et de LAN en partenariat avec Riot Games et Red Bull.", "Coordination des équipes, planification d'événements et gestion d'un budget supérieur à 10 000 €.", "Élu membre d'honneur de l'association à la fin de mon mandat."],
+    tags: ["Management d'équipe", "Administration réseau", "Budget", "Partenariats"], img: ["/media/lan_lol_minitel.jpeg", "/media/affiche_lan_lol.png", "/media/minitel-3d-vlad.png"] },
+  { logo: "/logo/emse.png", org: "Mines Saint-Étienne", role: "Élu au comité de l'enseignement", date: "Fév 2026 — aujourd'hui", stats: [["3000", "élèves représentés"], ["ISMIN", "& ICM"]], points: ["Décisions sur les programmes pédagogiques", "Porte-parole des promotions", "Gestion des parties prenantes"], site: "https://www.mines-stetienne.fr/", with: "Laure Rivier",
+    en: { role: "Elected member, Academic Committee", date: "Feb 2026 — present", stats: [["3000", "students represented"], ["ISMIN", "& ICM"]], points: ["Decisions on academic curricula", "Spokesperson for my cohorts", "Stakeholder management"],
+      desc: ["Take part in Academic Committee meetings, where major changes to the school's curricula are discussed, decided and presented.", "Representative and spokesperson for the ISMIN and ICM cohorts."],
+      tags: ["Institutional communication", "Mediation", "Stakeholders"] },
+    desc: ["Participation aux réunions du comité de l'enseignement, où sont discutés, décidés et présentés les grands changements des programmes pédagogiques de l'école.", "Représentant et porte-parole des promotions ISMIN et ICM."],
+    tags: ["Communication institutionnelle", "Médiation", "Parties prenantes"] },
+];
+const OTHERS: Eng[] = [
+  { logo: "/logo/emse.png", org: "Mines Saint-Étienne", role: "Représentant de promotion", date: "2024 — auj.", with: "Laure Rivier", desc: ["Réunions mensuelles avec la direction du campus pour remonter les points clés de la promotion.", "Liaison active avec les professeurs pour des ajustements de cours ou d'évaluations.", "Création de questionnaires et centralisation des avis et ressentis."], en: { role: "Class representative", date: "2024 — present", desc: ["Monthly meetings with campus leadership to escalate the class's key concerns.", "Active liaison with faculty to adjust courses and assessments.", "Designed surveys and consolidated student feedback."] } },
+  { logo: "/logo/emse.png", org: "Mines Saint-Étienne", role: "Ambassadeur communication", date: "2025 — auj.", desc: ["Refonte intégrale de la plaquette Alpha du cursus ISMIN pour les futurs élèves ingénieurs.", "Écriture de scripts pour des capsules vidéo destinées aux réseaux sociaux de l'école.", "Réalisation d'une vidéo de présentation de l'uniforme de Mines Saint-Étienne."], en: { role: "Communications ambassador", date: "2025 — present", desc: ["Complete redesign of the ISMIN program brochure for prospective engineering students.", "Wrote scripts for short videos on the school's social media.", "Produced a video presenting the Mines Saint-Étienne uniform."] } },
+  { logo: "/logo/alumni.png", org: "Alumni Mines", role: "Relai de la promotion", date: "À vie", with: "Laure Rivier", desc: ["Représentation de la promotion auprès du réseau des anciens pour assurer la communication, organiser des événements de networking et faciliter la collaboration professionnelle."], site: "https://www.mines-saint-etienne.org/", en: { role: "Class liaison", date: "For life", desc: ["Represent my class within the alumni network: handling communication, organizing networking events and fostering professional collaboration."] } },
+  { logo: "/logo/jmp.png", org: "Junior Mines Provence", role: "Responsable communication & marketing", date: "2025 — auj.", desc: ["Junior-Entreprise du campus Georges Charpak Provence de Mines Saint-Étienne.", "Responsable de la communication et du marketing : image de marque, réseaux sociaux et supports de prospection."], site: "https://www.junior-mines-provence.fr/", en: { role: "Head of communications & marketing", date: "2025 — present", desc: ["Junior Enterprise of the Mines Saint-Étienne Georges Charpak Provence campus.", "In charge of communications and marketing: brand image, social media and prospecting materials."] } },
+  { logo: "/logo/bde.jpeg", org: "BDE", role: "Responsable uniformes & merch", date: "2025 — 2026", desc: ["Responsable uniformes et merchandising du Bureau des Élèves.", "Gestion des commandes et de la distribution des uniformes et produits dérivés."], site: "https://bde-emse.fr/", en: { role: "Uniforms & merch lead", desc: ["In charge of uniforms and merchandise for the Student Union.", "Managed orders and distribution of uniforms and branded products."] } },
+  { logo: "/logo/fei.jpeg", org: "FEI", role: "Chargé logistique", date: "2025", desc: ["Accueil et guidage des entreprises.", "Bon déroulement des conférences et résolution des problèmes logistiques sur site."], site: "https://fei-aix.com/", en: { role: "Logistics officer", desc: ["Welcomed and guided partner companies.", "Ensured conferences ran smoothly and solved on-site logistics issues."] } },
+  { logo: "/logo/solidar-ismin.jpg", org: "Solidar'ISMIN", role: "Pôle prévention HVSSD", date: "2025 — 2026", desc: ["Formation de tous les bureaux associatifs du campus aux enjeux de harcèlement et violences (HVSSD) via une formation en réalité virtuelle."], en: { role: "Harassment prevention team", desc: ["Trained every student association board on campus on harassment and sexual and gender-based violence through a virtual reality program."] } },
+  { logo: "/logo/comif.jpeg", org: "COMIF", role: "Serveur au bar étudiant", date: "2025 — 2026", desc: ["Service quotidien pendant les pauses et soirées associatives, gestion des transactions et service client."], en: { role: "Student bar server", desc: ["Daily service during breaks and association evenings, handling transactions and customer service."] } },
+];
+
+/* ---------------- Primitives ---------------- */
+function Label({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <span className={`font-mono text-[11px] uppercase tracking-[0.14em] text-mute ${className}`}>{children}</span>;
+}
+
+function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  return (
+    <motion.div className={className} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.9, ease, delay }}>
+      {children}
+    </motion.div>
+  );
+}
+
+/* ---------------- Chip die (hero visual) ---------------- */
+const TRACES = [
+  "M200 200 H120 V80 H20", "M200 200 H280 V60 H380", "M200 200 V320 H60 V380", "M200 200 V310 H340 V380",
+  "M200 200 H90 V250 H20", "M200 200 H320 V170 H380", "M200 200 V90 H150 V20", "M200 200 V110 H260 V20",
+];
+
+function Die() {
+  const ref = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0), my = useMotionValue(0);
+  const rx = useSpring(useTransform(my, [-1, 1], [10, -10]), { stiffness: 120, damping: 18 });
+  const ry = useSpring(useTransform(mx, [-1, 1], [-10, 10]), { stiffness: 120, damping: 18 });
+  const [hot, setHot] = useState(false);
+  const { tr } = useLang();
+
+  return (
+    <div
+      ref={ref}
+      className="relative aspect-square w-full [perspective:1200px]"
+      onPointerMove={(e) => {
+        const r = ref.current!.getBoundingClientRect();
+        mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
+        my.set(((e.clientY - r.top) / r.height) * 2 - 1);
+      }}
+      onPointerEnter={() => setHot(true)}
+      onPointerLeave={() => { mx.set(0); my.set(0); setHot(false); }}
+    >
+      <motion.div style={{ rotateX: rx, rotateY: ry }} className="absolute inset-0 [transform-style:preserve-3d]">
+        <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible">
+          {/* pads */}
+          {Array.from({ length: 13 }).map((_, i) => (
+            <g key={i} className="fill-ink/80">
+              <rect x={56 + i * 22} y={4} width="8" height="10" />
+              <rect x={56 + i * 22} y={386} width="8" height="10" />
+              <rect x={4} y={56 + i * 22} width="10" height="8" />
+              <rect x={386} y={56 + i * 22} width="10" height="8" />
+            </g>
+          ))}
+          {TRACES.map((d, i) => (
+            <g key={d}>
+              <path d={d} className="stroke-line" strokeWidth="1.5" fill="none" />
+              <motion.path
+                d={d} fill="none" strokeWidth="2" strokeLinecap="round" className="stroke-signal"
+                initial={{ pathLength: 0, pathOffset: 0 }}
+                animate={{ pathLength: [0, 0.25, 0], pathOffset: [0, 0.6, 1] }}
+                transition={{ duration: hot ? 1.1 : 2.6, repeat: Infinity, delay: i * 0.33, ease: "easeInOut" }}
+              />
+            </g>
+          ))}
+          {/* die body */}
+          <rect x="130" y="130" width="140" height="140" className="fill-ink" />
+          <g className="stroke-paper/15" strokeWidth="1">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <line key={i} x1={130 + (i + 1) * 17.5} y1="130" x2={130 + (i + 1) * 17.5} y2="270" />
+            ))}
+          </g>
+          <rect x="150" y="150" width="44" height="44" className="fill-signal" />
+          <text x="150" y="252" className="fill-paper font-mono" fontSize="10" letterSpacing="1.5">AD-27 / PM</text>
+          <text x="150" y="238" className="fill-paper/50 font-mono" fontSize="8" letterSpacing="1">ISMIN × POLIMI</text>
+        </svg>
+      </motion.div>
+      <div className="pointer-events-none absolute -bottom-2 left-0 right-0 flex justify-between">
+        <Label>{tr("fig. 01 — signal → produit", "fig. 01 — signal → product")}</Label>
+        <Label>{hot ? "clock ×2.4" : "idle"}</Label>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Scroll-scrubbed manifesto ---------------- */
+function Word({ children, progress, range }: { children: string; progress: MotionValue<number>; range: [number, number] }) {
+  const o = useTransform(progress, range, [0.12, 1]);
+  const accent = children.startsWith("*");
+  return (
+    <motion.span style={{ opacity: o }} className={`mr-[0.25em] inline-block ${accent ? "text-signal italic" : ""}`}>
+      {accent ? children.slice(1) : children}
+    </motion.span>
+  );
+}
+
+function Manifesto() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "end 0.45"] });
+  const { tr } = useLang();
+  const text = tr("J'ai commencé par le *silicium : PCB, FPGA, ECU, bancs de test. Puis j'ai présidé une association, et compris que le plus dur n'est pas de construire la chose, mais de construire la *bonne chose. Aujourd'hui je relie l'ingénierie, le design et la stratégie pour concevoir des produits qui *comptent.", "I started with *silicon: PCBs, FPGAs, ECUs, test benches. Then I led a student association, and learned that the hardest part isn't building the thing, it's building the *right thing. Today I bridge engineering, design and strategy to build products that *matter.");
+  const words = text.split(" ");
+  return (
+    <div ref={ref} className="text-[clamp(1.8rem,4.2vw,3.6rem)] font-medium leading-[1.08] tracking-[-0.025em]">
+      {words.map((w, i) => (
+        <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>{w}</Word>
+      ))}
+    </div>
+  );
+}
+
+/* ---------------- Collaborateurs ---------------- */
+const PEOPLE: Record<string, string> = {
+  "Yasmin Hadj-Said": "https://www.linkedin.com/in/yasmin-hadj-said",
+  "Inès Lixi": "https://www.linkedin.com/in/in%C3%A8s-lixi-979654329",
+  "Jade Diouri": "https://www.linkedin.com/in/jade-diouri-7a4688328",
+  "Laure Rivier": "https://www.linkedin.com/in/laure-rivier-83060a328",
+};
+function Person({ name }: { name: string }) {
+  const url = PEOPLE[name];
+  return url ? (
+    <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-ink underline decoration-line underline-offset-4 transition-colors hover:text-signal hover:decoration-signal">
+      {name}<LinkedInIcon className="size-3" />
+    </a>
+  ) : <span className="text-ink">{name}</span>;
+}
+
+/* ---------------- Surligneur : un aplat de couleur balaie le texte quand il entre à l'écran ---------------- */
+function Hl({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <motion.span
+      initial={{ backgroundSize: "0% 100%", color: "var(--color-ink)" }}
+      whileInView={{ backgroundSize: "100% 100%", color: "var(--color-paper)" }}
+      viewport={{ once: true, margin: "-15% 0px" }}
+      transition={{ duration: 0.9, ease, delay: 0.15 }}
+      className={`bg-gradient-to-r from-signal to-signal bg-no-repeat px-[0.12em] [box-decoration-break:clone] ${className}`}
+    >{children}</motion.span>
+  );
+}
+
+/* ---------------- Stacked title: ta double écriture, qui glisse au scroll ---------------- */
+function Stacked({ ghost, children, n, dark = false }: { ghost: string; children: React.ReactNode; n: string; dark?: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const x = useTransform(scrollYProgress, [0, 1], ["6%", "-14%"]);
+  return (
+    <div ref={ref} className="relative">
+      <motion.div style={{ x }} aria-hidden className={`pointer-events-none font-serif text-[clamp(4.5rem,15vw,13rem)] leading-[0.8] whitespace-nowrap italic select-none ${dark ? "text-outline-paper opacity-30" : "text-outline opacity-25"}`}>
+        {ghost}
+      </motion.div>
+      <div className="relative -mt-[0.32em] flex items-baseline gap-5 text-[clamp(2.4rem,6vw,5.2rem)] md:pl-2">
+        <span className="font-mono text-[11px] tracking-[0.14em] text-signal">§{n}</span>
+        <h2 className="leading-[0.95] font-semibold tracking-[-0.035em]">{children}</h2>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Detail sheet ---------------- */
+type Detail = { kicker: string; title: string; meta?: string; logo?: string; lead?: string; points: string[]; tags?: string[]; img?: string[]; links?: { l: string; h: string }[]; with?: string };
+function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
+  const { tr } = useLang();
+  useEffect(() => {
+    if (!d) return;
+    const k = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", k);
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", k); document.body.style.overflow = ""; };
+  }, [d, onClose]);
+  return (
+    <AnimatePresence>
+      {d && (
+        <motion.div className="fixed inset-0 z-50 flex justify-end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <div className="absolute inset-0 bg-ink/30 backdrop-blur-[2px]" onClick={onClose} />
+          <motion.aside
+            role="dialog" aria-modal aria-label={d.title}
+            initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", stiffness: 260, damping: 32 }}
+            className="relative h-full w-full max-w-2xl overflow-y-auto bg-paper"
+          >
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink bg-paper/90 px-8 py-4 backdrop-blur">
+              <Label>{d.kicker}</Label>
+              <button onClick={onClose} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase hover:text-signal">
+                {tr("Fermer", "Close")} <kbd className="border border-line px-1.5 py-0.5 text-[9px]">ESC</kbd>
+              </button>
+            </div>
+            <div className="px-8 py-12">
+              {d.logo && <img src={d.logo} alt="" className="mb-8 size-14 rounded-lg bg-white object-contain p-2 ring-1 ring-line" />}
+              <motion.h2 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6, ease }} className="text-4xl leading-[1] font-semibold tracking-[-0.035em] md:text-5xl">{d.title}</motion.h2>
+              {d.meta && <p className="mt-4 font-mono text-[11px] tracking-wider text-mute uppercase">{d.meta}</p>}
+              {d.lead && <p className="mt-8 text-xl leading-snug">{d.lead}</p>}
+              {d.img && d.img.length > 0 && (
+                <div className="mt-10 grid gap-2">
+                  {d.img.map((src) => <img key={src} src={src} alt="" className="w-full border border-line object-cover" />)}
+                </div>
+              )}
+              <div className="mt-10 border-t border-ink pt-6">
+                <Label>{tr("Ce que j'ai fait", "What I did")}</Label>
+                <ul className="mt-5 space-y-4">
+                  {d.points.map((p, i) => (
+                    <motion.li key={p} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 + i * 0.05 }} className="grid grid-cols-[32px_1fr] text-[17px] leading-relaxed">
+                      <span className="pt-1 font-mono text-[11px] text-signal">{String(i + 1).padStart(2, "0")}</span>{p}
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+              {d.tags && d.tags.length > 0 && (
+                <div className="mt-10 border-t border-line pt-6">
+                  <Label>{tr("Stack & compétences", "Stack & skills")}</Label>
+                  <div className="mt-4 flex flex-wrap gap-1.5">{d.tags.map((t) => <span key={t} className="border border-ink/20 px-2 py-1 font-mono text-[11px]">{t}</span>)}</div>
+                </div>
+              )}
+              <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-line pt-6">
+                {d.with && <span className="mr-auto text-sm text-mute">{tr("En binôme avec", "Teamed with")} <Person name={d.with} /></span>}
+                {d.links?.map((l) => (
+                  <a key={l.h} href={l.h} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-ink px-4 py-2.5 text-sm font-medium text-paper hover:bg-signal">{l.l} <ArrowUpRight className="size-4" /></a>
+                ))}
+              </div>
+            </div>
+          </motion.aside>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+const CAT_EN: Record<Cat, string> = { Hardware: "Hardware", Software: "Software", IA: "AI", Produit: "Product" };
+const catLabel = (c: Cat | "Tous", lang: Lang) => (lang === "en" ? (c === "Tous" ? "All" : CAT_EN[c]) : c);
+const projectDetail = (p: ProjectBase, lang: Lang): Detail => ({
+  kicker: `${lang === "en" ? "Project" : "Projet"} · ${p.cat.map((c) => catLabel(c, lang)).join(" / ")}`, title: p.t, meta: p.d, lead: p.desc, points: p.points ?? [], tags: p.tags, img: p.img, with: p.with,
+  links: p.link ? [{ l: p.link.endsWith(".pdf") ? (lang === "en" ? "PDF presentation" : "Présentation PDF") : (lang === "en" ? "View code" : "Voir le code"), h: p.link }] : undefined,
+});
+const engDetail = (e: EngBase, lang: Lang): Detail => ({
+  kicker: `${lang === "en" ? "Involvement" : "Engagement"} · ${e.org}`, title: e.role, meta: `${e.org} · ${e.date}`, logo: e.logo, points: e.desc, tags: e.tags, img: e.img, with: e.with,
+  links: e.site ? [{ l: lang === "en" ? "Official website" : "Site officiel", h: e.site }] : undefined,
+});
+
+/* ---------------- Projects ---------------- */
+const FILTERS: ("Tous" | Cat)[] = ["Tous", "Hardware", "Software", "IA", "Produit"];
+function Projects() {
+  const [f, setF] = useState<(typeof FILTERS)[number]>("Tous");
+  const [open, setOpen] = useState<number | null>(null);
+  const { lang, tr } = useLang();
+  const all = useMemo(() => PROJECTS.map((p) => loc(p, lang)), [lang]);
+  const list = all.filter((p) => f === "Tous" || p.cat.includes(f));
+  return (
+    <>
+      <div className="mb-10 flex flex-wrap items-center gap-1 border-b border-ink pb-4">
+        {FILTERS.map((x) => {
+          const count = x === "Tous" ? PROJECTS.length : PROJECTS.filter((p) => p.cat.includes(x)).length;
+          return (
+            <button key={x} onClick={() => setF(x)} className="relative px-4 py-2 text-sm font-medium">
+              {f === x && <motion.span layoutId="filter" className="absolute inset-0 bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
+              <span className={`relative transition-colors ${f === x ? "text-paper" : ""}`}>{catLabel(x, lang)} <sup className="font-mono text-[9px] opacity-60">{count}</sup></span>
+            </button>
+          );
+        })}
+      </div>
+      <motion.div layout className="grid gap-px bg-ink/15 sm:grid-cols-2 lg:grid-cols-3">
+        <AnimatePresence mode="popLayout">
+          {list.map((p) => (
+            <motion.article
+              layout key={PROJECTS[all.indexOf(p)].t}
+              initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.45, ease }}
+              onClick={() => setOpen(all.indexOf(p))} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && setOpen(all.indexOf(p))}
+              className="group relative flex min-h-[220px] cursor-pointer flex-col bg-paper p-7 transition-colors duration-500 hover:bg-ink hover:text-paper"
+            >
+              <div className="flex items-start justify-between">
+                <span className="font-mono text-[11px] text-mute group-hover:text-paper/50">{p.d}</span>
+                {p.current && <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />Live</span>}
+              </div>
+              <h3 className="mt-8 text-xl leading-tight font-semibold tracking-tight">{p.t}</h3>
+              <p className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-mute group-hover:text-paper/70">{p.desc}</p>
+              <div className="mt-auto pt-6">
+                <div className="flex flex-wrap gap-1.5">
+                  {p.tags.slice(0, 3).map((t) => <span key={t} className="border border-current/20 px-1.5 py-0.5 font-mono text-[10px] uppercase opacity-70">{t}</span>)}
+                </div>
+                <div className="mt-4 flex items-center justify-between text-xs">
+                  <span className="text-mute group-hover:text-paper/50">{p.with ? `${tr("avec", "with")} ${p.with}` : "Solo"}</span>
+                  <span className="flex items-center gap-1 font-medium text-signal">
+                    {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")} <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45" />
+                  </span>
+                </div>
+              </div>
+            </motion.article>
+          ))}
+        </AnimatePresence>
+      </motion.div>
+      <Sheet d={open !== null ? projectDetail(all[open], lang) : null} onClose={() => setOpen(null)} />
+    </>
+  );
+}
+
+/* ---------------- Engagements ---------------- */
+function Engagements({ onMinitel }: { onMinitel: () => void }) {
+  const [open, setOpen] = useState<Eng | null>(null);
+  const { lang, tr } = useLang();
+  const featured = useMemo(() => FEATURED.map((e) => loc(e, lang)), [lang]);
+  return (
+    <>
+      <div className="grid gap-px bg-ink lg:grid-cols-2">
+        {featured.map((e, i) => (
+          <Reveal key={e.logo} delay={i * 0.1} className="bg-paper">
+            <article onClick={() => setOpen(FEATURED[i])} className="group flex h-full cursor-pointer flex-col p-8 transition-colors hover:bg-white/50 md:p-10">
+              <div className="flex items-center gap-4">
+                <img
+                  src={e.logo} alt={e.org}
+                  onClick={(ev) => { if (e.action === "minitel") { ev.stopPropagation(); onMinitel(); } }}
+                  title={e.action === "minitel" ? "3615…" : undefined}
+                  className="size-12 rounded-lg bg-white object-contain p-1.5 ring-1 ring-line transition-transform hover:scale-110"
+                />
+                <div>
+                  <Label>{e.org} · {e.date}</Label>
+                  <h3 className="mt-1 text-2xl font-semibold tracking-tight md:text-3xl">{e.role}</h3>
+                </div>
+              </div>
+              <div className="mt-10 flex gap-10">
+                {e.stats.map(([v, l]) => (
+                  <div key={l}>
+                    <div className="text-4xl font-semibold tracking-tight text-signal md:text-5xl">{v}</div>
+                    <Label className="mt-1 block">{l}</Label>
+                  </div>
+                ))}
+              </div>
+              <ul className="mt-8 space-y-2.5">
+                {e.points.map((p) => <li key={p} className="flex gap-3"><span className="mt-2.5 h-px w-3 shrink-0 bg-signal" />{p}</li>)}
+              </ul>
+              <span className="mt-auto flex items-center gap-1 pt-8 text-sm font-medium">{tr("Lire en détail", "Read more")} <ArrowUpRight className="size-4 transition-transform group-hover:rotate-45" /></span>
+            </article>
+          </Reveal>
+        ))}
+      </div>
+      <div className="mt-px grid gap-px bg-ink/15 sm:grid-cols-2 lg:grid-cols-4">
+        {OTHERS.map((raw, i) => { const o = loc(raw, lang); return (
+          <Reveal key={raw.role} delay={i * 0.04} className="bg-paper">
+            <button onClick={() => setOpen(raw)} className="group flex w-full items-center gap-3 p-5 text-left transition-colors hover:bg-ink hover:text-paper">
+              <img src={o.logo} alt={o.org} className="size-9 rounded-md bg-white object-contain p-1 ring-1 ring-line grayscale transition group-hover:grayscale-0" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{o.role}</p>
+                <p className="truncate font-mono text-[10px] text-mute uppercase group-hover:text-paper/50">{o.org} · {o.date}</p>
+              </div>
+              <ArrowUpRight className="size-4 shrink-0 opacity-0 transition group-hover:opacity-100" />
+            </button>
+          </Reveal>
+        ); })}
+      </div>
+      <Sheet d={open && engDetail(loc(open, lang), lang)} onClose={() => setOpen(null)} />
+    </>
+  );
+}
+
+/* ---------------- Command palette (glass) ---------------- */
+function Palette({ open, onClose, onGame }: { open: boolean; onClose: () => void; onGame: (g: Game) => void }) {
+  const [q, setQ] = useState("");
+  const [sel, setSel] = useState(0);
+  const { lang, tr } = useLang();
+  const actions = [
+    ...NAV.map((n) => ({ label: `${tr("Aller à", "Go to")} ${loc(n, lang).label}`, hint: "Navigation", run: () => document.getElementById(n.id)?.scrollIntoView() })),
+    { label: tr("Copier l'email", "Copy email"), hint: "contact@arthurdx.com", run: () => navigator.clipboard.writeText("contact@arthurdx.com") },
+    { label: tr("Ouvrir LinkedIn", "Open LinkedIn"), hint: tr("Externe", "External"), run: () => window.open("https://linkedin.com/in/arthur-doradoux") },
+    { label: tr("Voir le CV", "View resume"), hint: "PDF", run: () => window.dispatchEvent(new Event("open-cv")) },
+    { label: tr("Ouvrir GitHub", "Open GitHub"), hint: tr("Externe", "External"), run: () => window.open("https://github.com/Arthrir") },
+    { label: "3615 MINITEL", hint: tr("Jeux", "Games"), run: () => onGame("minitel") },
+    { label: "Grand Prix F1", hint: tr("Jeux", "Games"), run: () => onGame("f1") },
+    { label: "Aim Lab — Team Vitality", hint: tr("Jeux", "Games"), run: () => onGame("aim") },
+    { label: tr("Blackjack — modèle TIPE", "Blackjack — TIPE model"), hint: tr("Jeux", "Games"), run: () => onGame("blackjack") },
+  ];
+  const list = actions.filter((a) => a.label.toLowerCase().includes(q.toLowerCase()));
+
+  useEffect(() => { setSel(0); }, [q]);
+  useEffect(() => { if (!open) setQ(""); }, [open]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div className="fixed inset-0 z-50 flex items-start justify-center bg-ink/20 px-4 pt-[18vh]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            initial={{ y: -12, scale: 0.97, opacity: 0 }} animate={{ y: 0, scale: 1, opacity: 1 }} exit={{ y: -8, scale: 0.98, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+            className="glass w-full max-w-lg overflow-hidden rounded-2xl"
+          >
+            <div className="flex items-center gap-3 border-b border-ink/10 px-4 py-3.5">
+              <Search className="size-4 text-mute" />
+              <input
+                autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={tr("Tapez une commande…", "Type a command…")}
+                onKeyDown={(e) => {
+                  if (e.key === "ArrowDown") { e.preventDefault(); setSel((s) => Math.min(s + 1, list.length - 1)); }
+                  if (e.key === "ArrowUp") { e.preventDefault(); setSel((s) => Math.max(s - 1, 0)); }
+                  if (e.key === "Enter" && list[sel]) { list[sel].run(); onClose(); }
+                }}
+                className="flex-1 bg-transparent text-[15px] outline-none placeholder:text-mute"
+              />
+              <kbd className="font-mono text-[10px] text-mute">ESC</kbd>
+            </div>
+            <ul className="max-h-72 overflow-auto p-1.5">
+              {list.map((a, i) => (
+                <li key={a.label}>
+                  <button onMouseEnter={() => setSel(i)} onClick={() => { a.run(); onClose(); }}
+                    className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm ${sel === i ? "bg-ink text-paper" : ""}`}>
+                    <span>{a.label}</span>
+                    <span className={`flex items-center gap-2 font-mono text-[10px] ${sel === i ? "text-paper/60" : "text-mute"}`}>
+                      {a.hint}{sel === i && <CornerDownLeft className="size-3" />}
+                    </span>
+                  </button>
+                </li>
+              ))}
+              {list.length === 0 && <li className="px-3 py-6 text-center text-sm text-mute">{tr("Aucun résultat", "No results")}</li>}
+            </ul>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ---------------- Rail latéral : une mini F1 descend la piste au fil du scroll ---------------- */
+function Rail() {
+  const { scrollYProgress } = useScroll();
+  const p = useSpring(scrollYProgress, { stiffness: 140, damping: 26 });
+  const top = useTransform(p, (v) => `${v * 100}%`);
+  const { lang } = useLang();
+  const [marks, setMarks] = useState<{ id: string; at: number }[]>([]);
+  useEffect(() => {
+    const calc = () => {
+      const h = document.documentElement.scrollHeight - innerHeight;
+      setMarks(NAV.flatMap((n) => { const el = document.getElementById(n.id); return el ? [{ id: n.id, at: Math.min(1, (el.offsetTop - innerHeight * 0.3) / h) }] : []; }));
+    };
+    calc();
+    const t = setTimeout(calc, 1500);
+    addEventListener("resize", calc);
+    return () => { clearTimeout(t); removeEventListener("resize", calc); };
+  }, []);
+  // la piste remplace la barre de défilement : clic ou glisser la F1 pour se déplacer
+  const track = useRef<HTMLDivElement>(null);
+  const seek = (y: number) => {
+    const b = track.current!.getBoundingClientRect();
+    const v = Math.max(0, Math.min(1, (y - b.top) / b.height));
+    scrollTo({ top: v * (document.documentElement.scrollHeight - innerHeight) });
+  };
+  const down = (e: React.PointerEvent) => { e.preventDefault(); (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); seek(e.clientY); };
+  const move = (e: React.PointerEvent) => { if ((e.currentTarget as HTMLElement).hasPointerCapture(e.pointerId)) seek(e.clientY); };
+  return (
+    <div className="fixed top-[calc(env(safe-area-inset-top)+12px)] right-0 bottom-3 z-40 hidden w-8 md:block">
+      <div ref={track} onPointerDown={down} onPointerMove={move} className="group/rail relative mx-auto h-full w-6 cursor-grab touch-none active:cursor-grabbing">
+        <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-ink/15" />
+        <motion.div style={{ scaleY: p }} className="absolute inset-y-0 left-1/2 w-px origin-top -translate-x-1/2 bg-signal" />
+        {marks.map((mk) => { const m = { ...mk, label: loc(NAV.find((n) => n.id === mk.id)!, lang).label }; return (
+          <button key={m.id} onPointerDown={(e) => e.stopPropagation()} onClick={() => document.getElementById(m.id)?.scrollIntoView({ behavior: "smooth" })} aria-label={m.label} style={{ top: `${m.at * 100}%` }} className="group absolute left-1/2 block size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/40 bg-paper transition-colors hover:border-signal">
+            <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 bg-paper/90 px-1 font-mono text-[10px] tracking-[0.12em] whitespace-nowrap text-ink uppercase opacity-0 transition-opacity group-hover:opacity-100 group-hover/rail:opacity-60">{m.label}</span>
+          </button>
+        ); })}
+        <motion.div style={{ top }} className="pointer-events-none absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform group-active/rail:scale-125">
+          <svg width="12" height="26" viewBox="0 0 12 26" className="drop-shadow-sm">
+            <rect x="0" y="1" width="12" height="3" rx="1" className="fill-ink" />
+            <rect x="0" y="22" width="12" height="3" rx="1" className="fill-ink" />
+            <rect x="0" y="6" width="2.5" height="5" rx="1" className="fill-ink" /><rect x="9.5" y="6" width="2.5" height="5" rx="1" className="fill-ink" />
+            <rect x="0" y="16" width="2.5" height="5" rx="1" className="fill-ink" /><rect x="9.5" y="16" width="2.5" height="5" rx="1" className="fill-ink" />
+            <path d="M6 2 L8 7 L8.5 20 L6 23 L3.5 20 L4 7 Z" className="fill-signal" />
+            <circle cx="6" cy="13" r="1.3" className="fill-ink" />
+          </svg>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Nav (isolée : changer de section ne re-rend pas toute la page) ---------------- */
+function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onPalette: () => void }) {
+  const [section, setSection] = useState("");
+  const [pick, setPick] = useState<string | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const tabs = useRef<HTMLDivElement>(null);
+  const { lang, tr } = useLang();
+  const nav = useMemo(() => NAV.map((n) => loc(n, lang)), [lang]);
+  useEffect(() => { if (pick && pick === section) setPick(null); }, [section, pick]);
+  // Glisser le doigt / la souris sur la barre : la lentille suit et grossit, on relâche pour y aller
+  const tabAt = (x: number) => {
+    const els = [...(tabs.current?.querySelectorAll<HTMLElement>("[data-tab]") ?? [])];
+    return els.find((el) => { const b = el.getBoundingClientRect(); return x >= b.left && x <= b.right; })?.dataset.tab;
+  };
+  const dragStart = useRef<{ x: number; moved: boolean } | null>(null);
+  const onTabsDown = (e: React.PointerEvent) => { dragStart.current = { x: e.clientX, moved: false }; };
+  const onTabsMove = (e: React.PointerEvent) => {
+    const d = dragStart.current;
+    if (!d) return;
+    if (!d.moved && Math.abs(e.clientX - d.x) > 6) { d.moved = true; setDragging(true); tabs.current?.setPointerCapture(e.pointerId); }
+    if (d.moved) { const id = tabAt(e.clientX); if (id) setPick(id); }
+  };
+  const onTabsUp = (e: React.PointerEvent) => {
+    const d = dragStart.current; dragStart.current = null;
+    if (!d?.moved) return;
+    setDragging(false);
+    const id = tabAt(e.clientX);
+    if (id) document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    const io = new IntersectionObserver((es) => es.forEach((en) => en.isIntersecting && setSection(en.target.id)), { rootMargin: "-45% 0px -50% 0px" });
+    NAV.forEach((n) => { const el = document.getElementById(n.id); if (el) io.observe(el); });
+    return () => io.disconnect();
+  }, []);
+  return (
+    <>
+      {/* Nav liquid glass — la lentille glisse vers l'onglet survolé, puis revient sur la section active */}
+      <motion.nav initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.9, ease, delay: 0.2 }}
+        className="liquid fixed bottom-[calc(env(safe-area-inset-bottom)+14px)] left-1/2 z-40 md:top-[calc(env(safe-area-inset-top)+16px)] md:bottom-auto flex -translate-x-1/2 items-center gap-1 rounded-full p-1.5">
+        <a href="#top" onClick={onLogo} aria-label={tr("Accueil", "Home")} className="mr-1 ml-1.5 grid h-8 w-10 place-items-center rounded-full text-ink transition-colors hover:text-signal">
+          <Logo className="h-[18px] w-auto" />
+        </a>
+        <div ref={tabs} className="hidden touch-none items-center select-none md:flex" onPointerDown={onTabsDown} onPointerMove={onTabsMove} onPointerUp={onTabsUp} onPointerCancel={onTabsUp}>
+          {nav.map((n) => {
+            const lit = (pick ?? section) === n.id;
+            return (
+              <a key={n.id} data-tab={n.id} href={`#${n.id}`} draggable={false} onClick={(e) => { if (dragging) e.preventDefault(); setPick(n.id); }} className="relative px-3.5 py-1.5 text-[13px] font-medium">
+                {lit && (
+                  <motion.span
+                    layoutId="lens"
+                    className="lens absolute inset-0 rounded-full"
+                    animate={{ scale: dragging ? 1.28 : 1 }}
+                    transition={{ type: "spring", stiffness: 520, damping: 30, mass: 0.7 }}
+                  >
+                    <motion.span key={n.id} className="block size-full rounded-full" initial={{ scaleX: 1.18, scaleY: 0.82 }} animate={{ scaleX: 1, scaleY: 1 }} transition={{ type: "spring", stiffness: 300, damping: 12 }} />
+                  </motion.span>
+                )}
+                <span className={`relative inline-block transition-all duration-200 ${lit ? "text-ink" : "text-ink/70"} ${lit && dragging ? "scale-110" : ""}`}>{n.label}</span>
+              </a>
+            );
+          })}
+        </div>
+        <LangToggle className="mx-0.5" />
+        <button onClick={() => window.dispatchEvent(new Event("open-cv"))} className="hidden rounded-full bg-ink px-3.5 py-1.5 text-[13px] font-medium text-paper transition-colors hover:bg-signal md:block">CV</button>
+        <button onClick={() => setMenu((m) => !m)} aria-label="Menu" aria-expanded={menu} className="flex items-center gap-2 rounded-full px-3 py-1.5 text-[13px] font-medium md:hidden">
+          {nav.find((n) => n.id === section)?.label ?? "Menu"}
+          <span className="flex w-3.5 flex-col gap-[3px]"><span className={`h-px bg-ink transition ${menu ? "translate-y-[2px] rotate-45" : ""}`} /><span className={`h-px bg-ink transition ${menu ? "-translate-y-[2px] -rotate-45" : ""}`} /></span>
+        </button>
+        <AnimatePresence>
+          {menu && (
+            <motion.div initial={{ opacity: 0, y: 8, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.96 }} transition={{ duration: 0.25, ease }}
+              className="glass absolute right-0 bottom-full left-0 mb-2 flex flex-col rounded-3xl p-2 md:hidden">
+              {nav.map((n, i) => (
+                <a key={n.id} href={`#${n.id}`} onClick={() => setMenu(false)} className={`flex items-baseline justify-between rounded-2xl px-4 py-3 text-lg font-medium ${section === n.id ? "bg-ink text-paper" : ""}`}>
+                  {n.label}<span className="font-mono text-[10px] opacity-50">0{i + 2}</span>
+                </a>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.nav>
+    </>
+  );
+}
+
+/* ---------------- App ---------------- */
+export default function App() {
+  return <LangProvider><Page /></LangProvider>;
+}
+
+function Page() {
+  const { lang, tr } = useLang();
+  const [palette, setPalette] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [legal, setLegal] = useState(() => location.hash === "#mentions-legales");
+  useEffect(() => {
+    const h = () => setLegal(location.hash === "#mentions-legales");
+    window.addEventListener("hashchange", h);
+    return () => window.removeEventListener("hashchange", h);
+  }, []);
+  useEffect(() => { document.body.style.overflow = legal ? "hidden" : ""; }, [legal]);
+  const [game, setGame] = useState<Game | null>(null);
+  const [viaMinitel, setViaMinitel] = useState(false);
+  const [cv, setCv] = useState(false);
+  useEffect(() => { const o = () => setCv(true); addEventListener("open-cv", o); return () => removeEventListener("open-cv", o); }, []);
+  // un jeu lancé depuis le 3615 ramène au Minitel quand on le quitte
+  const closeGame = () => { if (viaMinitel && game !== "minitel") setGame("minitel"); else { setGame(null); setViaMinitel(false); } };
+  const taps = useRef({ n: 0, t: 0 as ReturnType<typeof setTimeout> | 0 });
+
+
+  // Easter eggs : Konami → Aim Lab ; taper "minitel", "monza", "vitality", "blackjack"
+  useEffect(() => {
+    const konami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    let keys: string[] = [], buf = "";
+    const words: Record<string, Game> = { minitel: "minitel", "3615": "minitel", monza: "f1", vitality: "aim", blackjack: "blackjack" };
+    const k = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).closest("input, textarea")) return;
+      keys = [...keys, e.key].slice(-konami.length);
+      if (keys.join() === konami.join()) setGame("aim");
+      if (e.key.length === 1) {
+        buf = (buf + e.key.toLowerCase()).slice(-12);
+        const hit = Object.keys(words).find((w) => buf.endsWith(w));
+        if (hit) { setGame(words[hit]); buf = ""; }
+      }
+    };
+    window.addEventListener("keydown", k);
+    return () => window.removeEventListener("keydown", k);
+  }, []);
+
+  // Mobile : taps rapides sur le logo — 3 = F1, 5 = Aim Lab, 7 = Blackjack
+  const tapLogo = (e: React.MouseEvent) => {
+    const r = taps.current;
+    r.n++;
+    if (r.n > 1) e.preventDefault();
+    if (r.t) clearTimeout(r.t);
+    r.t = setTimeout(() => {
+      if (r.n >= 7) setGame("blackjack"); else if (r.n >= 5) setGame("aim"); else if (r.n >= 3) setGame("f1");
+      r.n = 0;
+    }, 450);
+  };
+  const { scrollYProgress } = useScroll();
+  const bar = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: heroP } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY = useTransform(heroP, [0, 1], [0, 120]);
+  const heroO = useTransform(heroP, [0, 0.8], [1, 0]);
+
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setPalette((p) => !p); }
+      if (e.key === "Escape") setPalette(false);
+    };
+    window.addEventListener("keydown", k);
+    return () => window.removeEventListener("keydown", k);
+  }, []);
+
+  const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
+
+  return (
+    <div className="relative min-h-screen overflow-x-clip pb-[calc(env(safe-area-inset-bottom)+84px)] md:pb-0">
+      <AnimatePresence>{cv && <CvViewer onClose={() => setCv(false)} />}</AnimatePresence>
+      <AnimatePresence>{legal && <Legal onClose={() => { history.replaceState(null, "", " "); setLegal(false); }} />}</AnimatePresence>
+      <motion.div style={{ scaleX: bar }} className="fixed top-0 right-0 left-0 z-50 h-[2px] origin-left bg-signal md:hidden" />
+      <Rail />
+
+      {/* Filtre de réfraction pour la lentille liquid glass */}
+      <svg className="absolute size-0" aria-hidden>
+        <filter id="lg-refract" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.04" numOctaves="2" seed="7" result="n" />
+          <feGaussianBlur in="n" stdDeviation="2" result="nb" />
+          <feDisplacementMap in="SourceGraphic" in2="nb" scale="18" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        {/* Bords réfractants façon Apple : carte de déplacement neutre au centre, qui tord les bords */}
+        <filter id="lg-nav" x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
+          <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20200%2050%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22r%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23f00%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000%22/%3E%3C/linearGradient%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%220%22%20y1%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%230f0%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000%22/%3E%3C/linearGradient%3E%3Cfilter%20id%3D%22b%22%3E%3CfeGaussianBlur%20stdDeviation%3D%225%22/%3E%3C/filter%3E%3C/defs%3E%3Crect%20width%3D%22200%22%20height%3D%2250%22%20fill%3D%22%23000%22/%3E%3Crect%20width%3D%22200%22%20height%3D%2250%22%20fill%3D%22url%28%23r%29%22/%3E%3Crect%20width%3D%22200%22%20height%3D%2250%22%20fill%3D%22url%28%23g%29%22%20style%3D%22mix-blend-mode%3Ascreen%22/%3E%3Crect%20x%3D%2214%22%20y%3D%2210%22%20width%3D%22172%22%20height%3D%2230%22%20rx%3D%2215%22%20fill%3D%22%23808000%22%20filter%3D%22url%28%23b%29%22/%3E%3C/svg%3E" preserveAspectRatio="none" x="0" y="0" width="100%" height="100%" result="map" />
+          <feDisplacementMap in="SourceGraphic" in2="map" scale="-46" xChannelSelector="R" yChannelSelector="G" result="d" />
+          <feGaussianBlur in="d" stdDeviation="0.4" />
+        </filter>
+      </svg>
+
+      <Nav onLogo={tapLogo} onPalette={() => setPalette(true)} />
+
+      {/* HERO */}
+      <header id="top" ref={heroRef} className="relative mx-auto grid min-h-[100svh] max-w-[1400px] items-center gap-12 px-6 pt-[calc(env(safe-area-inset-top)+64px)] pb-16 md:px-10 md:pt-28 lg:grid-cols-[1.25fr_1fr]">
+        <div className="grid-bg pointer-events-none absolute inset-0 -z-10 opacity-50 [mask-image:radial-gradient(ellipse_at_70%_45%,black,transparent_70%)]" />
+        <motion.div style={{ y: heroY, opacity: heroO }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <span className="flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />{tr("Disponible — avril 2027", "Available — April 2027")}</span>
+            <Label>Mines Saint-Étienne × Politecnico di Milano</Label>
+          </motion.div>
+          <h1 className="text-[clamp(3.4rem,10vw,9.5rem)] leading-[0.86] font-semibold tracking-[-0.05em]">
+            {["Arthur", "Doradoux"].map((w, i) => (
+              <span key={w} className="block overflow-hidden pb-[0.06em]">
+                <motion.span className="block" initial={{ y: "105%" }} animate={{ y: 0 }} transition={{ duration: 1.1, ease, delay: 0.15 + i * 0.1 }}>
+                  {w}{i === 1 && <span className="text-signal">.</span>}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
+          <Reveal delay={0.6} className="mt-10 grid max-w-xl gap-8 sm:grid-cols-[auto_1fr]">
+            <Label className="pt-1">{tr("Rôle visé", "Target role")}</Label>
+            <p className="text-xl leading-snug">
+              {tr("Ingénieur en microélectronique, j'aspire à devenir ", "Microelectronics engineer aspiring to become a ")}<Hl className="font-medium">Product Manager</Hl>.
+            </p>
+          </Reveal>
+          <Reveal delay={0.75} className="mt-10 flex flex-wrap gap-3">
+            <a href="#roadmap" className="group flex items-center gap-2 bg-ink px-5 py-3.5 text-sm font-medium text-paper transition-colors hover:bg-signal">
+              {tr("Voir mon parcours", "See my journey")} <ArrowUpRight className="size-4 transition-transform group-hover:rotate-45" />
+            </a>
+            <button onClick={() => setCv(true)} className="flex items-center gap-2 border border-ink px-5 py-3.5 text-sm font-medium transition-colors hover:bg-ink hover:text-paper"><Download className="size-4" />{tr("Mon CV", "My resume")}</button>
+          </Reveal>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto w-full max-w-[460px]">
+          <Die />
+          <motion.figure
+            initial={{ opacity: 0, y: 30, rotate: 0 }} animate={{ opacity: 1, y: 0, rotate: -4 }} transition={{ duration: 1.2, ease, delay: 0.9 }}
+            whileHover={{ rotate: 0, scale: 1.04 }}
+            className="group absolute -top-8 -left-2 w-28 bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 md:-top-10 md:-left-16 md:w-36"
+          >
+            <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
+            <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
+          </motion.figure>
+        </motion.div>
+      </header>
+
+      {/* KPI strip */}
+      <section className="border-y border-ink">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-2 md:grid-cols-4">
+          {(lang === "en" ? [["15", "technical projects"], ["02", "industry internships"], ["10", "student roles"], ["03", "countries: FR · DE · IT"]] : [["15", "projets techniques"], ["02", "stages industriels"], ["10", "engagements étudiants"], ["03", "pays : FR · DE · IT"]]).map(([n, l], i) => (
+            <Reveal key={i} delay={i * 0.08} className={`px-6 py-8 md:px-10 ${i > 0 ? "md:border-l" : ""} ${i % 2 ? "border-l" : ""} ${i > 1 ? "border-t md:border-t-0" : ""} border-ink`}>
+              <div className="text-5xl font-semibold tracking-tight">{n}</div>
+              <Label className="mt-2 block">{l}</Label>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* VISION */}
+      <section id="vision" className="mx-auto max-w-[1400px] px-6 py-32 md:px-10 md:py-44">
+        <div className="grid gap-10 md:grid-cols-[200px_1fr]">
+          <Label>§01 — Vision</Label>
+          <Manifesto />
+        </div>
+      </section>
+
+      {/* ROADMAP */}
+      <section id="roadmap" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
+        <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
+          <Stacked ghost={tr("Parcours", "Journey")} n="02">{tr("Ma roadmap.", "My roadmap.")}</Stacked>
+          <p className="max-w-sm text-mute">{tr("Un PM pense en jalons. Voici les miens — survolez un composant pour l'ouvrir.", "A PM thinks in milestones. Here are mine — hover over a component to open it.")}</p>
+        </div>
+        <Circuit />
+      </section>
+
+      {/* EXPERIENCES */}
+      <section style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="overflow-hidden bg-ink text-paper">
+        <div className="mx-auto max-w-[1400px] px-6 py-28 md:px-10">
+          <Stacked ghost={tr("Industrie", "Industry")} n="03" dark>{tr("Expériences.", "Experience.")}</Stacked>
+          <div className="mt-14">
+            {EXPERIENCES.map((raw) => loc(raw, lang)).map((x, i) => (
+              <Reveal key={x.co} delay={i * 0.1}>
+                <article className="group grid gap-8 border-t border-paper/15 py-12 md:grid-cols-[80px_1.1fr_1fr]">
+                  <img src={x.logo} alt={x.co} className={`size-14 rounded-lg object-contain p-2 ${x.co.startsWith("PHINIA") ? "bg-ink ring-1 ring-paper/20" : "bg-white"}`} />
+                  <div>
+                    <h3 className="text-4xl font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-2 md:text-6xl">{x.co}</h3>
+                    <p className="mt-3 text-paper/70">{x.role}</p>
+                    <p className="mt-1 font-mono text-[11px] tracking-wider text-paper/40 uppercase">{x.place} · {x.date}</p>
+                  </div>
+                  <div>
+                    <ul className="space-y-3">
+                      {x.points.map((p) => <li key={p} className="flex gap-3 leading-snug"><span className="mt-2 h-px w-3 shrink-0 bg-signal" />{p}</li>)}
+                    </ul>
+                    <div className="mt-6 flex flex-wrap gap-1.5">
+                      {x.tags.map((t) => <span key={t} className="border border-paper/20 px-2 py-1 font-mono text-[10px] tracking-wider uppercase text-paper/70">{t}</span>)}
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROJECTS */}
+      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 py-32 md:px-10">
+        <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
+        <Projects />
+      </section>
+
+      {/* ENGAGEMENTS */}
+      <section id="engagements" style={{ "--color-signal": "#E10600" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 pb-32 md:px-10">
+        <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
+          <Stacked ghost="Leadership" n="05">{tr("Engagements.", "Involvement.")}</Stacked>
+          <p className="max-w-sm text-mute">{tr("Là où j'ai appris à aligner des gens, un budget et une deadline — le cœur du métier de PO.", "Where I learned to align people, a budget and a deadline — the core of a PO's job.")}</p>
+        </div>
+        <Engagements onMinitel={() => setGame("minitel")} />
+      </section>
+
+      {/* PASSIONS */}
+      <section id="passions" style={{ "--color-signal": "#E10600" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 pb-32 md:px-10">
+        <div className="mb-14"><Stacked ghost={tr("Hors cadre", "Off the clock")} n="06">Passions.</Stacked></div>
+        <Passions Label={Label} />
+      </section>
+
+      {/* STACK */}
+      <section id="stack" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 py-32 md:px-10">
+        <div className="mb-14"><Stacked ghost="Toolbox" n="07"><Hl>{tr("Du transistor à la ", "From transistor to ")}<span className="font-serif font-normal italic">roadmap</span>.</Hl></Stacked></div>
+        <div className="border-t border-ink">
+          {STACK.map((raw) => loc(raw, lang)).map((s, i) => (
+            <Reveal key={s.n} delay={i * 0.06}>
+              <div className="group grid items-center gap-4 border-b border-ink py-6 transition-colors hover:bg-ink hover:text-paper md:grid-cols-[120px_220px_1fr] md:px-4">
+                <span className="font-mono text-[11px] text-mute group-hover:text-signal">L{s.n}</span>
+                <span className="text-3xl font-semibold tracking-tight">{s.layer}</span>
+                <div className="flex flex-wrap gap-x-5 gap-y-1">
+                  {s.items.map((it) => <span key={it} className="text-mute group-hover:text-paper/80">{it}</span>)}
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <div className="mt-16 grid gap-12 lg:grid-cols-2">
+          <div>
+            <Label>{tr("Langues", "Languages")}</Label>
+            <div className="mt-5 space-y-5">
+              {LANGS.map((raw) => loc(raw, lang)).map((l, i) => (
+                <div key={i}>
+                  <div className="flex justify-between text-sm"><span className="font-medium">{l.l}</span><span className="font-mono text-[11px] text-mute">{l.v}</span></div>
+                  <div className="mt-2 h-[3px] bg-line">
+                    <motion.div className="h-full origin-left bg-ink" style={{ width: `${l.p}%` }} initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 1.2, ease, delay: i * 0.12 }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <Label>Certifications</Label>
+            <ul className="mt-5 space-y-2.5">
+              {["Label HandiManagement", tr("PSC1 — Premiers secours", "PSC1 — First aid certification"), "TOEIC 955 / 990 · TOEFL · Cambridge"].map((c) => <li key={c} className="flex gap-3"><span className="mt-2.5 h-px w-3 shrink-0 bg-signal" />{c}</li>)}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="relative overflow-hidden border-t border-ink">
+        <div className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+          <Label>§08 — Contact</Label>
+          <h2 className="mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-semibold tracking-[-0.05em]">{tr("Travaillons", "Let's work")}<br />{tr("ensemble", "together")}<span className="text-signal">.</span></h2>
+          <p className="mt-8 max-w-lg text-lg text-mute">{tr("Stage de fin d'études de 5+ mois à partir d'avril 2027 — Product Owner, Product Manager, ou ingénierie hardware / software.", "5+ month end-of-studies internship starting April 2027 — Product Owner, Product Manager, or hardware / software engineering.")}</p>
+          <button onClick={copy} className="group mt-12 flex items-center gap-4 border-b-2 border-ink pb-2 text-2xl font-medium md:text-4xl">
+            contact@arthurdx.com
+            <span className="grid size-10 place-items-center rounded-full bg-ink text-paper transition-colors group-hover:bg-signal">
+              {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+            </span>
+          </button>
+          <div className="mt-14 grid grid-cols-2 gap-px border border-ink bg-ink lg:grid-cols-4">
+            {SOCIALS.map(({ I, l, h }) => (
+              <a key={l} href={h} target="_blank" rel="noreferrer" className="group flex items-center justify-between bg-paper p-6 transition-colors hover:bg-ink hover:text-paper">
+                <span className="flex items-center gap-4"><I className="size-7" /><span className="text-xl font-medium">{l}</span></span>
+                <ArrowUpRight className="size-5 transition-transform group-hover:rotate-45" />
+              </a>
+            ))}
+            <button onClick={() => setCv(true)} className="group flex items-center justify-between bg-paper p-6 text-left transition-colors hover:bg-ink hover:text-paper">
+              <span className="flex items-center gap-4"><Download className="size-7" /><span className="text-xl font-medium">{tr("CV", "Resume")}</span></span>
+              <span className="font-mono text-[10px] tracking-[0.14em] text-mute uppercase group-hover:text-paper/60">FR · EN</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <footer className="bg-ink text-paper">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-6 px-6 py-6 md:grid-cols-[1fr_auto] md:px-10">
+          <div>
+            <Logo className="h-7 w-auto text-paper" />
+            
+          </div>
+          <div className="flex gap-2">
+            {SOCIALS.map(({ I, l, h }) => (
+              <a key={l} href={h} target="_blank" rel="noreferrer" aria-label={l} className="grid size-9 place-items-center border border-paper/20 transition-colors hover:border-signal hover:bg-signal">
+                <I className="size-4" />
+              </a>
+            ))}
+            <a href="mailto:contact@arthurdx.com" aria-label="Email" className="grid size-9 place-items-center border border-paper/20 transition-colors hover:border-signal hover:bg-signal"><Mail className="size-4" /></a>
+          </div>
+        </div>
+        <div className="border-t border-paper/10">
+          <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-6 py-3 md:px-10">
+            <span className="font-mono text-[11px] tracking-[0.14em] text-paper/40 uppercase">© 2026 Arthur Doradoux · <a href="#mentions-legales" className="hover:text-paper">{tr("Mentions légales", "Legal notice")}</a></span>
+            <LangToggle dark />
+            <span className="font-mono text-[11px] tracking-[0.14em] text-paper/30 uppercase">{tr("Il y a des secrets", "There are secrets")}</span>
+          </div>
+        </div>
+      </footer>
+
+      <AnimatePresence>
+        {copied && (
+          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="glass fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full px-5 py-2.5 text-sm font-medium">
+            {tr("Email copié", "Email copied")}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <Suspense fallback={null}>
+        <AnimatePresence>
+          {game === "minitel" && <Minitel key="m" onClose={() => { setGame(null); setViaMinitel(false); }} onLaunch={(g) => { setViaMinitel(true); setGame(g); }} />}
+          {game === "f1" && <F1 key="f" onClose={closeGame} />}
+          {game === "aim" && <AimLab key="a" onClose={closeGame} />}
+          {game === "blackjack" && <Blackjack key="b" onClose={closeGame} />}
+        </AnimatePresence>
+      </Suspense>
+      <Palette open={palette} onClose={() => setPalette(false)} onGame={setGame} />
+    </div>
+  );
+}
