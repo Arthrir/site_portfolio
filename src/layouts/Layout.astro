@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 import F1GameModal from '../components/F1GameModal.astro';
 import VitalityGameModal from '../components/VitalityGameModal.astro';
+import BlackjackModal from '../components/BlackjackModal.astro';
 import MinitelTerminal from '../components/MinitelTerminal.astro';
 import { getLangFromCookie, makeT } from '../i18n/translations';
 
@@ -174,10 +175,11 @@ const schemaJson = {
 		<MinitelTerminal />
 		<F1GameModal />
 		<VitalityGameModal />
+		<BlackjackModal />
     <Analytics />
 
     <script is:inline>
-      // Secret mobile trigger : 3 taps rapides sur le copyright = F1, 5 taps = Vitality Aim Lab
+      // Secret mobile trigger : 3 taps rapides = F1, 5 taps = Vitality Aim Lab, 7 taps = Blackjack TIPE
       let secretTapCount = 0;
       let secretTapTimer = null;
       const copyrightEl = document.getElementById('footerCopyright');
@@ -188,8 +190,10 @@ const schemaJson = {
         secretTapTimer = setTimeout(() => {
           if (secretTapCount === 3 && window.startF1) {
             window.startF1();
-          } else if (secretTapCount >= 5 && window.startVitality) {
+          } else if (secretTapCount === 5 && window.startVitality) {
             window.startVitality();
+          } else if (secretTapCount >= 7 && window.startBlackjack) {
+            window.startBlackjack();
           }
           secretTapCount = 0;
         }, 450);
