@@ -1,23 +1,53 @@
 ---
 // src/components/F1GameModal.astro
-// Racing Game
+// Grand Prix Racing Game - Multi-Track, Controllable Speed & 2-Player Local Mode
 ---
 
-<div id="f1Modal" class="f1-modal" style="display: none;" role="dialog" aria-modal="true" aria-label="Racing Game">
+<div id="f1Modal" class="f1-modal" style="display: none;" role="dialog" aria-modal="true" aria-label="Grand Prix Racing Game">
   <div class="f1-backdrop" id="f1Backdrop"></div>
 
   <div class="f1-content">
     <button class="f1-close-btn" id="f1CloseBtn" aria-label="Fermer" title="Fermer (Échap)">✕</button>
 
     <div class="f1-header">
-      <h2 class="f1-title">Grand Prix Racing</h2>
-      <p class="f1-subtitle">Flèches / ZQSD sur clavier • Joystick & pédales sur mobile.</p>
+      <div class="f1-title-row">
+        <h2 class="f1-title">Grand Prix Racing</h2>
+        <!-- Sélecteur de circuits avec records sauvegardés -->
+        <div class="f1-track-selector" id="f1TrackSelector" role="tablist" aria-label="Sélection du circuit">
+          <button type="button" class="f1-track-btn active" data-track="monza">🇮🇹 Monza</button>
+          <button type="button" class="f1-track-btn" data-track="monaco">🇲🇨 Monaco</button>
+          <button type="button" class="f1-track-btn" data-track="silverstone">🇬🇧 Silverstone</button>
+        </div>
+      </div>
+
+      <!-- Bannière de statut 1P / 2P -->
+      <div class="f1-mode-banner" id="f1ModeBanner">
+        <span class="f1-mode-dot"></span>
+        <span id="f1ModeTxt">J1 : Flèches (ou Touch) • Appuyez sur ZQSD ou WASD pour jouer à 2 sur le clavier !</span>
+      </div>
     </div>
 
     <div class="f1-game-container">
       <canvas id="racingCanvas" width="800" height="450"></canvas>
-      <div id="f1LapOverlay">Temps: <span id="f1TimerDisplay">0.00</span>s</div>
-      <div id="f1BestLapOverlay">Record: <span id="f1BestTimerDisplay">--</span>s</div>
+      
+      <!-- Overlays chronos P1 et P2 -->
+      <div id="f1LapOverlay">
+        <div class="f1-timer-row">
+          <span class="driver-tag p1">J1</span>
+          <span>Tour : <strong id="f1TimerDisplay">0.00</strong>s</span>
+        </div>
+        <div class="f1-timer-row" id="p2TimerRow" style="display: none; margin-top: 4px;">
+          <span class="driver-tag p2">J2</span>
+          <span>Tour : <strong id="f2TimerDisplay">0.00</strong>s</span>
+        </div>
+      </div>
+
+      <!-- Record du circuit actif -->
+      <div id="f1BestLapOverlay">
+        <div class="record-label">RECORD DU CIRCUIT</div>
+        <div class="record-val"><span id="f1BestTimerDisplay">--</span>s</div>
+        <div class="record-track-name" id="f1TrackBadge">MONZA</div>
+      </div>
     </div>
 
     <!-- Commandes tactiles mobiles : placées HORS du circuit en mode portrait pour une visibilité 100% dégagée -->
@@ -33,7 +63,7 @@
 
       <!-- Conseil d'orientation central -->
       <div class="f1-center-ctrl">
-        <span class="f1-orient-tip">🔄 Mode Paysage plein écran</span>
+        <span class="f1-orient-tip">🔄 Rotation paysage plein écran</span>
       </div>
 
       <!-- Pédales frein & accélérateur à droite -->
@@ -55,22 +85,22 @@
   .f1-modal {
     position: fixed; inset: 0; z-index: 10000;
     display: flex; align-items: center; justify-content: center;
-    padding: 20px;
+    padding: 16px;
   }
   .f1-backdrop {
     position: absolute; inset: 0;
-    background: rgba(12, 13, 16, 0.9);
+    background: rgba(10, 12, 16, 0.92);
     backdrop-filter: blur(8px);
   }
   .f1-content {
     position: relative; z-index: 2;
-    background: #14161B;
+    background: #13151A;
     border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 12px;
-    width: 100%; max-width: 860px;
-    padding: 24px 28px;
+    border-radius: 14px;
+    width: 100%; max-width: 880px;
+    padding: 20px 24px;
     color: #F1F1EC;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     text-align: center;
   }
   .f1-close-btn {
@@ -83,22 +113,93 @@
   }
   .f1-close-btn:hover { color: #fff; border-color: #fff; background: rgba(255, 255, 255, 0.08); }
 
-  .f1-title {
-    font-family: var(--font-serif, serif); font-size: 1.7rem; font-weight: 600;
-    margin-bottom: 4px; color: #FFFFFF;
+  .f1-header {
+    margin-bottom: 12px;
   }
-  .f1-subtitle {
-    font-size: 0.85rem; color: #8F9198; margin-bottom: 16px;
+  .f1-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .f1-title {
+    font-family: var(--font-serif, serif); font-size: 1.6rem; font-weight: 600;
+    color: #FFFFFF; letter-spacing: -0.01em;
+  }
+  .f1-track-selector {
+    display: flex;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .f1-track-btn {
+    background: transparent;
+    border: none;
+    color: #BAC2D1;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .f1-track-btn:hover {
+    color: #FFF;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .f1-track-btn.active {
+    background: #E10600;
+    color: #FFF;
+    box-shadow: 0 2px 8px rgba(225, 6, 0, 0.45);
+  }
+  .f1-mode-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.76rem;
+    color: #BAC2D1;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    margin: 0 auto;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .f1-mode-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 6px #10B981;
+    flex-shrink: 0;
+  }
+  .f1-mode-banner.multi {
+    border-color: rgba(0, 229, 255, 0.35);
+    background: rgba(0, 229, 255, 0.08);
+    color: #FFFFFF;
+  }
+  .f1-mode-banner.multi .f1-mode-dot {
+    background: #00E5FF;
+    box-shadow: 0 0 8px #00E5FF;
+    animation: modePulse 1s infinite alternate;
+  }
+  @keyframes modePulse {
+    from { opacity: 0.6; } to { opacity: 1; }
   }
 
   .f1-game-container {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    background: #2b7a2b; /* herbe */
-    border-radius: 8px;
+    background: #185218; /* pelouse */
+    border-radius: 10px;
     overflow: hidden;
-    border: 2px solid #333;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4);
   }
 
   canvas {
@@ -110,21 +211,58 @@
   #f1LapOverlay, #f1BestLapOverlay {
     position: absolute;
     top: 10px;
-    background: rgba(0,0,0,0.65);
-    padding: 6px 10px;
-    border-radius: 6px;
+    background: rgba(10, 12, 16, 0.85);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 6px 12px;
+    border-radius: 8px;
     font-family: monospace;
-    font-size: 0.95rem;
-    color: #fff;
+    font-size: 0.88rem;
+    color: #FFF;
     pointer-events: none;
     z-index: 10;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
   }
   #f1LapOverlay {
     left: 10px;
+    text-align: left;
   }
+  .f1-timer-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .driver-tag {
+    font-size: 0.62rem;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+  .driver-tag.p1 { background: #FF1801; color: #FFF; }
+  .driver-tag.p2 { background: #00E5FF; color: #000; }
+
   #f1BestLapOverlay {
     right: 10px;
-    color: #ffde00;
+    text-align: right;
+  }
+  .record-label {
+    font-size: 0.58rem;
+    color: #BAC2D1;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
+  .record-val {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #FFDE00;
+    line-height: 1.1;
+  }
+  .record-track-name {
+    font-size: 0.62rem;
+    color: #8F9198;
+    text-transform: uppercase;
+    font-weight: 700;
   }
 
   /* --- Commandes Tactiles Mobiles (En dessous du circuit en portrait) --- */
@@ -263,24 +401,17 @@
 
   /* Responsive Mobile Portrait */
   @media (max-width: 640px) {
-    .f1-modal {
-      padding: 6px;
-    }
+    .f1-modal { padding: 6px; }
     .f1-content {
-      padding: 12px 8px 10px 8px;
+      padding: 10px 8px 8px 8px;
       border-radius: 10px;
-      width: 98vw;
-      max-width: 98vw;
+      width: 98vw; max-width: 98vw;
     }
-    .f1-title {
-      font-size: 1.25rem;
-      margin-bottom: 4px;
-    }
-    .f1-subtitle {
-      display: none; /* Nettoyage complet en mode portrait pour visibilité maximale */
-    }
+    .f1-title { font-size: 1.15rem; }
+    .f1-track-btn { font-size: 0.66rem; padding: 3px 7px; }
+    .f1-mode-banner { font-size: 0.68rem; padding: 2px 8px; }
     #f1LapOverlay, #f1BestLapOverlay {
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       padding: 3px 6px;
       top: 5px;
     }
@@ -290,52 +421,29 @@
 
   /* Responsive Mobile Landscape (Plein écran optimisé) */
   @media (orientation: landscape) and (max-height: 520px) {
-    .f1-modal {
-      padding: 0;
-    }
+    .f1-modal { padding: 0; }
     .f1-content {
-      width: 100vw;
-      height: 100vh;
-      max-width: 100vw;
-      max-height: 100vh;
-      padding: 0;
-      border-radius: 0;
-      border: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      width: 100vw; height: 100vh;
+      max-width: 100vw; max-height: 100vh;
+      padding: 0; border-radius: 0; border: none;
+      display: flex; flex-direction: column; justify-content: center;
       background: #000;
     }
-    .f1-header {
-      display: none;
-    }
-    .f1-close-btn {
-      top: 8px;
-      right: 10px;
-    }
+    .f1-header { display: none; }
+    .f1-close-btn { top: 8px; right: 10px; }
     .f1-game-container {
-      width: 100vw;
-      height: 100vh;
-      max-height: 100vh;
-      border-radius: 0;
-      border: none;
+      width: 100vw; height: 100vh; max-height: 100vh;
+      border-radius: 0; border: none;
     }
     .f1-touch-controls {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       pointer-events: none;
-      background: transparent;
-      border: none;
-      margin-top: 0;
-      padding: 10px 18px;
+      background: transparent; border: none;
+      margin-top: 0; padding: 8px 18px;
       align-items: flex-end;
     }
-    .f1-steer-zone, .f1-pedals-zone {
-      pointer-events: auto;
-    }
-    .f1-center-ctrl {
-      display: none;
-    }
+    .f1-steer-zone, .f1-pedals-zone { pointer-events: auto; }
+    .f1-center-ctrl { display: none; }
   }
 </style>
 
@@ -347,118 +455,289 @@
     const canvas = document.getElementById('racingCanvas');
     const ctx = canvas.getContext('2d');
     const timerDisplay = document.getElementById('f1TimerDisplay');
+    const timer2Display = document.getElementById('f2TimerDisplay');
+    const p2TimerRow = document.getElementById('p2TimerRow');
     const bestTimerDisplay = document.getElementById('f1BestTimerDisplay');
+    const trackBadge = document.getElementById('f1TrackBadge');
+    const modeBanner = document.getElementById('f1ModeBanner');
+    const modeTxt = document.getElementById('f1ModeTxt');
+    const trackBtns = document.querySelectorAll('.f1-track-btn');
 
     let isGameRunning = false;
     let animFrameId = null;
+    let p2Active = false;
 
+    // Touches Clavier : Joueur 1 (Flèches) et Joueur 2 (ZQSD / WASD)
     const keys = {
+      // P1 (Flèches)
       ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false,
-      w: false, s: false, a: false, d: false
+      // P2 (ZQSD / WASD)
+      z: false, q: false, s: false, d: false,
+      w: false, a: false
     };
 
-    // Track path (inner and outer boundaries)
-    // Simple oval track
-    const trackOuter = { x: 400, y: 225, rx: 350, ry: 180, width: 80 };
+    // Définition des 3 circuits de légende
+    const TRACK_DEFS = {
+      monza: {
+        id: 'monza',
+        name: 'Monza',
+        width: 76,
+        controlPoints: [
+          [130, 110], [670, 110], [730, 225], [670, 340],
+          [480, 340], [420, 305], [370, 340], [130, 340], [70, 225]
+        ]
+      },
+      monaco: {
+        id: 'monaco',
+        name: 'Monaco',
+        width: 72,
+        controlPoints: [
+          [110, 110], [450, 95], [560, 150], [700, 120], [730, 240],
+          [620, 250], [580, 345], [470, 345], [410, 265], [310, 265],
+          [270, 350], [120, 355], [70, 230]
+        ]
+      },
+      silverstone: {
+        id: 'silverstone',
+        name: 'Silverstone',
+        width: 74,
+        controlPoints: [
+          [130, 120], [380, 95], [530, 140], [650, 95], [720, 185],
+          [670, 305], [510, 255], [410, 355], [230, 345], [170, 255], [80, 215]
+        ]
+      }
+    };
+
+    let currentTrackId = 'monza';
+    let currentTrack = null;
+
+    // Génération de la spline Catmull-Rom pour un asphalte ultra-fluide
+    function generateSmoothTrack(pts, segments = 12) {
+      const points = [];
+      const n = pts.length;
+      for (let i = 0; i < n; i++) {
+        const p0 = pts[(i - 1 + n) % n];
+        const p1 = pts[i];
+        const p2 = pts[(i + 1) % n];
+        const p3 = pts[(i + 2) % n];
+        for (let s = 0; s < segments; s++) {
+          const t = s / segments;
+          const t2 = t * t;
+          const t3 = t2 * t;
+          const x = 0.5 * ((2 * p1[0]) +
+            (-p0[0] + p2[0]) * t +
+            (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 +
+            (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3);
+          const y = 0.5 * ((2 * p1[1]) +
+            (-p0[1] + p2[1]) * t +
+            (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 +
+            (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3);
+          points.push({ x, y });
+        }
+      }
+      return points;
+    }
+
+    function buildTrack(trackDef) {
+      const points = generateSmoothTrack(trackDef.controlPoints, 14);
+      return {
+        id: trackDef.id,
+        name: trackDef.name,
+        width: trackDef.width,
+        points: points
+      };
+    }
+
+    // Distance euclidienne minimale d'un point au tracé central
+    function getDistToTrack(px, py, trackPoints) {
+      let minDist = Infinity;
+      const n = trackPoints.length;
+      for (let i = 0; i < n; i++) {
+        const a = trackPoints[i];
+        const b = trackPoints[(i + 1) % n];
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const l2 = dx * dx + dy * dy;
+        let dist;
+        if (l2 === 0) {
+          dist = Math.hypot(px - a.x, py - a.y);
+        } else {
+          let t = Math.max(0, Math.min(1, ((px - a.x) * dx + (py - a.y) * dy) / l2));
+          dist = Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy));
+        }
+        if (dist < minDist) minDist = dist;
+      }
+      return minDist;
+    }
+
+    // Gestion de la sauvegarde du meilleur tour par circuit
+    function getSavedBestLap(trackId) {
+      try {
+        const val = localStorage.getItem('f1_best_lap_' + trackId);
+        return val ? parseFloat(val) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+    function saveBestLap(trackId, time) {
+      try {
+        localStorage.setItem('f1_best_lap_' + trackId, time.toFixed(2));
+      } catch (e) {}
+    }
 
     class Car {
-      constructor(x, y, color, isPlayer = false) {
+      constructor(x, y, angle, color, controlType = 'ai') {
         this.x = x;
         this.y = y;
-        this.angle = 0;
+        this.angle = angle;
         this.speed = 0;
-        this.maxSpeed = isPlayer ? 4.5 : 3.5;
-        this.friction = 0.965;
-        this.acceleration = 0.12;
-        this.turnSpeed = 0.038;
         this.color = color;
-        this.isPlayer = isPlayer;
+        this.controlType = controlType; // 'p1', 'p2', 'ai'
+
+        // Vitesse calibrée : dosable, fluide et contrôlable
+        this.maxSpeed = controlType.startsWith('p') ? 2.75 : 2.35;
+        this.acceleration = 0.062;
+        this.turnSpeed = 0.046;
+        this.friction = 0.974;
+
+        // IA pathing
+        this.targetIndex = 4;
+        this.aiLaneOffset = (Math.random() - 0.5) * 16;
+        this.aiSpeedVariation = 0.92 + Math.random() * 0.16;
 
         this.lapStartTime = null;
         this.bestLapTime = null;
-        this.crossedStartLine = false;
+        this.hasStarted = false;
+        this.lastLapCheck = performance.now();
       }
 
       update() {
-        if (this.isPlayer) {
-          if (keys.ArrowUp || keys.w) this.speed += this.acceleration;
-          if (keys.ArrowDown || keys.s) this.speed -= this.acceleration * 1.3;
+        const isP1 = (this.controlType === 'p1');
+        const isP2 = (this.controlType === 'p2');
 
-          // Contrôles directionnels mobiles (Joystick 360° fluide style Brawl Stars)
+        if (isP1) {
+          // --- CONTRÔLES JOUEUR 1 (Flèches ou Tactile Mobile) ---
+          if (keys.ArrowUp) this.speed += this.acceleration;
+          if (keys.ArrowDown) this.speed -= this.acceleration * 1.4;
+
+          // Joystick tactile 360° mobile
           if (joyActive && joyMagnitude > 0.15) {
             let diff = joyTargetAngle - this.angle;
             while (diff < -Math.PI) diff += Math.PI * 2;
             while (diff > Math.PI) diff -= Math.PI * 2;
 
-            const turnRate = 0.082 + 0.038 * joyMagnitude;
+            const turnRate = 0.075 + 0.035 * joyMagnitude;
             this.angle += Math.sign(diff) * Math.min(Math.abs(diff), turnRate);
 
-            // Auto-propulsion légère au joystick si ni gaz ni frein ne sont pressés
-            if (!keys.ArrowUp && !keys.ArrowDown && !keys.w && !keys.s && joyMagnitude > 0.28) {
+            if (!keys.ArrowUp && !keys.ArrowDown && joyMagnitude > 0.25) {
               this.speed += this.acceleration * 0.85 * joyMagnitude;
             }
           } else if (this.speed !== 0) {
-            // Clavier standard : direction progressive selon la vitesse
             const flip = this.speed > 0 ? 1 : -1;
-            const steerFactor = Math.min(Math.abs(this.speed) / 2.2, 1.0);
-            const effectiveTurn = this.turnSpeed * (0.35 + 0.65 * steerFactor);
-            if (keys.ArrowLeft || keys.a) this.angle -= effectiveTurn * flip;
-            if (keys.ArrowRight || keys.d) this.angle += effectiveTurn * flip;
+            const steerFactor = Math.min(Math.abs(this.speed) / 1.8, 1.0);
+            const turnRate = this.turnSpeed * (0.4 + 0.6 * steerFactor);
+            if (keys.ArrowLeft) this.angle -= turnRate * flip;
+            if (keys.ArrowRight) this.angle += turnRate * flip;
+          }
+        } else if (isP2) {
+          // --- CONTRÔLES JOUEUR 2 (ZQSD / WASD) ---
+          const gas = keys.z || keys.w;
+          const brake = keys.s;
+          const left = keys.q || keys.a;
+          const right = keys.d;
+
+          if (gas) this.speed += this.acceleration;
+          if (brake) this.speed -= this.acceleration * 1.4;
+
+          if (this.speed !== 0) {
+            const flip = this.speed > 0 ? 1 : -1;
+            const steerFactor = Math.min(Math.abs(this.speed) / 1.8, 1.0);
+            const turnRate = this.turnSpeed * (0.4 + 0.6 * steerFactor);
+            if (left) this.angle -= turnRate * flip;
+            if (right) this.angle += turnRate * flip;
           }
         } else {
-          // AI: suit la trajectoire de la piste
-          const angleToCenter = Math.atan2(this.y - trackOuter.y, this.x - trackOuter.x);
-          let targetAngle = angleToCenter + Math.PI / 2;
-          
-          let diff = targetAngle - this.angle;
-          while (diff < -Math.PI) diff += Math.PI * 2;
-          while (diff > Math.PI) diff -= Math.PI * 2;
+          // --- IA PILOTE COMPÉTITIVE (Suivi du tracé et freinage pré-virage) ---
+          if (currentTrack && currentTrack.points.length > 0) {
+            const pts = currentTrack.points;
+            const n = pts.length;
+            const target = pts[this.targetIndex % n];
 
-          this.angle += Math.sign(diff) * Math.min(Math.abs(diff), this.turnSpeed * 0.7);
-          this.speed += this.acceleration * 0.7;
+            // Cible avec offset pour ne pas tous rouler sur la même ligne
+            const targetX = target.x;
+            const targetY = target.y;
+
+            const distToTarget = Math.hypot(targetX - this.x, targetY - this.y);
+            if (distToTarget < 36) {
+              this.targetIndex = (this.targetIndex + 1) % n;
+            }
+
+            const targetAngle = Math.atan2(targetY - this.y, targetX - this.x);
+            let diff = targetAngle - this.angle;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+            while (diff > Math.PI) diff -= Math.PI * 2;
+
+            this.angle += Math.sign(diff) * Math.min(Math.abs(diff), this.turnSpeed * 0.95);
+
+            // Ralentit si virage serré, accélère à fond en ligne droite
+            const isSharpCorner = Math.abs(diff) > 0.45;
+            if (isSharpCorner) {
+              this.speed *= 0.985;
+            } else {
+              this.speed += this.acceleration * 0.72 * this.aiSpeedVariation;
+            }
+          }
         }
 
-        // Friction et limites de vitesse
+        // Friction naturelle et plafonnement de vitesse
         this.speed *= this.friction;
         if (this.speed > this.maxSpeed) this.speed = this.maxSpeed;
-        if (this.speed < -1.5) this.speed = -1.5; // marche arrière limitée
+        if (this.speed < -1.1) this.speed = -1.1; // marche arrière douce
 
         const prevX = this.x;
+        const prevY = this.y;
 
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
 
-        // Détection de l'herbe
-        const dx = this.x - trackOuter.x;
-        const dy = this.y - trackOuter.y;
-        const distSq = (dx*dx)/(trackOuter.rx*trackOuter.rx) + (dy*dy)/(trackOuter.ry*trackOuter.ry);
-        const innerRadiusSq = Math.pow((trackOuter.rx - trackOuter.width)/trackOuter.rx, 2);
-
-        if (distSq > 1 || distSq < innerRadiusSq) {
-          this.speed *= 0.91; // adhérence réduite dans l'herbe
-          if (this.speed > 2.0) this.speed = 2.0;
+        // Détection de l'herbe hors-piste
+        if (currentTrack) {
+          const distToCenter = getDistToTrack(this.x, this.y, currentTrack.points);
+          if (distToCenter > (currentTrack.width / 2) + 4) {
+            this.speed *= 0.91; // ralentissement sur herbe
+            if (this.speed > 1.3) this.speed = 1.3;
+          }
         }
 
-        if (this.isPlayer) {
-          // Ligne de départ (x = 400, y < 225)
-          if (prevX <= trackOuter.x && this.x > trackOuter.x && this.y < trackOuter.y) {
-            if (this.crossedStartLine) {
-              const now = performance.now();
-              if (this.lapStartTime) {
+        // Détection du passage de la ligne de départ / arrivée
+        if (currentTrack && currentTrack.points.length > 2) {
+          const pStart = currentTrack.points[0];
+          const pNext = currentTrack.points[1];
+          // Distance à la ligne de départ
+          const distStart = Math.hypot(this.x - pStart.x, this.y - pStart.y);
+          if (distStart < currentTrack.width * 0.6) {
+            const now = performance.now();
+            if (now - this.lastLapCheck > 2800) {
+              if (this.hasStarted) {
                 const lapTime = (now - this.lapStartTime) / 1000;
-                if (lapTime > 2.5) {
+                if (lapTime > 3.0) {
                   if (!this.bestLapTime || lapTime < this.bestLapTime) {
                     this.bestLapTime = lapTime;
-                    bestTimerDisplay.textContent = this.bestLapTime.toFixed(2);
+                    if (isP1) {
+                      const curSaved = getSavedBestLap(currentTrack.id);
+                      if (!curSaved || lapTime < curSaved) {
+                        saveBestLap(currentTrack.id, lapTime);
+                        bestTimerDisplay.textContent = lapTime.toFixed(2);
+                      }
+                    }
                   }
                   this.lapStartTime = now;
                 }
               } else {
+                this.hasStarted = true;
                 this.lapStartTime = now;
               }
-            } else {
-              this.crossedStartLine = true;
-              this.lapStartTime = performance.now();
+              this.lastLapCheck = now;
             }
           }
         }
@@ -469,106 +748,90 @@
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
 
-        // --- 1. SUSPENSIONS EN CARBONE ---
+        // 1. Suspensions en carbone
         ctx.strokeStyle = '#1e1e1e';
         ctx.lineWidth = 1.2;
         ctx.beginPath();
-        // Avant
         ctx.moveTo(3, -2); ctx.lineTo(8, -7);
         ctx.moveTo(6, -2); ctx.lineTo(10, -7);
         ctx.moveTo(3, 2);  ctx.lineTo(8, 7);
         ctx.moveTo(6, 2);  ctx.lineTo(10, 7);
-        // Arrière
         ctx.moveTo(-6, -2); ctx.lineTo(-10, -8);
         ctx.moveTo(-3, -2); ctx.lineTo(-8, -8);
         ctx.moveTo(-6, 2);  ctx.lineTo(-10, 8);
         ctx.moveTo(-3, 2);  ctx.lineTo(-8, 8);
         ctx.stroke();
 
-        // --- 2. PNEUS SLICKS F1 NOIRS AVEC JANTES ---
+        // 2. Pneus slicks F1
         const drawWheel = (wx, wy, ww, wh) => {
           ctx.fillStyle = '#111113';
           ctx.beginPath();
           ctx.roundRect(wx, wy, ww, wh, 2);
           ctx.fill();
-          // Jante
           ctx.fillStyle = '#555';
           ctx.fillRect(wx + ww/2 - 0.75, wy + 0.8, 1.5, wh - 1.6);
         };
-        // Roues avant (longueur 7.5, largeur 3.8)
         drawWheel(5, -9.5, 7.5, 3.8);
         drawWheel(5, 5.7, 7.5, 3.8);
-        // Roues arrière (longueur 8.5, largeur 4.6)
         drawWheel(-13, -10.5, 8.5, 4.6);
         drawWheel(-13, 5.9, 8.5, 4.6);
 
-        // --- 3. AILERON ARRIÈRE F1 ---
-        // Dérives latérales (endplates)
+        // 3. Aileron arrière
         ctx.fillStyle = '#111';
         ctx.fillRect(-17, -9.5, 3, 19);
-        // Volet DRS principal (couleur carrosserie)
         ctx.fillStyle = this.color;
         ctx.fillRect(-16.5, -8.5, 2.5, 17);
-        // Feu rouge pluie arrière
         ctx.fillStyle = '#FF0033';
         ctx.fillRect(-17.5, -1, 1.5, 2);
 
-        // --- 4. CHÂSSIS & CARROSSERIE F1 ---
+        // 4. Carrosserie F1
         ctx.fillStyle = this.color;
         ctx.beginPath();
-        ctx.moveTo(17, 0);      // Pointe du nez
-        ctx.lineTo(12, -2.2);   // Côté nez avant
-        ctx.lineTo(4, -2.8);    // Avant cockpit
-        ctx.lineTo(2, -5.5);    // Entrée ponton gauche
-        ctx.lineTo(-7, -5.8);   // Ponton gauche
-        ctx.lineTo(-11, -3);    // Arrière ponton
-        ctx.lineTo(-14, -1.8);  // Boîte arrière gauche
-        ctx.lineTo(-14, 1.8);   // Boîte arrière droite
-        ctx.lineTo(-11, 3);     // Arrière ponton droit
-        ctx.lineTo(-7, 5.8);    // Ponton droit
-        ctx.lineTo(2, 5.5);     // Entrée ponton droit
-        ctx.lineTo(4, 2.8);     // Avant cockpit
-        ctx.lineTo(12, 2.2);    // Côté nez avant
+        ctx.moveTo(17, 0);
+        ctx.lineTo(12, -2.2);
+        ctx.lineTo(4, -2.8);
+        ctx.lineTo(2, -5.5);
+        ctx.lineTo(-7, -5.8);
+        ctx.lineTo(-11, -3);
+        ctx.lineTo(-14, -1.8);
+        ctx.lineTo(-14, 1.8);
+        ctx.lineTo(-11, 3);
+        ctx.lineTo(-7, 5.8);
+        ctx.lineTo(2, 5.5);
+        ctx.lineTo(4, 2.8);
+        ctx.lineTo(12, 2.2);
         ctx.closePath();
         ctx.fill();
 
-        // Entrées d'air des pontons (radiateurs)
         ctx.fillStyle = '#111';
         ctx.fillRect(1.5, -5.2, 1.8, 1.8);
         ctx.fillRect(1.5, 3.4, 1.8, 1.8);
-
-        // Arête moteur / requin
         ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
         ctx.fillRect(-11, -0.7, 7, 1.4);
 
-        // --- 5. COCKPIT, PILOTE & HALO ---
-        // Habitacle noir
+        // 5. Cockpit & Pilote
         ctx.fillStyle = '#080808';
         ctx.beginPath();
         ctx.ellipse(1.5, 0, 3.8, 2.2, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Casque du pilote
-        ctx.fillStyle = this.isPlayer ? '#FFD700' : '#EEEEEE';
+        ctx.fillStyle = (this.controlType === 'p1') ? '#FFD700' : ((this.controlType === 'p2') ? '#00E5FF' : '#E0E0E0');
         ctx.beginPath();
         ctx.arc(1.2, 0, 1.7, 0, Math.PI * 2);
         ctx.fill();
-        // Visière du casque
         ctx.fillStyle = '#080808';
         ctx.fillRect(1.8, -1.1, 0.9, 2.2);
 
-        // Structure protectrice Halo
+        // Halo
         ctx.strokeStyle = '#2d2d2d';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(1.5, 0, 2.6, -Math.PI/2, Math.PI/2);
         ctx.stroke();
 
-        // --- 6. AILERON AVANT F1 COMPLET ---
-        // Voilure principale
+        // 6. Aileron avant
         ctx.fillStyle = '#161616';
         ctx.fillRect(14, -8.5, 3, 17);
-        // Dériveurs d'aileron avant couleur carrosserie
         ctx.fillStyle = this.color;
         ctx.fillRect(13, -9, 4.5, 1.3);
         ctx.fillRect(13, 7.7, 4.5, 1.3);
@@ -579,92 +842,148 @@
 
     let cars = [];
 
-    function initGame() {
+    function setupCircuit(trackId) {
+      currentTrackId = trackId;
+      const def = TRACK_DEFS[trackId] || TRACK_DEFS.monza;
+      currentTrack = buildTrack(def);
+
+      trackBadge.textContent = def.name.toUpperCase();
+      const saved = getSavedBestLap(def.id);
+      bestTimerDisplay.textContent = saved ? saved.toFixed(2) : '--';
+
+      // Mise à jour visuelle des boutons
+      trackBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-track') === trackId);
+      });
+
+      // Positionnement des voitures sur la grille de départ
+      const p0 = currentTrack.points[0];
+      const p1 = currentTrack.points[1];
+      const startAngle = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+
+      // Calcul des slots de départ décalés
+      const getSlot = (distBack, lateralOffset) => {
+        const perpAngle = startAngle + Math.PI / 2;
+        return {
+          x: p0.x - Math.cos(startAngle) * distBack + Math.cos(perpAngle) * lateralOffset,
+          y: p0.y - Math.sin(startAngle) * distBack + Math.sin(perpAngle) * lateralOffset
+        };
+      };
+
+      const slot1 = getSlot(15, -12);
+      const slot2 = getSlot(55, 12);
+      const slot3 = getSlot(95, -10);
+      const slot4 = getSlot(135, 10);
+
       cars = [
-        new Car(400, trackOuter.y - trackOuter.ry + trackOuter.width/2, '#FF1801', true), // Player
-        new Car(400 - 60, trackOuter.y - trackOuter.ry + trackOuter.width/2 + 10, '#00D2BE', false), // AI 1
-        new Car(400 - 120, trackOuter.y - trackOuter.ry + trackOuter.width/2 - 10, '#1E41FF', false) // AI 2
+        new Car(slot1.x, slot1.y, startAngle, '#FF1801', 'p1'), // Joueur 1 (Ferrari Red)
+        new Car(slot2.x, slot2.y, startAngle, '#00E5FF', p2Active ? 'p2' : 'ai'), // Joueur 2 ou AI
+        new Car(slot3.x, slot3.y, startAngle, '#00D2BE', 'ai'), // AI 1 (Mercedes)
+        new Car(slot4.x, slot4.y, startAngle, '#FF8000', 'ai')  // AI 2 (McLaren)
       ];
-      bestTimerDisplay.textContent = '--';
+
+      // Index cibles IA décalés pour démarrage fluide
+      cars[1].targetIndex = 6;
+      cars[2].targetIndex = 4;
+      cars[3].targetIndex = 2;
     }
 
-    function drawTrack() {
-      // Pelouse du circuit
-      ctx.fillStyle = '#1b561b';
+    function activatePlayer2() {
+      if (!p2Active) {
+        p2Active = true;
+        if (cars.length > 1) {
+          cars[1].controlType = 'p2';
+        }
+        if (p2TimerRow) p2TimerRow.style.display = 'flex';
+        if (modeBanner) {
+          modeBanner.classList.add('multi');
+          if (modeTxt) modeTxt.innerHTML = '<strong>Mode 2 Joueurs Actif</strong> • J1: Flèches • J2: ZQSD/WASD';
+        }
+      }
+    }
+
+    function drawRacetrack() {
+      if (!currentTrack) return;
+      const pts = currentTrack.points;
+      const n = pts.length;
+      const w = currentTrack.width;
+
+      // 1. Pelouse globale
+      ctx.fillStyle = '#185018';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Vibreurs F1 extérieurs (rouge et blanc alternés)
+      // 2. Vibreurs extérieurs (rouges et blancs alternés)
       ctx.beginPath();
-      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx + 3, trackOuter.ry + 3, 0, 0, Math.PI*2);
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < n; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.closePath();
+      ctx.lineWidth = w + 14;
       ctx.strokeStyle = '#E10600';
-      ctx.lineWidth = 5;
-      ctx.setLineDash([12, 12]);
+      ctx.setLineDash([14, 14]);
       ctx.stroke();
+
       ctx.strokeStyle = '#FFFFFF';
-      ctx.lineDashOffset = 12;
+      ctx.lineDashOffset = 14;
       ctx.stroke();
-
-      // Asphalte du circuit
-      ctx.setLineDash([]);
       ctx.lineDashOffset = 0;
-      ctx.beginPath();
-      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx, trackOuter.ry, 0, 0, Math.PI*2);
-      ctx.fillStyle = '#2c2d33';
-      ctx.fill();
-
-      // Trajectoire de course gommée (plus sombre)
-      ctx.beginPath();
-      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx - trackOuter.width/2, trackOuter.ry - trackOuter.width/2, 0, 0, Math.PI*2);
-      ctx.strokeStyle = '#222328';
-      ctx.lineWidth = 38;
-      ctx.stroke();
-
-      // Vibreurs F1 intérieurs (rouge et blanc)
-      ctx.beginPath();
-      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx - trackOuter.width + 2, trackOuter.ry - trackOuter.width + 2, 0, 0, Math.PI*2);
-      ctx.strokeStyle = '#E10600';
-      ctx.lineWidth = 5;
-      ctx.setLineDash([10, 10]);
-      ctx.stroke();
-      ctx.strokeStyle = '#FFFFFF';
-      ctx.lineDashOffset = 10;
-      ctx.stroke();
-
-      // Herbe intérieure du circuit
       ctx.setLineDash([]);
-      ctx.lineDashOffset = 0;
-      ctx.beginPath();
-      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx - trackOuter.width, trackOuter.ry - trackOuter.width, 0, 0, Math.PI*2);
-      ctx.fillStyle = '#1b561b';
-      ctx.fill();
 
-      // Ligne de départ / arrivée à damier
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(trackOuter.x, trackOuter.y - trackOuter.ry, 6, trackOuter.width);
-      ctx.fillStyle = '#111';
-      for (let i = 0; i < trackOuter.width; i += 10) {
-        ctx.fillRect(trackOuter.x, trackOuter.y - trackOuter.ry + i + (Math.floor(i/10)%2 === 0 ? 0 : 5), 3, 5);
-        ctx.fillRect(trackOuter.x + 3, trackOuter.y - trackOuter.ry + i + (Math.floor(i/10)%2 === 0 ? 5 : 0), 3, 5);
+      // 3. Asphalte principal du circuit
+      ctx.lineWidth = w;
+      ctx.strokeStyle = '#2d2e33';
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // 4. Trajectoire de course gommée (grip sombre)
+      ctx.lineWidth = w * 0.44;
+      ctx.strokeStyle = '#222327';
+      ctx.stroke();
+
+      // 5. Ligne de départ / damier d'arrivée
+      const p0 = pts[0];
+      const p1 = pts[1];
+      const angle = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+      const perp = angle + Math.PI / 2;
+
+      ctx.save();
+      ctx.translate(p0.x, p0.y);
+      ctx.rotate(perp);
+
+      const checkerW = w * 0.95;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(-checkerW / 2, -4, checkerW, 8);
+      ctx.fillStyle = '#111111';
+      for (let i = -checkerW / 2; i < checkerW / 2; i += 8) {
+        ctx.fillRect(i, -4, 4, 4);
+        ctx.fillRect(i + 4, 0, 4, 4);
       }
+      ctx.restore();
     }
 
     function gameLoop() {
       if (!isGameRunning) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawTrack();
+      drawRacetrack();
 
       cars.forEach(car => {
         car.update();
         car.draw(ctx);
       });
 
-      // Update player timer
-      if (cars[0].lapStartTime) {
-         const currentLap = (performance.now() - cars[0].lapStartTime) / 1000;
-         timerDisplay.textContent = currentLap.toFixed(2);
+      // Chrono Joueur 1
+      if (cars[0] && cars[0].lapStartTime) {
+        const cur = (performance.now() - cars[0].lapStartTime) / 1000;
+        timerDisplay.textContent = cur.toFixed(2);
       } else {
-         timerDisplay.textContent = "0.00";
+        timerDisplay.textContent = '0.00';
+      }
+
+      // Chrono Joueur 2 si actif
+      if (p2Active && cars[1] && cars[1].lapStartTime) {
+        const cur2 = (performance.now() - cars[1].lapStartTime) / 1000;
+        if (timer2Display) timer2Display.textContent = cur2.toFixed(2);
       }
 
       animFrameId = requestAnimationFrame(gameLoop);
@@ -673,9 +992,9 @@
     function openModal() {
       if (modal) {
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Empêche tout défilement de la page en arrière-plan
+        document.body.style.overflow = 'hidden';
         isGameRunning = true;
-        initGame();
+        setupCircuit(currentTrackId);
         gameLoop();
       }
     }
@@ -683,27 +1002,49 @@
     function closeModal() {
       if (modal) {
         modal.style.display = 'none';
-        document.body.style.overflow = ''; // Restaure le défilement normal
+        document.body.style.overflow = '';
         isGameRunning = false;
         if (animFrameId) cancelAnimationFrame(animFrameId);
       }
     }
 
+    // Sélecteur de circuit au clic
+    trackBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tid = btn.getAttribute('data-track');
+        if (tid) setupCircuit(tid);
+      });
+    });
+
+    // Écouteur Clavier avec détection automatique de Joueur 2
     window.addEventListener('keydown', (e) => {
       if (modal && modal.style.display === 'flex') {
-        // Bloque le défilement natif du navigateur avec les flèches du clavier
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
           e.preventDefault();
         }
+
+        // Touche P1
         if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
+
+        // Détection de frappe Joueur 2 (ZQSD / WASD)
+        const p2Keys = ['z', 'q', 's', 'd', 'w', 'a', 'Z', 'Q', 'S', 'D', 'W', 'A'];
+        if (p2Keys.includes(e.key)) {
+          const lower = e.key.toLowerCase();
+          if (keys.hasOwnProperty(lower)) keys[lower] = true;
+          activatePlayer2();
+        }
+
         if (e.key === 'Escape') closeModal();
       }
     });
+
     window.addEventListener('keyup', (e) => {
       if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
+      const lower = e.key.toLowerCase();
+      if (keys.hasOwnProperty(lower)) keys[lower] = false;
     });
 
-    // --- Gestion des Contrôles Tactiles Mobiles (Joystick & Pédales) ---
+    // --- Contrôles Tactiles Mobiles (Joystick 360° & Pédales) ---
     const touchControls = document.getElementById('f1TouchControls');
     const joyZone = document.getElementById('f1JoystickZone');
     const joyBase = document.getElementById('f1JoystickBase');
@@ -760,7 +1101,6 @@
         joyCenterX = baseRect.left + baseRect.width / 2;
         joyCenterY = baseRect.top + baseRect.height / 2;
       }
-
       updateJoystickPosition(e.clientX, e.clientY);
     });
 
