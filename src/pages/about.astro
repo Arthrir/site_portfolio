@@ -787,16 +787,32 @@ const t = makeT(lang);
             markerElevation: 0.03,
             markers: getMarkers(currentDest),
             arcs: flightArcs,
-            onRender: (state) => {
-              if (autoSpin) {
-                targetPhi += 0.0022;
-              }
-              phi += (targetPhi - phi) * 0.07;
-              theta += (targetTheta - theta) * 0.07;
-              state.phi = phi;
-              state.theta = theta;
-            }
           });
+
+          // Boucle d'animation continue haute fluidité pour le globe 3D
+          let animId = null;
+          let isVisible = true;
+
+          function renderFrame() {
+            if (isVisible) {
+              if (autoSpin) {
+                targetPhi += 0.003;
+              }
+              phi += (targetPhi - phi) * 0.08;
+              theta += (targetTheta - theta) * 0.08;
+              globe.update({ phi, theta });
+            }
+            animId = requestAnimationFrame(renderFrame);
+          }
+          animId = requestAnimationFrame(renderFrame);
+
+          // Optimisation des ressources : n'anime que si le canvas est visible
+          if ('IntersectionObserver' in window) {
+            const visObserver = new IntersectionObserver((entries) => {
+              isVisible = entries[0].isIntersecting;
+            }, { threshold: 0.05 });
+            visObserver.observe(canvas);
+          }
 
           // Méthode globale pour faire pivoter le globe sur la destination sélectionnée
           window.rotateGlobeTo = function(lat, lon, key) {
