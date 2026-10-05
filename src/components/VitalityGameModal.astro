@@ -268,12 +268,14 @@
     function openModal() {
       if (modal) {
         modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
         resetGameUI();
       }
     }
 
     function closeModal() {
       if (modal) {
+        document.body.style.overflow = '';
         stopGame();
         modal.style.display = 'none';
       }

@@ -227,12 +227,7 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
           <article class="card project-card" data-tags={JSON.stringify(flatTags)} style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
               <h3 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; margin-bottom: 6px;">{project.title}</h3>
-              <p class="muted" style="font-size: 0.85rem; margin-bottom: 12px; display: flex; align-items: center; gap: 7px;">
-                {project.isCurrent && (
-                  <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #10B981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.7); flex-shrink: 0;" title={lang === 'fr' ? "Projet en cours" : "Ongoing project"}></span>
-                )}
-                <span>{project.date}</span>
-              </p>
+              <p class="muted" style="font-size: 0.85rem; margin-bottom: 12px;">{project.date}</p>
               {project.team && project.team.length > 0 && (
                 <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px; font-size: 0.82rem; color: var(--muted); flex-wrap: wrap;">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>

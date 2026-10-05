@@ -419,6 +419,7 @@
     function openModal() {
       if (modal) {
         modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Empêche tout défilement de la page en arrière-plan
         isGameRunning = true;
         initGame();
         gameLoop();
@@ -428,14 +429,21 @@
     function closeModal() {
       if (modal) {
         modal.style.display = 'none';
+        document.body.style.overflow = ''; // Restaure le défilement normal
         isGameRunning = false;
         if (animFrameId) cancelAnimationFrame(animFrameId);
       }
     }
 
     window.addEventListener('keydown', (e) => {
-      if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
-      if (modal && modal.style.display === 'flex' && e.key === 'Escape') closeModal();
+      if (modal && modal.style.display === 'flex') {
+        // Bloque le défilement natif du navigateur avec les flèches du clavier
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+          e.preventDefault();
+        }
+        if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
+        if (e.key === 'Escape') closeModal();
+      }
     });
     window.addEventListener('keyup', (e) => {
       if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
