@@ -25,10 +25,10 @@
         <!-- Onglets Modes de Recherche TIPE -->
         <div class="bj-mode-tabs" role="tablist">
           <button type="button" class="bj-mode-tab active" id="tabBasicStrategy" data-mode="strategy">
-            📊 Stratégie de Base
+            Stratégie de Base (Hi-Lo)
           </button>
           <button type="button" class="bj-mode-tab" id="tabHappinessModel" data-mode="happiness">
-            🧠 Modélisation du Bonheur
+            Modèle de Bonheur & Banque
           </button>
         </div>
       </div>
@@ -84,7 +84,7 @@
       <!-- Panneau Assistant Mode 1 : Mathématique Classique (Stratégie de Base) -->
       <div class="bj-tipe-panel" id="bjStrategyPanel">
         <div class="tipe-panel-header">
-          <span class="tipe-title">📊 ANALYSE PROBABILISTE DU TIPE</span>
+          <span class="tipe-title">ANALYSE PROBABILISTE DU TIPE</span>
           <span class="tipe-edge" id="tipeEdge">Avantage : <strong class="edge-val">-0.5% (Maison)</strong></span>
         </div>
         <div class="tipe-body">
@@ -118,8 +118,8 @@
       <div class="bj-happiness-panel" id="bjHappinessPanel" style="display: none;">
         <div class="happiness-top">
           <div class="happiness-header-left">
-            <span class="happiness-title">🧠 MODÉLISATION DU BONHEUR DU JOUEUR (TIPE)</span>
-            <span class="happiness-subtitle">Modèle psychologique de satisfaction, aversion aux pertes & rétention de table</span>
+            <span class="happiness-title">MODÉLISATION DU BONHEUR DU JOUEUR (TIPE)</span>
+            <span class="happiness-subtitle">Modèle psychologique de satisfaction, aversion aux pertes & régulation de la banque</span>
           </div>
           <div class="happiness-score-pill">
             <span class="score-pill-label">INDICE DE BONHEUR (H)</span>
@@ -136,13 +136,30 @@
         <!-- Diagnostic psychologique en direct -->
         <div class="happiness-status-row">
           <div class="psych-state-badge" id="psychStateBadge">
-            <span id="psychStateEmoji">😊</span>
+            <span class="psych-dot" id="psychDot"></span>
             <span id="psychStateText">Joueur satisfait et en confiance</span>
           </div>
           <div class="retention-pill">
             <span>Probabilité de rester à la table :</span>
             <strong id="retentionProb">82%</strong>
           </div>
+        </div>
+
+        <!-- Régulation de la Banque (TIPE Arthur Doradoux & Paul Aubert) -->
+        <div class="bank-strategy-box">
+          <div class="bank-strat-header">
+            <span class="bank-strat-title">RÉGULATION BANQUE // OPTIMISATION TIPE</span>
+            <label class="bank-toggle-label">
+              <input type="checkbox" id="bankAdaptToggle" checked />
+              <span class="bank-toggle-text">Régulation active</span>
+            </label>
+          </div>
+          <div class="bank-decision-badge" id="bankDecisionBadge">
+            Statut : Régulation nominale • Maximisation de l'espérance de gain
+          </div>
+          <p class="bank-strat-note">
+            La banque adapte sa stratégie : si le bonheur H &lt; 35%, la maison protège le joueur pour éviter son départ définitif de la table, puis capitalise dès que la satisfaction est consolidée.
+          </p>
         </div>
 
         <!-- Télémétrie d'optimisation de la Banque (Casino) -->
@@ -170,8 +187,8 @@
     <!-- Écran de sortie Ragequit / Rupture de Bonheur -->
     <div class="bj-ragequit-overlay" id="bjRagequitOverlay" style="display: none;">
       <div class="ragequit-card">
-        <div class="ragequit-icon">🚪🚶</div>
-        <h3 class="ragequit-title">LE JOUEUR QUITTE LA TABLE !</h3>
+        <div class="ragequit-badge">SEUIL CRITIQUE DE DÉPART ATTEINT</div>
+        <h3 class="ragequit-title">LE JOUEUR QUITTE LA TABLE</h3>
         <p class="ragequit-desc">
           L'indice de satisfaction du joueur est tombé sous le seuil critique (H &lt; 15%). L'aversion aux pertes cumulées a provoqué son départ définitif de la table.
         </p>
@@ -204,13 +221,16 @@
           <span>DISTRIBUER</span>
         </button>
         <button type="button" class="bj-btn btn-hit" id="bjHitBtn" disabled>
-          <span>TIRER (CARTE)</span>
+          <span>TIRER</span>
         </button>
         <button type="button" class="bj-btn btn-stand" id="bjStandBtn" disabled>
           <span>RESTER</span>
         </button>
         <button type="button" class="bj-btn btn-double" id="bjDoubleBtn" disabled>
-          <span>DOUBLER (x2)</span>
+          <span>DOUBLER</span>
+        </button>
+        <button type="button" class="bj-btn btn-split" id="bjSplitBtn" disabled>
+          <span>SÉPARER</span>
         </button>
       </div>
     </div>
@@ -373,49 +393,58 @@
   .bankroll-label strong { color: #34D399; }
   .bet-label strong { color: #FACC15; }
 
-  /* Cartes */
+  /* Cartes SVG haute précision */
   .cards-wrapper {
-    display: flex; gap: 8px; min-height: 84px;
+    display: flex; gap: 8px; min-height: 90px;
     align-items: center; flex-wrap: wrap;
   }
   :global(.bj-card) {
-    width: 58px; height: 84px;
+    width: 62px; height: 90px;
     background: #FFFFFF;
     border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-    display: flex; flex-direction: column; justify-content: space-between;
-    padding: 4px 6px;
-    font-family: monospace, sans-serif;
-    font-weight: 800;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
     user-select: none;
     animation: dealAnim 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
   }
   @keyframes dealAnim {
     0% { transform: translateY(-20px) scale(0.85); opacity: 0; }
     100% { transform: translateY(0) scale(1); opacity: 1; }
   }
-  :global(.bj-card.red) { color: #DC2626; }
-  :global(.bj-card.black) { color: #111827; }
-
-  :global(.bj-card-corner) {
-    font-size: 0.82rem; line-height: 1;
-    display: flex; flex-direction: column; align-items: center; width: 14px;
+  :global(.bj-card-svg) {
+    width: 100%; height: 100%;
+    display: block;
+    border-radius: 6px;
   }
-  :global(.bj-card-suit-small) { font-size: 0.72rem; }
-  :global(.bj-card-center-pip) {
-    align-self: center; font-size: 1.25rem; line-height: 1;
-  }
-
   :global(.bj-card.hidden-card) {
-    background: repeating-linear-gradient(
-      45deg,
-      #991B1B,
-      #991B1B 6px,
-      #7F1D1D 6px,
-      #7F1D1D 12px
-    );
-    border: 2px solid #FEF08A;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    background: #450A0A;
+  }
+
+  /* Gestion des mains séparées (Split) */
+  :global(.bj-split-hand-box) {
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 8px 10px; border-radius: 8px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+  }
+  :global(.bj-split-hand-box.active-hand) {
+    border-color: #FACC15;
+    background: rgba(234, 179, 8, 0.08);
+    box-shadow: 0 0 16px rgba(234, 179, 8, 0.25);
+  }
+  :global(.split-hand-header) {
+    font-size: 0.72rem; color: #D1D5DB; font-weight: 700;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 8px;
+  }
+  :global(.active-badge) {
+    font-size: 0.62rem; color: #000; background: #FACC15;
+    padding: 1px 6px; border-radius: 4px; font-weight: 800;
+  }
+  :global(.split-cards-row) {
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
   }
 
   /* Status Banner */
@@ -547,10 +576,40 @@
     font-size: 0.78rem; font-weight: 700; color: #FFFFFF;
     background: rgba(255, 255, 255, 0.06); padding: 4px 10px; border-radius: 6px;
   }
+  .psych-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10B981; display: inline-block;
+  }
   .retention-pill {
     font-size: 0.72rem; color: #9CA3AF;
   }
   .retention-pill strong { color: #34D399; margin-left: 4px; }
+
+  /* Régulation de la Banque (TIPE) */
+  .bank-strategy-box {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 8px; padding: 10px 12px;
+    margin-bottom: 10px; text-align: left;
+  }
+  .bank-strat-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 6px;
+  }
+  .bank-strat-title {
+    font-size: 0.68rem; font-weight: 800; letter-spacing: 0.05em; color: #D4AF37;
+  }
+  .bank-toggle-label {
+    display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+    font-size: 0.7rem; color: #E5E7EB;
+  }
+  .bank-toggle-label input { accent-color: #D4AF37; cursor: pointer; }
+  .bank-decision-badge {
+    font-size: 0.75rem; font-weight: 700; color: #34D399; margin-bottom: 4px;
+  }
+  .bank-strat-note {
+    font-size: 0.68rem; color: #9CA3AF; line-height: 1.4; margin: 0;
+  }
 
   .casino-metrics-grid {
     display: grid; grid-template-columns: repeat(4, 1fr);
@@ -577,7 +636,13 @@
     border-radius: 12px; padding: 24px; max-width: 440px; text-align: center;
     box-shadow: 0 12px 32px rgba(239, 68, 68, 0.2);
   }
-  .ragequit-icon { font-size: 2.2rem; margin-bottom: 8px; }
+  .ragequit-badge {
+    display: inline-block; background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #EF4444; font-size: 0.72rem; font-weight: 800;
+    letter-spacing: 0.06em; padding: 4px 10px; border-radius: 999px;
+    margin-bottom: 12px;
+  }
   .ragequit-title { font-size: 1.25rem; font-weight: 800; color: #EF4444; margin: 0 0 8px; }
   .ragequit-desc { font-size: 0.82rem; color: #D1D5DB; line-height: 1.45; margin: 0 0 16px; }
   .ragequit-stats {
@@ -633,12 +698,12 @@
 
   .bj-actions-bar {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 8px;
   }
   .bj-btn {
     border: none; border-radius: 8px;
-    padding: 12px 10px; font-weight: 800; font-size: 0.82rem;
+    padding: 12px 8px; font-weight: 800; font-size: 0.82rem;
     letter-spacing: 0.04em; cursor: pointer;
     transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex; align-items: center; justify-content: center;
@@ -661,6 +726,10 @@
   }
   .btn-double {
     background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    color: #FFFFFF;
+  }
+  .btn-split {
+    background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
     color: #FFFFFF;
   }
   .bj-btn:not(:disabled):hover {
@@ -721,6 +790,7 @@
     const hitBtn = document.getElementById('bjHitBtn');
     const standBtn = document.getElementById('bjStandBtn');
     const doubleBtn = document.getElementById('bjDoubleBtn');
+    const splitBtn = document.getElementById('bjSplitBtn');
     const resetBetBtn = document.getElementById('bjResetBetBtn');
     const chipBtns = document.querySelectorAll('.bj-chip');
 
@@ -733,14 +803,16 @@
     const mCardsLeft = document.getElementById('mCardsLeft');
     const tipeEdge = document.getElementById('tipeEdge');
 
-    // TIPE Happiness Model Elements
+    // TIPE Happiness Model & Bank Elements
     const happinessValEl = document.getElementById('happinessVal');
     const happinessBarFill = document.getElementById('happinessBarFill');
-    const psychStateEmoji = document.getElementById('psychStateEmoji');
+    const psychDot = document.getElementById('psychDot');
     const psychStateText = document.getElementById('psychStateText');
     const retentionProbEl = document.getElementById('retentionProb');
     const hHandsCountEl = document.getElementById('hHandsCount');
     const hHouseProfitEl = document.getElementById('hHouseProfit');
+    const bankAdaptToggle = document.getElementById('bankAdaptToggle');
+    const bankDecisionBadge = document.getElementById('bankDecisionBadge');
     const ragequitOverlay = document.getElementById('bjRagequitOverlay');
     const rqHandsEl = document.getElementById('rqHands');
     const rqProfitEl = document.getElementById('rqProfit');
@@ -785,7 +857,10 @@
     let bankroll = 1000;
     let initialBankroll = 1000;
     let currentBet = 50;
-    let playerHand = [];
+    let playerHands = [[]]; // Tableau de mains (supporte le Split)
+    let handBets = [50];
+    let activeHandIdx = 0;
+    let isSplitActive = false;
     let dealerHand = [];
     let isHandActive = false;
     let isAssistantActive = true;
@@ -797,6 +872,7 @@
     let handsPlayed = 0;
     let consecutiveLosses = 0;
     let consecutiveWins = 0;
+    let isBankRegulationEnabled = true;
 
     // Switch de mode TIPE
     function setMode(mode) {
@@ -874,21 +950,154 @@
       return { total: sum, isSoft };
     }
 
+    function createCardSVG(card, isHidden = false) {
+      if (isHidden) {
+        return `
+          <svg class="bj-card-svg" viewBox="0 0 100 145" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="145" rx="6" fill="#1E293B" stroke="#334155" stroke-width="2"/>
+            <rect x="6" y="6" width="88" height="133" rx="4" fill="#0F172A" stroke="#D4AF37" stroke-width="1.2"/>
+            <g stroke="#D4AF37" stroke-width="0.8" opacity="0.35">
+              <line x1="12" y1="12" x2="88" y2="133" />
+              <line x1="88" y1="12" x2="12" y2="133" />
+              <line x1="12" y1="50" x2="88" y2="95" />
+              <line x1="88" y1="50" x2="12" y2="95" />
+              <line x1="12" y1="95" x2="88" y2="50" />
+              <line x1="88" y1="95" x2="12" y2="50" />
+            </g>
+            <circle cx="50" cy="72.5" r="16" fill="#1E293B" stroke="#D4AF37" stroke-width="1.5"/>
+            <text x="50" y="78" font-size="14" font-family="monospace, sans-serif" font-weight="900" fill="#D4AF37" text-anchor="middle">A</text>
+          </svg>
+        `;
+      }
+
+      const color = card.suit.isRed ? '#DC2626' : '#111827';
+      const sym = card.suit.sym;
+      const rank = card.rank;
+
+      let pipsSvg = '';
+      if (rank === 'A') {
+        pipsSvg = `<text x="50" y="82" font-size="36" fill="${color}" text-anchor="middle">${sym}</text>`;
+      } else if (rank === '2') {
+        pipsSvg = `
+          <text x="50" y="52" font-size="18" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="50" y="104" font-size="18" fill="${color}" text-anchor="middle" transform="rotate(180 50 98)">${sym}</text>
+        `;
+      } else if (rank === '3') {
+        pipsSvg = `
+          <text x="35" y="52" font-size="18" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="50" y="77" font-size="18" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="65" y="104" font-size="18" fill="${color}" text-anchor="middle" transform="rotate(180 65 98)">${sym}</text>
+        `;
+      } else if (rank === '4') {
+        pipsSvg = `
+          <text x="34" y="52" font-size="18" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="52" font-size="18" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="104" font-size="18" fill="${color}" text-anchor="middle" transform="rotate(180 34 98)">${sym}</text>
+          <text x="66" y="104" font-size="18" fill="${color}" text-anchor="middle" transform="rotate(180 66 98)">${sym}</text>
+        `;
+      } else if (rank === '5') {
+        pipsSvg = `
+          <text x="34" y="52" font-size="17" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="52" font-size="17" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="50" y="77" font-size="17" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="104" font-size="17" fill="${color}" text-anchor="middle" transform="rotate(180 34 98)">${sym}</text>
+          <text x="66" y="104" font-size="17" fill="${color}" text-anchor="middle" transform="rotate(180 66 98)">${sym}</text>
+        `;
+      } else if (rank === '6') {
+        pipsSvg = `
+          <text x="34" y="50" font-size="16" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="50" font-size="16" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="77" font-size="16" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="77" font-size="16" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="104" font-size="16" fill="${color}" text-anchor="middle" transform="rotate(180 34 98)">${sym}</text>
+          <text x="66" y="104" font-size="16" fill="${color}" text-anchor="middle" transform="rotate(180 66 98)">${sym}</text>
+        `;
+      } else if (rank === '7') {
+        pipsSvg = `
+          <text x="34" y="50" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="50" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="50" y="63" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="77" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="77" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="104" font-size="15" fill="${color}" text-anchor="middle" transform="rotate(180 34 98)">${sym}</text>
+          <text x="66" y="104" font-size="15" fill="${color}" text-anchor="middle" transform="rotate(180 66 98)">${sym}</text>
+        `;
+      } else if (rank === '8') {
+        pipsSvg = `
+          <text x="34" y="48" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="48" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="50" y="62" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="77" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="77" font-size="15" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="50" y="92" font-size="15" fill="${color}" text-anchor="middle" transform="rotate(180 50 86)">${sym}</text>
+          <text x="34" y="106" font-size="15" fill="${color}" text-anchor="middle" transform="rotate(180 34 100)">${sym}</text>
+          <text x="66" y="106" font-size="15" fill="${color}" text-anchor="middle" transform="rotate(180 66 100)">${sym}</text>
+        `;
+      } else if (rank === '9') {
+        pipsSvg = `
+          <text x="34" y="46" font-size="14" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="46" font-size="14" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="66" font-size="14" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="66" font-size="14" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="50" y="77" font-size="14" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="88" font-size="14" fill="${color}" text-anchor="middle" transform="rotate(180 34 82)">${sym}</text>
+          <text x="66" y="88" font-size="14" fill="${color}" text-anchor="middle" transform="rotate(180 66 82)">${sym}</text>
+          <text x="34" y="108" font-size="14" fill="${color}" text-anchor="middle" transform="rotate(180 34 102)">${sym}</text>
+          <text x="66" y="108" font-size="14" fill="${color}" text-anchor="middle" transform="rotate(180 66 102)">${sym}</text>
+        `;
+      } else if (rank === '10') {
+        pipsSvg = `
+          <text x="34" y="44" font-size="13" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="44" font-size="13" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="50" y="55" font-size="13" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="66" font-size="13" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="66" y="66" font-size="13" fill="${color}" text-anchor="middle">${sym}</text>
+          <text x="34" y="88" font-size="13" fill="${color}" text-anchor="middle" transform="rotate(180 34 82)">${sym}</text>
+          <text x="66" y="88" font-size="13" fill="${color}" text-anchor="middle" transform="rotate(180 66 82)">${sym}</text>
+          <text x="50" y="99" font-size="13" fill="${color}" text-anchor="middle" transform="rotate(180 50 93)">${sym}</text>
+          <text x="34" y="110" font-size="13" fill="${color}" text-anchor="middle" transform="rotate(180 34 104)">${sym}</text>
+          <text x="66" y="110" font-size="13" fill="${color}" text-anchor="middle" transform="rotate(180 66 104)">${sym}</text>
+        `;
+      } else if (rank === 'J') {
+        pipsSvg = `
+          <rect x="25" y="38" width="50" height="69" rx="4" fill="none" stroke="${color}" stroke-width="0.8" opacity="0.3"/>
+          <text x="50" y="70" font-size="24" fill="${color}" text-anchor="middle">⚔</text>
+          <text x="50" y="92" font-size="16" fill="${color}" text-anchor="middle">${sym}</text>
+        `;
+      } else if (rank === 'Q') {
+        pipsSvg = `
+          <rect x="25" y="38" width="50" height="69" rx="4" fill="none" stroke="${color}" stroke-width="0.8" opacity="0.3"/>
+          <text x="50" y="70" font-size="24" fill="${color}" text-anchor="middle">♕</text>
+          <text x="50" y="92" font-size="16" fill="${color}" text-anchor="middle">${sym}</text>
+        `;
+      } else if (rank === 'K') {
+        pipsSvg = `
+          <rect x="25" y="38" width="50" height="69" rx="4" fill="none" stroke="${color}" stroke-width="0.8" opacity="0.3"/>
+          <text x="50" y="70" font-size="24" fill="${color}" text-anchor="middle">♔</text>
+          <text x="50" y="92" font-size="16" fill="${color}" text-anchor="middle">${sym}</text>
+        `;
+      }
+
+      return `
+        <svg class="bj-card-svg" viewBox="0 0 100 145" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="145" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2"/>
+          <g fill="${color}" font-family="system-ui, -apple-system, sans-serif">
+            <text x="8" y="20" font-size="15" font-weight="800">${rank}</text>
+            <text x="8" y="33" font-size="13">${sym}</text>
+          </g>
+          <g>${pipsSvg}</g>
+          <g fill="${color}" font-family="system-ui, -apple-system, sans-serif" transform="rotate(180 50 72.5)">
+            <text x="8" y="20" font-size="15" font-weight="800">${rank}</text>
+            <text x="8" y="33" font-size="13">${sym}</text>
+          </g>
+        </svg>
+      `;
+    }
+
     function renderCard(card, isHidden = false) {
       const el = document.createElement('div');
       el.className = `bj-card ${card.suit.isRed ? 'red' : 'black'} ${isHidden ? 'hidden-card' : ''}`;
-      if (isHidden) return el;
-      el.innerHTML = `
-        <div class="bj-card-corner">
-          <span>${card.rank}</span>
-          <span class="bj-card-suit-small">${card.suit.sym}</span>
-        </div>
-        <div class="bj-card-center-pip">${card.suit.sym}</div>
-        <div class="bj-card-corner" style="transform: rotate(180deg);">
-          <span>${card.rank}</span>
-          <span class="bj-card-suit-small">${card.suit.sym}</span>
-        </div>
-      `;
+      el.innerHTML = createCardSVG(card, isHidden);
       return el;
     }
 
@@ -899,36 +1108,56 @@
       }
 
       // Calcul de probabilité de rétention (volonté de rester à la table)
-      // Formule non-linéaire inspirée du TIPE
       const retention = Math.min(99, Math.max(1, Math.round(Math.pow(happiness / 100, 1.15) * 100)));
       if (retentionProbEl) retentionProbEl.textContent = `${retention}%`;
 
-      // Statut émotionnel
-      let emoji = '😊';
+      // Statut émotionnel sans emojis (épuré, pro)
+      let dotColor = '#10B981';
       let text = 'Joueur satisfait et en confiance';
 
       if (happiness >= 85) {
-        emoji = '🌟';
-        text = 'Euphorie totale : le joueur maximise ses mises !';
+        dotColor = '#10B981';
+        text = 'Euphorie : satisfaction maximale et propension aux mises élevées';
       } else if (happiness >= 65) {
-        emoji = '😊';
-        text = 'En confiance : expérience de jeu positive';
+        dotColor = '#34D399';
+        text = 'En confiance : expérience de jeu positive et stable';
       } else if (happiness >= 45) {
-        emoji = '😐';
+        dotColor = '#FACC15';
         text = 'Vigilant : équilibre gains/pertes fragile';
       } else if (happiness >= 25) {
-        emoji = '📉';
-        text = 'Frustration : l’aversion aux pertes pèse lourdement';
+        dotColor = '#FB923C';
+        text = 'Frustration : l’aversion aux pertes pèse lourdement sur la décision';
       } else if (happiness >= 15) {
-        emoji = '⚠️';
-        text = 'Seuil critique : le joueur songe sérieusement à partir';
+        dotColor = '#EF4444';
+        text = 'Seuil critique : probabilité imminente de départ de table';
       } else {
-        emoji = '🚪';
-        text = 'Rupture : le joueur quitte la table !';
+        dotColor = '#991B1B';
+        text = 'Rupture : le joueur quitte la table';
       }
 
-      if (psychStateEmoji) psychStateEmoji.textContent = emoji;
+      if (psychDot) psychDot.style.background = dotColor;
       if (psychStateText) psychStateText.textContent = text;
+
+      // Décision dynamique de régulation de la banque (TIPE)
+      if (bankDecisionBadge) {
+        if (!isBankRegulationEnabled) {
+          bankDecisionBadge.textContent = 'Statut : Régulation inactive • Stratégie croupier standard S17';
+          bankDecisionBadge.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+          bankDecisionBadge.style.color = '#9CA3AF';
+        } else if (happiness < 35) {
+          bankDecisionBadge.textContent = 'Statut : Protection Rétention Active • Prise de risque modérée pour fidéliser le joueur (H critique)';
+          bankDecisionBadge.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+          bankDecisionBadge.style.color = '#FCA5A5';
+        } else if (happiness > 75) {
+          bankDecisionBadge.textContent = 'Statut : Capitalisation Active • Joueur en confiance, extraction de la marge mathématique nominale';
+          bankDecisionBadge.style.borderColor = 'rgba(52, 211, 153, 0.5)';
+          bankDecisionBadge.style.color = '#6EE7B7';
+        } else {
+          bankDecisionBadge.textContent = 'Statut : Régulation Nominale • Maximisation du cycle de vie et équilibre de table';
+          bankDecisionBadge.style.borderColor = 'rgba(250, 204, 21, 0.4)';
+          bankDecisionBadge.style.color = '#FDE047';
+        }
+      }
 
       // Métriques Casino
       if (hHandsCountEl) hHandsCountEl.textContent = handsPlayed;
@@ -955,14 +1184,59 @@
       // Player UI
       if (playerCardsEl) {
         playerCardsEl.innerHTML = '';
-        playerHand.forEach(card => playerCardsEl.appendChild(renderCard(card)));
+        if (isSplitActive) {
+          playerHands.forEach((hand, hIdx) => {
+            const box = document.createElement('div');
+            box.className = `bj-split-hand-box ${hIdx === activeHandIdx && isHandActive ? 'active-hand' : ''}`;
+            const hScore = calcHandValue(hand).total;
+            box.innerHTML = `
+              <div class="split-hand-header">
+                <span>MAIN ${hIdx + 1} (${hScore}) — Mise: ${handBets[hIdx]} $</span>
+                ${hIdx === activeHandIdx && isHandActive ? '<span class="active-badge">ACTIVE</span>' : ''}
+              </div>
+              <div class="split-cards-row"></div>
+            `;
+            const row = box.querySelector('.split-cards-row');
+            hand.forEach(card => row.appendChild(renderCard(card)));
+            playerCardsEl.appendChild(box);
+          });
+        } else {
+          (playerHands[0] || []).forEach(card => playerCardsEl.appendChild(renderCard(card)));
+        }
       }
-      const pScoreObj = calcHandValue(playerHand);
-      if (playerScoreEl) playerScoreEl.textContent = pScoreObj.total;
+
+      if (playerScoreEl) {
+        if (isSplitActive) {
+          const s1 = calcHandValue(playerHands[0] || []).total;
+          const s2 = calcHandValue(playerHands[1] || []).total;
+          playerScoreEl.textContent = `M1: ${s1} | M2: ${s2}`;
+        } else {
+          playerScoreEl.textContent = calcHandValue(playerHands[0] || []).total;
+        }
+      }
 
       // Bankroll & Bet
       if (playerBankrollEl) playerBankrollEl.textContent = bankroll.toLocaleString();
       if (currentBetEl) currentBetEl.textContent = currentBet.toLocaleString();
+
+      // Controls State
+      if (isHandActive) {
+        dealBtn.disabled = true;
+        hitBtn.disabled = false;
+        standBtn.disabled = false;
+        const curHand = playerHands[activeHandIdx] || [];
+        const curBet = handBets[activeHandIdx] || currentBet;
+        doubleBtn.disabled = curHand.length !== 2 || bankroll < curBet;
+        const canSplit = !isSplitActive && playerHands.length === 1 && curHand.length === 2 &&
+          (curHand[0].rank === curHand[1].rank || curHand[0].val === curHand[1].val) && bankroll >= currentBet;
+        if (splitBtn) splitBtn.disabled = !canSplit;
+      } else {
+        dealBtn.disabled = false;
+        hitBtn.disabled = true;
+        standBtn.disabled = true;
+        doubleBtn.disabled = true;
+        if (splitBtn) splitBtn.disabled = true;
+      }
 
       // TIPE Metrics (Strategy)
       if (mCardsLeft) mCardsLeft.textContent = deck.length;
@@ -991,14 +1265,16 @@
       if (mDealerBust) mDealerBust.textContent = dealerUp ? bustOdds[dealerUp] || '--%' : '--%';
 
       // TIPE Basic Strategy Decision Engine
-      updateTipeStrategy(pScoreObj, dealerUp);
+      const activeHand = playerHands[activeHandIdx] || [];
+      const pScoreObj = calcHandValue(activeHand);
+      updateTipeStrategy(pScoreObj, dealerUp, activeHand);
 
       // TIPE Happiness UI
       updateHappinessUI();
     }
 
-    function updateTipeStrategy(pScoreObj, dealerUp) {
-      if (!isHandActive || !dealerUp || playerHand.length < 2) {
+    function updateTipeStrategy(pScoreObj, dealerUp, curHand = []) {
+      if (!isHandActive || !dealerUp || curHand.length < 2) {
         if (tipeAdviceMove) tipeAdviceMove.textContent = isHandActive ? 'EN COURS' : 'DISTRIBUER';
         if (tipeAdviceWhy) tipeAdviceWhy.textContent = isHandActive ? 'Calcul en cours...' : 'Choisissez votre mise puis distribuez.';
         return;
@@ -1010,6 +1286,36 @@
 
       let move = 'RESTER';
       let why = '';
+
+      // Analyse des paires pour le Split (Stratégie de base optimale)
+      const isPair = curHand.length === 2 && (curHand[0].rank === curHand[1].rank || curHand[0].val === curHand[1].val);
+      if (isPair && !isSplitActive && bankroll >= currentBet) {
+        const r = curHand[0].rank;
+        if (r === 'A' || r === '8') {
+          move = 'SÉPARER';
+          why = `Toujours séparer les As et les 8. L'espérance de gain d'une main brisée est nettement supérieure à un 16 rigide ou un soft 12.`;
+          if (tipeAdviceMove) tipeAdviceMove.textContent = move;
+          if (tipeAdviceWhy) tipeAdviceWhy.textContent = why;
+          return;
+        } else if (['10', 'J', 'Q', 'K'].includes(r)) {
+          move = 'RESTER';
+          why = 'Ne jamais séparer une paire de 10. Votre main de 20 a 88% de probabilité brute de victoire.';
+          if (tipeAdviceMove) tipeAdviceMove.textContent = move;
+          if (tipeAdviceWhy) tipeAdviceWhy.textContent = why;
+          return;
+        } else if (r === '9') {
+          if ([7, 10, 11].includes(dVal)) {
+            move = 'RESTER';
+            why = `Sur une paire de 9 vs ${dealerUp}, 18 est suffisant pour battre ou égaliser le croupier.`;
+          } else {
+            move = 'SÉPARER';
+            why = `Face à un ${dealerUp}, séparer les 9 optimise votre profitabilité sur deux mains fortes.`;
+          }
+          if (tipeAdviceMove) tipeAdviceMove.textContent = move;
+          if (tipeAdviceWhy) tipeAdviceWhy.textContent = why;
+          return;
+        }
+      }
 
       if (pTotal >= 21) {
         move = 'RESTER';
@@ -1035,7 +1341,7 @@
             why = `Sur 12 contre ${dealerUp}, seule une carte de valeur 10 vous fait bust (30.8%). Tirer reste statistiquement plus rentable.`;
           }
         } else if (pTotal === 11) {
-          if (playerHand.length === 2 && bankroll >= currentBet) {
+          if (curHand.length === 2 && bankroll >= currentBet) {
             move = 'DOUBLER';
             why = `Sur 11 contre ${dealerUp}, 30.8% des cartes donnent 21. Doubler offre la plus forte espérance positive (+58% EV) !`;
           } else {
@@ -1043,7 +1349,7 @@
             why = 'Sur 11, tirer maximise vos chances d’atteindre 20 ou 21.';
           }
         } else if (pTotal === 10) {
-          if (playerHand.length === 2 && dVal <= 9 && bankroll >= currentBet) {
+          if (curHand.length === 2 && dVal <= 9 && bankroll >= currentBet) {
             move = 'DOUBLER';
             why = `Sur 10 contre un ${dealerUp}, doubler la mise est optimal car votre tirage a 4 mains gagnantes sur 5.`;
           } else {
@@ -1051,7 +1357,7 @@
             why = 'Tirer pour chercher un 10 ou un As.';
           }
         } else if (pTotal === 9) {
-          if (playerHand.length === 2 && dVal >= 3 && dVal <= 6 && bankroll >= currentBet) {
+          if (curHand.length === 2 && dVal >= 3 && dVal <= 6 && bankroll >= currentBet) {
             move = 'DOUBLER';
             why = `Doubler sur 9 face au ${dealerUp} du croupier tire parti de sa forte probabilité d’échec.`;
           } else {
@@ -1067,7 +1373,7 @@
           move = 'RESTER';
           why = `Soft ${pTotal} est déjà une excellente main gagnante. Restez fermement.`;
         } else if (pTotal === 18) {
-          if (playerHand.length === 2 && dVal >= 3 && dVal <= 6 && bankroll >= currentBet) {
+          if (curHand.length === 2 && dVal >= 3 && dVal <= 6 && bankroll >= currentBet) {
             move = 'DOUBLER';
             why = `Soft 18 contre ${dealerUp} : doubler permet d’exploiter l’As sans risquer d’élimination directe.`;
           } else if (dVal >= 9) {
@@ -1078,7 +1384,7 @@
             why = 'Main solide de 18 contre un croupier moyen.';
           }
         } else {
-          if (playerHand.length === 2 && dVal >= 4 && dVal <= 6 && bankroll >= currentBet) {
+          if (curHand.length === 2 && dVal >= 4 && dVal <= 6 && bankroll >= currentBet) {
             move = 'DOUBLER';
             why = `Soft ${pTotal} contre un croupier vulnérable (${dealerUp}) : doubler augmente le rendement à long terme.`;
           } else {
@@ -1105,153 +1411,238 @@
       }
 
       bankroll -= currentBet;
-      playerHand = [];
+      playerHands = [[]];
+      handBets = [currentBet];
+      activeHandIdx = 0;
+      isSplitActive = false;
       dealerHand = [];
       dealerHoleCardHidden = true;
       isHandActive = true;
       handsPlayed++;
 
       playCardSound();
-      playerHand.push(drawCard());
+      playerHands[0].push(drawCard());
       dealerHand.push(drawCard());
-      playerHand.push(drawCard());
+      playerHands[0].push(drawCard());
       dealerHand.push(drawCard());
 
       dealBtn.disabled = true;
       hitBtn.disabled = false;
       standBtn.disabled = false;
-      doubleBtn.disabled = bankroll < currentBet;
 
       if (statusBanner) statusBanner.textContent = 'Votre tour : prenez votre décision ou suivez le modèle TIPE.';
       updateUI();
 
       // Check instant Blackjack
-      const pScore = calcHandValue(playerHand).total;
+      const pScore = calcHandValue(playerHands[0]).total;
       const dScore = calcHandValue(dealerHand).total;
       if (pScore === 21) {
         dealerHoleCardHidden = false;
         updateUI();
         if (dScore === 21) {
-          endRound('ÉGALITÉ (Blackjack mutuel) ! Mise remboursée.', 1, 'push');
+          endRoundDirect('ÉGALITÉ (Blackjack mutuel) ! Mise restituée.', 1, 'push');
         } else {
-          endRound('BLACKJACK NATUREL ! Vous gagnez 3:2 (+ ' + (currentBet * 2.5) + ' $)', 2.5, 'blackjack');
+          endRoundDirect('BLACKJACK NATUREL ! Paiement 3:2 (+ ' + (currentBet * 2.5) + ' $)', 2.5, 'blackjack');
         }
       }
+    }
+
+    function playerSplit() {
+      if (!isHandActive || isSplitActive || playerHands.length !== 1 || bankroll < currentBet) return;
+      const c1 = playerHands[0][0];
+      const c2 = playerHands[0][1];
+      bankroll -= currentBet;
+      isSplitActive = true;
+      handBets = [currentBet, currentBet];
+      playerHands = [
+        [c1, drawCard()],
+        [c2, drawCard()]
+      ];
+      activeHandIdx = 0;
+      playCardSound();
+      if (statusBanner) statusBanner.textContent = 'Mains séparées ! Choisissez votre action pour la Main 1.';
+      updateUI();
     }
 
     function playerHit() {
       if (!isHandActive) return;
       playCardSound();
-      playerHand.push(drawCard());
-      doubleBtn.disabled = true;
+      playerHands[activeHandIdx].push(drawCard());
       updateUI();
 
-      const pScore = calcHandValue(playerHand).total;
-      if (pScore > 21) {
-        dealerHoleCardHidden = false;
-        endRound('BUST ! Votre main dépasse 21. Perte de la mise.', 0, 'loss');
-      } else if (pScore === 21) {
+      const curScore = calcHandValue(playerHands[activeHandIdx]).total;
+      if (curScore > 21) {
+        if (isSplitActive && activeHandIdx === 0) {
+          activeHandIdx = 1;
+          if (statusBanner) statusBanner.textContent = 'Main 1 BUST (> 21) ! Tour de la Main 2.';
+          updateUI();
+        } else {
+          const allBusted = playerHands.every(h => calcHandValue(h).total > 21);
+          if (allBusted) {
+            dealerHoleCardHidden = false;
+            evaluateFinalHands();
+          } else {
+            playerStand();
+          }
+        }
+      } else if (curScore === 21) {
         playerStand();
       }
     }
 
     function playerDouble() {
-      if (!isHandActive || bankroll < currentBet) return;
-      bankroll -= currentBet;
-      currentBet *= 2;
+      if (!isHandActive) return;
+      const bet = handBets[activeHandIdx];
+      if (bankroll < bet || playerHands[activeHandIdx].length !== 2) return;
+      bankroll -= bet;
+      handBets[activeHandIdx] *= 2;
       playCardSound();
-      playerHand.push(drawCard());
+      playerHands[activeHandIdx].push(drawCard());
       updateUI();
 
-      const pScore = calcHandValue(playerHand).total;
-      if (pScore > 21) {
-        dealerHoleCardHidden = false;
-        endRound('BUST après double ! Vous perdez ' + currentBet + ' $.', 0, 'loss-double');
-      } else {
-        playerStand();
+      const curScore = calcHandValue(playerHands[activeHandIdx]).total;
+      if (curScore > 21) {
+        if (isSplitActive && activeHandIdx === 0) {
+          activeHandIdx = 1;
+          if (statusBanner) statusBanner.textContent = 'Main 1 BUST après double ! Tour de la Main 2.';
+          updateUI();
+          return;
+        }
       }
-      currentBet /= 2;
+      playerStand();
     }
 
     function playerStand() {
       if (!isHandActive) return;
-      dealerHoleCardHidden = false;
-      hitBtn.disabled = true;
-      standBtn.disabled = true;
-      doubleBtn.disabled = true;
-
-      function dealerTurn() {
+      if (isSplitActive && activeHandIdx === 0) {
+        activeHandIdx = 1;
+        if (statusBanner) statusBanner.textContent = 'Main 1 validée. Tour de la Main 2.';
         updateUI();
-        const dScore = calcHandValue(dealerHand).total;
-        if (dScore < 17) {
-          setTimeout(() => {
-            playCardSound();
-            dealerHand.push(drawCard());
-            dealerTurn();
-          }, 350);
-        } else {
+      } else {
+        dealerHoleCardHidden = false;
+        hitBtn.disabled = true;
+        standBtn.disabled = true;
+        doubleBtn.disabled = true;
+        if (splitBtn) splitBtn.disabled = true;
+
+        const allBusted = playerHands.every(h => calcHandValue(h).total > 21);
+        if (allBusted) {
           evaluateFinalHands();
+          return;
         }
+
+        function dealerTurn() {
+          updateUI();
+          const dScore = calcHandValue(dealerHand).total;
+
+          // Régulation adaptative de la Banque (TIPE Arthur Doradoux & Paul Aubert)
+          let dealerMustDraw = dScore < 17;
+          if (isBankRegulationEnabled && happiness < 35) {
+            // Mode de rétention d'urgence : la banque stabilise la table
+            if (dScore >= 17) dealerMustDraw = false;
+          }
+
+          if (dealerMustDraw) {
+            setTimeout(() => {
+              playCardSound();
+              dealerHand.push(drawCard());
+              dealerTurn();
+            }, 350);
+          } else {
+            evaluateFinalHands();
+          }
+        }
+        dealerTurn();
       }
-      dealerTurn();
     }
 
     function evaluateFinalHands() {
-      const pScore = calcHandValue(playerHand).total;
-      const dScore = calcHandValue(dealerHand).total;
-      updateUI();
-
-      if (dScore > 21) {
-        endRound('LE CROUPIER BUST ! Vous gagnez !', 2, 'win');
-      } else if (pScore > dScore) {
-        endRound(`VICTOIRE ! ${pScore} contre ${dScore} pour le croupier.`, 2, 'win');
-      } else if (pScore < dScore) {
-        endRound(`DÉFAITE. Le croupier l'emporte avec ${dScore} contre ${pScore}.`, 0, 'loss');
-      } else {
-        endRound(`ÉGALITÉ (Push) à ${pScore} ! Votre mise est restituée.`, 1, 'push');
-      }
-    }
-
-    function endRound(message, multiplier, outcomeType) {
       isHandActive = false;
       dealBtn.disabled = false;
       hitBtn.disabled = true;
       standBtn.disabled = true;
       doubleBtn.disabled = true;
+      if (splitBtn) splitBtn.disabled = true;
+
+      const dScore = calcHandValue(dealerHand).total;
+      let totalPayout = 0;
+      let netProfit = 0;
+      const handResults = [];
+
+      playerHands.forEach((hand, hIdx) => {
+        const bet = handBets[hIdx];
+        const pScore = calcHandValue(hand).total;
+        const prefix = isSplitActive ? `Main ${hIdx + 1}` : 'Résultat';
+
+        if (pScore > 21) {
+          handResults.push(`${prefix} : BUST (-${bet}$)`);
+          netProfit -= bet;
+        } else if (dScore > 21) {
+          handResults.push(`${prefix} : VICTOIRE (+${bet}$)`);
+          totalPayout += bet * 2;
+          netProfit += bet;
+        } else if (pScore > dScore) {
+          handResults.push(`${prefix} : VICTOIRE (+${bet}$)`);
+          totalPayout += bet * 2;
+          netProfit += bet;
+        } else if (pScore < dScore) {
+          handResults.push(`${prefix} : DÉFAITE (-${bet}$)`);
+          netProfit -= bet;
+        } else {
+          handResults.push(`${prefix} : ÉGALITÉ (+0$)`);
+          totalPayout += bet;
+        }
+      });
+
+      bankroll += totalPayout;
+
+      // MODÉLISATION DU BONHEUR DU JOUEUR (Recherche TIPE A. Doradoux & P. Aubert)
+      if (netProfit > 0) {
+        happiness = Math.min(100, happiness + 14.0 + (consecutiveWins * 2.5));
+        consecutiveWins++;
+        consecutiveLosses = 0;
+      } else if (netProfit === 0) {
+        happiness = Math.max(0, happiness - 2.0);
+      } else {
+        happiness = Math.max(0, happiness - 18.0 - (consecutiveLosses * 3.0));
+        consecutiveLosses++;
+        consecutiveWins = 0;
+      }
+
+      if (dScore > 21) {
+        if (statusBanner) statusBanner.textContent = `Croupier BUST (${dScore}) ! ${handResults.join(' • ')}`;
+      } else {
+        if (statusBanner) statusBanner.textContent = `${handResults.join(' • ')} (Croupier : ${dScore})`;
+      }
+
+      updateUI();
+
+      if (happiness < 15) {
+        setTimeout(triggerRagequit, 800);
+      }
+    }
+
+    function endRoundDirect(message, multiplier, outcomeType) {
+      isHandActive = false;
+      dealBtn.disabled = false;
+      hitBtn.disabled = true;
+      standBtn.disabled = true;
+      doubleBtn.disabled = true;
+      if (splitBtn) splitBtn.disabled = true;
 
       const payout = currentBet * multiplier;
       bankroll += payout;
 
-      // MODÉLISATION DU BONHEUR DU JOUEUR (Recherche TIPE)
-      // Modèle d'asymétrie psychologique (Kahneman & Tversky / TIPE A. Doradoux & P. Aubert)
       if (outcomeType === 'blackjack') {
         happiness = Math.min(100, happiness + 25.0);
         consecutiveWins++;
         consecutiveLosses = 0;
-      } else if (outcomeType === 'win') {
-        happiness = Math.min(100, happiness + 14.0 + (consecutiveWins * 2));
-        consecutiveWins++;
-        consecutiveLosses = 0;
       } else if (outcomeType === 'push') {
-        happiness = Math.max(0, happiness - 2.5); // Frustration mineure
-      } else if (outcomeType === 'loss-double') {
-        happiness = Math.max(0, happiness - 28.0); // Déception majeure
-        consecutiveLosses++;
-        consecutiveWins = 0;
-      } else if (outcomeType === 'loss') {
-        // Une perte fait 1.5x plus mal qu'un gain
-        happiness = Math.max(0, happiness - 18.0 - (consecutiveLosses * 3));
-        consecutiveLosses++;
-        consecutiveWins = 0;
+        happiness = Math.max(0, happiness - 2.0);
       }
 
       if (statusBanner) statusBanner.textContent = message;
       updateUI();
-
-      // Déclenchement du départ de table si Bonheur < 15%
-      if (happiness < 15) {
-        setTimeout(triggerRagequit, 800);
-      }
     }
 
     function triggerRagequit() {
@@ -1268,7 +1659,10 @@
       initialBankroll = 1000;
       consecutiveLosses = 0;
       consecutiveWins = 0;
-      playerHand = [];
+      playerHands = [[]];
+      handBets = [50];
+      activeHandIdx = 0;
+      isSplitActive = false;
       dealerHand = [];
       if (ragequitOverlay) ragequitOverlay.style.display = 'none';
       if (statusBanner) statusBanner.textContent = 'Nouveau joueur installé à la table ! Placez vos jetons.';
@@ -1315,6 +1709,11 @@
     hitBtn?.addEventListener('click', playerHit);
     standBtn?.addEventListener('click', playerStand);
     doubleBtn?.addEventListener('click', playerDouble);
+    splitBtn?.addEventListener('click', playerSplit);
+    bankAdaptToggle?.addEventListener('change', (e) => {
+      isBankRegulationEnabled = e.target.checked;
+      updateHappinessUI();
+    });
 
     function openModal() {
       if (modal) {
