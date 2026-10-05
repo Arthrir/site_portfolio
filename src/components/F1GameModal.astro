@@ -11,13 +11,35 @@
 
     <div class="f1-header">
       <h2 class="f1-title">Grand Prix Racing</h2>
-      <p class="f1-subtitle">Flèches directionnelles ou ZQSD pour piloter.</p>
+      <p class="f1-subtitle">Flèches / ZQSD sur clavier • Joystick & pédales sur mobile.</p>
     </div>
 
     <div class="f1-game-container">
       <canvas id="racingCanvas" width="800" height="450"></canvas>
       <div id="f1LapOverlay">Temps au tour: <span id="f1TimerDisplay">0.00</span>s</div>
       <div id="f1BestLapOverlay">Meilleur tour: <span id="f1BestTimerDisplay">--</span>s</div>
+
+      <!-- Commandes tactiles mobiles transparentes (Brawl Stars & Racing) -->
+      <div class="f1-touch-controls" id="f1TouchControls">
+        <!-- Joystick virtuel transparent à gauche -->
+        <div class="f1-joystick-zone" id="f1JoystickZone">
+          <div class="f1-joystick-base" id="f1JoystickBase">
+            <div class="f1-joystick-thumb" id="f1JoystickThumb"></div>
+          </div>
+        </div>
+
+        <!-- Pédales frein & accélérateur à droite -->
+        <div class="f1-pedals-zone">
+          <button type="button" class="f1-pedal f1-pedal-brake" id="f1PedalBrake" aria-label="Freiner / Reculer">
+            <span class="pedal-label">FREIN</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="5" width="16" height="14" rx="2"/></svg>
+          </button>
+          <button type="button" class="f1-pedal f1-pedal-gas" id="f1PedalGas" aria-label="Accélérer">
+            <span class="pedal-label">GAZ</span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -95,6 +117,122 @@
   #f1BestLapOverlay {
     right: 15px;
     color: #ffde00;
+  }
+  /* --- Commandes Tactiles Mobiles (Brawl Stars Joystick & Pédales) --- */
+  .f1-touch-controls {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: none;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 10px 14px;
+    z-index: 25;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+
+  @media (pointer: coarse), (max-width: 900px) {
+    .f1-touch-controls {
+      display: flex;
+    }
+  }
+
+  .f1-joystick-zone {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    pointer-events: auto;
+    touch-action: none;
+  }
+
+  .f1-joystick-base {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.28);
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .f1-joystick-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.2) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    transition: transform 0.04s linear;
+  }
+
+  .f1-pedals-zone {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    pointer-events: auto;
+    touch-action: none;
+    margin-bottom: 6px;
+    margin-right: 4px;
+  }
+
+  .f1-pedal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(6px);
+    transition: transform 0.08s ease, background 0.1s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  .pedal-label {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    margin-bottom: 3px;
+    font-family: monospace;
+    opacity: 0.9;
+  }
+
+  .f1-pedal-brake {
+    width: 50px;
+    height: 58px;
+    background: rgba(225, 6, 0, 0.28);
+    color: #FFF;
+    border-color: rgba(255, 80, 80, 0.45);
+  }
+  .f1-pedal-brake.active,
+  .f1-pedal-brake:active {
+    background: rgba(225, 6, 0, 0.75);
+    transform: scale(0.92);
+  }
+
+  .f1-pedal-gas {
+    width: 54px;
+    height: 76px;
+    background: rgba(16, 185, 129, 0.28);
+    color: #FFF;
+    border-color: rgba(16, 185, 129, 0.55);
+  }
+  .f1-pedal-gas.active,
+  .f1-pedal-gas:active {
+    background: rgba(16, 185, 129, 0.75);
+    transform: scale(0.92);
   }
 </style>
 
@@ -448,6 +586,135 @@
     window.addEventListener('keyup', (e) => {
       if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
     });
+
+    // --- Gestion des Contrôles Tactiles Mobiles (Joystick & Pédales) ---
+    const touchControls = document.getElementById('f1TouchControls');
+    const joyZone = document.getElementById('f1JoystickZone');
+    const joyBase = document.getElementById('f1JoystickBase');
+    const joyThumb = document.getElementById('f1JoystickThumb');
+    const pedalGas = document.getElementById('f1PedalGas');
+    const pedalBrake = document.getElementById('f1PedalBrake');
+
+    let joyActive = false;
+    let joyTouchId = null;
+    let joyCenterX = 0;
+    let joyCenterY = 0;
+    const maxJoyRadius = 32;
+
+    if (touchControls && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+      touchControls.style.display = 'flex';
+    }
+
+    function updateJoystickPosition(clientX, clientY) {
+      const dx = clientX - joyCenterX;
+      const dy = clientY - joyCenterY;
+      const dist = Math.hypot(dx, dy);
+      const angle = Math.atan2(dy, dx);
+      const clampedDist = Math.min(dist, maxJoyRadius);
+
+      const thumbX = Math.cos(angle) * clampedDist;
+      const thumbY = Math.sin(angle) * clampedDist;
+
+      if (joyThumb) {
+        joyThumb.style.transform = `translate(${thumbX}px, ${thumbY}px)`;
+      }
+
+      // Braquage gauche / droite
+      if (thumbX < -8) {
+        keys.ArrowLeft = true;
+        keys.ArrowRight = false;
+      } else if (thumbX > 8) {
+        keys.ArrowRight = true;
+        keys.ArrowLeft = false;
+      } else {
+        keys.ArrowLeft = false;
+        keys.ArrowRight = false;
+      }
+
+      // Possibilité d'accélérer / freiner aussi avec le joystick vertical
+      if (thumbY < -12) {
+        keys.ArrowUp = true;
+      } else if (!pedalGas?.classList.contains('active')) {
+        keys.ArrowUp = false;
+      }
+
+      if (thumbY > 12) {
+        keys.ArrowDown = true;
+      } else if (!pedalBrake?.classList.contains('active')) {
+        keys.ArrowDown = false;
+      }
+    }
+
+    function resetJoystick() {
+      joyActive = false;
+      joyTouchId = null;
+      if (joyThumb) joyThumb.style.transform = 'translate(0px, 0px)';
+      keys.ArrowLeft = false;
+      keys.ArrowRight = false;
+      if (!pedalGas?.classList.contains('active')) keys.ArrowUp = false;
+      if (!pedalBrake?.classList.contains('active')) keys.ArrowDown = false;
+    }
+
+    joyZone?.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      joyActive = true;
+      joyTouchId = e.pointerId;
+      try { joyZone.setPointerCapture(e.pointerId); } catch(err) {}
+
+      if (joyBase) {
+        const baseRect = joyBase.getBoundingClientRect();
+        joyCenterX = baseRect.left + baseRect.width / 2;
+        joyCenterY = baseRect.top + baseRect.height / 2;
+      }
+
+      updateJoystickPosition(e.clientX, e.clientY);
+    });
+
+    joyZone?.addEventListener('pointermove', (e) => {
+      if (!joyActive || e.pointerId !== joyTouchId) return;
+      e.preventDefault();
+      updateJoystickPosition(e.clientX, e.clientY);
+    });
+
+    joyZone?.addEventListener('pointerup', (e) => {
+      if (e.pointerId === joyTouchId) resetJoystick();
+    });
+    joyZone?.addEventListener('pointercancel', (e) => {
+      if (e.pointerId === joyTouchId) resetJoystick();
+    });
+
+    // Pédale Accélérateur (Gaz)
+    const handleGasStart = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      keys.ArrowUp = true;
+      pedalGas?.classList.add('active');
+    };
+    const handleGasEnd = (e) => {
+      e.preventDefault();
+      keys.ArrowUp = false;
+      pedalGas?.classList.remove('active');
+    };
+    pedalGas?.addEventListener('pointerdown', handleGasStart);
+    pedalGas?.addEventListener('pointerup', handleGasEnd);
+    pedalGas?.addEventListener('pointercancel', handleGasEnd);
+
+    // Pédale Frein
+    const handleBrakeStart = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      keys.ArrowDown = true;
+      pedalBrake?.classList.add('active');
+    };
+    const handleBrakeEnd = (e) => {
+      e.preventDefault();
+      keys.ArrowDown = false;
+      pedalBrake?.classList.remove('active');
+    };
+    pedalBrake?.addEventListener('pointerdown', handleBrakeStart);
+    pedalBrake?.addEventListener('pointerup', handleBrakeEnd);
+    pedalBrake?.addEventListener('pointercancel', handleBrakeEnd);
 
     closeBtn?.addEventListener('click', closeModal);
     backdrop?.addEventListener('click', closeModal);
