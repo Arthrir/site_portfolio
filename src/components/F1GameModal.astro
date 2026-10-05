@@ -16,29 +16,36 @@
 
     <div class="f1-game-container">
       <canvas id="racingCanvas" width="800" height="450"></canvas>
-      <div id="f1LapOverlay">Temps au tour: <span id="f1TimerDisplay">0.00</span>s</div>
-      <div id="f1BestLapOverlay">Meilleur tour: <span id="f1BestTimerDisplay">--</span>s</div>
+      <div id="f1LapOverlay">Temps: <span id="f1TimerDisplay">0.00</span>s</div>
+      <div id="f1BestLapOverlay">Record: <span id="f1BestTimerDisplay">--</span>s</div>
+    </div>
 
-      <!-- Commandes tactiles mobiles transparentes (Brawl Stars & Racing) -->
-      <div class="f1-touch-controls" id="f1TouchControls">
-        <!-- Joystick virtuel transparent à gauche -->
+    <!-- Commandes tactiles mobiles : placées HORS du circuit en mode portrait pour une visibilité 100% dégagée -->
+    <div class="f1-touch-controls" id="f1TouchControls">
+      <!-- Joystick directionnel 360° fluide à gauche -->
+      <div class="f1-steer-zone">
         <div class="f1-joystick-zone" id="f1JoystickZone">
           <div class="f1-joystick-base" id="f1JoystickBase">
             <div class="f1-joystick-thumb" id="f1JoystickThumb"></div>
           </div>
         </div>
+      </div>
 
-        <!-- Pédales frein & accélérateur à droite -->
-        <div class="f1-pedals-zone">
-          <button type="button" class="f1-pedal f1-pedal-brake" id="f1PedalBrake" aria-label="Freiner / Reculer">
-            <span class="pedal-label">FREIN</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="5" width="16" height="14" rx="2"/></svg>
-          </button>
-          <button type="button" class="f1-pedal f1-pedal-gas" id="f1PedalGas" aria-label="Accélérer">
-            <span class="pedal-label">GAZ</span>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
-          </button>
-        </div>
+      <!-- Conseil d'orientation central -->
+      <div class="f1-center-ctrl">
+        <span class="f1-orient-tip">🔄 Mode Paysage plein écran</span>
+      </div>
+
+      <!-- Pédales frein & accélérateur à droite -->
+      <div class="f1-pedals-zone">
+        <button type="button" class="f1-pedal f1-pedal-brake" id="f1PedalBrake" aria-label="Freiner">
+          <span class="pedal-label">FREIN</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="5" width="16" height="14" rx="2"/></svg>
+        </button>
+        <button type="button" class="f1-pedal f1-pedal-gas" id="f1PedalGas" aria-label="Accélérer">
+          <span class="pedal-label">GAZ</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -61,34 +68,34 @@
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 12px;
     width: 100%; max-width: 860px;
-    padding: 30px;
+    padding: 24px 28px;
     color: #F1F1EC;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     text-align: center;
   }
   .f1-close-btn {
-    position: absolute; top: 14px; right: 16px;
+    position: absolute; top: 12px; right: 14px;
     background: transparent; border: 1px solid rgba(255, 255, 255, 0.18);
     color: #8F9198; width: 32px; height: 32px; border-radius: 6px;
     font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: all 0.15s ease;
-    z-index: 10;
+    z-index: 30;
   }
   .f1-close-btn:hover { color: #fff; border-color: #fff; background: rgba(255, 255, 255, 0.08); }
 
   .f1-title {
-    font-family: var(--font-serif, serif); font-size: 1.85rem; font-weight: 600;
-    margin-bottom: 8px; color: #FFFFFF;
+    font-family: var(--font-serif, serif); font-size: 1.7rem; font-weight: 600;
+    margin-bottom: 4px; color: #FFFFFF;
   }
   .f1-subtitle {
-    font-size: 0.88rem; color: #8F9198; margin-bottom: 20px;
+    font-size: 0.85rem; color: #8F9198; margin-bottom: 16px;
   }
 
   .f1-game-container {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    background: #2b7a2b; /* grass color */
+    background: #2b7a2b; /* herbe */
     border-radius: 8px;
     overflow: hidden;
     border: 2px solid #333;
@@ -102,32 +109,35 @@
 
   #f1LapOverlay, #f1BestLapOverlay {
     position: absolute;
-    top: 15px;
-    background: rgba(0,0,0,0.6);
-    padding: 8px 12px;
+    top: 10px;
+    background: rgba(0,0,0,0.65);
+    padding: 6px 10px;
     border-radius: 6px;
     font-family: monospace;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     color: #fff;
     pointer-events: none;
+    z-index: 10;
   }
   #f1LapOverlay {
-    left: 15px;
+    left: 10px;
   }
   #f1BestLapOverlay {
-    right: 15px;
+    right: 10px;
     color: #ffde00;
   }
-  /* --- Commandes Tactiles Mobiles (Brawl Stars Joystick & Pédales) --- */
+
+  /* --- Commandes Tactiles Mobiles (En dessous du circuit en portrait) --- */
   .f1-touch-controls {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
     display: none;
+    width: 100%;
+    margin-top: 10px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     justify-content: space-between;
-    align-items: flex-end;
-    padding: 10px 14px;
-    z-index: 25;
+    align-items: center;
     user-select: none;
     -webkit-user-select: none;
     touch-action: none;
@@ -139,23 +149,27 @@
     }
   }
 
+  .f1-steer-zone {
+    display: flex;
+    align-items: center;
+  }
+
   .f1-joystick-zone {
-    width: 120px;
-    height: 120px;
+    width: 86px;
+    height: 86px;
     position: relative;
-    pointer-events: auto;
     touch-action: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .f1-joystick-base {
-    width: 84px;
-    height: 84px;
+    width: 74px;
+    height: 74px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.08);
-    border: 2px solid rgba(255, 255, 255, 0.28);
-    position: absolute;
-    left: 8px;
-    bottom: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.32);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -164,24 +178,36 @@
   }
 
   .f1-joystick-thumb {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.2) 100%);
-    border: 2px solid rgba(255, 255, 255, 0.85);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.95);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     pointer-events: none;
-    transition: transform 0.04s linear;
+    transition: transform 0.03s linear;
+  }
+
+  .f1-center-ctrl {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+  }
+  .f1-orient-tip {
+    font-size: 0.68rem;
+    color: #BAC2D1;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
   }
 
   .f1-pedals-zone {
     display: flex;
-    gap: 12px;
-    align-items: flex-end;
-    pointer-events: auto;
+    gap: 10px;
+    align-items: center;
     touch-action: none;
-    margin-bottom: 6px;
-    margin-right: 4px;
   }
 
   .f1-pedal {
@@ -204,90 +230,111 @@
     font-size: 0.62rem;
     font-weight: 800;
     letter-spacing: 0.05em;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
     font-family: monospace;
     opacity: 0.9;
   }
 
   .f1-pedal-brake {
-    width: 50px;
-    height: 58px;
+    width: 48px;
+    height: 56px;
     background: rgba(225, 6, 0, 0.28);
     color: #FFF;
     border-color: rgba(255, 80, 80, 0.45);
   }
   .f1-pedal-brake.active,
   .f1-pedal-brake:active {
-    background: rgba(225, 6, 0, 0.75);
+    background: rgba(225, 6, 0, 0.85);
     transform: scale(0.92);
   }
 
   .f1-pedal-gas {
-    width: 54px;
-    height: 76px;
+    width: 52px;
+    height: 70px;
     background: rgba(16, 185, 129, 0.28);
     color: #FFF;
     border-color: rgba(16, 185, 129, 0.55);
   }
   .f1-pedal-gas.active,
   .f1-pedal-gas:active {
-    background: rgba(16, 185, 129, 0.75);
+    background: rgba(16, 185, 129, 0.85);
     transform: scale(0.92);
   }
 
-  /* Responsive Mobile */
+  /* Responsive Mobile Portrait */
   @media (max-width: 640px) {
     .f1-modal {
-      padding: 8px;
+      padding: 6px;
     }
     .f1-content {
-      padding: 14px 10px 10px 10px;
-      border-radius: 8px;
+      padding: 12px 8px 10px 8px;
+      border-radius: 10px;
+      width: 98vw;
+      max-width: 98vw;
     }
     .f1-title {
-      font-size: 1.3rem;
-      margin-bottom: 2px;
+      font-size: 1.25rem;
+      margin-bottom: 4px;
     }
     .f1-subtitle {
-      font-size: 0.72rem;
-      margin-bottom: 10px;
+      display: none; /* Nettoyage complet en mode portrait pour visibilité maximale */
     }
     #f1LapOverlay, #f1BestLapOverlay {
-      font-size: 0.75rem;
-      padding: 4px 8px;
-      top: 6px;
+      font-size: 0.72rem;
+      padding: 3px 6px;
+      top: 5px;
     }
-    #f1LapOverlay { left: 6px; }
-    #f1BestLapOverlay { right: 6px; }
+    #f1LapOverlay { left: 5px; }
+    #f1BestLapOverlay { right: 5px; }
+  }
+
+  /* Responsive Mobile Landscape (Plein écran optimisé) */
+  @media (orientation: landscape) and (max-height: 520px) {
+    .f1-modal {
+      padding: 0;
+    }
+    .f1-content {
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      max-height: 100vh;
+      padding: 0;
+      border-radius: 0;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #000;
+    }
+    .f1-header {
+      display: none;
+    }
+    .f1-close-btn {
+      top: 8px;
+      right: 10px;
+    }
+    .f1-game-container {
+      width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+      border-radius: 0;
+      border: none;
+    }
     .f1-touch-controls {
-      padding: 6px 8px;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: transparent;
+      border: none;
+      margin-top: 0;
+      padding: 10px 18px;
+      align-items: flex-end;
     }
-    .f1-joystick-zone {
-      width: 96px;
-      height: 96px;
+    .f1-steer-zone, .f1-pedals-zone {
+      pointer-events: auto;
     }
-    .f1-joystick-base {
-      width: 72px;
-      height: 72px;
-      left: 4px;
-      bottom: 4px;
-    }
-    .f1-joystick-thumb {
-      width: 36px;
-      height: 36px;
-    }
-    .f1-pedals-zone {
-      gap: 8px;
-      margin-bottom: 4px;
-      margin-right: 2px;
-    }
-    .f1-pedal-brake {
-      width: 44px;
-      height: 52px;
-    }
-    .f1-pedal-gas {
-      width: 48px;
-      height: 66px;
+    .f1-center-ctrl {
+      display: none;
     }
   }
 </style>
@@ -337,9 +384,22 @@
           if (keys.ArrowUp || keys.w) this.speed += this.acceleration;
           if (keys.ArrowDown || keys.s) this.speed -= this.acceleration * 1.3;
 
-          if (this.speed !== 0) {
+          // Contrôles directionnels mobiles (Joystick 360° fluide style Brawl Stars)
+          if (joyActive && joyMagnitude > 0.15) {
+            let diff = joyTargetAngle - this.angle;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+            while (diff > Math.PI) diff -= Math.PI * 2;
+
+            const turnRate = 0.082 + 0.038 * joyMagnitude;
+            this.angle += Math.sign(diff) * Math.min(Math.abs(diff), turnRate);
+
+            // Auto-propulsion légère au joystick si ni gaz ni frein ne sont pressés
+            if (!keys.ArrowUp && !keys.ArrowDown && !keys.w && !keys.s && joyMagnitude > 0.28) {
+              this.speed += this.acceleration * 0.85 * joyMagnitude;
+            }
+          } else if (this.speed !== 0) {
+            // Clavier standard : direction progressive selon la vitesse
             const flip = this.speed > 0 ? 1 : -1;
-            // Direction progressive selon la vitesse (évite de tourner à 180° à l'arrêt)
             const steerFactor = Math.min(Math.abs(this.speed) / 2.2, 1.0);
             const effectiveTurn = this.turnSpeed * (0.35 + 0.65 * steerFactor);
             if (keys.ArrowLeft || keys.a) this.angle -= effectiveTurn * flip;
@@ -655,6 +715,8 @@
     let joyTouchId = null;
     let joyCenterX = 0;
     let joyCenterY = 0;
+    let joyTargetAngle = 0;
+    let joyMagnitude = 0;
     const maxJoyRadius = 32;
 
     if (touchControls && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
@@ -675,40 +737,15 @@
         joyThumb.style.transform = `translate(${thumbX}px, ${thumbY}px)`;
       }
 
-      // Braquage gauche / droite
-      if (thumbX < -8) {
-        keys.ArrowLeft = true;
-        keys.ArrowRight = false;
-      } else if (thumbX > 8) {
-        keys.ArrowRight = true;
-        keys.ArrowLeft = false;
-      } else {
-        keys.ArrowLeft = false;
-        keys.ArrowRight = false;
-      }
-
-      // Possibilité d'accélérer / freiner aussi avec le joystick vertical
-      if (thumbY < -12) {
-        keys.ArrowUp = true;
-      } else if (!pedalGas?.classList.contains('active')) {
-        keys.ArrowUp = false;
-      }
-
-      if (thumbY > 12) {
-        keys.ArrowDown = true;
-      } else if (!pedalBrake?.classList.contains('active')) {
-        keys.ArrowDown = false;
-      }
+      joyTargetAngle = angle;
+      joyMagnitude = clampedDist / maxJoyRadius;
     }
 
     function resetJoystick() {
       joyActive = false;
       joyTouchId = null;
+      joyMagnitude = 0;
       if (joyThumb) joyThumb.style.transform = 'translate(0px, 0px)';
-      keys.ArrowLeft = false;
-      keys.ArrowRight = false;
-      if (!pedalGas?.classList.contains('active')) keys.ArrowUp = false;
-      if (!pedalBrake?.classList.contains('active')) keys.ArrowDown = false;
     }
 
     joyZone?.addEventListener('pointerdown', (e) => {
@@ -739,6 +776,9 @@
     joyZone?.addEventListener('pointercancel', (e) => {
       if (e.pointerId === joyTouchId) resetJoystick();
     });
+    joyZone?.addEventListener('pointerleave', (e) => {
+      if (e.pointerId === joyTouchId) resetJoystick();
+    });
 
     // Pédale Accélérateur (Gaz)
     const handleGasStart = (e) => {
@@ -755,6 +795,7 @@
     pedalGas?.addEventListener('pointerdown', handleGasStart);
     pedalGas?.addEventListener('pointerup', handleGasEnd);
     pedalGas?.addEventListener('pointercancel', handleGasEnd);
+    pedalGas?.addEventListener('pointerleave', handleGasEnd);
 
     // Pédale Frein
     const handleBrakeStart = (e) => {
@@ -771,6 +812,7 @@
     pedalBrake?.addEventListener('pointerdown', handleBrakeStart);
     pedalBrake?.addEventListener('pointerup', handleBrakeEnd);
     pedalBrake?.addEventListener('pointercancel', handleBrakeEnd);
+    pedalBrake?.addEventListener('pointerleave', handleBrakeEnd);
 
     closeBtn?.addEventListener('click', closeModal);
     backdrop?.addEventListener('click', closeModal);
