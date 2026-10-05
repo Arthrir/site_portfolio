@@ -9,6 +9,8 @@ const featured = [
   {
     logo: "/logo/emse.png", color: "var(--school-emse)", date: lang === 'fr' ? "Fév 2026 - Aujourd'hui" : "Feb 2026 - Pres.",
     role: "ISMIN & ICM", title: lang === 'fr' ? "Élu au comité de l'enseignement" : "Elected Member of the Academic Committee",
+    site: "https://www.mines-stetienne.fr/",
+    team: [{ name: "Laure Rivier", link: "https://linkedin.com/in/laure-rivier-83060a328" }],
     desc: lang === 'fr' ? `
       <ul>
         <li>Participation aux réunions de comité de l'enseignement où sont discutés, décidés et présentés les grands changements des programmes pédagogiques de l'école.</li>
@@ -25,6 +27,7 @@ const featured = [
   {
     logo: "/logo/minitel.png", color: "var(--accent-bright)", date: lang === 'fr' ? "Mars 2025 - Mars 2026" : "Mar 2025 - Mar 2026",
     role: "MINITEL", title: lang === 'fr' ? "Président" : "President",
+    site: "https://minitel.emse.fr/",
     desc: lang === 'fr' ? `
       <p style="margin-bottom:8px">Association étudiante d'informatique, réseau et gaming. Direction de l'association (16 membres) et gestion des projets majeurs :</p>
       <ul>
@@ -50,6 +53,8 @@ const others = [
   { 
     logo: "/logo/emse.png", date: lang === 'fr' ? "Sep 2024 - Aujourd'hui" : "Sep 2024 - Pres.", role: "1A & 2A", 
     title: lang === 'fr' ? "Représentant de Promotion" : "Class Representative", 
+    site: "https://www.mines-stetienne.fr/",
+    team: [{ name: "Laure Rivier", link: "https://linkedin.com/in/laure-rivier-83060a328" }],
     desc: lang === 'fr' ? `
       <ul>
         <li>Réunions mensuelles avec l'équipe de direction du campus pour remonter les points clés de la promotion.</li>
@@ -67,6 +72,7 @@ const others = [
   { 
     logo: "/logo/emse.png", date: lang === 'fr' ? "Janvier 2025 - Aujourd'hui" : "Jan 2025 - Pres.", role: "Communication", 
     title: lang === 'fr' ? "Ambassadeur Communication" : "School Ambassador", 
+    site: "https://www.mines-stetienne.fr/",
     desc: lang === 'fr' ? `
       <ul>
         <li>Mise à jour et refonte intégrale de la plaquette Alpha du cursus ISMIN pour les futurs élèves ingénieurs.</li>
@@ -84,17 +90,36 @@ const others = [
   { 
     logo: "/logo/alumni.png", date: lang === 'fr' ? "Rôle à vie" : "Lifetime", role: "Alumni", 
     title: lang === 'fr' ? "Relai de la Promotion" : "Class Representative for Alumni", 
+    site: "https://www.mines-saint-etienne.org/",
     desc: lang === 'fr' ? "Représentation de la promotion auprès du réseau des anciens élèves pour assurer la communication, organiser des événements de networking et faciliter la collaboration professionnelle." : "Representation of the class within the alumni network to ensure communication, organize networking events and facilitate professional collaboration." 
   },
   { 
     logo: "/logo/bde.jpeg", date: lang === 'fr' ? "Avril 2025 - Mars 2026" : "Apr 2025 - Mar 2026", role: "BDE", 
     title: lang === 'fr' ? "Responsable Merchandising et Uniformes" : "Merchandising and Uniforms Manager", 
+    site: "https://bde-emse.fr/",
     desc: lang === 'fr' ? "Gestion des commandes et de la distribution des uniformes et produits dérivés pour les élèves de l'école." : "Management of orders and distribution of uniforms and merchandise for the school’s students." 
   },
   { 
     logo: "/logo/fei.jpeg", date: lang === 'fr' ? "Avril 2025 - Nov 2025" : "Apr 2025 - Nov 2025", role: "FEI", 
     title: lang === 'fr' ? "Chargé Logistique" : "Logistics Officer", 
+    site: "https://fei-aix.com/",
     desc: lang === 'fr' ? "Soutien à l'accueil et au guidage des entreprises. Gestion du bon déroulement des conférences et résolution des problèmes logistiques sur site." : "Support for welcoming and guiding companies. Ensuring the smooth running of conferences and solving on-site logistical issues." 
+  },
+  { 
+    logo: "/logo/jmp.png", date: lang === 'fr' ? "2025 - Présent" : "2025 - Pres.", role: "Junior-Entreprise", 
+    title: "Junior Mines Provence", 
+    site: "https://www.junior-mines-provence.fr/",
+    desc: lang === 'fr' ? `
+      <ul>
+        <li>Junior-Entreprise du campus Georges Charpak Provence de Mines Saint-Étienne.</li>
+        <li>Participation aux missions d'ingénierie et de conseil en informatique et microélectronique.</li>
+      </ul>
+    ` : `
+      <ul>
+        <li>Junior-Enterprise of the Georges Charpak Provence campus at Mines Saint-Étienne.</li>
+        <li>Involvement in tech and consulting missions in IT and microelectronics.</li>
+      </ul>
+    ` 
   },
   { 
     logo: "/logo/comif.jpeg", date: lang === 'fr' ? "Mars 2025 - Mars 2026" : "Mar 2025 - Mar 2026", role: "COMIF", 
@@ -133,8 +158,23 @@ const others = [
             <div style="margin-left: auto; font-size: 0.85rem; font-weight: 600; color: var(--muted); text-align: right;">{item.date}</div>
           </div>
           <div style="font-size: 0.96rem; line-height: 1.7; max-width: 740px;" set:html={item.desc} />
-          <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
-            {item.tags.map(tag => <span class="skill-tag">{tag}</span>)}
+          <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              {item.tags.map(tag => <span class="skill-tag">{tag}</span>)}
+            </div>
+            <div style="display: flex; gap: 14px; align-items: center; font-size: 0.85rem; flex-wrap: wrap;">
+              {item.team && item.team.map(member => (
+                <span style="color: var(--muted); display: inline-flex; align-items: center; gap: 5px;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  {lang === 'fr' ? 'En binôme avec' : 'With'} <a href={member.link} target="_blank" rel="noopener noreferrer" style="color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 2px;">{member.name} ↗</a>
+                </span>
+              ))}
+              {item.site && (
+                <a href={item.site} target="_blank" rel="noopener noreferrer" style="color: var(--pop-blue); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: underline; text-underline-offset: 2px;">
+                  {lang === 'fr' ? 'Site officiel' : 'Official website'} ↗
+                </a>
+              )}
+            </div>
           </div>
         </div>
       ))}
@@ -156,7 +196,22 @@ const others = [
           </summary>
           <div class="accordion-body">
             <div class="accordion-body-inner">
-              <p class="org-name-sub" style="margin-bottom: 12px;">{item.role}</p>
+              <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
+                <p class="org-name-sub" style="margin-bottom: 0;">{item.role}</p>
+                <div style="display: flex; gap: 12px; align-items: center; font-size: 0.82rem; flex-wrap: wrap;">
+                  {item.team && item.team.map(member => (
+                    <span style="color: var(--muted); display: inline-flex; align-items: center; gap: 4px;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                      {lang === 'fr' ? 'En binôme avec' : 'With'} <a href={member.link} target="_blank" rel="noopener noreferrer" style="color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 2px;">{member.name} ↗</a>
+                    </span>
+                  ))}
+                  {item.site && (
+                    <a href={item.site} target="_blank" rel="noopener noreferrer" style="color: var(--pop-blue); font-weight: 600; text-decoration: underline; text-underline-offset: 2px;">
+                      {lang === 'fr' ? 'Site officiel' : 'Official website'} ↗
+                    </a>
+                  )}
+                </div>
+              </div>
               <div style="font-size: 0.92rem;" set:html={item.desc} />
             </div>
           </div>

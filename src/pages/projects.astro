@@ -7,8 +7,16 @@ const t = makeT(lang);
 
 const projects = [
   { 
+    title: lang === 'fr' ? "Site Web Portfolio" : "Portfolio Website", 
+    date: lang === 'fr' ? "2024 - Présent (En cours)" : "2024 - Present (Current)", 
+    isCurrent: true,
+    desc: lang === 'fr' ? "Design et développement de ce portfolio personnel. Focus sur l'UI/UX, le responsive design et les performances." : "Design and development of this personal portfolio. Focus on UI/UX, responsive design, and performance.", 
+    tags: { hardware: [], software: ["HTML", "CSS", "JavaScript", "Astro"], soft: ["UI/UX Design"], tools: ["Figma"] }, link: "#" 
+  },
+  { 
     title: lang === 'fr' ? "FPGA - ECG & communication sécurisée" : "FPGA ECG and Communication", 
     date: lang === 'fr' ? "Fév. 2026 - Mars 2026" : "Feb. 2026 - Mar. 2026", 
+    team: [{ name: "Yasmin Hadj-Said", link: "https://linkedin.com/in/yasmin-hadj-said" }],
     desc: lang === 'fr' ? `
       <p>Développement d’un système basé sur FPGA permettant le déchiffrement de trames ECG.</p>
       <ul>
@@ -29,6 +37,7 @@ const projects = [
   { 
     title: lang === 'fr' ? "IA embarquée (Détection de défauts)" : "Embedded AI", 
     date: lang === 'fr' ? "Fév. 2026 - Mars 2026" : "Feb. 2026 - Mar. 2026", 
+    team: [{ name: "Yasmin Hadj-Said", link: "https://linkedin.com/in/yasmin-hadj-said" }],
     desc: lang === 'fr' ? `
       <ul>
         <li>Entraînement d'un modèle en Python pour détecter des défauts sur des machines.</li>
@@ -43,8 +52,26 @@ const projects = [
     tags: { hardware: ["STM32"], software: ["Python", "C"], soft: [], tools: [] }, link: "https://github.com/Arthrir/ISMIN-IA_Embarquee_Projet" 
   },
   { 
+    title: lang === 'fr' ? "IA pour le Manufacturing" : "AI for Manufacturing", 
+    date: lang === 'fr' ? "Fév. 2026 - Mars 2026" : "Feb. 2026 - Mar. 2026", 
+    team: [{ name: "Yasmin Hadj-Said", link: "https://linkedin.com/in/yasmin-hadj-said" }],
+    desc: lang === 'fr' ? `
+      <ul>
+        <li>Application de modèles de machine learning et deep learning aux processus de fabrication industrielle.</li>
+        <li>Détection d'anomalies et analyse prédictive sur données de production sous Python.</li>
+      </ul>
+    ` : `
+      <ul>
+        <li>Application of machine learning and deep learning models to industrial manufacturing processes.</li>
+        <li>Anomaly detection and predictive analysis on manufacturing line data using Python.</li>
+      </ul>
+    `, 
+    tags: { hardware: [], software: ["Python"], soft: [], tools: ["Machine Learning"] }, link: "#" 
+  },
+  { 
     title: lang === 'fr' ? "Architecture des processeurs RISC-V" : "Processor Architecture (RISC-V)", 
     date: lang === 'fr' ? "Oct. 2025 - Jan. 2026" : "Oct. 2025 - Jan. 2026", 
+    team: [{ name: "Yasmin Hadj-Said", link: "https://linkedin.com/in/yasmin-hadj-said" }],
     desc: lang === 'fr' ? `
       <ul>
         <li>Implémentation complète d’un processeur RISC-V en SystemVerilog.</li>
@@ -77,12 +104,14 @@ const projects = [
   { 
     title: lang === 'fr' ? "Projet IoT - Qualité de l’air" : "Terrariot IoT Box", 
     date: lang === 'fr' ? "Nov. 2025 - Fév. 2026" : "Nov. 2025 - Feb. 2026", 
+    team: [{ name: "Jade Diouri", link: "https://linkedin.com/in/jade-diouri-7a4688328" }],
     desc: lang === 'fr' ? "Conception d’un boîtier de mesure de la qualité de l’air destiné aux zoos afin de réguler et contrôler des microclimats spécifiques." : "Design of an air quality measurement enclosure intended for zoos in order to regulate and better control microclimates.", 
     tags: { hardware: ["STM32", "Sensors", "3D Printing"], software: ["C"], soft: [], tools: ["Inventor"] }, link: "#" 
   },
   { 
     title: lang === 'fr' ? "Ventilateur à capteur capacitif" : "Capacitive Sensor Fan", 
     date: lang === 'fr' ? "Fév. 2025 - Juin 2025" : "Feb. 2025 - Jun. 2025", 
+    team: [{ name: "Inès Lixi", link: "https://linkedin.com/in/in%C3%A8s-lixi-979654329" }],
     desc: lang === 'fr' ? `
       <ul>
         <li>Acquisition de données via STM32 pour ajuster la vitesse.</li>
@@ -99,12 +128,14 @@ const projects = [
   { 
     title: lang === 'fr' ? "Robot autonome (STM32)" : "Autonomous Robot (STM32)", 
     date: lang === 'fr' ? "Fév. 2025 - Juin 2025" : "Feb. 2025 - Jun. 2025", 
+    team: [{ name: "Inès Lixi", link: "https://linkedin.com/in/in%C3%A8s-lixi-979654329" }],
     desc: lang === 'fr' ? "Programmation d'un robot basé sur STM32. Algorithme lui permettant de s'arrêter exactement à 20cm d'un objet puis de le suivre dynamiquement." : "Programming of an STM32-based robot to dynamically follow objects maintaining a 20cm distance.", 
     tags: { hardware: ["STM32", "Robotics"], software: ["C"], soft: [], tools: [] }, link: "#" 
   },
   { 
     title: lang === 'fr' ? "Conception Processeur RISC-V (32 bits)" : "CPU Design (RV32I)", 
     date: lang === 'fr' ? "Oct. 2025 - Déc. 2025" : "Oct. 2025 - Dec. 2025", 
+    team: [{ name: "Inès Lixi", link: "https://linkedin.com/in/in%C3%A8s-lixi-979654329" }],
     desc: lang === 'fr' ? "Conception complète d'un CPU (RV32I) sur Logisim-evolution (ALU, registres, mémoire)." : "Complete design of a processing unit (CPU) based on RISC-V using Logisim-evolution.", 
     tags: { hardware: ["RISC-V"], software: [], soft: [], tools: ["Logisim"] }, link: "#" 
   },
@@ -117,6 +148,7 @@ const projects = [
   { 
     title: lang === 'fr' ? "Jeu State.io" : "State.io Game", 
     date: lang === 'fr' ? "Fév. 2025 - Avr. 2025" : "Feb. 2025 - Apr. 2025", 
+    team: [{ name: "Inès Lixi", link: "https://linkedin.com/in/in%C3%A8s-lixi-979654329" }],
     desc: lang === 'fr' ? "Développement d'un jeu multijoueur en C visant la conquête de territoires (Sockets, Ncurses)." : "Development of the State.io game in C using client-server architecture (Sockets) and Ncurses.", 
     tags: { hardware: [], software: ["C"], soft: ["Dev Lead"], tools: [] }, link: "https://github.com/Arthrir/ISMIN-Jeu_Stateio" 
   },
@@ -137,19 +169,13 @@ const projects = [
     date: lang === 'fr' ? "Jan. 2023 - Juil. 2024" : "Jan. 2023 - Jul. 2024", 
     desc: lang === 'fr' ? "Simulation Python modélisant le bonheur du joueur pour optimiser les gains du casino." : "Python simulation modeling player happiness to optimize casino gains.", 
     tags: { hardware: [], software: ["Python"], soft: [], tools: ["Matplotlib"] }, link: "#" 
-  },
-  { 
-    title: lang === 'fr' ? "Site Web Portfolio" : "Portfolio Website", 
-    date: lang === 'fr' ? "2024 - 2026" : "2024 - 2026", 
-    desc: lang === 'fr' ? "Design et développement de ce portfolio personnel. Focus sur l'UI/UX, le responsive design et les performances." : "Design and development of this personal portfolio. Focus on UI/UX, responsive design, and performance.", 
-    tags: { hardware: [], software: ["HTML", "CSS", "JavaScript", "Astro"], soft: ["UI/UX Design"], tools: ["Figma"] }, link: "#" 
   }
 ];
 
 const domTags = ["FPGA", "STM32", "RISC-V", "Sensors", "3D Printing", "PCB", "Robotics", "Cryptography", "Electronics"];
 const techTags = ["Python", "SystemVerilog", "C", "Linux", "HTML", "CSS", "JavaScript", "Astro"];
 const softTags = ["Dev Lead", "Event Management", "Communication", "Entrepreneurship", "Tech Lead", "UI/UX Design"];
-const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "Matplotlib", "Figma"];
+const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "Matplotlib", "Figma", "Machine Learning"];
 ---
 
 <Layout 
@@ -197,8 +223,26 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
         return (
           <article class="card project-card" data-tags={JSON.stringify(flatTags)} style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; margin-bottom: 6px;">{project.title}</h3>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px;">
+                <h3 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">{project.title}</h3>
+                {project.isCurrent && (
+                  <span style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 100px; background: rgba(59, 130, 246, 0.12); color: var(--pop-blue); border: 1px solid rgba(59, 130, 246, 0.3); white-space: nowrap;">
+                    {lang === 'fr' ? 'En cours' : 'Current'}
+                  </span>
+                )}
+              </div>
               <p class="muted" style="font-size: 0.85rem; margin-bottom: 12px;">{project.date}</p>
+              {project.team && project.team.length > 0 && (
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px; font-size: 0.82rem; color: var(--muted); flex-wrap: wrap;">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  <span>{lang === 'fr' ? 'En binôme avec' : 'With'} :</span>
+                  {project.team.map((member) => (
+                    <a href={member.link} target="_blank" rel="noopener noreferrer" style="color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 2px;">
+                      {member.name} ↗
+                    </a>
+                  ))}
+                </div>
+              )}
               <div class="project-desc" style="font-size: 0.95rem; margin-bottom: 20px; color: var(--text);" set:html={project.desc} />
             </div>
             <div>
