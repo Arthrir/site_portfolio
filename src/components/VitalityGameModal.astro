@@ -43,11 +43,6 @@
         <span class="hud-value highlight-green" id="vitAccuracy">100%</span>
         <span class="hud-sub" id="vitHitsCounter">0 touchés</span>
       </div>
-      <div class="hud-box best-box">
-        <span class="hud-label">RECORD</span>
-        <span class="hud-value highlight-gold" id="vitBestScore">0</span>
-        <span class="hud-sub">SESSION BEST</span>
-      </div>
     </div>
 
     <!-- Arène de tir haute précision -->
@@ -58,64 +53,34 @@
       <!-- Hitmarker flash dynamique -->
       <div class="vit-hitmarker" id="vitHitmarker"></div>
 
-      <!-- Overlay de départ -->
+      <!-- Overlay de départ : sobre et efficace -->
       <div class="vit-overlay" id="vitStartOverlay">
-        <div class="overlay-card">
-          <div class="overlay-icon">🎯</div>
-          <h3 class="overlay-title">STAND DE TIR PRÊT</h3>
-          <p class="overlay-desc">Cliquez ou touchez les cibles le plus vite possible dès leur apparition. Évitez les tirs dans le vide pour préserver votre précision.</p>
-          <button class="vit-btn-action" id="vitStartGameBtn">
-            <span>DÉMARRER LA SESSION</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          </button>
+        <div class="vit-menu-box">
+          <div class="vit-start-title">VITALITY AIM & REFLEX DRILL</div>
+          <button class="vit-btn-main" id="vitStartGameBtn">LANCER LA SESSION</button>
+          <div class="vit-start-hint">15s • Visez et cliquez sur chaque cible dorée</div>
         </div>
       </div>
 
-      <!-- Overlay de fin avec rapport de performance détaillé -->
+      <!-- Overlay de fin : rapport de score épuré -->
       <div class="vit-overlay" id="vitEndOverlay" style="display: none;">
-        <div class="overlay-card end-card">
-          <div class="rank-badge" id="vitEndRankBadge">
-            <span class="rank-icon" id="vitEndRankIcon">👑</span>
-            <span class="rank-title" id="vitEndRank">MAJOR CHAMPION</span>
+        <div class="vit-menu-box">
+          <div class="vit-end-rank" id="vitEndRank">MAJOR CHAMPION</div>
+          <div class="vit-end-stats-line">
+            Score : <strong id="endScoreVal">0</strong> • Cibles : <strong id="endHitsVal">0</strong> • Précision : <strong id="endAccVal">100%</strong> • Cadence : <strong id="endKpsVal">0.0 /s</strong>
           </div>
-
-          <div class="stats-grid">
-            <div class="stat-col">
-              <span class="stat-col-lbl">Score final</span>
-              <span class="stat-col-val" id="endScoreVal">0</span>
-            </div>
-            <div class="stat-col">
-              <span class="stat-col-lbl">Cibles éliminées</span>
-              <span class="stat-col-val" id="endHitsVal">0</span>
-            </div>
-            <div class="stat-col">
-              <span class="stat-col-lbl">Précision globale</span>
-              <span class="stat-col-val" id="endAccVal">100%</span>
-            </div>
-            <div class="stat-col">
-              <span class="stat-col-lbl">Cadence de tir</span>
-              <span class="stat-col-val" id="endKpsVal">0.0 /s</span>
-            </div>
-          </div>
-
           <div class="new-record-alert" id="vitNewRecordAlert" style="display: none;">
-            ✨ NOUVEAU RECORD PERSONNEL ÉTABLI !
+            NOUVEAU RECORD PERSONNEL !
           </div>
-
-          <div class="end-actions">
-            <button class="vit-btn-action" id="vitRestartBtn">
-              <span>NOUVEAU DRILL (REJOUER)</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            </button>
-          </div>
+          <button class="vit-btn-main" id="vitRestartBtn">REJOUER</button>
         </div>
       </div>
     </div>
 
-    <!-- Barre inférieure discrète -->
+    <!-- Barre inférieure avec record personnel bien visible -->
     <div class="vit-footer">
+      <span class="vit-record-pill">Record personnel : <strong id="vitBestScore">0</strong> pts</span>
       <span class="vit-tip"><kbd>Échap</kbd> quitter • <kbd>Espace</kbd> relancer</span>
-      <span class="vit-credits">Design inspiré de l'entraînement CS2 / Aim Lab</span>
     </div>
   </div>
 </div>
@@ -348,83 +313,74 @@
     100% { transform: translate(-50%, -90px) scale(1.1); opacity: 0; }
   }
 
-  /* Overlays */
+  /* Overlays : sleek, minimal esports menu */
   .vit-overlay {
     position: absolute; inset: 0;
-    background: rgba(8, 9, 12, 0.85);
-    backdrop-filter: blur(6px);
+    background: rgba(8, 9, 12, 0.88);
+    backdrop-filter: blur(8px);
     display: flex; align-items: center; justify-content: center;
     padding: 20px; z-index: 70;
   }
-  .overlay-card {
-    background: rgba(18, 21, 28, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 14px;
-    padding: 26px 30px;
-    max-width: 440px; text-align: center;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  .vit-menu-box {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    text-align: center; max-width: 440px; width: 100%;
   }
-  .overlay-icon { font-size: 2.2rem; margin-bottom: 8px; }
-  .overlay-title {
-    font-size: 1.25rem; font-weight: 800; color: #FFFFFF;
-    margin: 0 0 8px; letter-spacing: 0.02em;
+  .vit-start-title {
+    font-size: 1.15rem; font-weight: 800; letter-spacing: 0.08em;
+    color: #FFFFFF; font-family: monospace, sans-serif;
   }
-  .overlay-desc {
-    font-size: 0.84rem; color: #9CA3AF; margin: 0 0 20px; line-height: 1.45;
+  .vit-start-hint {
+    font-size: 0.82rem; color: #9CA3AF;
   }
 
-  .vit-btn-action {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    background: linear-gradient(135deg, #FACC15 0%, #EAB308 100%);
+  .vit-btn-main {
+    background: #F2E800;
     color: #000000;
-    font-weight: 800; font-size: 0.9rem; letter-spacing: 0.04em;
-    border: none; border-radius: 8px;
-    padding: 12px 24px; cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 14px rgba(234, 179, 8, 0.3);
+    font-size: 0.95rem; font-weight: 800;
+    letter-spacing: 0.08em;
+    border: none; border-radius: 6px;
+    padding: 12px 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(242, 232, 0, 0.35);
+    transition: all 0.15s ease;
   }
-  .vit-btn-action:hover {
+  .vit-btn-main:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(234, 179, 8, 0.45);
+    box-shadow: 0 6px 22px rgba(242, 232, 0, 0.5);
     filter: brightness(1.05);
   }
-  .vit-btn-action:active { transform: translateY(0); }
+  .vit-btn-main:active { transform: translateY(0); }
 
-  /* End screen card */
-  .end-card { max-width: 480px; width: 100%; }
-  .rank-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(234, 179, 8, 0.15);
-    border: 1px solid rgba(234, 179, 8, 0.4);
-    padding: 8px 18px; border-radius: 999px; margin-bottom: 18px;
+  /* End screen */
+  .vit-end-rank {
+    font-size: 1.35rem; font-weight: 900; color: #F2E800;
+    letter-spacing: 0.08em; font-family: monospace, sans-serif;
   }
-  .rank-icon { font-size: 1.3rem; }
-  .rank-title { font-size: 0.95rem; font-weight: 800; color: #FACC15; letter-spacing: 0.05em; }
-
-  .stats-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr);
-    gap: 10px; margin-bottom: 18px;
+  .vit-end-stats-line {
+    font-size: 0.9rem; color: #E5E7EB; line-height: 1.5;
   }
-  .stat-col {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 8px; padding: 10px;
-    display: flex; flex-direction: column; align-items: center;
+  .vit-end-stats-line strong {
+    color: #F2E800; font-weight: 700;
   }
-  .stat-col-lbl { font-size: 0.68rem; color: #9CA3AF; margin-bottom: 2px; }
-  .stat-col-val { font-size: 1.2rem; font-weight: 800; color: #FFFFFF; font-variant-numeric: tabular-nums; }
 
   .new-record-alert {
     background: rgba(16, 185, 129, 0.15);
     border: 1px solid rgba(16, 185, 129, 0.35);
-    color: #34D399; font-size: 0.78rem; font-weight: 700;
-    padding: 6px 12px; border-radius: 6px; margin-bottom: 16px;
+    color: #34D399; font-size: 0.8rem; font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 6px 14px; border-radius: 6px;
   }
 
   /* Footer */
   .vit-footer {
     display: flex; justify-content: space-between; align-items: center;
-    margin-top: 14px; font-size: 0.75rem; color: #6B7280;
+    margin-top: 14px; font-size: 0.78rem; color: #6B7280;
+  }
+  .vit-record-pill {
+    color: #9CA3AF; font-size: 0.85rem;
+  }
+  .vit-record-pill strong {
+    color: #FACC15; font-weight: 800;
   }
   .vit-tip kbd {
     background: rgba(255, 255, 255, 0.08);
@@ -752,22 +708,17 @@
       const finalAcc = totalClicks > 0 ? Math.round((hits / totalClicks) * 100) : 100;
       const finalKps = (hits / TOTAL_DURATION).toFixed(1);
 
-      // Calcul du rang esport
+      // Calcul du rang esport épuré
       let rankTitle = 'ROOKIE // Recrue';
-      let rankIcon = '🛡️';
 
       if (hits >= 34 && finalAcc >= 90) {
         rankTitle = 'MAJOR MVP // ZywOo Class';
-        rankIcon = '👑';
       } else if (hits >= 26 && finalAcc >= 85) {
-        rankTitle = 'RADIANT // CS2 Global Elite';
-        rankIcon = '⚡';
+        rankTitle = 'RADIANT // Global Elite';
       } else if (hits >= 18 && finalAcc >= 75) {
-        rankTitle = 'DIAMOND // Faceit Level 10';
-        rankIcon = '🎯';
+        rankTitle = 'DIAMOND // Aim Pro';
       } else if (hits >= 12) {
         rankTitle = 'GOLD // Challenger';
-        rankIcon = '⚔️';
       }
 
       const isNewBest = score > savedBest;
@@ -779,7 +730,6 @@
       }
 
       if (endRankEl) endRankEl.textContent = rankTitle;
-      if (endRankIconEl) endRankIconEl.textContent = rankIcon;
       if (endScoreVal) endScoreVal.textContent = score;
       if (endHitsVal) endHitsVal.textContent = hits;
       if (endAccVal) endAccVal.textContent = `${finalAcc}%`;
