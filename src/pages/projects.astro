@@ -163,7 +163,9 @@ const projects = [
     title: lang === 'fr' ? "Velisud - Programme Entrep’" : "Velisud - Entrep'", 
     date: lang === 'fr' ? "Oct. 2024 - Mar. 2025" : "Oct. 2024 - Mar. 2025", 
     desc: lang === 'fr' ? "Conception technique et électronique d'un véhicule intermédiaire dans le cadre d'un programme d'entrepreneuriat." : "Technical specifications and electronic design for an intermediate vehicle in a local entrepreneurship program.", 
-    tags: { hardware: ["Electronics"], software: [], soft: ["Entrepreneurship", "Tech Lead"], tools: [] }, link: "#" 
+    tags: { hardware: ["Electronics"], software: [], soft: ["Entrepreneurship", "Tech Lead"], tools: [] }, 
+    link: "/assets/VELISUD.pdf",
+    linkLabel: lang === 'fr' ? "Consulter la présentation (PDF)" : "View presentation (PDF)"
   },
   { 
     title: lang === 'fr' ? "TIPE - Optimisation Blackjack" : "TIPE - Blackjack", 
@@ -253,8 +255,8 @@ const toolsTags = ["Vivado", "OSINT", "Inventor", "KiCad", "Logisim", "Typst", "
                 ))}
               </div>
               {project.link !== "#" && (
-                <a href={project.link} target="_blank" style="display: inline-block; font-size: 0.85rem; font-weight: 600; text-decoration: underline; text-decoration-color: var(--pop-purple); text-underline-offset: 3px;">
-                  {t('common.viewOnGithub')} →
+                <a href={project.link} target="_blank" rel="noopener noreferrer" style="display: inline-block; font-size: 0.85rem; font-weight: 600; text-decoration: underline; text-decoration-color: var(--pop-purple); text-underline-offset: 3px;">
+                  {project.linkLabel || (project.link.endsWith('.pdf') ? (lang === 'fr' ? 'Consulter la présentation (PDF)' : 'View presentation (PDF)') : t('common.viewOnGithub'))} →
                 </a>
               )}
             </div>
