@@ -126,16 +126,12 @@
         this.y = y;
         this.angle = 0;
         this.speed = 0;
-        this.maxSpeed = isPlayer ? 6 : 4;
-        this.friction = 0.95;
-        this.acceleration = 0.2;
-        this.turnSpeed = 0.05;
+        this.maxSpeed = isPlayer ? 4.5 : 3.5;
+        this.friction = 0.965;
+        this.acceleration = 0.12;
+        this.turnSpeed = 0.038;
         this.color = color;
         this.isPlayer = isPlayer;
-        
-        // Sprite placeholder dimensions (will be replaced by Unity sprites later)
-        this.width = 24;
-        this.height = 12;
 
         this.lapStartTime = null;
         this.bestLapTime = null;
@@ -145,67 +141,67 @@
       update() {
         if (this.isPlayer) {
           if (keys.ArrowUp || keys.w) this.speed += this.acceleration;
-          if (keys.ArrowDown || keys.s) this.speed -= this.acceleration;
+          if (keys.ArrowDown || keys.s) this.speed -= this.acceleration * 1.3;
 
-          if (this.speed != 0) {
+          if (this.speed !== 0) {
             const flip = this.speed > 0 ? 1 : -1;
-            if (keys.ArrowLeft || keys.a) this.angle -= this.turnSpeed * flip;
-            if (keys.ArrowRight || keys.d) this.angle += this.turnSpeed * flip;
+            // Direction progressive selon la vitesse (évite de tourner à 180° à l'arrêt)
+            const steerFactor = Math.min(Math.abs(this.speed) / 2.2, 1.0);
+            const effectiveTurn = this.turnSpeed * (0.35 + 0.65 * steerFactor);
+            if (keys.ArrowLeft || keys.a) this.angle -= effectiveTurn * flip;
+            if (keys.ArrowRight || keys.d) this.angle += effectiveTurn * flip;
           }
         } else {
-          // simple AI: follow track ellipse
+          // AI: suit la trajectoire de la piste
           const angleToCenter = Math.atan2(this.y - trackOuter.y, this.x - trackOuter.x);
-          let targetAngle = angleToCenter + Math.PI / 2; // tangent
+          let targetAngle = angleToCenter + Math.PI / 2;
           
-          // steering towards tangent
           let diff = targetAngle - this.angle;
           while (diff < -Math.PI) diff += Math.PI * 2;
           while (diff > Math.PI) diff -= Math.PI * 2;
 
-          this.angle += Math.sign(diff) * Math.min(Math.abs(diff), this.turnSpeed * 0.8);
-          this.speed += this.acceleration * 0.8;
+          this.angle += Math.sign(diff) * Math.min(Math.abs(diff), this.turnSpeed * 0.7);
+          this.speed += this.acceleration * 0.7;
         }
 
-        // Apply friction and speed limits
+        // Friction et limites de vitesse
         this.speed *= this.friction;
         if (this.speed > this.maxSpeed) this.speed = this.maxSpeed;
-        if (this.speed < -this.maxSpeed/2) this.speed = -this.maxSpeed/2;
+        if (this.speed < -1.5) this.speed = -1.5; // marche arrière limitée
 
         const prevX = this.x;
-        const prevY = this.y;
 
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
 
-        // Collision with grass (slow down)
+        // Détection de l'herbe
         const dx = this.x - trackOuter.x;
         const dy = this.y - trackOuter.y;
-        // distance from center normalized to ellipse
         const distSq = (dx*dx)/(trackOuter.rx*trackOuter.rx) + (dy*dy)/(trackOuter.ry*trackOuter.ry);
         const innerRadiusSq = Math.pow((trackOuter.rx - trackOuter.width)/trackOuter.rx, 2);
 
         if (distSq > 1 || distSq < innerRadiusSq) {
-           this.speed *= 0.85; // grass friction
+          this.speed *= 0.91; // adhérence réduite dans l'herbe
+          if (this.speed > 2.0) this.speed = 2.0;
         }
 
         if (this.isPlayer) {
-          // check start line (x = 400, y < 225)
+          // Ligne de départ (x = 400, y < 225)
           if (prevX <= trackOuter.x && this.x > trackOuter.x && this.y < trackOuter.y) {
-            // crossed start line to the right
             if (this.crossedStartLine) {
-               const now = performance.now();
-               if (this.lapStartTime) {
-                 const lapTime = (now - this.lapStartTime) / 1000;
-                 if (lapTime > 2) { // prevent double triggers
-                   if (!this.bestLapTime || lapTime < this.bestLapTime) {
-                     this.bestLapTime = lapTime;
-                     bestTimerDisplay.textContent = this.bestLapTime.toFixed(2);
-                   }
-                   this.lapStartTime = now;
-                 }
-               } else {
-                 this.lapStartTime = now;
-               }
+              const now = performance.now();
+              if (this.lapStartTime) {
+                const lapTime = (now - this.lapStartTime) / 1000;
+                if (lapTime > 2.5) {
+                  if (!this.bestLapTime || lapTime < this.bestLapTime) {
+                    this.bestLapTime = lapTime;
+                    bestTimerDisplay.textContent = this.bestLapTime.toFixed(2);
+                  }
+                  this.lapStartTime = now;
+                }
+              } else {
+                this.lapStartTime = now;
+              }
             } else {
               this.crossedStartLine = true;
               this.lapStartTime = performance.now();
@@ -219,17 +215,109 @@
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
 
-        // Placeholder car drawing
+        // --- 1. SUSPENSIONS EN CARBONE ---
+        ctx.strokeStyle = '#1e1e1e';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        // Avant
+        ctx.moveTo(3, -2); ctx.lineTo(8, -7);
+        ctx.moveTo(6, -2); ctx.lineTo(10, -7);
+        ctx.moveTo(3, 2);  ctx.lineTo(8, 7);
+        ctx.moveTo(6, 2);  ctx.lineTo(10, 7);
+        // Arrière
+        ctx.moveTo(-6, -2); ctx.lineTo(-10, -8);
+        ctx.moveTo(-3, -2); ctx.lineTo(-8, -8);
+        ctx.moveTo(-6, 2);  ctx.lineTo(-10, 8);
+        ctx.moveTo(-3, 2);  ctx.lineTo(-8, 8);
+        ctx.stroke();
+
+        // --- 2. PNEUS SLICKS F1 NOIRS AVEC JANTES ---
+        const drawWheel = (wx, wy, ww, wh) => {
+          ctx.fillStyle = '#111113';
+          ctx.beginPath();
+          ctx.roundRect(wx, wy, ww, wh, 2);
+          ctx.fill();
+          // Jante
+          ctx.fillStyle = '#555';
+          ctx.fillRect(wx + ww/2 - 0.75, wy + 0.8, 1.5, wh - 1.6);
+        };
+        // Roues avant (longueur 7.5, largeur 3.8)
+        drawWheel(5, -9.5, 7.5, 3.8);
+        drawWheel(5, 5.7, 7.5, 3.8);
+        // Roues arrière (longueur 8.5, largeur 4.6)
+        drawWheel(-13, -10.5, 8.5, 4.6);
+        drawWheel(-13, 5.9, 8.5, 4.6);
+
+        // --- 3. AILERON ARRIÈRE F1 ---
+        // Dérives latérales (endplates)
+        ctx.fillStyle = '#111';
+        ctx.fillRect(-17, -9.5, 3, 19);
+        // Volet DRS principal (couleur carrosserie)
         ctx.fillStyle = this.color;
-        ctx.fillRect(-this.width/2, -this.height/2, this.width, this.height);
-        
-        // Window/cockpit
-        ctx.fillStyle = '#000';
-        ctx.fillRect(-this.width/4, -this.height/3, this.width/2, this.height/1.5);
-        
-        // Front direction indicator
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(this.width/2 - 4, -this.height/2, 2, this.height);
+        ctx.fillRect(-16.5, -8.5, 2.5, 17);
+        // Feu rouge pluie arrière
+        ctx.fillStyle = '#FF0033';
+        ctx.fillRect(-17.5, -1, 1.5, 2);
+
+        // --- 4. CHÂSSIS & CARROSSERIE F1 ---
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.moveTo(17, 0);      // Pointe du nez
+        ctx.lineTo(12, -2.2);   // Côté nez avant
+        ctx.lineTo(4, -2.8);    // Avant cockpit
+        ctx.lineTo(2, -5.5);    // Entrée ponton gauche
+        ctx.lineTo(-7, -5.8);   // Ponton gauche
+        ctx.lineTo(-11, -3);    // Arrière ponton
+        ctx.lineTo(-14, -1.8);  // Boîte arrière gauche
+        ctx.lineTo(-14, 1.8);   // Boîte arrière droite
+        ctx.lineTo(-11, 3);     // Arrière ponton droit
+        ctx.lineTo(-7, 5.8);    // Ponton droit
+        ctx.lineTo(2, 5.5);     // Entrée ponton droit
+        ctx.lineTo(4, 2.8);     // Avant cockpit
+        ctx.lineTo(12, 2.2);    // Côté nez avant
+        ctx.closePath();
+        ctx.fill();
+
+        // Entrées d'air des pontons (radiateurs)
+        ctx.fillStyle = '#111';
+        ctx.fillRect(1.5, -5.2, 1.8, 1.8);
+        ctx.fillRect(1.5, 3.4, 1.8, 1.8);
+
+        // Arête moteur / requin
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.fillRect(-11, -0.7, 7, 1.4);
+
+        // --- 5. COCKPIT, PILOTE & HALO ---
+        // Habitacle noir
+        ctx.fillStyle = '#080808';
+        ctx.beginPath();
+        ctx.ellipse(1.5, 0, 3.8, 2.2, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Casque du pilote
+        ctx.fillStyle = this.isPlayer ? '#FFD700' : '#EEEEEE';
+        ctx.beginPath();
+        ctx.arc(1.2, 0, 1.7, 0, Math.PI * 2);
+        ctx.fill();
+        // Visière du casque
+        ctx.fillStyle = '#080808';
+        ctx.fillRect(1.8, -1.1, 0.9, 2.2);
+
+        // Structure protectrice Halo
+        ctx.strokeStyle = '#2d2d2d';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(1.5, 0, 2.6, -Math.PI/2, Math.PI/2);
+        ctx.stroke();
+
+        // --- 6. AILERON AVANT F1 COMPLET ---
+        // Voilure principale
+        ctx.fillStyle = '#161616';
+        ctx.fillRect(14, -8.5, 3, 17);
+        // Dériveurs d'aileron avant couleur carrosserie
+        ctx.fillStyle = this.color;
+        ctx.fillRect(13, -9, 4.5, 1.3);
+        ctx.fillRect(13, 7.7, 4.5, 1.3);
 
         ctx.restore();
       }
@@ -247,30 +335,62 @@
     }
 
     function drawTrack() {
-      // Background grass
-      ctx.fillStyle = '#2b7a2b';
+      // Pelouse du circuit
+      ctx.fillStyle = '#1b561b';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Track Asphalt
+      // Vibreurs F1 extérieurs (rouge et blanc alternés)
+      ctx.beginPath();
+      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx + 3, trackOuter.ry + 3, 0, 0, Math.PI*2);
+      ctx.strokeStyle = '#E10600';
+      ctx.lineWidth = 5;
+      ctx.setLineDash([12, 12]);
+      ctx.stroke();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineDashOffset = 12;
+      ctx.stroke();
+
+      // Asphalte du circuit
+      ctx.setLineDash([]);
+      ctx.lineDashOffset = 0;
       ctx.beginPath();
       ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx, trackOuter.ry, 0, 0, Math.PI*2);
-      ctx.fillStyle = '#444';
+      ctx.fillStyle = '#2c2d33';
       ctx.fill();
 
-      // Track Inner Grass
+      // Trajectoire de course gommée (plus sombre)
+      ctx.beginPath();
+      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx - trackOuter.width/2, trackOuter.ry - trackOuter.width/2, 0, 0, Math.PI*2);
+      ctx.strokeStyle = '#222328';
+      ctx.lineWidth = 38;
+      ctx.stroke();
+
+      // Vibreurs F1 intérieurs (rouge et blanc)
+      ctx.beginPath();
+      ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx - trackOuter.width + 2, trackOuter.ry - trackOuter.width + 2, 0, 0, Math.PI*2);
+      ctx.strokeStyle = '#E10600';
+      ctx.lineWidth = 5;
+      ctx.setLineDash([10, 10]);
+      ctx.stroke();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineDashOffset = 10;
+      ctx.stroke();
+
+      // Herbe intérieure du circuit
+      ctx.setLineDash([]);
+      ctx.lineDashOffset = 0;
       ctx.beginPath();
       ctx.ellipse(trackOuter.x, trackOuter.y, trackOuter.rx - trackOuter.width, trackOuter.ry - trackOuter.width, 0, 0, Math.PI*2);
-      ctx.fillStyle = '#2b7a2b';
+      ctx.fillStyle = '#1b561b';
       ctx.fill();
 
-      // Start/Finish Line
+      // Ligne de départ / arrivée à damier
       ctx.fillStyle = '#fff';
       ctx.fillRect(trackOuter.x, trackOuter.y - trackOuter.ry, 6, trackOuter.width);
-      // checkered pattern
-      ctx.fillStyle = '#000';
-      for (let i=0; i<trackOuter.width; i+=10) {
-        ctx.fillRect(trackOuter.x, trackOuter.y - trackOuter.ry + i + (Math.floor(i/10)%2===0?0:5), 3, 5);
-        ctx.fillRect(trackOuter.x+3, trackOuter.y - trackOuter.ry + i + (Math.floor(i/10)%2===0?5:0), 3, 5);
+      ctx.fillStyle = '#111';
+      for (let i = 0; i < trackOuter.width; i += 10) {
+        ctx.fillRect(trackOuter.x, trackOuter.y - trackOuter.ry + i + (Math.floor(i/10)%2 === 0 ? 0 : 5), 3, 5);
+        ctx.fillRect(trackOuter.x + 3, trackOuter.y - trackOuter.ry + i + (Math.floor(i/10)%2 === 0 ? 5 : 0), 3, 5);
       }
     }
 
