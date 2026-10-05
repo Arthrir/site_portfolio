@@ -52,10 +52,10 @@ const t = makeT(lang);
 
     <div style="display: flex; flex-direction: column; gap: 36px;">
 
-      <div>
+      <div id="aboutF1Section" class="about-hobby-block" style="cursor: pointer;" title="🏎️ Grand Prix Racing (Appuyez 3 fois pour lancer le jeu)">
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-orange);">Motorsport</span>
-          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">Formula 1</h4>
+          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">Formula 1 <span style="font-size: 0.95rem; opacity: 0.7;">🏎️</span></h4>
         </div>
         <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
           {lang === 'fr' ? 
@@ -64,10 +64,10 @@ const t = makeT(lang);
         </p>
       </div>
 
-      <div>
+      <div id="aboutVitalitySection" class="about-hobby-block" style="cursor: pointer;" title="🐝 Vitality Aim Lab (Appuyez 3 fois pour lancer le jeu)">
         <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 0.78rem; font-weight: 700; color: var(--pop-purple);">Esport</span>
-          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">Gaming & Team Vitality</h4>
+          <h4 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600;">Gaming & Team Vitality <span style="font-size: 0.95rem; opacity: 0.7;">🐝</span></h4>
         </div>
         <p style="font-size: 1rem; line-height: 1.75; color: var(--text);">
           {lang === 'fr' ? 
@@ -360,6 +360,31 @@ const t = makeT(lang);
             imgEl.src = '/assets/voyages/' + item.imgFile;
           }
         });
+      });
+
+      // Secret mobile triggers sur les passions
+      let f1Tap = 0, f1Timer = null;
+      document.getElementById('aboutF1Section')?.addEventListener('pointerdown', () => {
+        f1Tap++;
+        clearTimeout(f1Timer);
+        f1Timer = setTimeout(() => {
+          if (f1Tap >= 3 && window.startF1) {
+            window.startF1();
+          }
+          f1Tap = 0;
+        }, 450);
+      });
+
+      let vitTap = 0, vitTimer = null;
+      document.getElementById('aboutVitalitySection')?.addEventListener('pointerdown', () => {
+        vitTap++;
+        clearTimeout(vitTimer);
+        vitTimer = setTimeout(() => {
+          if (vitTap >= 3 && window.startVitality) {
+            window.startVitality();
+          }
+          vitTap = 0;
+        }, 450);
       });
     })();
   </script>

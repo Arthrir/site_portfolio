@@ -234,6 +234,62 @@
     background: rgba(16, 185, 129, 0.75);
     transform: scale(0.92);
   }
+
+  /* Responsive Mobile */
+  @media (max-width: 640px) {
+    .f1-modal {
+      padding: 8px;
+    }
+    .f1-content {
+      padding: 14px 10px 10px 10px;
+      border-radius: 8px;
+    }
+    .f1-title {
+      font-size: 1.3rem;
+      margin-bottom: 2px;
+    }
+    .f1-subtitle {
+      font-size: 0.72rem;
+      margin-bottom: 10px;
+    }
+    #f1LapOverlay, #f1BestLapOverlay {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      top: 6px;
+    }
+    #f1LapOverlay { left: 6px; }
+    #f1BestLapOverlay { right: 6px; }
+    .f1-touch-controls {
+      padding: 6px 8px;
+    }
+    .f1-joystick-zone {
+      width: 96px;
+      height: 96px;
+    }
+    .f1-joystick-base {
+      width: 72px;
+      height: 72px;
+      left: 4px;
+      bottom: 4px;
+    }
+    .f1-joystick-thumb {
+      width: 36px;
+      height: 36px;
+    }
+    .f1-pedals-zone {
+      gap: 8px;
+      margin-bottom: 4px;
+      margin-right: 2px;
+    }
+    .f1-pedal-brake {
+      width: 44px;
+      height: 52px;
+    }
+    .f1-pedal-gas {
+      width: 48px;
+      height: 66px;
+    }
+  }
 </style>
 
 <script is:inline>

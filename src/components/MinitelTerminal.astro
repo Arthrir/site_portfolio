@@ -7,12 +7,19 @@
   <div class="minitel-backdrop" id="minitelBackdrop"></div>
 
   <div class="minitel-container" id="minitelContainer">
+    <button type="button" class="minitel-close-btn" id="minitelCloseBtn" aria-label="Quitter le Minitel" title="Quitter (Échap)">✕ QUITTER</button>
     <div class="minitel-crt">
-      <div class="minitel-screen">
+      <div class="minitel-screen" id="minitelScreen">
         <div class="minitel-scanlines"></div>
         <div class="minitel-content" id="minitelContent">
           <div class="minitel-line minitel-blink">CONNEXION 3615 MINITEL...</div>
         </div>
+      </div>
+      <!-- Barre d'accès rapide tactile (idéale mobile et desktop) -->
+      <div class="minitel-quick-nav">
+        <button type="button" class="minitel-nav-btn" data-choice="F1">1 • F1 RACING</button>
+        <button type="button" class="minitel-nav-btn" data-choice="VITALITY">2 • VITALITY AIM</button>
+        <button type="button" class="minitel-nav-btn" data-choice="QUITTER">3 • QUITTER</button>
       </div>
     </div>
   </div>
@@ -23,6 +30,7 @@
     position: fixed; inset: 0; z-index: 10000;
     display: flex; align-items: center; justify-content: center;
     background: #000;
+    padding: 12px;
   }
   .minitel-backdrop {
     position: absolute; inset: 0;
@@ -32,7 +40,7 @@
   .minitel-container {
     position: relative; z-index: 2;
     width: 90vw; max-width: 820px;
-    height: 72vh; max-height: 600px;
+    height: 74vh; max-height: 580px;
     background: #181916;
     border: 18px solid #c9c5ba;
     border-radius: 20px 20px 12px 12px;
@@ -45,6 +53,32 @@
     transform: scale(1);
     opacity: 1;
   }
+  .minitel-close-btn {
+    position: absolute;
+    top: -15px;
+    right: 14px;
+    z-index: 25;
+    background: #252722;
+    color: #ded9cd;
+    border: 1.5px solid #827e74;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    transition: all 0.15s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .minitel-close-btn:hover,
+  .minitel-close-btn:active {
+    background: #b92b27;
+    color: #ffffff;
+    border-color: #ff5752;
+  }
   .minitel-crt {
     position: relative; width: 100%; height: 100%;
     background: #050a05;
@@ -52,12 +86,15 @@
     overflow: hidden;
     border: 8px solid #141814;
     box-shadow: inset 0 0 24px rgba(105, 255, 10, 0.12);
+    display: flex;
+    flex-direction: column;
   }
   .minitel-screen {
-    position: absolute; inset: 0;
+    position: relative;
+    flex: 1;
     background: repeating-linear-gradient(0deg, #070e07 0px, #070e07 2px, #040804 2px, #040804 4px);
     background-size: 100% 4px;
-    padding: 24px;
+    padding: 24px 24px 16px 24px;
     font-family: 'Courier New', Courier, monospace;
     color: #69FF0A; /* Authentique vert MINITEL */
     font-size: 1.15rem;
@@ -86,6 +123,22 @@
     margin-bottom: 8px;
     word-break: break-all;
     letter-spacing: 0.03em;
+  }
+  .minitel-clickable {
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.15s ease, text-shadow 0.15s ease;
+    user-select: none;
+    display: inline-block;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+  .minitel-clickable:hover,
+  .minitel-clickable:active {
+    background: rgba(105, 255, 10, 0.2);
+    color: #ffffff;
+    text-shadow: 0 0 10px #69FF0A, 0 0 16px #ffffff;
   }
   .minitel-blink {
     animation: minitelBlink 0.9s step-end infinite;
@@ -132,6 +185,88 @@
     background: #69FF0A;
     color: #040804;
   }
+
+  /* Barre de touches tactiles rétro */
+  .minitel-quick-nav {
+    position: relative;
+    z-index: 15;
+    background: #090e09;
+    border-top: 1px solid rgba(105, 255, 10, 0.22);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+    justify-content: center;
+    align-items: center;
+  }
+  .minitel-nav-btn {
+    background: rgba(105, 255, 10, 0.08);
+    border: 1px solid rgba(105, 255, 10, 0.55);
+    color: #69FF0A;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-shadow: 0 0 4px rgba(105, 255, 10, 0.6);
+    transition: all 0.15s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .minitel-nav-btn:hover,
+  .minitel-nav-btn:active {
+    background: #69FF0A;
+    color: #040804;
+    text-shadow: none;
+    box-shadow: 0 0 10px rgba(105, 255, 10, 0.8);
+  }
+
+  /* Responsive Mobile */
+  @media (max-width: 640px) {
+    .minitel-modal {
+      padding: 8px;
+    }
+    .minitel-container {
+      width: 96vw;
+      max-width: 96vw;
+      height: 80vh;
+      max-height: 560px;
+      border: 8px solid #c9c5ba;
+      border-radius: 12px;
+    }
+    .minitel-close-btn {
+      top: -12px;
+      right: 8px;
+      font-size: 0.68rem;
+      padding: 2px 8px;
+    }
+    .minitel-crt {
+      border: 3px solid #141814;
+    }
+    .minitel-screen {
+      padding: 14px 10px 10px 10px;
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+    .minitel-prompt {
+      font-size: 0.95rem;
+    }
+    .minitel-input {
+      font-size: 0.86rem !important;
+    }
+    .minitel-quick-nav {
+      gap: 6px;
+      padding: 6px 8px;
+    }
+    .minitel-nav-btn {
+      font-size: 0.72rem;
+      padding: 5px 8px;
+      flex: 1;
+      text-align: center;
+      min-width: 80px;
+    }
+  }
 </style>
 
 <script is:inline>
@@ -140,6 +275,8 @@
     const container = document.getElementById('minitelContainer');
     const content = document.getElementById('minitelContent');
     const backdrop = document.getElementById('minitelBackdrop');
+    const closeBtn = document.getElementById('minitelCloseBtn');
+    const screenEl = document.getElementById('minitelScreen');
 
     let isTyping = false;
     
@@ -150,22 +287,50 @@
           div.className = 'minitel-line';
           div.textContent = text;
           content.appendChild(div);
-          content.parentElement.scrollTop = content.parentElement.scrollHeight;
+          if (screenEl) screenEl.scrollTop = screenEl.scrollHeight;
+          resolve();
+        }, delay);
+      });
+    }
+
+    function writeLineHtml(html, delay = 0) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          const div = document.createElement('div');
+          div.className = 'minitel-line';
+          div.innerHTML = html;
+          content.appendChild(div);
+          if (screenEl) screenEl.scrollTop = screenEl.scrollHeight;
           resolve();
         }, delay);
       });
     }
 
     function createInput() {
+      // Remove any existing active inputs first
+      const oldInputs = content.querySelectorAll('input');
+      oldInputs.forEach(inp => { inp.disabled = true; inp.style.opacity = '0.6'; });
+
       const div = document.createElement('div');
       div.className = 'minitel-input-line';
-      div.innerHTML = `<span class="minitel-prompt">&gt;</span><input type="text" class="minitel-input" autocomplete="off" spellcheck="false" autofocus />`;
+      div.innerHTML = `<span class="minitel-prompt">&gt;</span><input type="text" class="minitel-input" autocomplete="off" spellcheck="false" />`;
       content.appendChild(div);
       const input = div.querySelector('input');
       
-      // Ensure click focuses input
-      content.parentElement.onclick = () => input.focus();
-      input.focus();
+      // Ensure click on screen focuses input (only on non-touch or when explicitly intended)
+      if (screenEl) {
+        screenEl.onclick = (e) => {
+          if (!e.target.closest('.minitel-clickable')) {
+            input.focus();
+          }
+        };
+      }
+      
+      // On mobile, avoid auto-forcing keyboard open so the screen remains fully visible
+      const isMobile = window.matchMedia('(max-width: 640px)').matches;
+      if (!isMobile) {
+        input.focus();
+      }
       
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -183,28 +348,28 @@
     async function processCommand(cmd) {
       const isEn = document.documentElement.lang === 'en';
       if (cmd === 'F1' || cmd === '1') {
-        await writeLine(isEn ? 'LANCEMENT MODULE COURSE...' : 'LANCEMENT MODULE COURSE...', 350);
+        await writeLine(isEn ? 'LANCEMENT MODULE COURSE...' : 'LANCEMENT MODULE COURSE...', 250);
         setTimeout(() => {
           closeMinitel();
           if (window.startF1) window.startF1();
-        }, 700);
+        }, 500);
       } else if (cmd === 'VITALITY' || cmd === '2') {
-        await writeLine(isEn ? 'LANCEMENT AIM LAB...' : 'LANCEMENT MODULE AIM LAB...', 350);
+        await writeLine(isEn ? 'LANCEMENT AIM LAB...' : 'LANCEMENT MODULE AIM LAB...', 250);
         setTimeout(() => {
           closeMinitel();
           if (window.startVitality) window.startVitality();
-        }, 700);
+        }, 500);
       } else if (cmd === 'EXIT' || cmd === 'QUITTER' || cmd === 'QUIT' || cmd === '3') {
-        await writeLine(isEn ? 'DECONNEXION DU SERVEUR...' : 'DECONNEXION DU SERVEUR...', 200);
-        setTimeout(closeMinitel, 400);
+        await writeLine(isEn ? 'DECONNEXION DU SERVEUR...' : 'DECONNEXION DU SERVEUR...', 150);
+        setTimeout(closeMinitel, 300);
       } else if (cmd === 'HELP' || cmd === 'AIDE' || cmd === '?') {
-        await writeLine(isEn ? 'AVAILABLE COMMANDS :' : 'COMMANDES DISPONIBLES :', 150);
-        await writeLine('  1 / F1        : GRAND PRIX RACING', 80);
-        await writeLine('  2 / VITALITY  : AIM & REFLEX LAB', 80);
-        await writeLine('  3 / QUITTER   : RETOUR AU SITE', 80);
+        await writeLine(isEn ? 'COMMANDES DISPONIBLES :' : 'COMMANDES DISPONIBLES :', 120);
+        await writeLineHtml('<span class="minitel-clickable" data-choice="F1">  1 / F1        : GRAND PRIX RACING</span>', 60);
+        await writeLineHtml('<span class="minitel-clickable" data-choice="VITALITY">  2 / VITALITY  : AIM & REFLEX LAB</span>', 60);
+        await writeLineHtml('<span class="minitel-clickable" data-choice="QUITTER">  3 / QUITTER   : RETOUR AU SITE</span>', 60);
         createInput();
       } else if (cmd !== '') {
-        await writeLine(isEn ? 'COMMANDE INCONNUE. TAPEZ 1, 2, 3 OU HELP.' : 'COMMANDE INCONNUE. TAPEZ 1, 2, 3 OU AIDE.', 200);
+        await writeLine(isEn ? 'COMMANDE INCONNUE. CHOISISSEZ 1, 2, 3 OU AIDE.' : 'COMMANDE INCONNUE. CHOISISSEZ 1, 2, 3 OU AIDE.', 150);
         createInput();
       } else {
         createInput();
@@ -213,13 +378,13 @@
 
     async function startBootSequence() {
       content.innerHTML = '';
-      await writeLine('CONNEXION...', 400);
-      await writeLine('3615 MINITEL EST EN LIGNE.', 600);
-      await writeLine('BIENVENUE SUR LE RESEAU ARTHUR DORADOUX.', 400);
-      await writeLine('TAPEZ VOTRE CHOIX :', 200);
-      await writeLine('- F1', 100);
-      await writeLine('- VITALITY', 100);
-      await writeLine('- QUITTER', 100);
+      await writeLine('CONNEXION...', 250);
+      await writeLine('3615 MINITEL EST EN LIGNE.', 400);
+      await writeLine('BIENVENUE SUR LE RESEAU ARTHUR DORADOUX.', 300);
+      await writeLine('CHOIX DISPONIBLES (CLIQUEZ OU TAPEZ) :', 150);
+      await writeLineHtml('<span class="minitel-clickable" data-choice="F1">- 1 : F1 GRAND PRIX RACING</span>', 70);
+      await writeLineHtml('<span class="minitel-clickable" data-choice="VITALITY">- 2 : VITALITY AIM LAB</span>', 70);
+      await writeLineHtml('<span class="minitel-clickable" data-choice="QUITTER">- 3 : QUITTER</span>', 70);
       createInput();
     }
 
@@ -246,12 +411,39 @@
 
     window.startMinitel = openMinitel;
 
+    // Événements de fermeture
     backdrop?.addEventListener('click', closeMinitel);
+    closeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeMinitel();
+    });
+
+    // Clic tactile sur les options à l'écran
+    content?.addEventListener('click', (e) => {
+      const clickable = e.target.closest('.minitel-clickable');
+      if (clickable) {
+        e.stopPropagation();
+        const choice = clickable.getAttribute('data-choice');
+        if (choice) processCommand(choice);
+      }
+    });
+
+    // Clic tactile sur les touches de la barre rapide en bas
+    document.querySelectorAll('.minitel-nav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const choice = btn.getAttribute('data-choice');
+        if (choice) processCommand(choice);
+      });
+    });
     
     // Easter egg triggers via keyboard
     let keyBuffer = '';
     window.addEventListener('keydown', (e) => {
-      if (modal && modal.style.display === 'flex') return;
+      if (modal && modal.style.display === 'flex') {
+        if (e.key === 'Escape') closeMinitel();
+        return;
+      }
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
         keyBuffer += e.key.toLowerCase();
         if (keyBuffer.length > 20) keyBuffer = keyBuffer.slice(-20);
