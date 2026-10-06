@@ -895,7 +895,7 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
           initial={{ y: -30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.9, ease, delay: 0.2 }}
-          className="relative flex items-center gap-1 rounded-full border border-ink/15 bg-paper/95 p-1.5 shadow-md backdrop-blur-xl md:border-0 md:bg-transparent md:p-1.5 md:shadow-none md:liquid"
+          className="liquid relative flex items-center gap-1 rounded-full p-1.5"
         >
           <a href="#top" onClick={onLogo} aria-label={tr("Accueil", "Home")} className="mr-1 ml-1.5 grid h-8 w-10 place-items-center rounded-full text-ink transition-colors hover:text-signal">
             <Logo className="h-[18px] w-auto" />
@@ -953,7 +953,7 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
           initial={{ y: -30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.9, ease, delay: 0.25 }}
-          className="rounded-full border border-ink/15 bg-paper/95 p-1.5 shadow-md backdrop-blur-xl md:liquid md:border-0 md:bg-transparent"
+          className="liquid rounded-full p-1.5"
         >
           <LangToggle />
         </motion.div>
