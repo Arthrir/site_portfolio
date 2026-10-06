@@ -333,7 +333,7 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "🏆 Victoire au Hackathon STMicroelectronics",
+    t: "Victoire au Hackathon STMicroelectronics",
     date: "2024",
     d: "2024",
     cat: ["Produit", "Hardware"],
@@ -347,7 +347,7 @@ const PROJECTS: Project[] = [
     ],
     with: "Yasmin Hadj-Said, Inès Lixi, Typhaine Lavaud, Elouan Marron",
     en: {
-      t: "🏆 STMicroelectronics Hackathon Victory",
+      t: "STMicroelectronics Hackathon Victory",
       d: "2024",
       desc: "Robotics team competition organized by AREM with STMicroelectronics in Gardanne — 1st Place.",
       points: [
@@ -1065,14 +1065,20 @@ function Die() {
 
           {/* =================================================================
               BLOC FPGA & PORTES LOGIQUES NUMÉRIQUES (BOTTOM-RIGHT)
-              Portes AND, OR, NOT interconnectées façon bloc logique configurable (CLB / FPGA)
+              Portes AND, NOT, OR interconnectées de manière géométrique stricte
+              Entrées reliées au bus (270, 215 et 270, 237), sorties reliées aux pads de test
               ================================================================= */}
-          {/* Piste d'interconnexion vers le boîtier central (270, 215 -> 305, 215) */}
-          <path d="M270 215 H310 V198 H326" className="stroke-line" strokeWidth="1.25" fill="none" />
-          <path d="M303 237 H326" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne d'entrée du bus (270, 215) vers entrée haute AND (295, 209) */}
+          <path d="M270 215 H295" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne d'entrée du bus (270, 237) vers entrée basse AND (295, 217) et entrée haute OR (295, 233) */}
+          <path d="M270 237 H295" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <path d="M285 237 V217 H295" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne d'entrée basse OR (295, 241) depuis pad 10 bas (259, 274 -> 285, 241) */}
+          <path d="M259 274 V250 H295" className="stroke-line" strokeWidth="1.25" fill="none" />
+
           {!isDebug && (
             <motion.path
-              d="M270 215 H310 V198 H326"
+              d="M270 215 H295"
               fill="none"
               strokeWidth="1.6"
               stroke="#8B5CF6"
@@ -1082,31 +1088,63 @@ function Die() {
             />
           )}
 
-          {/* Porte ET (AND gate) — CLB Slice A */}
-          <g transform="translate(326, 190)">
-            <path d="M0 0 H8 A8 8 0 0 1 8 16 H0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" />
-            <text x="5" y="10" fontSize="4.5" textAnchor="middle" className="font-mono font-bold fill-ink">AND</text>
-            {/* Ligne de sortie vers porte inverseur NOT */}
-            <path d="M16 8 H24" className="stroke-line" strokeWidth="1.2" />
+          {/* Porte ET (AND gate) — Slice A (x: 295..313, y: 205..221) */}
+          <g transform="translate(295, 205)">
+            <path d="M0 0 H9 A8 8 0 0 1 9 16 H0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" />
+            <text x="6" y="10.5" fontSize="4.2" textAnchor="middle" className="font-mono font-bold fill-ink">AND</text>
           </g>
 
-          {/* Inverseur / NOT gate avec bulle d'inversion */}
-          <g transform="translate(350, 194)">
-            <polygon points="0,0 8,4 0,8" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.1" />
-            <circle cx="9.5" cy="4" r="1.5" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.1" />
+          {/* Ligne reliant la sortie AND (312, 213) à l'inverseur NOT (319, 213) */}
+          <path d="M312 213 H319" className="stroke-line" strokeWidth="1.2" />
+
+          {/* Inverseur / NOT gate avec bulle d'inversion (x: 319..332, y: 209..217) */}
+          <g transform="translate(319, 209)">
+            <polygon points="0,0 9,4 0,8" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.1" />
+            <circle cx="10.8" cy="4" r="1.5" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.1" />
           </g>
 
-          {/* Porte OU (OR gate) — CLB Slice B */}
-          <g transform="translate(326, 228)">
+          {/* Piste de sortie du NOT (333.3, 213) vers le point de test TP_NAND et le pad droit (356, 213) */}
+          <path d="M333.3 213 H356" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <g transform="translate(343, 213)">
+            <circle cx="0" cy="0" r="2.2" className="fill-signal/20 stroke-signal" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="0.8" className="fill-signal" />
+          </g>
+
+          {/* Porte OU (OR gate) — Slice B (x: 295..313, y: 229..245) */}
+          <g transform="translate(295, 229)">
             <path d="M0 0 Q6 8 0 16 Q10 16 16 8 Q10 0 0 0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" />
-            <text x="6" y="10" fontSize="4.5" textAnchor="middle" className="font-mono font-bold fill-ink">OR</text>
+            <text x="6.5" y="10.5" fontSize="4.2" textAnchor="middle" className="font-mono font-bold fill-ink">OR</text>
+          </g>
+
+          {/* Ligne de sortie de la porte OR (311, 237) vers point de test et pad droit (356, 237) */}
+          <path d="M311 237 H356" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <g transform="translate(333, 237)">
+            <circle cx="0" cy="0" r="2.2" className="fill-purple-500/20 stroke-purple-500" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="0.8" className="fill-purple-500" />
           </g>
 
           {/* =================================================================
               VENTILATEUR PWM & HACHEUR DE PUISSANCE (PROTOTYPE ARTHUR)
-              Capteur capacitif -> Régulation PWM -> Hacheur MOSFET -> Hélice tournante
+              Capteur capacitif tactile -> Régulation PWM -> Hacheur MOSFET -> Hélice
               ================================================================= */}
-          {/* Ligne d'alimentation PWM depuis die (237, 274 -> vers transistor MOSFET Q1 à 325, 305) */}
+          {/* Électrode capacitive tactile PCB (Touch Pad CAP_SENSE) */}
+          <g
+            className="cursor-pointer transition-transform active:scale-95"
+            onClick={cycleFanSpeed}
+            transform="translate(284, 286)"
+          >
+            <rect x="0" y="0" width="22" height="13" rx="1.5" className="fill-paper stroke-ink/30" strokeWidth="0.8" />
+            {/* Peignes de détection capacitive interdigités */}
+            <line x1="3" y1="3" x2="19" y2="3" stroke="#06B6D4" strokeWidth="0.9" />
+            <line x1="3" y1="6.5" x2="16" y2="6.5" stroke={fanSpeed > 0 ? "#06B6D4" : "#94A3B8"} strokeWidth="0.9" />
+            <line x1="6" y1="10" x2="19" y2="10" stroke={fanSpeed > 1 ? "#06B6D4" : "#94A3B8"} strokeWidth="0.9" />
+            <text x="11" y="16.5" fontSize="3.8" textAnchor="middle" className="fill-cyan-600 font-mono font-bold">TOUCH SPEED</text>
+          </g>
+
+          {/* Piste de commande depuis le capteur tactile vers le die */}
+          <path d="M284 292 H270" className="stroke-cyan-500/60" strokeWidth="1.1" fill="none" />
+
+          {/* Ligne d'alimentation PWM depuis die (237, 274) vers le transistor MOSFET Q1 à (315, 305) */}
           <path d="M237 274 V292 H315 V305" className="stroke-line" strokeWidth="1.25" fill="none" />
           {!isDebug && fanSpeed > 0 && (
             <motion.path
@@ -1122,7 +1160,6 @@ function Die() {
 
           {/* Transistor MOSFET de puissance (Q1 / Hacheur) */}
           <g transform="translate(315, 305)">
-            {/* Boîtier CMS DPAK / SOT-223 */}
             <rect x="-5" y="-5" width="10" height="10" rx="1" fill="#18181B" stroke="#09090B" strokeWidth="0.75" />
             <rect x="-4" y="-7" width="8" height="2" fill="#94A3B8" />
             <rect x="-3" y="5" width="2" height="2.5" fill="#94A3B8" />
@@ -1252,66 +1289,69 @@ function Die() {
         </svg>
       </motion.div>
 
-      {/* Mini-Banc interactif toolbar (accessible aussi bien par clic direct sur le SVG que par ces boutons) */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink/20 bg-paper/90 p-2.5 font-mono text-[10px] sm:text-[11px] backdrop-blur-sm">
-        {/* Option A : Banc Logique XOR */}
+      {/* Mini-Banc interactif — Interface de banc d'essai épurée (style matériel d'instrumentation) */}
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-ink/20 bg-paper/95 px-3 py-2 font-mono text-[11px] shadow-sm backdrop-blur-md">
+        {/* Module logique : XOR */}
         <div className="flex items-center gap-1.5">
-          <span className="text-mute font-semibold">XOR:</span>
+          <span className="text-[10px] font-semibold tracking-wider text-mute uppercase">LOGIC:</span>
           <button
             type="button"
             onClick={() => setLogicA((v) => !v)}
-            className={`rounded px-1.5 py-0.5 font-bold transition-colors ${logicA ? "bg-signal text-white" : "border border-ink/20 bg-ink/5 text-ink hover:bg-ink/10"}`}
-            title="Basculer l'entrée logique A"
+            className={`rounded border px-2 py-0.5 font-bold transition-all active:scale-95 ${logicA ? "border-ink bg-ink text-paper" : "border-ink/20 bg-ink/5 text-ink hover:border-ink/40"}`}
+            title="Entrée logique A"
           >
             A={logicA ? "1" : "0"}
           </button>
           <button
             type="button"
             onClick={() => setLogicB((v) => !v)}
-            className={`rounded px-1.5 py-0.5 font-bold transition-colors ${logicB ? "bg-signal text-white" : "border border-ink/20 bg-ink/5 text-ink hover:bg-ink/10"}`}
-            title="Basculer l'entrée logique B"
+            className={`rounded border px-2 py-0.5 font-bold transition-all active:scale-95 ${logicB ? "border-ink bg-ink text-paper" : "border-ink/20 bg-ink/5 text-ink hover:border-ink/40"}`}
+            title="Entrée logique B"
           >
             B={logicB ? "1" : "0"}
           </button>
-          <span className="text-mute">→</span>
-          <span className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-bold ${logicOut ? "bg-amber-500/15 text-amber-600" : "bg-ink/5 text-mute"}`}>
-            <span className={`size-1.5 rounded-full ${logicOut ? "bg-amber-500 shadow-[0_0_6px_#f59e0b]" : "bg-ink/30"}`} />
+          <span className="text-mute font-bold">→</span>
+          <span className={`inline-flex items-center gap-1.5 rounded border px-2 py-0.5 font-bold transition-colors ${logicOut ? "border-amber-500/40 bg-amber-500/10 text-amber-600" : "border-ink/10 bg-ink/5 text-mute"}`}>
+            <span className={`size-1.5 rounded-full ${logicOut ? "bg-amber-500 shadow-[0_0_8px_#f59e0b]" : "bg-ink/30"}`} />
             Y={logicOut ? "1" : "0"}
           </span>
         </div>
 
-        {/* Option B : Bouton Test / Pulse Clock */}
-        <button
-          type="button"
-          onClick={triggerClockPulse}
-          className="flex items-center gap-1.5 rounded border border-ink/20 bg-ink/5 px-2 py-0.5 font-semibold text-ink transition hover:bg-ink hover:text-paper active:scale-95"
-          title="Envoyer une impulsion d'horloge"
-        >
-          <span className={`size-1.5 rounded-full ${clockSurge ? "bg-amber-400 shadow-[0_0_8px_#f59e0b]" : "bg-emerald-500"}`} />
-          <span>{clockSurge ? "PULSE 120MHz" : "TEST CLK"}</span>
-        </button>
+        {/* Commandes dynamiques : CLK & PWM & RUN/DBG */}
+        <div className="flex items-center gap-1.5">
+          {/* Bouton Clock Pulse */}
+          <button
+            type="button"
+            onClick={triggerClockPulse}
+            className="flex items-center gap-1.5 rounded border border-ink/20 bg-ink/5 px-2.5 py-0.5 font-semibold text-ink transition hover:border-ink hover:bg-ink hover:text-paper active:scale-95"
+            title="Envoyer une impulsion d'horloge"
+          >
+            <span className={`size-1.5 rounded-full ${clockSurge ? "bg-amber-400 shadow-[0_0_8px_#f59e0b]" : "bg-emerald-500"}`} />
+            <span>{clockSurge ? "120 MHz" : "PULSE"}</span>
+          </button>
 
-        {/* Option D : Ventilateur PWM & Hacheur */}
-        <button
-          type="button"
-          onClick={cycleFanSpeed}
-          className={`flex items-center gap-1.5 rounded px-2 py-0.5 font-semibold transition ${fanSpeed > 0 ? "border border-cyan-500/40 bg-cyan-500/15 text-cyan-600" : "border border-ink/20 bg-ink/5 text-mute"}`}
-          title="Réguler la vitesse PWM du ventilateur (Hacheur)"
-        >
-          <span className={`size-1.5 rounded-full ${fanSpeed > 0 ? "bg-cyan-500 shadow-[0_0_6px_#06b6d4]" : "bg-ink/30"}`} />
-          <span>PWM: {fanPwmDuty}%</span>
-        </button>
+          {/* Ventilateur PWM */}
+          <button
+            type="button"
+            onClick={cycleFanSpeed}
+            className={`flex items-center gap-1.5 rounded border px-2.5 py-0.5 font-semibold transition active:scale-95 ${fanSpeed > 0 ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-600" : "border-ink/20 bg-ink/5 text-mute hover:border-ink/40"}`}
+            title="Réguler la vitesse PWM du ventilateur"
+          >
+            <span className={`size-1.5 rounded-full ${fanSpeed > 0 ? "bg-cyan-500 shadow-[0_0_8px_#06b6d4]" : "bg-ink/30"}`} />
+            <span>PWM {fanPwmDuty}%</span>
+          </button>
 
-        {/* Option C : Commutateur Run / Debug */}
-        <button
-          type="button"
-          onClick={() => setIsDebug((d) => !d)}
-          className={`flex items-center gap-1.5 rounded px-2 py-0.5 font-semibold transition ${isDebug ? "border border-amber-500/40 bg-amber-500/15 text-amber-600" : "border border-emerald-500/40 bg-emerald-500/15 text-emerald-700"}`}
-          title="Basculer entre le mode exécution et débogage"
-        >
-          <span className={`size-1.5 rounded-full ${isDebug ? "bg-amber-500 shadow-[0_0_6px_#f59e0b]" : "bg-emerald-500 shadow-[0_0_6px_#10b981]"}`} />
-          <span>{isDebug ? "MODE: DEBUG" : "MODE: RUN"}</span>
-        </button>
+          {/* Commutateur Run / Debug */}
+          <button
+            type="button"
+            onClick={() => setIsDebug((d) => !d)}
+            className={`flex items-center gap-1.5 rounded border px-2.5 py-0.5 font-semibold transition active:scale-95 ${isDebug ? "border-amber-500/50 bg-amber-500/10 text-amber-600" : "border-emerald-500/50 bg-emerald-500/10 text-emerald-700"}`}
+            title="Basculer le mode de débogage"
+          >
+            <span className={`size-1.5 rounded-full ${isDebug ? "bg-amber-500 shadow-[0_0_8px_#f59e0b]" : "bg-emerald-500 shadow-[0_0_8px_#10b981]"}`} />
+            <span>{isDebug ? "DEBUG" : "RUN"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Légende bas */}
@@ -1357,8 +1397,23 @@ const PEOPLE: Record<string, string> = {
   "Inès Lixi": "https://www.linkedin.com/in/in%C3%A8s-lixi-979654329",
   "Jade Diouri": "https://www.linkedin.com/in/jade-diouri-7a4688328",
   "Laure Rivier": "https://www.linkedin.com/in/laure-rivier-83060a328",
+  "Typhaine Lavaud": "https://www.linkedin.com/in/typhaine-lavaud",
+  "Elouan Marron": "https://www.linkedin.com/in/elouan-marron",
 };
 function Person({ name }: { name: string }) {
+  const parts = name.split(/,\s*/);
+  if (parts.length > 1) {
+    return (
+      <>
+        {parts.map((p, i) => (
+          <span key={p}>
+            {i > 0 && (i === parts.length - 1 ? " et " : ", ")}
+            <Person name={p} />
+          </span>
+        ))}
+      </>
+    );
+  }
   const url = PEOPLE[name];
   return url ? (
     <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-ink underline decoration-line underline-offset-4 transition-colors hover:text-signal hover:decoration-signal">
@@ -1692,7 +1747,7 @@ const FEATURED_PROJECT_TITLES = [
   "Monitoring ECG sécurisé sur FPGA",
   "Terrariot — IoT qualité de l'air",
   "Ventilateur régulé par capteur capacitif",
-  "🏆 Victoire au Hackathon STMicroelectronics",
+  "Victoire au Hackathon STMicroelectronics",
 ];
 
 /* ---------------- Projects ---------------- */
@@ -1937,7 +1992,7 @@ function Rail() {
     <div className="fixed top-[calc(env(safe-area-inset-top)+12px)] right-0 bottom-3 z-40 hidden w-8 md:block">
       <div ref={track} onPointerDown={down} onPointerMove={move} className="group/rail relative mx-auto h-full w-6 cursor-grab touch-none active:cursor-grabbing">
         <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-ink/15" />
-        <motion.div style={{ scaleY: p }} className="absolute inset-y-0 left-1/2 w-px origin-top -translate-x-1/2 bg-signal" />
+        <motion.div style={{ scaleY: p }} className="absolute inset-y-0 left-1/2 w-px origin-top -translate-x-1/2 bg-ink/40" />
         {marks.map((mk) => { const m = { ...mk, label: loc(NAV.find((n) => n.id === mk.id)!, lang).label }; return (
           <button key={m.id} onPointerDown={(e) => e.stopPropagation()} onClick={() => document.getElementById(m.id)?.scrollIntoView({ behavior: "smooth" })} aria-label={m.label} style={{ top: `${m.at * 100}%` }} className="group absolute left-1/2 block size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/40 bg-paper transition-colors hover:border-signal">
             <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 bg-paper/90 px-1 font-mono text-[10px] tracking-[0.12em] whitespace-nowrap text-ink uppercase opacity-0 transition-opacity group-hover:opacity-100 group-hover/rail:opacity-60">{m.label}</span>
@@ -2216,15 +2271,21 @@ function Page() {
               </span>
             ))}
           </h1>
-          <Reveal delay={0.6} className="mt-8 max-w-xl">
+          <Reveal delay={0.6} className="mt-8 max-w-xl space-y-3">
             <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
               {tr(
-                "Élève-ingénieur en microélectronique, informatique et conception produit (Mines Saint-Étienne × Politecnico di Milano). À la recherche d'un stage de fin d'études de 5+ mois dès avril 2027, orienté prototypage, test et innovation produit.",
-                "Engineering student in microelectronics, computer science, and product design (Mines Saint-Étienne × Politecnico di Milano). Seeking a 5+ month end-of-studies internship starting April 2027, focused on prototyping, testing, and product innovation."
+                "Élève-ingénieur en microélectronique, informatique et conception produit aux Mines Saint-Étienne × Politecnico di Milano.",
+                "Engineering student in microelectronics, computer science, and product design at Mines Saint-Étienne × Politecnico di Milano."
               )}
             </p>
-            <div className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] leading-normal text-ink/80">
-              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Rôle visé :", "Target role:")}</span>
+            <p className="text-[16px] md:text-[17px] leading-relaxed text-ink/75">
+              {tr(
+                "À la recherche d'un stage de fin d'études de 5+ mois dès avril 2027 — focalisé sur le prototypage, les bancs de test et l'innovation produit.",
+                "Seeking a 5+ month end-of-studies internship starting April 2027 — focused on prototyping, test benches, and product innovation."
+              )}
+            </p>
+            <div className="pt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] leading-normal text-ink/80">
+              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Objectif pro :", "Career target:")}</span>
               <span className="font-semibold text-ink"><Hl>Product Owner / Product Manager</Hl></span>
             </div>
           </Reveal>
@@ -2473,7 +2534,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#10B981" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#B45309" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
@@ -2494,7 +2555,7 @@ function Page() {
       </section>
 
       {/* STACK */}
-      <section id="stack" style={{ "--color-signal": "#06B6D4" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="stack" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost="Toolbox" n="07"><Hl>{tr("Du transistor au ", "From transistor to ")}<span className="font-serif font-normal italic">{tr("produit", "product")}</span>.</Hl></Stacked></div>
         <div className="border-t border-ink">
           {STACK.map((raw) => loc(raw, lang)).map((s, i) => (
@@ -2509,25 +2570,76 @@ function Page() {
             </Reveal>
           ))}
         </div>
-        <div className="mt-16 grid gap-12 lg:grid-cols-2">
-          <div>
-            <Label>{tr("Langues", "Languages")}</Label>
-            <div className="mt-5 space-y-5">
+        <div className="mt-20 grid gap-8 lg:grid-cols-2">
+          {/* Carte Langues */}
+          <div className="rounded-2xl border border-ink/20 bg-paper/60 p-7 md:p-8 shadow-sm backdrop-blur-sm transition-all hover:border-ink/40">
+            <div className="flex items-center justify-between border-b border-ink/10 pb-4">
+              <Label className="text-ink/80">{tr("Langues de travail", "Working Languages")}</Label>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-mute">FR · EN · DE</span>
+            </div>
+            <div className="mt-6 space-y-6">
               {LANGS.map((raw) => loc(raw, lang)).map((l, i) => (
-                <div key={i}>
-                  <div className="flex justify-between text-sm"><span className="font-medium">{l.l}</span><span className="font-mono text-[11px] text-mute">{l.v}</span></div>
-                  <div className="mt-2 h-[3px] bg-line">
-                    <motion.div className="h-full origin-left bg-ink" style={{ width: `${l.p}%` }} initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 1.2, ease, delay: i * 0.12 }} />
+                <div key={i} className="group">
+                  <div className="flex items-baseline justify-between">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-lg font-semibold tracking-tight text-ink">{l.l}</span>
+                      <span className="rounded bg-ink/5 px-2 py-0.5 font-mono text-[11px] font-semibold text-signal">{l.v}</span>
+                    </div>
+                    <span className="font-mono text-xs text-mute group-hover:text-ink">{l.p}%</span>
+                  </div>
+                  <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-ink/10">
+                    <motion.div
+                      className="h-full rounded-full bg-signal"
+                      style={{ width: `${l.p}%` }}
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1.1, ease, delay: i * 0.12 }}
+                    />
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          <div>
-            <Label>Certifications</Label>
-            <ul className="mt-5 space-y-2.5">
-              {["Label HandiManagement", tr("PSC1 — Premiers secours", "PSC1 — First aid certification"), "TOEIC 955 / 990 · TOEFL · Cambridge"].map((c) => <li key={c} className="flex gap-3"><span className="mt-2.5 h-px w-3 shrink-0 bg-signal" />{c}</li>)}
-            </ul>
+
+          {/* Carte Certifications */}
+          <div className="rounded-2xl border border-ink/20 bg-paper/60 p-7 md:p-8 shadow-sm backdrop-blur-sm transition-all hover:border-ink/40">
+            <div className="flex items-center justify-between border-b border-ink/10 pb-4">
+              <Label className="text-ink/80">{tr("Certifications & Distinctions", "Certifications & Accreditations")}</Label>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-signal font-semibold">VALIDÉES</span>
+            </div>
+            <div className="mt-6 space-y-4">
+              {[
+                {
+                  title: "TOEIC 955 / 990 (Niveau C1)",
+                  sub: tr("Score officiel · Cambridge English & TOEFL", "Official Score · Cambridge English & TOEFL"),
+                  badge: "Langues",
+                },
+                {
+                  title: "Label HandiManagement",
+                  sub: tr("Inclusion et management des situations de handicap en entreprise", "Workplace disability inclusion and management accreditation"),
+                  badge: "RSE / Management",
+                },
+                {
+                  title: tr("PSC1 — Prévention & Secours Civiques", "PSC1 — First Aid & Civilian Rescue"),
+                  sub: tr("Formation premiers secours et gestes d'urgence", "Emergency first aid and life-saving rescue procedures"),
+                  badge: "Sécurité",
+                },
+              ].map((c) => (
+                <div key={c.title} className="flex items-start gap-4 rounded-xl border border-ink/10 bg-white/70 p-4 transition-all hover:border-ink/30 hover:bg-white">
+                  <div className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-signal/15 text-signal">
+                    <Check className="size-3 stroke-[2.5]" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <h4 className="text-[15px] font-semibold text-ink">{c.title}</h4>
+                      <span className="rounded border border-ink/10 bg-ink/5 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-mute">{c.badge}</span>
+                    </div>
+                    <p className="mt-0.5 text-xs text-mute leading-relaxed">{c.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

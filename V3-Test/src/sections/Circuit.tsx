@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence, useInView } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
+import { motion, useInView } from "motion/react";
 import { loc, useLang, type Lang, type Loc } from "../i18n";
 
 /* ============================================================================
@@ -134,7 +133,7 @@ const ITEMS: Loc<Item>[] = [
     label: "Président MINITEL",
     place: "Association étudiante, Gardanne",
     from: "2025-03",
-    to: "2026-03",
+    to: "2026-02",
     details: [
       "Direction de l'association (16 membres) et gestion d'un budget de plus de 25 000 €.",
       "Maintenance du réseau Wi-Fi/filaire de 150+ logements étudiants du campus.",
@@ -397,15 +396,14 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                   });
                   d += ` L${x(T1)} ${mid}`;
                 } else {
-                  // Ligne logique : si deux segments se touchent ou s'enchaînent (comme Président -> Membre d'honneur),
-                  // on reste au niveau haut HI et on insère un séparateur oblique/croisement propre sans effondrement à zéro
+                  // Ligne logique : état bas LO au repos, passage à HI lors d'une période active.
+                  // Entre deux mandats consécutifs (ex: Président -> Membre d'honneur), on réalise une coupure / transition franche (glitch/handover)
                   d = `M${x(T0)} ${lo}`;
                   let curX = x(T0);
                   seg.forEach(({ a, b }, idx) => {
                     if (a > curX) {
                       d += ` L${a} ${lo} L${a} ${hi}`;
                     } else if (a <= curX) {
-                      // Transition directe au niveau haut avec un léger motif triangulaire / marqueur de passage de relais
                       d += ` L${a} ${hi}`;
                     }
                     d += ` L${b} ${hi}`;
@@ -414,8 +412,9 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                       d += ` L${b} ${lo}`;
                       curX = b;
                     } else {
-                      // Le segment suivant commence directement ici : on reste à hi ou on fait un biseau
-                      curX = b;
+                      // Transition immédiate entre mandats consécutifs : encoche d'impulsion de synchronisation propre
+                      d += ` L${b} ${mid} L${next.a} ${mid} L${next.a} ${hi}`;
+                      curX = next.a;
                     }
                   });
                   d += ` L${x(T1)} ${lo}`;
@@ -430,14 +429,13 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                     ))}
                     <motion.path d={d} fill="none" stroke="var(--color-ink)" strokeWidth={1} strokeDasharray={dashed ? "4 3" : undefined} {...draw(ri)} />
                     
-                    {/* Séparateur élégant de transition entre deux mandats/états consécutifs */}
+                    {/* Marqueur de frontière de transition entre deux mandats */}
                     {!r.bus && seg.map(({ b }, idx) => {
                       const next = seg[idx + 1];
-                      if (next && Math.abs(next.a - b) <= 2) {
+                      if (next && Math.abs(next.a - b) <= 4) {
                         return (
-                          <g key={`trans-${idx}`} className="stroke-ink" strokeWidth={1.2}>
-                            <line x1={b - 3} y1={hi} x2={b + 3} y2={lo} strokeDasharray="2 1" />
-                            <polygon points={`${b - 2},${hi} ${b + 2},${hi} ${b},${hi + 4}`} fill="var(--color-ink)" />
+                          <g key={`trans-${idx}`} className="stroke-ink">
+                            <line x1={b} y1={hi - 4} x2={b} y2={lo + 4} strokeDasharray="2 2" strokeWidth={1} />
                           </g>
                         );
                       }
@@ -451,13 +449,16 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                       return (
                         <g key={i.id} role="button" tabIndex={0} aria-pressed={on} aria-label={`${i.label}, ${fmtRange(i)}`}
                           className="cursor-pointer outline-none"
-                          onClick={() => setSel(i.id)}
+                          onClick={() => {
+                            setSel(i.id);
+                            handleAction(i);
+                          }}
                           onDoubleClick={() => handleAction(i)}
                           onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === " ") {
                               e.preventDefault();
-                              if (sel === i.id) handleAction(i);
-                              else setSel(i.id);
+                              setSel(i.id);
+                              handleAction(i);
                             }
                           }}>
                           <rect x={a} y={top + 4} width={inside ? b - a : b - a + textWidth} height={ROW_H - 8} fill="transparent" />
@@ -494,81 +495,6 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
             </svg>
           </div>
         </div>
-      </div>
-
-      {/* Panneau de détail */}
-      <div className="mt-6 min-h-[170px] border-t border-ink pt-5" aria-live="polite">
-        <AnimatePresence mode="wait">
-          <motion.div key={item.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease }}
-            className="grid gap-4 md:grid-cols-[240px_1fr]">
-            <div className="font-mono text-[12px] leading-6 text-mute">
-              <div><span className="text-ink">{ROWS.find((r) => r.key === item.row)!.name}</span></div>
-              <div>{fmtRange(item)}</div>
-              <div>Δt = {m(item.to) - m(item.from) + 1} {mo}</div>
-              
-              {/* Bouton d'action directe contextuel */}
-              {item.row === "STAGE" && (
-                <div className="mt-3 pt-2">
-                  <a
-                    href="#experiences"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline"
-                  >
-                    {tr("Voir l'expérience", "View experience")} <ArrowUpRight className="size-3.5" />
-                  </a>
-                </div>
-              )}
-              {item.row === "ASSO" && (
-                <div className="mt-3 pt-2">
-                  <a
-                    href="#engagements"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline"
-                  >
-                    {tr("Voir dans les engagements", "View in involvements")} <ArrowUpRight className="size-3.5" />
-                  </a>
-                </div>
-              )}
-              {(item.row === "FORMATION" || item.row === "INTL") && (
-                <div className="mt-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => handleAction(item)}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline"
-                  >
-                    {tr("Voir le programme détaillé ↓", "View detailed curriculum ↓")} <ArrowUpRight className="size-3.5" />
-                  </button>
-                </div>
-              )}
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h3 className="text-2xl font-semibold tracking-tight">{item.label}</h3>
-                {item.row === "STAGE" && (
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-mute border border-ink/10 px-2 py-0.5 rounded">
-                    {tr("Double-clic pour voir le stage", "Double-click to view internship")}
-                  </span>
-                )}
-                {item.row === "ASSO" && (
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-mute border border-ink/10 px-2 py-0.5 rounded">
-                    {tr("Double-clic pour voir l'engagement", "Double-click to view involvement")}
-                  </span>
-                )}
-                {(item.row === "FORMATION" || item.row === "INTL") && (
-                  <button
-                    type="button"
-                    onClick={() => handleAction(item)}
-                    className="font-mono text-[10px] uppercase tracking-wider text-mute border border-ink/20 px-2.5 py-1 rounded hover:border-ink hover:text-ink transition-colors"
-                  >
-                    {tr("Double-clic pour ouvrir le dépliant", "Double-click to open school card")}
-                  </button>
-                )}
-              </div>
-              <p className="mt-1 text-[15px] text-mute">{item.place}</p>
-              <ul className="mt-4 space-y-1.5 text-[15px] leading-relaxed">
-                {item.details.map((d) => <li key={d} className="flex gap-3"><span className="mt-[0.7em] h-px w-3 shrink-0 bg-ink" />{d}</li>)}
-              </ul>
-            </div>
-          </motion.div>
-        </AnimatePresence>
       </div>
     </div>
   );

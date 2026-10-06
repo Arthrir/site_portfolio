@@ -125,7 +125,7 @@ export default function Passions({ Label }: { Label: (p: { children: React.React
           <Label className="absolute right-0 bottom-0">{tr("Glisser pour tourner", "Drag to rotate")} · {DESTS.length} {tr("pays", "countries")}</Label>
         </div>
         <div>
-          <Label>{tr("04 · Voyages — j'adore voyager", "04 · Travel — I love to travel")}</Label>
+          <Label>{tr("04 · Voyages — Carnet de route", "04 · Travel — Field notes")}</Label>
           <div className="mt-6 flex flex-wrap gap-1" role="tablist">
             {dests.map((d) => (
               <button key={d.key} role="tab" aria-selected={dest.key === d.key} onClick={() => setDest(d.key)} className="relative px-3 py-1.5 text-sm font-medium">
@@ -134,15 +134,25 @@ export default function Passions({ Label }: { Label: (p: { children: React.React
               </button>
             ))}
           </div>
-          <p className="mt-6 max-w-lg text-mute">{tr("J'adore voyager : chaque pays m'apprend une autre façon de concevoir, de construire et de vivre la technologie.", "I love to travel: every country teaches me a different way to design, build and live with technology.")}</p>
-          <AnimatePresence mode="wait">
-            <motion.div key={dest.key} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.4, ease }} className="mt-10">
-              <Label className="text-signal">{dest.theme}</Label>
-              <h3 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">{dest.title}</h3>
-              <p className="mt-4 max-w-lg text-lg leading-relaxed text-mute">{dest.text}</p>
-              <img src={`/assets/voyages/${dest.key}.jpg`} alt="" onError={(e) => (e.currentTarget.style.display = "none")} className="mt-8 aspect-[16/9] w-full max-w-lg object-cover" />
-            </motion.div>
-          </AnimatePresence>
+
+          <div className="mt-8 rounded-xl border border-dashed border-ink/30 bg-ink/[0.02] p-7 md:p-8">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-signal bg-signal/10 px-2 py-0.5 rounded border border-signal/20">
+              {tr("Section en construction", "Under construction")}
+            </span>
+            <h3 className="mt-4 text-2xl font-semibold tracking-tight md:text-3xl">
+              {dest.name} · {dest.cities}
+            </h3>
+            <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-mute">
+              {tr(
+                "Cette partie du site est en cours de finalisation ! Je vais très bientôt la mettre à jour avec mes propres photographies, carnets de route et inspirations glanées au fil de mes voyages.",
+                "This section is currently under construction! I will soon be updating it with my own photography, travel journals and design insights gathered across the globe."
+              )}
+            </p>
+            <div className="mt-6 flex items-center gap-2 font-mono text-[11px] text-mute">
+              <span className="size-2 rounded-full bg-signal animate-ping" />
+              <span>{tr("Mise à jour prochaine avec galerie photo", "Upcoming update with photo gallery")}</span>
+            </div>
+          </div>
         </div>
       </div>
     </>
