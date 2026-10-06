@@ -756,11 +756,6 @@ const SM_CAPS = [
 ];
 
 function Die() {
-  const ref = useRef<HTMLDivElement>(null);
-  const mx = useMotionValue(0), my = useMotionValue(0);
-  const rx = useSpring(useTransform(my, [-1, 1], [8, -8]), { stiffness: 120, damping: 18 });
-  const ry = useSpring(useTransform(mx, [-1, 1], [-8, 8]), { stiffness: 120, damping: 18 });
-  const [hot, setHot] = useState(false);
   const { tr } = useLang();
 
   // Option A : Banc logique (2 entrées -> 1 sortie XOR)
@@ -775,37 +770,17 @@ function Die() {
   // Option C : Commutateur RUN / DEBUG
   const [isDebug, setIsDebug] = useState(false);
 
-  // Commande PWM Ventilateur (Prototype capteur capacitif & hacheur de puissance)
-  const [fanSpeed, setFanSpeed] = useState<0 | 1 | 2 | 3>(2); // 0=Stop, 1=33%, 2=66%, 3=100%
-  const fanPwmDuty = isDebug ? 0 : fanSpeed === 0 ? 0 : fanSpeed === 1 ? 33 : fanSpeed === 2 ? 66 : 100;
-  const fanAnimDuration = isDebug || fanSpeed === 0 ? 999999 : fanSpeed === 1 ? 2.2 : fanSpeed === 2 ? 0.9 : 0.35;
-
-  const cycleFanSpeed = () => {
-    setFanSpeed((s) => ((s + 1) % 4) as 0 | 1 | 2 | 3);
-  };
-
   const triggerClockPulse = () => {
     setPulseCount((c) => c + 1);
     setClockSurge(true);
     setTimeout(() => setClockSurge(false), 850);
   };
 
-  const animDuration = isDebug ? 999999 : clockSurge ? 0.45 : hot ? 1.0 : 2.2;
+  const animDuration = isDebug ? 999999 : clockSurge ? 0.45 : 2.0;
 
   return (
-    <div className="relative w-full max-w-[420px] pb-6 [perspective:1200px]">
-      <motion.div
-        ref={ref}
-        style={{ rotateX: rx, rotateY: ry }}
-        className="relative aspect-square w-full [transform-style:preserve-3d]"
-        onPointerMove={(e) => {
-          const r = ref.current!.getBoundingClientRect();
-          mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
-          my.set(((e.clientY - r.top) / r.height) * 2 - 1);
-        }}
-        onPointerEnter={() => setHot(true)}
-        onPointerLeave={() => { mx.set(0); my.set(0); setHot(false); }}
-      >
+    <div className="relative w-full max-w-[420px] pb-6">
+      <div className="relative aspect-square w-full">
         <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible select-none">
           <defs>
             <filter id="glow-led" x="-60%" y="-60%" width="220%" height="220%">
@@ -1125,71 +1100,7 @@ function Die() {
             <text x="0" y="-4" fontSize="4" textAnchor="middle" className="fill-mute font-mono">OR</text>
           </g>
 
-          {/* =================================================================
-              VENTILATEUR PWM & HACHEUR DE PUISSANCE (PROTOTYPE ARTHUR)
-              Piste PWM propre -> Hacheur MOSFET Q1 -> Ventilateur intégré
-              ================================================================= */}
-          {/* Ligne d'alimentation PWM depuis die (237, 274) vers le transistor MOSFET Q1 à (306, 298) */}
-          <path d="M237 274 V298 H306" className="stroke-line" strokeWidth="1.25" fill="none" />
-          {!isDebug && fanSpeed > 0 && (
-            <motion.path
-              d="M237 274 V298 H306"
-              fill="none"
-              strokeWidth="1.6"
-              stroke="#06B6D4"
-              initial={{ pathLength: 0, pathOffset: 0 }}
-              animate={{ pathLength: [0, 0.45, 0], pathOffset: [0, 0.55, 1] }}
-              transition={{ duration: fanAnimDuration * 1.2, repeat: Infinity, ease: "linear" }}
-            />
-          )}
 
-          {/* Transistor MOSFET de puissance (Q1 / Hacheur) centré à (292, 298) */}
-          <g transform="translate(292, 298)">
-            <rect x="-5" y="-5" width="10" height="10" rx="1" fill="#18181B" stroke="#09090B" strokeWidth="0.75" />
-            <rect x="-4" y="-7" width="8" height="2" fill="#94A3B8" />
-            <rect x="-3" y="5" width="2" height="2.5" fill="#94A3B8" />
-            <rect x="1" y="5" width="2" height="2.5" fill="#94A3B8" />
-            <text x="7" y="2" fontSize="4.5" className="fill-mute font-mono">Q1</text>
-          </g>
-
-          {/* Ligne de sortie MOSFET (297, 298) vers moteur ventilateur (306, 298) */}
-          <path d="M297 298 H306" className="stroke-line" strokeWidth="1.25" fill="none" />
-
-          {/* Ventilateur interactif propre et parfaitement cadré (centre à x: 320, y: 298, rayon 14px) */}
-          <g
-            className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
-            onClick={cycleFanSpeed}
-            transform="translate(320, 298)"
-          >
-            {/* Châssis circulaire usiné avec anneau de cuivre et de masse */}
-            <circle cx="0" cy="0" r="14" fill="#F8FAFC" stroke="#334155" strokeWidth="1.2" />
-            <circle cx="0" cy="0" r="12" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="0.75" />
-            <circle cx="0" cy="0" r="11.5" className="fill-white" />
-
-            {/* Hélice rotative à 4 pales nettes et proportionnées */}
-            <motion.g
-              animate={!isDebug && fanSpeed > 0 ? { rotate: 360 } : { rotate: 0 }}
-              transition={{
-                repeat: Infinity,
-                duration: fanAnimDuration,
-                ease: "linear",
-              }}
-            >
-              <circle cx="0" cy="0" r="3" fill="#1E293B" />
-              <path d="M0 -3 C3 -6.5 7 -6.5 7 -3 C7 0 3 0 0 -1.5 Z" fill="#0EA5E9" />
-              <path d="M3 0 C6.5 3 6.5 7 3 7 C0 7 0 3 1.5 0 Z" fill="#0EA5E9" />
-              <path d="M0 3 C-3 6.5 -7 6.5 -7 3 C-7 0 -3 0 0 1.5 Z" fill="#0284C7" />
-              <path d="M-3 0 C-6.5 -3 -6.5 -7 -3 -7 C0 -7 0 -3 -1.5 0 Z" fill="#0284C7" />
-            </motion.g>
-
-            {/* Noyau central du moteur */}
-            <circle cx="0" cy="0" r="1.5" fill="#F8FAFC" stroke="#0F172A" strokeWidth="0.6" />
-
-            {/* Sérigraphie élégante intégrée sur le PCB */}
-            <text x="0" y="21" fontSize="4.5" textAnchor="middle" className="fill-cyan-600 font-mono font-bold">
-              FAN {fanPwmDuty}%
-            </text>
-          </g>
 
           {/* Condensateurs CMS (0603) — 100% SOLIDES ET OPAQUES */}
           {SM_CAPS.map((cap) => (
@@ -1270,13 +1181,13 @@ function Die() {
             </g>
           </g>
         </svg>
-      </motion.div>
+      </div>
 
       {/* Légende bas discrète et technique */}
       <div className="mt-3 flex items-center justify-between px-1 font-mono text-[10px] text-mute uppercase">
         <span>fig. 01 — banc silicium interactif (touch & gates)</span>
         <span className="text-signal font-semibold">
-          {isDebug ? "PAUSED (DEBUG HALT)" : clockSurge ? "CLOCK ×3.6 (120 MHZ)" : hot ? "CLOCK ×2.0 (ACTIVE)" : "32.768 KHZ"}
+          {isDebug ? "PAUSED (DEBUG HALT)" : clockSurge ? "CLOCK ×3.6 (120 MHZ)" : "32.768 KHZ"}
         </span>
       </div>
     </div>
