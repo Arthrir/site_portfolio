@@ -618,7 +618,7 @@ const SCHOOLS: School[] = [
       "Informatique",
     ],
     goal: "Deux années de formation scientifique intensive (CPGE) développant rigueur conceptuelle, modélisation mathématique et endurance de travail.",
-    link: "https://lycee-pothier.fr/",
+    link: "https://www.lycee-pothier.com/",
     en: {
       degree: "Intensive Preparatory Classes (CPGE)",
       place: "Orléans, France",
@@ -648,7 +648,7 @@ const SCHOOLS: School[] = [
       "Section Européenne Anglais",
     ],
     goal: "Baccalauréat scientifique mention Bien avec parcours bilingue en Section Européenne et renforcement en mathématiques expertes.",
-    link: "https://aydes.fr/",
+    link: "https://www.nda41.fr/",
     en: {
       degree: "High School Diploma with Honors (European Track)",
       place: "Blois, France",
