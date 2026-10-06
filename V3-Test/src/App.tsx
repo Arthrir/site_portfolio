@@ -481,7 +481,7 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
             className="relative w-full max-w-lg rounded-2xl border border-ink bg-paper p-7 shadow-2xl md:p-9"
           >
             <div className="flex items-center justify-between border-b border-ink/15 pb-4">
-              <Label>{tr("Message direct", "Direct message")}</Label>
+              <Label>{tr("Envoyer un email", "Send an email")}</Label>
               <button onClick={onClose} className="font-mono text-[11px] uppercase tracking-wider text-mute hover:text-signal">
                 {tr("Fermer", "Close")} ✕
               </button>
@@ -1281,7 +1281,7 @@ function Page() {
               className="flex items-center gap-2 rounded-full border border-ink bg-ink px-6 py-3 text-sm font-semibold tracking-wide text-paper transition-all hover:bg-signal hover:border-signal"
             >
               <Send className="size-4" />
-              <span>{tr("Envoyer un message direct", "Send direct message")}</span>
+              <span>{tr("Envoyer un email", "Send an email")}</span>
             </button>
           </div>
           <div className="mt-14 grid grid-cols-2 gap-px border border-ink bg-ink lg:grid-cols-4">
