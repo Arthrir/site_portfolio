@@ -1,5 +1,6 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
+import { ArrowUpRight, Gamepad2 } from "lucide-react";
 import { loc, useLang, type Lang, type Loc } from "../i18n";
 
 /* ============================================================================
@@ -86,7 +87,7 @@ const ITEMS: Loc<Item>[] = [
     label: "PHINIA",
     place: "PHINIA Delphi, Blois",
     from: "2025-01",
-    to: "2025-02",
+    to: "2025-01",
     details: [
       "Stage Ingénieur Systèmes Hardware : plateforme ECU 24V.",
       "Configuration et tests de systèmes d'injection et bancs de tests industriels.",
@@ -221,7 +222,7 @@ const fmtL = (lang: Lang) => (t: number) => `${MONTHS[lang][((Math.round(t) % 12
 
 const NAME_W = 150, ROW_H = 64, AXIS_H = 40, PAD = 12, SLOPE = 6;
 
-export default function Circuit() {
+export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
   const wrap = useRef<HTMLDivElement>(null);
   const inView = useInView(wrap, { once: true, margin: "-15% 0px" });
   const [avail, setAvail] = useState(1000);
@@ -264,113 +265,159 @@ export default function Circuit() {
     transition: { duration: 1.6, delay: 0.15 * i, ease },
   });
 
+  const handleAction = (it: Item) => {
+    if (it.row === "STAGE") {
+      document.getElementById("experiences")?.scrollIntoView({ behavior: "smooth" });
+    } else if (it.id === "minitel") {
+      onMinitel ? onMinitel() : document.getElementById("engagements")?.scrollIntoView({ behavior: "smooth" });
+    } else if (it.row === "ASSO") {
+      document.getElementById("engagements")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div>
-      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2 font-mono text-[11px] tracking-[0.12em] text-mute uppercase">
-        <span>{tr("Chronogramme · cliquer sur un segment", "Timing diagram · click a segment")}</span>
-        <span>
-          {hover !== null ? <>Curseur B = <span className="text-ink">{fmt(hover)}</span> · Δ(A,B) = <span className="text-ink">{Math.round(hover - tToday) >= 0 ? "+" : ""}{Math.round(hover - tToday)} {mo}</span></> : tr("Survoler pour mesurer", "Hover to measure")}
-        </span>
+      {/* Sur mobile : sélecteur compact rapide en cartes horizontales au lieu du grand SVG de 1000px */}
+      <div className="sm:hidden mb-6">
+        <p className="font-mono text-[11px] uppercase tracking-wider text-mute mb-3">
+          {tr("Jalons du parcours · sélectionner", "Journey milestones · select")}
+        </p>
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+          {items.map((it) => {
+            const active = it.id === sel;
+            return (
+              <button
+                key={it.id}
+                onClick={() => setSel(it.id)}
+                className={`shrink-0 rounded-lg border px-3 py-2 text-left transition-colors ${
+                  active ? "border-ink bg-ink text-paper" : "border-line bg-paper text-ink"
+                }`}
+              >
+                <span className="block font-mono text-[9px] uppercase tracking-wider opacity-70">
+                  {ROWS.find((r) => r.key === it.row)?.name}
+                </span>
+                <span className="block text-xs font-semibold">{it.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div ref={wrap} className="relative overflow-x-auto border border-ink/80 bg-paper">
-        <div className="flex" style={{ width: NAME_W + W }}>
-          {/* Colonne des noms de signaux (sticky en scroll horizontal) */}
-          <div className="sticky left-0 z-10 shrink-0 border-r border-ink/80 bg-paper" style={{ width: NAME_W }}>
-            <div className="flex items-end px-3 pb-2 font-mono text-[11px] text-mute" style={{ height: AXIS_H }}>SIGNAL</div>
-            {ROWS.map((r) => (
-              <div key={r.key} className="flex items-center border-t border-line px-3 font-mono text-[13px] text-ink" style={{ height: ROW_H }}>{r.name}</div>
-            ))}
-          </div>
+      {/* Sur Desktop (sm:) : grand chronogramme interactif */}
+      <div className="hidden sm:block">
+        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2 font-mono text-[11px] tracking-[0.12em] text-mute uppercase">
+          <span>{tr("Chronogramme · clic pour afficher, double-clic pour ouvrir", "Timing diagram · click to view, double-click to open")}</span>
+          <span>
+            {hover !== null ? <>Curseur B = <span className="text-ink">{fmt(hover)}</span> · Δ(A,B) = <span className="text-ink">{Math.round(hover - tToday) >= 0 ? "+" : ""}{Math.round(hover - tToday)} {mo}</span></> : tr("Survoler pour mesurer", "Hover to measure")}
+          </span>
+        </div>
 
-          <svg
-            width={W} height={H} className="block shrink-0 select-none"
-            onPointerMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); const t = inv(e.clientX - r.left); setHover(t >= T0 && t <= T1 ? t : null); }}
-            onPointerLeave={() => setHover(null)}
-          >
-            {/* Grille + axe */}
-            {ticks.map(({ t, major }) => (
-              <g key={t}>
-                <line x1={x(t)} x2={x(t)} y1={major ? AXIS_H - 12 : AXIS_H - 5} y2={H} stroke="var(--color-line)" strokeWidth={1} strokeDasharray={major ? undefined : "2 3"} />
-                {major && t < T1 && <text x={x(t) + 4} y={AXIS_H - 16} className="fill-ink font-mono" fontSize={12}>{t / 12}</text>}
+        <div ref={wrap} className="relative overflow-x-auto border border-ink/80 bg-paper">
+          <div className="flex" style={{ width: NAME_W + W }}>
+            {/* Colonne des noms de signaux (sticky en scroll horizontal) */}
+            <div className="sticky left-0 z-10 shrink-0 border-r border-ink/80 bg-paper" style={{ width: NAME_W }}>
+              <div className="flex items-end px-3 pb-2 font-mono text-[11px] text-mute" style={{ height: AXIS_H }}>SIGNAL</div>
+              {ROWS.map((r) => (
+                <div key={r.key} className="flex items-center border-t border-line px-3 font-mono text-[13px] text-ink" style={{ height: ROW_H }}>{r.name}</div>
+              ))}
+            </div>
+
+            <svg
+              width={W} height={H} className="block shrink-0 select-none"
+              onPointerMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); const t = inv(e.clientX - r.left); setHover(t >= T0 && t <= T1 ? t : null); }}
+              onPointerLeave={() => setHover(null)}
+            >
+              {/* Grille + axe */}
+              {ticks.map(({ t, major }) => (
+                <g key={t}>
+                  <line x1={x(t)} x2={x(t)} y1={major ? AXIS_H - 12 : AXIS_H - 5} y2={H} stroke="var(--color-line)" strokeWidth={1} strokeDasharray={major ? undefined : "2 3"} />
+                  {major && t < T1 && <text x={x(t) + 4} y={AXIS_H - 16} className="fill-ink font-mono" fontSize={12}>{t / 12}</text>}
+                </g>
+              ))}
+              <line x1={0} x2={W} y1={AXIS_H} y2={AXIS_H} stroke="var(--color-ink)" strokeWidth={1} />
+              {/* Marque de rupture d'échelle */}
+              <g transform={`translate(${x(TB) - 9}, ${AXIS_H})`}>
+                <rect x={-3} y={-7} width={12} height={14} fill="var(--color-paper)" />
+                <path d="M-3 6 L3 -6 M3 6 L9 -6" stroke="var(--color-ink)" strokeWidth={1} />
               </g>
-            ))}
-            <line x1={0} x2={W} y1={AXIS_H} y2={AXIS_H} stroke="var(--color-ink)" strokeWidth={1} />
-            {/* Marque de rupture d'échelle */}
-            <g transform={`translate(${x(TB) - 9}, ${AXIS_H})`}>
-              <rect x={-3} y={-7} width={12} height={14} fill="var(--color-paper)" />
-              <path d="M-3 6 L3 -6 M3 6 L9 -6" stroke="var(--color-ink)" strokeWidth={1} />
-            </g>
 
-            {/* Signaux */}
-            {ROWS.map((r, ri) => {
-              const top = AXIS_H + ri * ROW_H;
-              const hi = top + 16, lo = top + ROW_H - 16, mid = (hi + lo) / 2;
-              const rowItems = items.filter((i) => i.row === r.key).sort((a, b) => m(a.from) - m(b.from));
-              const seg = rowItems.map((i) => ({ i, a: x(m(i.from)), b: x(m(i.to) + 1) }));
-              const dashed = r.key === "TARGET";
-              let d: string;
-              if (r.bus) {
-                // Bus : segments hexagonaux, état Z (ligne médiane) entre deux valeurs
-                d = `M${x(T0)} ${mid}`;
-                seg.forEach(({ a, b }) => {
-                  d += ` L${a} ${mid} L${a + SLOPE} ${hi} L${b - SLOPE} ${hi} L${b} ${mid} L${b - SLOPE} ${lo} L${a + SLOPE} ${lo} L${a} ${mid} M${b} ${mid}`;
-                });
-                d += ` L${x(T1)} ${mid}`;
-              } else {
-                d = `M${x(T0)} ${lo}`;
-                seg.forEach(({ a, b }) => { d += ` L${a} ${lo} L${a} ${hi} L${b} ${hi} L${b} ${lo}`; });
-                d += ` L${x(T1)} ${lo}`;
-              }
-              return (
-                <g key={r.key}>
-                  {ri > 0 && <line x1={0} x2={W} y1={top} y2={top} stroke="var(--color-line)" strokeWidth={1} />}
-                  {seg.map(({ i, a, b }) => i.id === sel && (
-                    r.bus
-                      ? <path key={`s${i.id}`} d={`M${a} ${mid} L${a + SLOPE} ${hi} L${b - SLOPE} ${hi} L${b} ${mid} L${b - SLOPE} ${lo} L${a + SLOPE} ${lo} Z`} fill="var(--color-signal)" opacity={0.12} />
-                      : <rect key={`s${i.id}`} x={a} y={hi} width={b - a} height={lo - hi} fill="var(--color-signal)" opacity={0.12} />
-                  ))}
-                  <motion.path d={d} fill="none" stroke="var(--color-ink)" strokeWidth={1} strokeDasharray={dashed ? "4 3" : undefined} {...draw(ri)} />
-                  {seg.map(({ i, a, b }) => {
-                    const on = i.id === sel;
-                    const inside = b - a > i.label.length * 7.6 + 16;
-                    return (
-                      <g key={i.id} role="button" tabIndex={0} aria-pressed={on} aria-label={`${i.label}, ${fmtRange(i)}`}
-                        className="cursor-pointer outline-none"
-                        onClick={() => setSel(i.id)}
-                        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSel(i.id); } }}>
-                        <rect x={a} y={top + 4} width={inside ? b - a : b - a + i.label.length * 7.6 + 16} height={ROW_H - 8} fill="transparent" />
-                        <motion.text
-                          x={inside ? a + (r.bus ? SLOPE + 6 : 8) : b + 6} y={mid + 4.5}
-                          fontSize={13} className={`font-sans ${on ? "fill-signal" : "fill-ink"}`} fontWeight={on ? 600 : 500}
-                          initial={{ opacity: 0 }} animate={{ opacity: inView ? 1 : 0 }} transition={{ delay: 0.15 * ri + 0.9, duration: 0.4 }}
-                        >{i.label}</motion.text>
-                      </g>
-                    );
-                  })}
-                </g>
-              );
-            })}
+              {/* Signaux */}
+              {ROWS.map((r, ri) => {
+                const top = AXIS_H + ri * ROW_H;
+                const hi = top + 16, lo = top + ROW_H - 16, mid = (hi + lo) / 2;
+                const rowItems = items.filter((i) => i.row === r.key).sort((a, b) => m(a.from) - m(b.from));
+                const seg = rowItems.map((i) => ({ i, a: x(m(i.from)), b: x(m(i.to) + 1) }));
+                const dashed = r.key === "TARGET";
+                let d: string;
+                if (r.bus) {
+                  // Bus : segments hexagonaux, état Z (ligne médiane) entre deux valeurs
+                  d = `M${x(T0)} ${mid}`;
+                  seg.forEach(({ a, b }) => {
+                    d += ` L${a} ${mid} L${a + SLOPE} ${hi} L${b - SLOPE} ${hi} L${b} ${mid} L${b - SLOPE} ${lo} L${a + SLOPE} ${lo} L${a} ${mid} M${b} ${mid}`;
+                  });
+                  d += ` L${x(T1)} ${mid}`;
+                } else {
+                  d = `M${x(T0)} ${lo}`;
+                  seg.forEach(({ a, b }) => { d += ` L${a} ${lo} L${a} ${hi} L${b} ${hi} L${b} ${lo}`; });
+                  d += ` L${x(T1)} ${lo}`;
+                }
+                return (
+                  <g key={r.key}>
+                    {ri > 0 && <line x1={0} x2={W} y1={top} y2={top} stroke="var(--color-line)" strokeWidth={1} />}
+                    {seg.map(({ i, a, b }) => i.id === sel && (
+                      r.bus
+                        ? <path key={`s${i.id}`} d={`M${a} ${mid} L${a + SLOPE} ${hi} L${b - SLOPE} ${hi} L${b} ${mid} L${b - SLOPE} ${lo} L${a + SLOPE} ${lo} Z`} fill="var(--color-signal)" opacity={0.12} />
+                        : <rect key={`s${i.id}`} x={a} y={hi} width={b - a} height={lo - hi} fill="var(--color-signal)" opacity={0.12} />
+                    ))}
+                    <motion.path d={d} fill="none" stroke="var(--color-ink)" strokeWidth={1} strokeDasharray={dashed ? "4 3" : undefined} {...draw(ri)} />
+                    {seg.map(({ i, a, b }) => {
+                      const on = i.id === sel;
+                      const inside = b - a > i.label.length * 7.6 + 16;
+                      return (
+                        <g key={i.id} role="button" tabIndex={0} aria-pressed={on} aria-label={`${i.label}, ${fmtRange(i)}`}
+                          className="cursor-pointer outline-none"
+                          onClick={() => setSel(i.id)}
+                          onDoubleClick={() => handleAction(i)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              if (sel === i.id) handleAction(i);
+                              else setSel(i.id);
+                            }
+                          }}>
+                          <rect x={a} y={top + 4} width={inside ? b - a : b - a + i.label.length * 7.6 + 16} height={ROW_H - 8} fill="transparent" />
+                          <motion.text
+                            x={inside ? a + (r.bus ? SLOPE + 6 : 8) : b + 6} y={mid + 4.5}
+                            fontSize={13} className={`font-sans ${on ? "fill-signal" : "fill-ink"}`} fontWeight={on ? 600 : 500}
+                            initial={{ opacity: 0 }} animate={{ opacity: inView ? 1 : 0 }} transition={{ delay: 0.15 * ri + 0.9, duration: 0.4 }}
+                          >{i.label}</motion.text>
+                        </g>
+                      );
+                    })}
+                  </g>
+                );
+              })}
 
-            {/* Curseur A : aujourd'hui */}
-            <line x1={x(tToday)} x2={x(tToday)} y1={AXIS_H - 8} y2={H} stroke="var(--color-signal)" strokeWidth={1} />
-            <rect x={x(tToday) - 1} y={AXIS_H - 30} width={128} height={16} fill="var(--color-signal)" />
-            <text x={x(tToday) + 4} y={AXIS_H - 18.5} fontSize={10.5} className="fill-paper font-mono">{tr("A · T = aujourd'hui", "A · T = today")}</text>
+              {/* Curseur A : aujourd'hui */}
+              <line x1={x(tToday)} x2={x(tToday)} y1={AXIS_H - 8} y2={H} stroke="var(--color-signal)" strokeWidth={1} />
+              <rect x={x(tToday) - 1} y={AXIS_H - 30} width={128} height={16} fill="var(--color-signal)" />
+              <text x={x(tToday) + 4} y={AXIS_H - 18.5} fontSize={10.5} className="fill-paper font-mono">{tr("A · T = aujourd'hui", "A · T = today")}</text>
 
-            {/* Curseur B : souris */}
-            {hover !== null && (() => {
-              const label = `B ${fmt(hover)}`;
-              const badgeW = Math.max(76, label.length * 7.5 + 14);
-              const badgeX = Math.min(W - badgeW - 4, Math.max(4, x(hover) + 4));
-              return (
-                <g pointerEvents="none">
-                  <line x1={x(hover)} x2={x(hover)} y1={AXIS_H} y2={H} stroke="var(--color-ink)" strokeWidth={1} strokeDasharray="3 3" />
-                  <rect x={badgeX} y={H - 22} width={badgeW} height={18} rx={2} fill="var(--color-ink)" />
-                  <text x={badgeX + 6} y={H - 9.5} fontSize={10.5} className="fill-paper font-mono" dominantBaseline="middle">{label}</text>
-                </g>
-              );
-            })()}
-          </svg>
+              {/* Curseur B : souris */}
+              {hover !== null && (() => {
+                const label = `B ${fmt(hover)}`;
+                const badgeW = Math.max(76, label.length * 7.5 + 14);
+                const badgeX = Math.min(W - badgeW - 4, Math.max(4, x(hover) + 4));
+                return (
+                  <g pointerEvents="none">
+                    <line x1={x(hover)} x2={x(hover)} y1={AXIS_H} y2={H} stroke="var(--color-ink)" strokeWidth={1} strokeDasharray="3 3" />
+                    <rect x={badgeX} y={H - 22} width={badgeW} height={18} rx={2} fill="var(--color-ink)" />
+                    <text x={badgeX + 6} y={H - 9.5} fontSize={10.5} className="fill-paper font-mono" dominantBaseline="middle">{label}</text>
+                  </g>
+                );
+              })()}
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -383,9 +430,44 @@ export default function Circuit() {
               <div><span className="text-ink">{ROWS.find((r) => r.key === item.row)!.name}</span></div>
               <div>{fmtRange(item)}</div>
               <div>Δt = {m(item.to) - m(item.from) + 1} {mo}</div>
+              
+              {/* Bouton d'action directe contextuel */}
+              {item.row === "STAGE" && (
+                <div className="mt-3 pt-2">
+                  <a
+                    href="#experiences"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline"
+                  >
+                    {tr("Voir l'expérience", "View experience")} <ArrowUpRight className="size-3.5" />
+                  </a>
+                </div>
+              )}
+              {item.id === "minitel" && (
+                <div className="mt-3 pt-2">
+                  <button
+                    onClick={() => (onMinitel ? onMinitel() : document.getElementById("engagements")?.scrollIntoView({ behavior: "smooth" }))}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline"
+                  >
+                    <Gamepad2 className="size-3.5" />
+                    {tr("Lancer Minitel 3D", "Launch Minitel 3D")}
+                  </button>
+                </div>
+              )}
             </div>
             <div>
-              <h3 className="text-2xl font-semibold tracking-tight">{item.label}</h3>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h3 className="text-2xl font-semibold tracking-tight">{item.label}</h3>
+                {item.row === "STAGE" && (
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-mute border border-ink/10 px-2 py-0.5 rounded">
+                    {tr("Double-clic pour voir le stage", "Double-click to view internship")}
+                  </span>
+                )}
+                {item.id === "minitel" && (
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-mute border border-ink/10 px-2 py-0.5 rounded">
+                    {tr("Double-clic pour lancer le jeu", "Double-click to launch game")}
+                  </span>
+                )}
+              </div>
               <p className="mt-1 text-[15px] text-mute">{item.place}</p>
               <ul className="mt-4 space-y-1.5 text-[15px] leading-relaxed">
                 {item.details.map((d) => <li key={d} className="flex gap-3"><span className="mt-[0.7em] h-px w-3 shrink-0 bg-ink" />{d}</li>)}

@@ -63,7 +63,7 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
     logo: "/logo/phinia.png",
     role: "Stage Ingénieur Systèmes Hardware",
     place: "Blois, France",
-    date: "Jan. 2025 — Fév. 2025",
+    date: "Janv. 2025",
     idx: "01",
     points: [
       "Configuration et tests de systèmes d'injection (plateforme ECU 24V).",
@@ -75,7 +75,7 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
     en: {
       role: "Hardware Systems Engineering Intern",
       place: "Blois, France",
-      date: "Jan. 2025 — Feb. 2025",
+      date: "Jan. 2025",
       points: [
         "Configured and tested hardware/software using a 24V ECU platform.",
         "Introduction to industrial test benches and hardware validation protocols.",
@@ -1414,7 +1414,7 @@ function Page() {
           <Stacked ghost={tr("Parcours", "Journey")} n="02">{tr("Ma roadmap.", "My roadmap.")}</Stacked>
           <p className="max-w-sm text-mute">{tr("Un PM pense en jalons. Voici les miens — survolez un composant pour l'ouvrir.", "A PM thinks in milestones. Here are mine — hover over a component to open it.")}</p>
         </div>
-        <Circuit />
+        <Circuit onMinitel={() => setGame("minitel")} />
 
         {/* ÉCOLES & FORMATION */}
         <div className="mt-24 border-t border-ink pt-14">
@@ -1491,7 +1491,7 @@ function Page() {
       </section>
 
       {/* EXPERIENCES */}
-      <section style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="overflow-hidden bg-ink text-paper">
+      <section id="experiences" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="overflow-hidden bg-ink text-paper">
         <div className="mx-auto max-w-[1400px] px-6 py-28 md:px-10">
           <Stacked ghost={tr("Industrie", "Industry")} n="03" dark>{tr("Expériences.", "Experience.")}</Stacked>
           <div className="mt-14">
