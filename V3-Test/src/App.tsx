@@ -27,7 +27,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 const NAV: Loc<{ id: string; label: string }>[] = [
   { id: "roadmap", label: "Parcours", en: { label: "Journey" } },
   { id: "projets", label: "Projets", en: { label: "Projects" } },
-  { id: "engagements", label: "Engagements", en: { label: "Leadership" } },
+  { id: "engagements", label: "Engagements", en: { label: "Involvement" } },
   { id: "passions", label: "Passions" },
   { id: "stack", label: "Stack" },
   { id: "contact", label: "Contact" },
