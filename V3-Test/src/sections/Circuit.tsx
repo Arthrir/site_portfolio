@@ -192,13 +192,18 @@ export default function Circuit() {
             <text x={x(tToday) + 4} y={AXIS_H - 18.5} fontSize={10.5} className="fill-paper font-mono">{tr("A · T = aujourd'hui", "A · T = today")}</text>
 
             {/* Curseur B : souris */}
-            {hover !== null && (
-              <g pointerEvents="none">
-                <line x1={x(hover)} x2={x(hover)} y1={AXIS_H} y2={H} stroke="var(--color-ink)" strokeWidth={1} strokeDasharray="3 3" />
-                <rect x={x(hover) + 3} y={H - 20} width={68} height={16} fill="var(--color-ink)" />
-                <text x={x(hover) + 7} y={H - 8.5} fontSize={10.5} className="fill-paper font-mono">B {fmt(hover)}</text>
-              </g>
-            )}
+            {hover !== null && (() => {
+              const label = `B ${fmt(hover)}`;
+              const badgeW = Math.max(76, label.length * 7.5 + 14);
+              const badgeX = Math.min(W - badgeW - 4, Math.max(4, x(hover) + 4));
+              return (
+                <g pointerEvents="none">
+                  <line x1={x(hover)} x2={x(hover)} y1={AXIS_H} y2={H} stroke="var(--color-ink)" strokeWidth={1} strokeDasharray="3 3" />
+                  <rect x={badgeX} y={H - 22} width={badgeW} height={18} rx={2} fill="var(--color-ink)" />
+                  <text x={badgeX + 6} y={H - 9.5} fontSize={10.5} className="fill-paper font-mono" dominantBaseline="middle">{label}</text>
+                </g>
+              );
+            })()}
           </svg>
         </div>
       </div>
