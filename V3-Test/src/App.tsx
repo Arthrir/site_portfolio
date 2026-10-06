@@ -2138,9 +2138,7 @@ function Page() {
             <div className="pt-2">
               <p className="text-xl sm:text-2xl font-bold tracking-tight text-ink">
                 {tr("Recherche de stage de fin d'études", "Seeking end-of-studies internship")}{" "}
-                <span className="font-semibold text-signal text-base sm:text-lg">
-                  {tr("(5+ mois dès avril 2027)", "(5+ months from April 2027)")}
-                </span>
+                <Hl className="font-semibold">{tr("(5+ mois dès avril 2027)", "(5+ months from April 2027)")}</Hl>
               </p>
               <p className="mt-1 text-[16px] sm:text-[17px] leading-relaxed text-ink/80">
                 {tr(
@@ -2171,8 +2169,8 @@ function Page() {
             initial={{ opacity: 0, y: 30, rotate: 0 }}
             animate={{ opacity: 1, y: 0, rotate: -4 }}
             transition={{ duration: 1.2, ease, delay: 0.9 }}
-            whileHover={{ rotate: 2, scale: 1.08, y: -8, zIndex: 40 }}
-            className="group absolute -top-10 -left-6 z-20 w-28 cursor-pointer select-none bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 transition-shadow hover:shadow-[0_25px_50px_-10px_rgba(18,18,17,.5)] sm:-top-12 sm:-left-12 sm:w-32 md:-top-14 md:-left-28 md:w-36 lg:-left-32"
+            whileHover={{ rotate: 0, scale: 1.05, y: -4 }}
+            className="group absolute -top-12 -left-3 z-20 w-[105px] cursor-pointer select-none bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 transition-shadow hover:shadow-[0_25px_50px_-10px_rgba(18,18,17,.5)] sm:-top-10 sm:-left-6 sm:w-32 md:-top-12 md:-left-20 md:w-40"
           >
             <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
             <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
