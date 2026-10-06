@@ -756,6 +756,10 @@ const SM_CAPS = [
 ];
 
 function Die() {
+  const ref = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0), my = useMotionValue(0);
+  const rx = useSpring(useTransform(my, [-1, 1], [8, -8]), { stiffness: 120, damping: 18 });
+  const ry = useSpring(useTransform(mx, [-1, 1], [-8, 8]), { stiffness: 120, damping: 18 });
   const { tr } = useLang();
 
   // Option A : Banc logique (2 entrées -> 1 sortie XOR)
@@ -779,8 +783,21 @@ function Die() {
   const animDuration = isDebug ? 999999 : clockSurge ? 0.45 : 2.0;
 
   return (
-    <div className="relative w-full max-w-[420px] pb-6">
-      <div className="relative aspect-square w-full">
+    <div className="relative w-full max-w-[420px] pb-6 [perspective:1200px]">
+      <motion.div
+        ref={ref}
+        style={{ rotateX: rx, rotateY: ry }}
+        className="relative aspect-square w-full [transform-style:preserve-3d]"
+        onPointerMove={(e) => {
+          const r = ref.current!.getBoundingClientRect();
+          mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
+          my.set(((e.clientY - r.top) / r.height) * 2 - 1);
+        }}
+        onPointerLeave={() => {
+          mx.set(0);
+          my.set(0);
+        }}
+      >
         <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible select-none">
           <defs>
             <filter id="glow-led" x="-60%" y="-60%" width="220%" height="220%">
@@ -1181,7 +1198,7 @@ function Die() {
             </g>
           </g>
         </svg>
-      </div>
+      </motion.div>
 
       {/* Légende bas discrète et technique */}
       <div className="mt-3 flex items-center justify-between px-1 font-mono text-[10px] text-mute uppercase">
@@ -2118,19 +2135,17 @@ function Page() {
                 "Engineering student in microelectronics, computer science, and product design at Mines Saint-Étienne × Politecnico di Milano."
               )}
             </p>
-            <div className="rounded-xl border border-signal/30 bg-signal/5 p-4 text-[16px] leading-relaxed text-ink">
-              <span className="font-semibold text-signal">
-                {tr("Recherche de stage de fin d'études (5+ mois dès avril 2027) :", "Seeking end-of-studies internship (5+ months starting April 2027):")}
-              </span>
-              <p className="mt-1 text-ink/80 text-[15px]">
+            <p className="text-[16px] leading-relaxed text-ink">
+              <Hl className="font-semibold">{tr("Recherche de stage de fin d'études", "Seeking end-of-studies internship")}</Hl>{" "}
+              <span className="text-ink/85">
                 {tr(
-                  "Prototypage, test, gestion de projet technique et innovation produit.",
-                  "Prototyping, testing, technical project management, and product innovation."
+                  "(5+ mois dès avril 2027) : Prototypage, test, gestion de projet technique et innovation produit.",
+                  "(5+ months starting April 2027): Prototyping, testing, technical project management, and product innovation."
                 )}
-              </p>
-            </div>
+              </span>
+            </p>
             <div className="pt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] leading-normal text-ink/80">
-              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Objectif pro :", "Career target:")}</span>
+              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Objectif professionnel :", "Career target:")}</span>
               <span className="font-semibold text-ink"><Hl>Product Owner / Product Manager</Hl></span>
             </div>
           </Reveal>
@@ -2144,9 +2159,11 @@ function Page() {
         <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[360px] sm:max-w-[420px] md:mt-0 md:max-w-[460px]">
           <Die />
           <motion.figure
-            initial={{ opacity: 0, y: 30, rotate: 0 }} animate={{ opacity: 1, y: 0, rotate: -4 }} transition={{ duration: 1.2, ease, delay: 0.9 }}
-            whileHover={{ rotate: 0, scale: 1.04 }}
-            className="group absolute -top-12 -left-3 w-[105px] bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 sm:w-32 sm:-top-10 sm:-left-6 md:-top-12 md:-left-20 md:w-40"
+            initial={{ opacity: 0, y: 30, rotate: 0 }}
+            animate={{ opacity: 1, y: 0, rotate: -4 }}
+            transition={{ duration: 1.2, ease, delay: 0.9 }}
+            whileHover={{ rotate: 2, scale: 1.08, y: -8, zIndex: 40 }}
+            className="group absolute -top-10 -left-6 z-20 w-28 cursor-pointer select-none bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 transition-shadow hover:shadow-[0_25px_50px_-10px_rgba(18,18,17,.5)] sm:-top-12 sm:-left-12 sm:w-32 md:-top-14 md:-left-28 md:w-36 lg:-left-32"
           >
             <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
             <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
@@ -2350,7 +2367,7 @@ function Page() {
       </section>
 
       {/* EXPERIENCES */}
-      <section id="experiences" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="overflow-hidden bg-ink text-paper">
+      <section id="experiences" style={{ "--color-signal": "#DC2626" } as React.CSSProperties} className="overflow-hidden bg-ink text-paper">
         <div className="mx-auto max-w-[1400px] px-6 py-28 md:px-10">
           <Stacked ghost={tr("Industrie", "Industry")} n="03" dark>{tr("Expériences.", "Experience.")}</Stacked>
           <div className="mt-14">
@@ -2384,7 +2401,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#CA8A04" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>

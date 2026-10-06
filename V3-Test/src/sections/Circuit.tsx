@@ -177,7 +177,7 @@ const ITEMS: Loc<Item>[] = [
   {
     id: "polimi",
     row: "INTL",
-    label: "Erasmus · Polimi",
+    label: "Politecnico di Milano",
     place: "Politecnico di Milano, Milan, Italie",
     from: "2026-09",
     to: "2027-02",
@@ -187,7 +187,7 @@ const ITEMS: Loc<Item>[] = [
       "Enjeu : Maîtriser l'ergonomie, le prototypage rapide et l'UX pour placer l'utilisateur au centre de la conception matérielle.",
     ],
     en: {
-      label: "Erasmus · Polimi",
+      label: "Politecnico di Milano",
       place: "Politecnico di Milano, Milan, Italy",
       details: [
         "Erasmus international semester — Master in Design & Engineering.",
