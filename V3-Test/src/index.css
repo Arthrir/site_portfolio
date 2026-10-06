@@ -49,14 +49,14 @@ body { background: var(--color-paper); color: var(--color-ink); font-family: var
 }
 @media (min-width: 768px) {
   .liquid {
-    background: rgba(239, 237, 231, 0.72);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(18, 18, 17, 0.14);
-    box-shadow: inset 1px 1px 0 rgba(255,255,255,.9), inset -1px -1px 0 rgba(0,0,0,.05), 0 8px 30px -8px rgba(18,18,17,.22);
+    background: rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(14px) saturate(190%) brightness(1.05);
+    -webkit-backdrop-filter: blur(14px) saturate(190%) brightness(1.05);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.85), inset -1px -1px 1px rgba(0, 0, 0, 0.06), 0 10px 30px -10px rgba(18, 18, 17, 0.25);
   }
   @supports (backdrop-filter: url(#x)) {
-    .liquid { backdrop-filter: url(#lg-nav) blur(16px) saturate(180%) brightness(1.02); }
+    .liquid { backdrop-filter: url(#lg-nav) blur(10px) saturate(180%) brightness(1.04); }
   }
 }
 
