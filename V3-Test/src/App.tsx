@@ -1143,31 +1143,30 @@ function Die() {
             />
           )}
 
-          {/* Transistor MOSFET de puissance (Q1 / Hacheur) centré à (306, 298) */}
-          <g transform="translate(306, 298)">
+          {/* Transistor MOSFET de puissance (Q1 / Hacheur) centré à (292, 298) */}
+          <g transform="translate(292, 298)">
             <rect x="-5" y="-5" width="10" height="10" rx="1" fill="#18181B" stroke="#09090B" strokeWidth="0.75" />
             <rect x="-4" y="-7" width="8" height="2" fill="#94A3B8" />
             <rect x="-3" y="5" width="2" height="2.5" fill="#94A3B8" />
             <rect x="1" y="5" width="2" height="2.5" fill="#94A3B8" />
-            <text x="7" y="2" fontSize="4.5" className="fill-mute font-mono">Q1_MOS</text>
+            <text x="7" y="2" fontSize="4.5" className="fill-mute font-mono">Q1</text>
           </g>
 
-          {/* Ligne de sortie MOSFET (311, 298) vers moteur ventilateur (326, 298) */}
-          <path d="M311 298 H326" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne de sortie MOSFET (297, 298) vers moteur ventilateur (306, 298) */}
+          <path d="M297 298 H306" className="stroke-line" strokeWidth="1.25" fill="none" />
 
-          {/* Ventilateur interactif parfaitement intégré au layout (centre à x: 338, y: 298) */}
+          {/* Ventilateur interactif propre et parfaitement cadré (centre à x: 320, y: 298, rayon 14px) */}
           <g
             className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
             onClick={cycleFanSpeed}
-            transform="translate(338, 298)"
+            transform="translate(320, 298)"
           >
-            {/* Châssis carré du ventilateur (24x24 px) */}
-            <rect x="-12" y="-12" width="24" height="24" rx="2.5" fill="#F8FAFC" stroke="#334155" strokeWidth="1.1" />
-            {/* Oubliure circulaire intérieure */}
-            <circle cx="0" cy="0" r="10.5" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="0.75" />
-            <circle cx="0" cy="0" r="10" className="fill-white" />
+            {/* Châssis circulaire usiné avec anneau de cuivre et de masse */}
+            <circle cx="0" cy="0" r="14" fill="#F8FAFC" stroke="#334155" strokeWidth="1.2" />
+            <circle cx="0" cy="0" r="12" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="0.75" />
+            <circle cx="0" cy="0" r="11.5" className="fill-white" />
 
-            {/* Hélice rotative à 4 pales aérodynamiques — Vitesse asservie au PWM */}
+            {/* Hélice rotative à 4 pales nettes et proportionnées */}
             <motion.g
               animate={!isDebug && fanSpeed > 0 ? { rotate: 360 } : { rotate: 0 }}
               transition={{
@@ -1176,22 +1175,19 @@ function Die() {
                 ease: "linear",
               }}
             >
-              {/* Moyeu central */}
-              <circle cx="0" cy="0" r="2.8" fill="#1E293B" />
-              {/* 4 pales régulières et symétriques */}
-              <path d="M0 -2.5 C3 -6 7 -6 7 -2.5 C7 0 3 0 0 -1.5 Z" fill="#0EA5E9" />
-              <path d="M2.5 0 C6 3 6 7 2.5 7 C0 7 0 3 1.5 0 Z" fill="#0EA5E9" />
-              <path d="M0 2.5 C-3 6 -7 6 -7 2.5 C-7 0 -3 0 0 1.5 Z" fill="#0284C7" />
-              <path d="M-2.5 0 C-6 -3 -6 -7 -2.5 -7 C0 -7 0 -3 -1.5 0 Z" fill="#0284C7" />
+              <circle cx="0" cy="0" r="3" fill="#1E293B" />
+              <path d="M0 -3 C3 -6.5 7 -6.5 7 -3 C7 0 3 0 0 -1.5 Z" fill="#0EA5E9" />
+              <path d="M3 0 C6.5 3 6.5 7 3 7 C0 7 0 3 1.5 0 Z" fill="#0EA5E9" />
+              <path d="M0 3 C-3 6.5 -7 6.5 -7 3 C-7 0 -3 0 0 1.5 Z" fill="#0284C7" />
+              <path d="M-3 0 C-6.5 -3 -6.5 -7 -3 -7 C0 -7 0 -3 -1.5 0 Z" fill="#0284C7" />
             </motion.g>
 
             {/* Noyau central du moteur */}
-            <circle cx="0" cy="0" r="1.4" fill="#F8FAFC" stroke="#0F172A" strokeWidth="0.5" />
+            <circle cx="0" cy="0" r="1.5" fill="#F8FAFC" stroke="#0F172A" strokeWidth="0.6" />
 
-            {/* Badge de vitesse PWM cliquable sous le ventilateur */}
-            <rect x="-12" y="14" width="24" height="8" rx="1.5" className="fill-cyan-500/10 stroke-cyan-500/40" strokeWidth="0.6" />
-            <text x="0" y="20" fontSize="4.2" textAnchor="middle" className="fill-cyan-600 font-mono font-bold">
-              {fanPwmDuty}%
+            {/* Sérigraphie élégante intégrée sur le PCB */}
+            <text x="0" y="21" fontSize="4.5" textAnchor="middle" className="fill-cyan-600 font-mono font-bold">
+              FAN {fanPwmDuty}%
             </text>
           </g>
 
@@ -2193,20 +2189,25 @@ function Page() {
               </span>
             ))}
           </h1>
-          <Reveal delay={0.6} className="mt-8 max-w-xl space-y-3">
+          <Reveal delay={0.6} className="mt-8 max-w-xl space-y-4">
             <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
               {tr(
                 "Élève-ingénieur en microélectronique, informatique et conception produit aux Mines Saint-Étienne × Politecnico di Milano.",
                 "Engineering student in microelectronics, computer science, and product design at Mines Saint-Étienne × Politecnico di Milano."
               )}
             </p>
-            <p className="text-[16px] md:text-[17px] leading-relaxed text-ink/75">
-              {tr(
-                "À la recherche d'un stage de fin d'études de 5+ mois dès avril 2027 — focalisé sur le prototypage, les bancs de test et l'innovation produit.",
-                "Seeking a 5+ month end-of-studies internship starting April 2027 — focused on prototyping, test benches, and product innovation."
-              )}
-            </p>
-            <div className="pt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] leading-normal text-ink/80">
+            <div className="rounded-xl border border-signal/30 bg-signal/5 p-4 text-[16px] leading-relaxed text-ink">
+              <span className="font-semibold text-signal">
+                {tr("Recherche de stage de fin d'études (5+ mois dès avril 2027) :", "Seeking end-of-studies internship (5+ months starting April 2027):")}
+              </span>
+              <p className="mt-1 text-ink/80 text-[15px]">
+                {tr(
+                  "Prototypage, test, gestion de projet technique et innovation produit.",
+                  "Prototyping, testing, technical project management, and product innovation."
+                )}
+              </p>
+            </div>
+            <div className="pt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] leading-normal text-ink/80">
               <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Objectif pro :", "Career target:")}</span>
               <span className="font-semibold text-ink"><Hl>Product Owner / Product Manager</Hl></span>
             </div>
@@ -2549,8 +2550,8 @@ function Page() {
           <h2 className="mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-semibold tracking-[-0.05em]">{tr("Travaillons", "Let's work")}<br />{tr("ensemble", "together")}<span className="text-signal">.</span></h2>
           <p className="mt-8 max-w-xl text-lg text-mute leading-relaxed">
             {tr(
-              "À la recherche d'un stage de fin d'études (5+ mois) à partir d'avril 2027 — Product Owner, Product Manager, Prototypage & Innovation Produit.",
-              "Seeking a 5+ month end-of-studies internship starting April 2027 — Product Owner, Product Manager, Prototyping & Product Innovation."
+              "À la recherche d'un stage de fin d'études de 5+ mois dès avril 2027 : Product Owner, Product Manager, Prototypage & Gestion de projet technique.",
+              "Seeking a 5+ month end-of-studies internship starting April 2027: Product Owner, Product Manager, Prototyping & Technical Project Management."
             )}
           </p>
           <div className="mt-12 flex flex-wrap items-center gap-6">
