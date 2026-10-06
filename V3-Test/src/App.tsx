@@ -1065,20 +1065,20 @@ function Die() {
 
           {/* =================================================================
               BLOC FPGA & PORTES LOGIQUES NUMÉRIQUES (BOTTOM-RIGHT)
-              Portes AND, NOT, OR interconnectées de manière géométrique stricte
-              Entrées reliées au bus (270, 215 et 270, 237), sorties reliées aux pads de test
+              Portes AND, NOT, OR interconnectées selon les normes ANSI :
+              Entrées issues des lignes de bus 215 et 237, sorties sur pads droits (356, 193 et 356, 237)
               ================================================================= */}
-          {/* Ligne d'entrée du bus (270, 215) vers entrée haute AND (295, 209) */}
-          <path d="M270 215 H295" className="stroke-line" strokeWidth="1.25" fill="none" />
-          {/* Ligne d'entrée du bus (270, 237) vers entrée basse AND (295, 217) et entrée haute OR (295, 233) */}
-          <path d="M270 237 H295" className="stroke-line" strokeWidth="1.25" fill="none" />
-          <path d="M285 237 V217 H295" className="stroke-line" strokeWidth="1.25" fill="none" />
-          {/* Ligne d'entrée basse OR (295, 241) depuis pad 10 bas (259, 274 -> 285, 241) */}
-          <path d="M259 274 V250 H295" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne d'entrée 1 depuis bus droit (270, 215) -> entrée haute AND (292, 197) */}
+          <path d="M270 215 H280 V197 H292" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne d'entrée 2 depuis bus bas (259, 274) -> entrée basse AND (292, 207) et entrée haute OR (292, 229) */}
+          <path d="M259 274 V245 H280 V207 H292" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <path d="M280 229 H292" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne d'entrée 3 depuis bus droit (270, 237) -> entrée basse OR (292, 239) */}
+          <path d="M270 237 H292" className="stroke-line" strokeWidth="1.25" fill="none" />
 
           {!isDebug && (
             <motion.path
-              d="M270 215 H295"
+              d="M270 215 H280 V197 H292"
               fill="none"
               strokeWidth="1.6"
               stroke="#8B5CF6"
@@ -1088,67 +1088,52 @@ function Die() {
             />
           )}
 
-          {/* Porte ET (AND gate) — Slice A (x: 295..313, y: 205..221) */}
-          <g transform="translate(295, 205)">
-            <path d="M0 0 H9 A8 8 0 0 1 9 16 H0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" />
-            <text x="6" y="10.5" fontSize="4.2" textAnchor="middle" className="font-mono font-bold fill-ink">AND</text>
+          {/* Porte ET (AND gate) — Slice A : entrées en (292, 197) et (292, 207), sortie en (308, 202) */}
+          <g transform="translate(292, 194)">
+            <path d="M0 0 H8 A8 8 0 0 1 8 16 H0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" strokeLinejoin="round" />
+            <text x="5" y="10.5" fontSize="4.2" textAnchor="middle" className="font-mono font-bold fill-ink">AND</text>
           </g>
 
-          {/* Ligne reliant la sortie AND (312, 213) à l'inverseur NOT (319, 213) */}
-          <path d="M312 213 H319" className="stroke-line" strokeWidth="1.2" />
+          {/* Ligne reliant la sortie AND (308, 202) à l'entrée NOT (315, 202) */}
+          <path d="M308 202 H315" className="stroke-line" strokeWidth="1.25" fill="none" />
 
-          {/* Inverseur / NOT gate avec bulle d'inversion (x: 319..332, y: 209..217) */}
-          <g transform="translate(319, 209)">
-            <polygon points="0,0 9,4 0,8" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.1" />
-            <circle cx="10.8" cy="4" r="1.5" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.1" />
+          {/* Porte NOT (Inverseur) : entrée en (315, 202), sortie en (328, 202) */}
+          <g transform="translate(315, 198)">
+            <polygon points="0,0 8,4 0,8" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" strokeLinejoin="round" />
+            <circle cx="10" cy="4" r="1.8" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" />
           </g>
 
-          {/* Piste de sortie du NOT (333.3, 213) vers le point de test TP_NAND et le pad droit (356, 213) */}
-          <path d="M333.3 213 H356" className="stroke-line" strokeWidth="1.25" fill="none" />
-          <g transform="translate(343, 213)">
-            <circle cx="0" cy="0" r="2.2" className="fill-signal/20 stroke-signal" strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="0.8" className="fill-signal" />
+          {/* Ligne de sortie NAND (328, 202) -> Testpoint TP_NAND (338, 202) -> Pad droit (356, 202) */}
+          <path d="M327 202 H356" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <g transform="translate(340, 202)">
+            <circle cx="0" cy="0" r="2.4" className="fill-signal/20 stroke-signal" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="0.9" className="fill-signal" />
+            <text x="0" y="-4" fontSize="4" textAnchor="middle" className="fill-mute font-mono">NAND</text>
           </g>
 
-          {/* Porte OU (OR gate) — Slice B (x: 295..313, y: 229..245) */}
-          <g transform="translate(295, 229)">
-            <path d="M0 0 Q6 8 0 16 Q10 16 16 8 Q10 0 0 0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" />
-            <text x="6.5" y="10.5" fontSize="4.2" textAnchor="middle" className="font-mono font-bold fill-ink">OR</text>
+          {/* Porte OU (OR gate) — Slice B : entrées en (292, 229) et (292, 239), sortie en (309, 234) */}
+          <g transform="translate(292, 226)">
+            <path d="M0 0 Q5 8 0 16 Q10 16 17 8 Q10 0 0 0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" strokeLinejoin="round" />
+            <text x="6" y="10.5" fontSize="4.2" textAnchor="middle" className="font-mono font-bold fill-ink">OR</text>
           </g>
 
-          {/* Ligne de sortie de la porte OR (311, 237) vers point de test et pad droit (356, 237) */}
-          <path d="M311 237 H356" className="stroke-line" strokeWidth="1.25" fill="none" />
-          <g transform="translate(333, 237)">
-            <circle cx="0" cy="0" r="2.2" className="fill-purple-500/20 stroke-purple-500" strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="0.8" className="fill-purple-500" />
+          {/* Ligne de sortie OR (309, 234) -> Testpoint TP_OR (330, 234) -> Pad droit (356, 234) */}
+          <path d="M309 234 H356" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <g transform="translate(332, 234)">
+            <circle cx="0" cy="0" r="2.4" className="fill-purple-500/20 stroke-purple-500" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="0.9" className="fill-purple-500" />
+            <text x="0" y="-4" fontSize="4" textAnchor="middle" className="fill-mute font-mono">OR</text>
           </g>
 
           {/* =================================================================
               VENTILATEUR PWM & HACHEUR DE PUISSANCE (PROTOTYPE ARTHUR)
-              Capteur capacitif tactile -> Régulation PWM -> Hacheur MOSFET -> Hélice
+              Piste PWM propre -> Hacheur MOSFET Q1 -> Ventilateur intégré
               ================================================================= */}
-          {/* Électrode capacitive tactile PCB (Touch Pad CAP_SENSE) */}
-          <g
-            className="cursor-pointer transition-transform active:scale-95"
-            onClick={cycleFanSpeed}
-            transform="translate(284, 286)"
-          >
-            <rect x="0" y="0" width="22" height="13" rx="1.5" className="fill-paper stroke-ink/30" strokeWidth="0.8" />
-            {/* Peignes de détection capacitive interdigités */}
-            <line x1="3" y1="3" x2="19" y2="3" stroke="#06B6D4" strokeWidth="0.9" />
-            <line x1="3" y1="6.5" x2="16" y2="6.5" stroke={fanSpeed > 0 ? "#06B6D4" : "#94A3B8"} strokeWidth="0.9" />
-            <line x1="6" y1="10" x2="19" y2="10" stroke={fanSpeed > 1 ? "#06B6D4" : "#94A3B8"} strokeWidth="0.9" />
-            <text x="11" y="16.5" fontSize="3.8" textAnchor="middle" className="fill-cyan-600 font-mono font-bold">TOUCH SPEED</text>
-          </g>
-
-          {/* Piste de commande depuis le capteur tactile vers le die */}
-          <path d="M284 292 H270" className="stroke-cyan-500/60" strokeWidth="1.1" fill="none" />
-
-          {/* Ligne d'alimentation PWM depuis die (237, 274) vers le transistor MOSFET Q1 à (315, 305) */}
-          <path d="M237 274 V292 H315 V305" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne d'alimentation PWM depuis die (237, 274) vers le transistor MOSFET Q1 à (306, 298) */}
+          <path d="M237 274 V298 H306" className="stroke-line" strokeWidth="1.25" fill="none" />
           {!isDebug && fanSpeed > 0 && (
             <motion.path
-              d="M237 274 V292 H315 V305"
+              d="M237 274 V298 H306"
               fill="none"
               strokeWidth="1.6"
               stroke="#06B6D4"
@@ -1158,8 +1143,8 @@ function Die() {
             />
           )}
 
-          {/* Transistor MOSFET de puissance (Q1 / Hacheur) */}
-          <g transform="translate(315, 305)">
+          {/* Transistor MOSFET de puissance (Q1 / Hacheur) centré à (306, 298) */}
+          <g transform="translate(306, 298)">
             <rect x="-5" y="-5" width="10" height="10" rx="1" fill="#18181B" stroke="#09090B" strokeWidth="0.75" />
             <rect x="-4" y="-7" width="8" height="2" fill="#94A3B8" />
             <rect x="-3" y="5" width="2" height="2.5" fill="#94A3B8" />
@@ -1167,19 +1152,20 @@ function Die() {
             <text x="7" y="2" fontSize="4.5" className="fill-mute font-mono">Q1_MOS</text>
           </g>
 
-          {/* Ligne vers le moteur du ventilateur */}
-          <path d="M315 315 V332 H332" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne de sortie MOSFET (311, 298) vers moteur ventilateur (326, 298) */}
+          <path d="M311 298 H326" className="stroke-line" strokeWidth="1.25" fill="none" />
 
-          {/* Ventilateur interactif avec hélice animée par le PWM */}
+          {/* Ventilateur interactif parfaitement intégré au layout (centre à x: 338, y: 298) */}
           <g
-            className="cursor-pointer"
+            className="cursor-pointer transition-transform hover:scale-105 active:scale-95"
             onClick={cycleFanSpeed}
-            transform="translate(346, 332)"
+            transform="translate(338, 298)"
           >
-            {/* Cadre extérieur du ventilateur (protection / chassis 3D) */}
-            <rect x="-14" y="-14" width="28" height="28" rx="4" fill="#F1F5F9" stroke="#334155" strokeWidth="1.2" />
-            <circle cx="0" cy="0" r="12" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="11.5" className="fill-white/80" />
+            {/* Châssis carré du ventilateur (24x24 px) */}
+            <rect x="-12" y="-12" width="24" height="24" rx="2.5" fill="#F8FAFC" stroke="#334155" strokeWidth="1.1" />
+            {/* Oubliure circulaire intérieure */}
+            <circle cx="0" cy="0" r="10.5" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="0.75" />
+            <circle cx="0" cy="0" r="10" className="fill-white" />
 
             {/* Hélice rotative à 4 pales aérodynamiques — Vitesse asservie au PWM */}
             <motion.g
@@ -1191,20 +1177,21 @@ function Die() {
               }}
             >
               {/* Moyeu central */}
-              <circle cx="0" cy="0" r="3.2" fill="#1E293B" />
-              {/* Pales incurvées */}
-              <path d="M0 -3 C4 -7 9 -7 9 -3 C9 0 4 0 0 -2 Z" fill="#0EA5E9" />
-              <path d="M3 0 C7 4 7 9 3 9 C0 9 0 4 2 0 Z" fill="#0EA5E9" />
-              <path d="M0 3 C-4 7 -9 7 -9 3 C-9 0 -4 0 0 2 Z" fill="#0284C7" />
-              <path d="M-3 0 C-7 -4 -7 -9 -3 -9 C0 -9 0 -4 -2 0 Z" fill="#0284C7" />
+              <circle cx="0" cy="0" r="2.8" fill="#1E293B" />
+              {/* 4 pales régulières et symétriques */}
+              <path d="M0 -2.5 C3 -6 7 -6 7 -2.5 C7 0 3 0 0 -1.5 Z" fill="#0EA5E9" />
+              <path d="M2.5 0 C6 3 6 7 2.5 7 C0 7 0 3 1.5 0 Z" fill="#0EA5E9" />
+              <path d="M0 2.5 C-3 6 -7 6 -7 2.5 C-7 0 -3 0 0 1.5 Z" fill="#0284C7" />
+              <path d="M-2.5 0 C-6 -3 -6 -7 -2.5 -7 C0 -7 0 -3 -1.5 0 Z" fill="#0284C7" />
             </motion.g>
 
             {/* Noyau central du moteur */}
-            <circle cx="0" cy="0" r="1.8" fill="#F8FAFC" stroke="#0F172A" strokeWidth="0.6" />
+            <circle cx="0" cy="0" r="1.4" fill="#F8FAFC" stroke="#0F172A" strokeWidth="0.5" />
 
-            {/* Sérigraphie indicateur PWM sous le ventilateur */}
-            <text x="0" y="20" fontSize="4.5" textAnchor="middle" className="fill-mute font-mono font-semibold">
-              PWM {fanPwmDuty}%
+            {/* Badge de vitesse PWM cliquable sous le ventilateur */}
+            <rect x="-12" y="14" width="24" height="8" rx="1.5" className="fill-cyan-500/10 stroke-cyan-500/40" strokeWidth="0.6" />
+            <text x="0" y="20" fontSize="4.2" textAnchor="middle" className="fill-cyan-600 font-mono font-bold">
+              {fanPwmDuty}%
             </text>
           </g>
 
@@ -1289,76 +1276,11 @@ function Die() {
         </svg>
       </motion.div>
 
-      {/* Mini-Banc interactif — Interface de banc d'essai épurée (style matériel d'instrumentation) */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-ink/20 bg-paper/95 px-3 py-2 font-mono text-[11px] shadow-sm backdrop-blur-md">
-        {/* Module logique : XOR */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-semibold tracking-wider text-mute uppercase">LOGIC:</span>
-          <button
-            type="button"
-            onClick={() => setLogicA((v) => !v)}
-            className={`rounded border px-2 py-0.5 font-bold transition-all active:scale-95 ${logicA ? "border-ink bg-ink text-paper" : "border-ink/20 bg-ink/5 text-ink hover:border-ink/40"}`}
-            title="Entrée logique A"
-          >
-            A={logicA ? "1" : "0"}
-          </button>
-          <button
-            type="button"
-            onClick={() => setLogicB((v) => !v)}
-            className={`rounded border px-2 py-0.5 font-bold transition-all active:scale-95 ${logicB ? "border-ink bg-ink text-paper" : "border-ink/20 bg-ink/5 text-ink hover:border-ink/40"}`}
-            title="Entrée logique B"
-          >
-            B={logicB ? "1" : "0"}
-          </button>
-          <span className="text-mute font-bold">→</span>
-          <span className={`inline-flex items-center gap-1.5 rounded border px-2 py-0.5 font-bold transition-colors ${logicOut ? "border-amber-500/40 bg-amber-500/10 text-amber-600" : "border-ink/10 bg-ink/5 text-mute"}`}>
-            <span className={`size-1.5 rounded-full ${logicOut ? "bg-amber-500 shadow-[0_0_8px_#f59e0b]" : "bg-ink/30"}`} />
-            Y={logicOut ? "1" : "0"}
-          </span>
-        </div>
-
-        {/* Commandes dynamiques : CLK & PWM & RUN/DBG */}
-        <div className="flex items-center gap-1.5">
-          {/* Bouton Clock Pulse */}
-          <button
-            type="button"
-            onClick={triggerClockPulse}
-            className="flex items-center gap-1.5 rounded border border-ink/20 bg-ink/5 px-2.5 py-0.5 font-semibold text-ink transition hover:border-ink hover:bg-ink hover:text-paper active:scale-95"
-            title="Envoyer une impulsion d'horloge"
-          >
-            <span className={`size-1.5 rounded-full ${clockSurge ? "bg-amber-400 shadow-[0_0_8px_#f59e0b]" : "bg-emerald-500"}`} />
-            <span>{clockSurge ? "120 MHz" : "PULSE"}</span>
-          </button>
-
-          {/* Ventilateur PWM */}
-          <button
-            type="button"
-            onClick={cycleFanSpeed}
-            className={`flex items-center gap-1.5 rounded border px-2.5 py-0.5 font-semibold transition active:scale-95 ${fanSpeed > 0 ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-600" : "border-ink/20 bg-ink/5 text-mute hover:border-ink/40"}`}
-            title="Réguler la vitesse PWM du ventilateur"
-          >
-            <span className={`size-1.5 rounded-full ${fanSpeed > 0 ? "bg-cyan-500 shadow-[0_0_8px_#06b6d4]" : "bg-ink/30"}`} />
-            <span>PWM {fanPwmDuty}%</span>
-          </button>
-
-          {/* Commutateur Run / Debug */}
-          <button
-            type="button"
-            onClick={() => setIsDebug((d) => !d)}
-            className={`flex items-center gap-1.5 rounded border px-2.5 py-0.5 font-semibold transition active:scale-95 ${isDebug ? "border-amber-500/50 bg-amber-500/10 text-amber-600" : "border-emerald-500/50 bg-emerald-500/10 text-emerald-700"}`}
-            title="Basculer le mode de débogage"
-          >
-            <span className={`size-1.5 rounded-full ${isDebug ? "bg-amber-500 shadow-[0_0_8px_#f59e0b]" : "bg-emerald-500 shadow-[0_0_8px_#10b981]"}`} />
-            <span>{isDebug ? "DEBUG" : "RUN"}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Légende bas */}
-      <div className="mt-2 flex items-center justify-between px-1 font-mono text-[10px] text-mute uppercase">
-        <span>fig. 01 — banc silicium & logique fpga</span>
-        <span className="text-signal">
-          {isDebug ? "PAUSED (DEBUG HALT)" : clockSurge ? "CLOCK ×3.6 (PULSE)" : hot ? "CLOCK ×2.0 (ACTIVE)" : "32.768 KHZ"}
+      {/* Légende bas discrète et technique */}
+      <div className="mt-3 flex items-center justify-between px-1 font-mono text-[10px] text-mute uppercase">
+        <span>fig. 01 — banc silicium interactif (touch & gates)</span>
+        <span className="text-signal font-semibold">
+          {isDebug ? "PAUSED (DEBUG HALT)" : clockSurge ? "CLOCK ×3.6 (120 MHZ)" : hot ? "CLOCK ×2.0 (ACTIVE)" : "32.768 KHZ"}
         </span>
       </div>
     </div>
