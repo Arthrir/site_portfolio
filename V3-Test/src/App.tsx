@@ -314,8 +314,41 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
 
 /* ---------------- Chip die (hero visual) ---------------- */
 const TRACES = [
-  "M200 200 H120 V80 H20", "M200 200 H280 V60 H380", "M200 200 V320 H60 V380", "M200 200 V310 H340 V380",
-  "M200 200 H90 V250 H20", "M200 200 H320 V170 H380", "M200 200 V90 H150 V20", "M200 200 V110 H260 V20",
+  // Differential pair top-left
+  "M150 130 V90 H90 V40 H78",
+  "M158 130 V95 H98 V40 H100",
+  // High-speed serial bus top-right
+  "M242 130 V80 H310 V40 H322",
+  "M250 130 V72 H332 V40 H344",
+  // Clock line & control left
+  "M130 160 H80 V120 H40 V108",
+  "M130 180 H70 V220 H40 V240",
+  "M130 220 H90 V270 H40 V284",
+  // SPI / I2C bus right
+  "M270 165 H320 V110 H360 V98",
+  "M270 185 H330 V210 H360 V220",
+  "M270 235 H315 V300 H360 V306",
+  // Power / Ground & Analog bottom
+  "M160 270 V320 H110 V360 H100",
+  "M180 270 V335 H155 V360 H144",
+  "M220 270 V335 H245 V360 H254",
+  "M240 270 V315 H290 V360 H298",
+];
+
+// Test points on PCB
+const TEST_POINTS = [
+  { x: 110, y: 150, label: "TP1_CLK" },
+  { x: 290, y: 140, label: "TP2_TX" },
+  { x: 105, y: 250, label: "TP3_RST" },
+  { x: 295, y: 260, label: "TP4_VREF" },
+];
+
+// Surface mount decoupling capacitors (0402 / 0603 packages)
+const SM_CAPS = [
+  { x: 112, y: 110, vertical: false },
+  { x: 278, y: 105, vertical: true },
+  { x: 114, y: 285, vertical: true },
+  { x: 276, y: 280, vertical: false },
 ];
 
 function Die() {
@@ -329,7 +362,7 @@ function Die() {
   return (
     <div
       ref={ref}
-      className="relative aspect-square w-full [perspective:1200px]"
+      className="relative aspect-square w-full pb-8 [perspective:1200px]"
       onPointerMove={(e) => {
         const r = ref.current!.getBoundingClientRect();
         mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
@@ -340,41 +373,106 @@ function Die() {
     >
       <motion.div style={{ rotateX: rx, rotateY: ry }} className="absolute inset-0 [transform-style:preserve-3d]">
         <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible">
-          {/* pads */}
+          {/* PCB Ground plane fiducials */}
+          <circle cx="28" cy="28" r="4" className="fill-none stroke-ink/30" strokeWidth="1" />
+          <circle cx="28" cy="28" r="1.5" className="fill-ink/50" />
+          <circle cx="372" cy="28" r="4" className="fill-none stroke-ink/30" strokeWidth="1" />
+          <circle cx="372" cy="28" r="1.5" className="fill-ink/50" />
+          <circle cx="372" cy="372" r="4" className="fill-none stroke-ink/30" strokeWidth="1" />
+          <circle cx="372" cy="372" r="1.5" className="fill-ink/50" />
+
+          {/* Peripheral SMD Pads (QFP/BGA package perimeter) */}
           {Array.from({ length: 13 }).map((_, i) => (
-            <g key={i} className="fill-ink/80">
-              <rect x={56 + i * 22} y={4} width="8" height="10" />
-              <rect x={56 + i * 22} y={386} width="8" height="10" />
-              <rect x={4} y={56 + i * 22} width="10" height="8" />
-              <rect x={386} y={56 + i * 22} width="10" height="8" />
+            <g key={`pads-${i}`} className="fill-ink/80 transition-colors">
+              <rect x={56 + i * 22} y={30} width={10} height={14} rx={1} />
+              <rect x={56 + i * 22} y={356} width={10} height={14} rx={1} />
+              <rect x={30} y={56 + i * 22} width={14} height={10} rx={1} />
+              <rect x={356} y={56 + i * 22} width={14} height={10} rx={1} />
             </g>
           ))}
+
+          {/* PCB Routing Traces */}
           {TRACES.map((d, i) => (
             <g key={d}>
-              <path d={d} className="stroke-line" strokeWidth="1.5" fill="none" />
+              <path d={d} className="stroke-line/90" strokeWidth="1.25" strokeLinejoin="round" fill="none" />
               <motion.path
-                d={d} fill="none" strokeWidth="2" strokeLinecap="round" className="stroke-signal"
+                d={d} fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="stroke-signal"
                 initial={{ pathLength: 0, pathOffset: 0 }}
-                animate={{ pathLength: [0, 0.25, 0], pathOffset: [0, 0.6, 1] }}
-                transition={{ duration: hot ? 1.1 : 2.6, repeat: Infinity, delay: i * 0.33, ease: "easeInOut" }}
+                animate={{ pathLength: [0, 0.22, 0], pathOffset: [0, 0.65, 1] }}
+                transition={{ duration: hot ? 1.0 : 2.5, repeat: Infinity, delay: i * 0.22, ease: "easeInOut" }}
               />
             </g>
           ))}
-          {/* die body */}
-          <rect x="130" y="130" width="140" height="140" className="fill-ink" />
-          <g className="stroke-paper/15" strokeWidth="1">
-            {Array.from({ length: 7 }).map((_, i) => (
-              <line key={i} x1={130 + (i + 1) * 17.5} y1="130" x2={130 + (i + 1) * 17.5} y2="270" />
-            ))}
+
+          {/* SMD Capacitors / Resistors */}
+          {SM_CAPS.map((cap, i) => (
+            <g key={`smd-${i}`} transform={`translate(${cap.x}, ${cap.y})`}>
+              {cap.vertical ? (
+                <>
+                  <rect x="-4" y="-8" width="8" height="16" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
+                  <rect x="-4" y="-8" width="8" height="3" className="fill-ink/70" />
+                  <rect x="-4" y="5" width="8" height="3" className="fill-ink/70" />
+                </>
+              ) : (
+                <>
+                  <rect x="-8" y="-4" width="16" height="8" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
+                  <rect x="-8" y="-4" width="3" height="8" className="fill-ink/70" />
+                  <rect x="5" y="-4" width="3" height="8" className="fill-ink/70" />
+                </>
+              )}
+            </g>
+          ))}
+
+          {/* Test Points with circular ring */}
+          {TEST_POINTS.map((tp) => (
+            <g key={tp.label}>
+              <circle cx={tp.x} cy={tp.y} r="3" className="fill-signal/20 stroke-signal" strokeWidth="1" />
+              <circle cx={tp.x} cy={tp.y} r="1" className="fill-signal" />
+              <text x={tp.x + 5} y={tp.y - 4} fontSize="6" className="fill-mute font-mono tracking-tight">{tp.label}</text>
+            </g>
+          ))}
+
+          {/* QFP / QFN IC Package Body */}
+          <g>
+            {/* Package Outline with Pin 1 chamfer / index corner */}
+            <path
+              d="M142 126 H270 V274 H126 V142 Z"
+              className="fill-ink"
+            />
+            {/* Pin 1 dimple marker */}
+            <circle cx="140" cy="140" r="4.5" className="fill-paper/20 stroke-paper/40" strokeWidth="0.75" />
+
+            {/* Exposed Thermal Pad / Heat Slug */}
+            <rect x="146" y="146" width="48" height="48" rx="2" className="fill-signal" />
+            <g className="stroke-paper/20" strokeWidth="0.75">
+              <line x1="146" y1="146" x2="194" y2="194" />
+              <line x1="194" y1="146" x2="146" y2="194" />
+            </g>
+
+            {/* Laser Marking / Silkscreen on IC Package */}
+            <g className="font-mono text-paper">
+              <text x="146" y="218" fontSize="8" letterSpacing="0.8" className="fill-paper/50">STM32 / RISC-V ARCH</text>
+              <text x="146" y="234" fontSize="12" fontWeight="600" letterSpacing="1.2" className="fill-paper">AD-27 / PM</text>
+              <text x="146" y="249" fontSize="7.5" letterSpacing="1.2" className="fill-signal">MINES-EMSE × POLIMI</text>
+              <text x="146" y="262" fontSize="6.5" letterSpacing="0.5" className="fill-paper/40">LOT: 2027-APR · HW/SW/PRD</text>
+            </g>
+
+            {/* Microelectronic Bus Tracks inside IC Package */}
+            <g className="stroke-paper/10" strokeWidth="0.75">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <line key={`sub-${i}`} x1={202 + i * 11} y1="146" x2={202 + i * 11} y2="200" />
+              ))}
+            </g>
           </g>
-          <rect x="150" y="150" width="44" height="44" className="fill-signal" />
-          <text x="150" y="252" className="fill-paper font-mono" fontSize="10" letterSpacing="1.5">AD-27 / PM</text>
-          <text x="150" y="238" className="fill-paper/50 font-mono" fontSize="8" letterSpacing="1">ISMIN × POLIMI</text>
         </svg>
       </motion.div>
-      <div className="pointer-events-none absolute -bottom-2 left-0 right-0 flex justify-between">
-        <Label>{tr("fig. 01 — signal → produit", "fig. 01 — signal → product")}</Label>
-        <Label>{hot ? "clock ×2.4" : "idle"}</Label>
+
+      {/* Caption bottom bar with safe vertical offset to prevent any overlapping */}
+      <div className="pointer-events-none absolute -bottom-6 left-0 right-0 flex items-center justify-between px-1">
+        <Label>{tr("fig. 01 — silicium → produit", "fig. 01 — silicon → product")}</Label>
+        <span className="font-mono text-[10px] tracking-wider uppercase text-signal">
+          {hot ? "clock ×2.4 (active)" : "32.768 khz (idle)"}
+        </span>
       </div>
     </div>
   );
@@ -1234,7 +1332,7 @@ function Page() {
       <Nav onLogo={tapLogo} onPalette={() => setPalette(true)} />
 
       {/* HERO */}
-      <header id="top" ref={heroRef} className="relative mx-auto grid min-h-[100svh] max-w-[1400px] items-center gap-12 px-6 pt-[calc(env(safe-area-inset-top)+64px)] pb-16 md:px-10 md:pt-28 lg:grid-cols-[1.25fr_1fr]">
+      <header id="top" ref={heroRef} className="relative mx-auto grid min-h-[100svh] max-w-[1400px] items-center gap-12 px-6 pt-[calc(env(safe-area-inset-top)+84px)] pb-20 md:px-10 md:pt-28 md:pb-16 lg:grid-cols-[1.25fr_1fr]">
         <div className="grid-bg pointer-events-none absolute inset-0 -z-10 opacity-50 [mask-image:radial-gradient(ellipse_at_70%_45%,black,transparent_70%)]" />
         <motion.div style={{ y: heroY, opacity: heroO }}>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -1269,12 +1367,12 @@ function Page() {
             <button onClick={() => setCv(true)} className="flex items-center gap-2 border border-ink px-5 py-3.5 text-sm font-medium transition-colors hover:bg-ink hover:text-paper"><Download className="size-4" />{tr("Mon CV", "My resume")}</button>
           </Reveal>
         </motion.div>
-        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto w-full max-w-[460px]">
+        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[360px] sm:max-w-[420px] md:mt-0 md:max-w-[460px]">
           <Die />
           <motion.figure
             initial={{ opacity: 0, y: 30, rotate: 0 }} animate={{ opacity: 1, y: 0, rotate: -4 }} transition={{ duration: 1.2, ease, delay: 0.9 }}
             whileHover={{ rotate: 0, scale: 1.04 }}
-            className="group absolute -top-8 -left-2 w-28 bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 md:-top-10 md:-left-16 md:w-36"
+            className="group absolute -top-10 left-0 w-24 bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 sm:w-28 sm:-top-8 sm:-left-2 md:-top-10 md:-left-16 md:w-36"
           >
             <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
             <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
