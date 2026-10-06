@@ -66,7 +66,7 @@ export function LangToggle({ className = "", dark = false }: { className?: strin
             onClick={() => setLang(l)}
             aria-pressed={active}
             lang={l}
-            className={`relative rounded-full px-2.5 py-1 font-mono text-[11px] font-bold tracking-wider uppercase transition-all duration-200 ${
+            className={`relative flex h-8 items-center rounded-full px-3 font-mono text-[11.5px] font-bold tracking-wider uppercase transition-all duration-200 ${
               active
                 ? dark
                   ? "bg-paper text-ink shadow-sm"
