@@ -56,9 +56,7 @@ export function LangToggle({ className = "", dark = false }: { className?: strin
     <div
       role="group"
       aria-label="Language"
-      className={`inline-flex items-center rounded-full p-0.5 ${
-        dark ? "bg-paper/10" : "bg-ink/5"
-      } ${className}`}
+      className={`inline-flex items-center gap-0.5 ${className}`}
     >
       {(["fr", "en"] as const).map((l) => {
         const active = lang === l;
@@ -68,14 +66,14 @@ export function LangToggle({ className = "", dark = false }: { className?: strin
             onClick={() => setLang(l)}
             aria-pressed={active}
             lang={l}
-            className={`relative rounded-full px-2 py-0.5 font-mono text-[10.5px] font-semibold tracking-wider uppercase transition-all duration-200 ${
+            className={`relative rounded-full px-2.5 py-1 font-mono text-[11px] font-bold tracking-wider uppercase transition-all duration-200 ${
               active
                 ? dark
                   ? "bg-paper text-ink shadow-sm"
                   : "bg-ink text-paper shadow-sm"
                 : dark
                 ? "text-paper/60 hover:text-paper"
-                : "text-ink/60 hover:text-ink"
+                : "text-ink/60 hover:text-ink hover:bg-ink/5"
             }`}
           >
             {l}
