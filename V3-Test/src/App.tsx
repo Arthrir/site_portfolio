@@ -868,7 +868,7 @@ function Engagements({ onMinitel }: { onMinitel: () => void }) {
         {OTHERS.map((raw, i) => { const o = loc(raw, lang); return (
           <Reveal key={raw.role} delay={i * 0.04} className="bg-paper">
             <button onClick={() => setOpen(raw)} className="group flex w-full items-center gap-3 p-5 text-left transition-colors hover:bg-ink hover:text-paper">
-              <img src={o.logo} alt={o.org} className="size-9 rounded-md bg-white object-contain p-1 ring-1 ring-line transition group-hover:scale-105" />
+              <img src={o.logo} alt={o.org} className="size-9 rounded-md object-contain grayscale transition group-hover:grayscale-0 group-hover:scale-105" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{o.role}</p>
                 <p className="truncate font-mono text-[10px] text-mute uppercase group-hover:text-paper/50">{o.org} · {o.date}</p>
@@ -1430,13 +1430,13 @@ function Page() {
 
       {/* PASSIONS */}
       <section id="passions" style={{ "--color-signal": "#E10600" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 pb-32 md:px-10">
-        <div className="mb-14"><Stacked ghost={tr("Hors cadre", "Off the clock")} n="06">Passions.</Stacked></div>
+        <div className="mb-14"><Stacked ghost={tr("Personnalité", "Personality")} n="06">Passions.</Stacked></div>
         <Passions Label={Label} />
       </section>
 
       {/* STACK */}
       <section id="stack" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 py-32 md:px-10">
-        <div className="mb-14"><Stacked ghost="Toolbox" n="07"><Hl>{tr("Du transistor à la ", "From transistor to ")}<span className="font-serif font-normal italic">roadmap</span>.</Hl></Stacked></div>
+        <div className="mb-14"><Stacked ghost="Toolbox" n="07"><Hl>{tr("Du transistor au ", "From transistor to ")}<span className="font-serif font-normal italic">{tr("produit", "product")}</span>.</Hl></Stacked></div>
         <div className="border-t border-ink">
           {STACK.map((raw) => loc(raw, lang)).map((s, i) => (
             <Reveal key={s.n} delay={i * 0.06}>
