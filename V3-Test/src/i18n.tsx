@@ -56,8 +56,8 @@ export function LangToggle({ className = "", dark = false }: { className?: strin
     <div
       role="group"
       aria-label="Language"
-      className={`inline-flex items-center rounded-full p-0.5 border ${
-        dark ? "border-paper/20 bg-paper/10" : "border-ink/15 bg-ink/5"
+      className={`inline-flex items-center rounded-full p-0.5 ${
+        dark ? "bg-paper/10" : "bg-ink/5"
       } ${className}`}
     >
       {(["fr", "en"] as const).map((l) => {
