@@ -49,20 +49,39 @@ export function loc<T extends object>(o: Loc<T>, lang: Lang): T {
   return lang === "en" && o.en ? { ...o, ...o.en } : o;
 }
 
-/** Sélecteur compact FR · EN. */
+/** Sélecteur segmented FR / EN avec pill tactile. */
 export function LangToggle({ className = "", dark = false }: { className?: string; dark?: boolean }) {
   const { lang, setLang } = useLang();
   return (
-    <div role="group" aria-label="Language" className={`flex items-center font-mono text-[10px] tracking-[0.12em] uppercase ${className}`}>
-      {(["fr", "en"] as const).map((l, i) => (
-        <span key={l} className="flex items-center">
-          {i > 0 && <span className={`px-0.5 ${dark ? "text-paper/30" : "text-ink/30"}`}>·</span>}
+    <div
+      role="group"
+      aria-label="Language"
+      className={`inline-flex items-center rounded-full p-0.5 border ${
+        dark ? "border-paper/20 bg-paper/10" : "border-ink/15 bg-ink/5"
+      } ${className}`}
+    >
+      {(["fr", "en"] as const).map((l) => {
+        const active = lang === l;
+        return (
           <button
-            onClick={() => setLang(l)} aria-pressed={lang === l} lang={l}
-            className={`rounded-full px-1.5 py-1 transition-colors ${lang === l ? (dark ? "text-paper" : "text-ink") : dark ? "text-paper/40 hover:text-paper" : "text-ink/40 hover:text-ink"} ${lang === l ? "font-semibold" : ""}`}
-          >{l}</button>
-        </span>
-      ))}
+            key={l}
+            onClick={() => setLang(l)}
+            aria-pressed={active}
+            lang={l}
+            className={`relative rounded-full px-2 py-0.5 font-mono text-[10.5px] font-semibold tracking-wider uppercase transition-all duration-200 ${
+              active
+                ? dark
+                  ? "bg-paper text-ink shadow-sm"
+                  : "bg-ink text-paper shadow-sm"
+                : dark
+                ? "text-paper/60 hover:text-paper"
+                : "text-ink/60 hover:text-ink"
+            }`}
+          >
+            {l}
+          </button>
+        );
+      })}
     </div>
   );
 }

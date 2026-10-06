@@ -40,15 +40,23 @@ body { background: var(--color-paper); color: var(--color-ink); font-family: var
   .lens { backdrop-filter: url(#lg-refract) saturate(170%) brightness(1.06); }
 }
 
-/* Vrai verre liquide : quasi transparent, pas de flou, bords qui réfractent le contenu (Chromium) */
+/* Barre de navigation : solide & contrastée sur mobile, verre liquide réfractant sur ordinateur */
 .liquid {
-  background: rgba(255,255,255,.12);
-  backdrop-filter: blur(6px) saturate(170%);
-  -webkit-backdrop-filter: blur(6px) saturate(170%);
-  box-shadow: inset 1px 1px 0 rgba(255,255,255,.85), inset -1px -1px 0 rgba(255,255,255,.35), inset 0 0 12px rgba(255,255,255,.25), 0 8px 24px -10px rgba(18,18,17,.28);
+  background: rgba(239, 237, 231, 0.94);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 10px 32px -4px rgba(18, 18, 17, 0.18), inset 0 0 0 1px rgba(18, 18, 17, 0.15);
 }
-@supports (backdrop-filter: url(#x)) {
-  .liquid { backdrop-filter: url(#lg-nav) saturate(180%) brightness(1.04); }
+@media (min-width: 768px) {
+  .liquid {
+    background: rgba(255,255,255,.32);
+    backdrop-filter: blur(12px) saturate(170%);
+    -webkit-backdrop-filter: blur(12px) saturate(170%);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,.85), inset -1px -1px 0 rgba(255,255,255,.35), inset 0 0 12px rgba(255,255,255,.25), 0 8px 24px -10px rgba(18,18,17,.28);
+  }
+  @supports (backdrop-filter: url(#x)) {
+    .liquid { backdrop-filter: url(#lg-nav) saturate(180%) brightness(1.04); }
+  }
 }
 
 /* Sur ordinateur, la mini F1 remplace la barre de défilement native */

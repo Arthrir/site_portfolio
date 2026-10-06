@@ -49,9 +49,9 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
 ];
 
 const STACK: Loc<{ layer: string; n: string; items: string[] }>[] = [
-  { layer: "Outils", n: "06", en: { layer: "Tools", items: ["STM32CubeIDE", "Arduino IDE", "Vivado", "ModelSim", "MATLAB / Simulink", "LTSpice", "Logisim Evolution", "Vector CANalyzer", "KiCad", "Inventor", "Oscilloscope", "Function generator", "VS Code", "Typst", "Figma", "Unity"] }, items: ["STM32CubeIDE", "Arduino IDE", "Vivado", "ModelSim", "MATLAB / Simulink", "LTSpice", "Logisim Evolution", "Vector CANalyzer", "KiCad", "Inventor", "Oscilloscope", "GBF", "VS Code", "Typst", "Figma", "Unity"] },
-  { layer: "Produit", n: "05", en: { layer: "Product", items: ["Product Management", "Project management (V-model / Agile)", "Team leadership", "Technical communication", "Event management", "Budget management (€25k)", "Institutional communication", "Planning"] }, items: ["Product Management", "Gestion de projet (Cycle en V / Agile)", "Leadership d'équipe", "Communication technique", "Organisation d'événements", "Gestion de budget (25k€)", "Communication institutionnelle", "Planification"] },
-  { layer: "Design", n: "04", en: { items: ["UX Design", "Product Design", "Industrial Design", "3D & physical prototyping", "Figma", "Unity"] }, items: ["UX Design", "Design Produit", "Design Industriel", "Prototypage 3D & physique", "Figma", "Unity"] },
+  { layer: "Outils", n: "06", en: { layer: "Tools", items: ["STM32CubeIDE", "Arduino IDE", "Vivado", "ModelSim", "MATLAB / Simulink", "LTSpice", "Logisim Evolution", "Vector CANalyzer", "KiCad", "Autodesk Inventor", "Wireshark", "Docker", "Oscilloscope", "Precision Microscope", "VNA / TDR", "Spectrum Analyzer", "Function Generator", "SMD Soldering", "VS Code", "Typst", "Figma", "Unity"] }, items: ["STM32CubeIDE", "Arduino IDE", "Vivado", "ModelSim", "MATLAB / Simulink", "LTSpice", "Logisim Evolution", "Vector CANalyzer", "KiCad", "Autodesk Inventor", "Wireshark", "Docker", "Oscilloscope", "Microscope de précision", "VNA / TDR", "Analyseur de spectre", "GBF", "Soudage & CMS", "VS Code", "Typst", "Figma", "Unity"] },
+  { layer: "Produit", n: "05", en: { layer: "Product", items: ["Product Management", "Project management (V-model / Agile)", "Team leadership", "Technical communication", "Event management", "Budget management (€25k)", "Institutional communication", "Roadmap & Backlog", "Planning"] }, items: ["Product Management", "Gestion de projet (Cycle en V / Agile)", "Leadership d'équipe", "Communication technique", "Organisation d'événements", "Gestion de budget (25k€)", "Communication institutionnelle", "Roadmap & Backlog", "Planification"] },
+  { layer: "Design", n: "04", en: { items: ["UX Design", "Product Design", "Industrial Design", "3D & physical prototyping", "User Research", "Figma", "Unity"] }, items: ["UX Design", "Design Produit", "Design Industriel", "Prototypage 3D & physique", "Recherche Utilisateur", "Figma", "Unity"] },
   { layer: "Data & IA", n: "03", en: { layer: "Data & AI", items: ["NumPy", "Pandas", "Matplotlib", "Seaborn", "SciPy", "scikit-learn", "TensorFlow", "Keras", "PyTorch", "Signal processing", "Embedded AI"] }, items: ["NumPy", "Pandas", "Matplotlib", "Seaborn", "SciPy", "scikit-learn", "TensorFlow", "Keras", "PyTorch", "Traitement du signal", "IA embarquée"] },
   { layer: "Software & Sécu", n: "02", en: { layer: "Software & Security", items: ["Python", "C / C++", "Rust", "OCaml", "SQL", "Linux / Bash", "Git", "CI/CD", "Networking (TCP/IP, Sockets)", "Multithreading", "Cybersecurity", "Cryptography (ASCON)", "Network security", "OSINT", "Social Engineering"] }, items: ["Python", "C / C++", "Rust", "OCaml", "SQL", "Linux / Bash", "Git", "CI/CD", "Réseau (TCP/IP, Sockets)", "Multithreading", "Cybersécurité", "Cryptographie (ASCON)", "Sécurité des réseaux", "OSINT", "Social Engineering"] },
   { layer: "Hardware & RF", n: "01", en: { items: ["Embedded C / C++", "Assembly", "Arduino", "STM32 (HAL / LL)", "ESP32", "FPGA", "SystemVerilog / VHDL", "RISC-V architecture", "PCB (KiCad)", "Hardware prototyping", "Analog & digital electronics", "Sensors & instrumentation", "I2C · SPI · UART · CAN", "IoT · RF · LoRa · BLE", "Impedance matching", "S-parameters", "VNA / TDR", "EMC"] }, items: ["C / C++ embarqué", "Assembleur", "Arduino", "STM32 (HAL / LL)", "ESP32", "FPGA", "SystemVerilog / VHDL", "Architecture RISC-V", "PCB (KiCad)", "Prototypage matériel", "Électronique analogique & numérique", "Capteurs & instrumentation", "I2C · SPI · UART · CAN", "IoT · RF · LoRa · BLE", "Adaptation d'impédance", "S-parameters", "VNA / TDR", "CEM"] },
@@ -69,18 +69,107 @@ const PROJECTS: Project[] = [
   { t: "FPGA — ECG & communication sécurisée", points: ["Développement d'un système FPGA permettant le déchiffrement de trames ECG.", "Déchiffrement matériel de trames chiffrées avec l'algorithme ASCON.", "Implémentation de l'architecture en SystemVerilog.", "Dashboard Python pour le suivi médical en temps réel."], date: "2026", d: "Fév – Mar 2026", cat: ["Hardware"], tags: ["FPGA", "SystemVerilog", "Python", "Vivado"], desc: "Déchiffrement matériel de trames ECG chiffrées en ASCON, architecture SystemVerilog et dashboard Python de suivi médical temps réel.", with: "Yasmin Hadj-Said", en: { t: "FPGA — ECG & secure communication", d: "Feb – Mar 2026", points: ["Built an FPGA system to decrypt ECG frames.", "Hardware decryption of frames encrypted with the ASCON algorithm.", "Architecture implemented in SystemVerilog.", "Python dashboard for real-time medical monitoring."], desc: "Hardware decryption of ASCON-encrypted ECG frames, a SystemVerilog architecture and a Python dashboard for real-time medical monitoring." } },
   { t: "IA embarquée — détection de défauts", points: ["Entraînement d'un modèle Python pour détecter des défauts sur des machines.", "Intégration et optimisation du modèle sur microcontrôleur STM32 en C."], date: "2026", d: "Fév – Mar 2026", cat: ["IA", "Hardware"], tags: ["STM32", "C", "Python"], desc: "Entraînement d'un modèle de détection de défauts machine, puis intégration et optimisation sur STM32 en C.", link: "https://github.com/Arthrir/ISMIN-IA_Embarquee_Projet", with: "Yasmin Hadj-Said", en: { t: "Embedded AI — fault detection", d: "Feb – Mar 2026", points: ["Trained a Python model to detect machine faults.", "Integrated and optimized the model on an STM32 microcontroller in C."], desc: "Trained a machine fault detection model, then integrated and optimized it on STM32 in C." } },
   { t: "IA pour le Manufacturing", points: ["Application de modèles de machine learning et deep learning aux processus de fabrication.", "Détection d'anomalies et analyse prédictive sur données de production."], date: "2026", d: "Fév – Mar 2026", cat: ["IA"], tags: ["Python", "ML", "Deep Learning"], desc: "Détection d'anomalies et analyse prédictive sur données de ligne de production.", with: "Yasmin Hadj-Said", en: { t: "AI for Manufacturing", d: "Feb – Mar 2026", points: ["Applied machine learning and deep learning models to manufacturing processes.", "Anomaly detection and predictive analytics on production data."], desc: "Anomaly detection and predictive analytics on production-line data." } },
-  { t: "Terrariot — IoT qualité de l'air", points: ["Boîtier de mesure de qualité de l'air destiné aux zoos.", "Régulation et contrôle de microclimats spécifiques.", "Électronique STM32, capteurs et enceinte imprimée en 3D (Inventor)."], date: "2025", d: "Nov 2025 – Fév 2026", cat: ["Hardware", "Produit"], tags: ["STM32", "Capteurs", "Impression 3D", "Inventor"], desc: "Boîtier de mesure de la qualité de l'air pour zoos, afin de réguler des microclimats spécifiques.", with: "Jade Diouri", en: { t: "Terrariot — air quality IoT", d: "Nov 2025 – Feb 2026", points: ["Air quality monitoring device designed for zoos.", "Regulation and control of specific microclimates.", "STM32 electronics, sensors and a 3D-printed enclosure (Inventor)."], tags: ["STM32", "Sensors", "3D Printing", "Inventor"], desc: "Air quality monitoring device for zoos, built to regulate specific microclimates." } },
-  { t: "Processeur RISC-V en SystemVerilog", points: ["Implémentation complète d'un processeur RISC-V en SystemVerilog.", "Gestion avancée des branchements (jumps & branches)."], date: "2025", d: "Oct 2025 – Jan 2026", cat: ["Hardware"], tags: ["RISC-V", "SystemVerilog"], desc: "Implémentation complète d'un processeur RISC-V avec gestion avancée des jumps & branches.", with: "Yasmin Hadj-Said", en: { t: "RISC-V processor in SystemVerilog", d: "Oct 2025 – Jan 2026", points: ["Full implementation of a RISC-V processor in SystemVerilog.", "Advanced handling of jumps & branches."], desc: "Full implementation of a RISC-V processor with advanced jump & branch handling." } },
-  { t: "CPU RV32I sur Logisim", img: ["/media/ismin-projets.png"], points: ["Conception complète d'un CPU 32 bits RV32I sur Logisim-evolution.", "ALU, banc de registres, mémoire."], date: "2025", d: "Oct – Déc 2025", cat: ["Hardware"], tags: ["RISC-V", "Logisim"], desc: "Conception complète d'un CPU 32 bits : ALU, registres, mémoire.", with: "Inès Lixi", en: { t: "RV32I CPU in Logisim", d: "Oct – Dec 2025", points: ["Designed a complete 32-bit RV32I CPU in Logisim-evolution.", "ALU, register file, memory."], desc: "Complete 32-bit CPU design: ALU, registers, memory." } },
+  { t: "Terrariot — IoT qualité de l'air", points: ["Boîtier connecté de mesure de qualité de l'air destiné aux zoos afin de surveiller et réguler des microclimats spécifiques.", "Conception électronique complète sur microcontrôleur STM32 avec capteurs environnementaux.", "Modélisation CAO et impression 3D de l'enceinte sous Autodesk Inventor."], date: "2025", d: "Nov 2025 – Fév 2026", cat: ["Hardware", "Produit"], tags: ["STM32", "Capteurs", "Impression 3D", "Inventor"], desc: "Boîtier de mesure de la qualité de l'air pour zoos, afin de réguler des microclimats spécifiques.", with: "Jade Diouri", en: { t: "Terrariot — air quality IoT", d: "Nov 2025 – Feb 2026", points: ["Connected air quality monitoring device designed for zoos to monitor and regulate specific microclimates.", "Complete electronic design on STM32 microcontroller with environmental sensors.", "CAD modeling and 3D-printed enclosure using Autodesk Inventor."], tags: ["STM32", "Sensors", "3D Printing", "Inventor"], desc: "Air quality monitoring device for zoos, built to regulate specific microclimates." } },
+  { t: "Processeur RISC-V en SystemVerilog", points: ["Conception et implémentation complète d'un processeur RISC-V en SystemVerilog.", "Gestion avancée du pipeline, des sauts et des branchements conditionnels (jumps & branches)."], date: "2025", d: "Oct 2025 – Jan 2026", cat: ["Hardware"], tags: ["RISC-V", "SystemVerilog"], desc: "Implémentation complète d'un processeur RISC-V avec gestion avancée des jumps & branches.", with: "Yasmin Hadj-Said", en: { t: "RISC-V processor in SystemVerilog", d: "Oct 2025 – Jan 2026", points: ["Full design and implementation of a RISC-V processor in SystemVerilog.", "Advanced handling of pipeline, jumps & branches."], desc: "Full implementation of a RISC-V processor with advanced jump & branch handling." } },
+  { t: "CPU RV32I sur Logisim", img: ["/media/ismin-projets.png"], points: ["Conception complète d'un CPU 32 bits RV32I sur Logisim-evolution.", "ALU, banc de registres, mémoire et unité de décodage."], date: "2025", d: "Oct – Déc 2025", cat: ["Hardware"], tags: ["RISC-V", "Logisim"], desc: "Conception complète d'un CPU 32 bits : ALU, registres, mémoire.", with: "Inès Lixi", en: { t: "RV32I CPU in Logisim", d: "Oct – Dec 2025", points: ["Designed a complete 32-bit RV32I CPU in Logisim-evolution.", "ALU, register file, memory and decoder unit."], desc: "Complete 32-bit CPU design: ALU, registers, memory." } },
   { t: "Sécurité des réseaux", points: ["Analyse et exploitation de vulnérabilités sur machine virtuelle isolée.", "Environnement Python regroupant divers outils d'exploitation."], date: "2025", d: "Oct 2025 – Jan 2026", cat: ["Software"], tags: ["Python", "Linux", "OSINT"], desc: "Exploitation de vulnérabilités sur VM isolée et environnement Python d'outils d'exploitation.", with: "Yasmin Hadj-Said", en: { t: "Network security", d: "Oct 2025 – Jan 2026", points: ["Analyzed and exploited vulnerabilities on an isolated virtual machine.", "Python environment bundling various exploitation tools."], desc: "Vulnerability exploitation on an isolated VM and a Python toolkit of exploitation tools." } },
   { t: "Ventilateur à capteur capacitif", img: ["/media/ismin-projets2.png"], points: ["Acquisition de données via STM32 pour ajuster la vitesse.", "Contrôle glissant (slider) à l'aide de deux électrodes.", "PCB conçu sous KiCad."], date: "2025", d: "Fév – Juin 2025", cat: ["Hardware", "Produit"], tags: ["STM32", "PCB", "KiCad", "C"], desc: "Slider capacitif à deux électrodes pour régler la vitesse, acquisition sur STM32.", with: "Inès Lixi", en: { t: "Capacitive-sensor fan", d: "Feb – Jun 2025", points: ["STM32 data acquisition to adjust fan speed.", "Slider control using two electrodes.", "PCB designed in KiCad."], desc: "Two-electrode capacitive slider to set the speed, with acquisition on STM32." } },
-  { t: "Robot autonome STM32", img: ["/media/ismin-projets.png"], points: ["Programmation d'un robot basé sur STM32.", "Algorithme d'arrêt à exactement 20 cm d'un objet, puis suivi dynamique."], date: "2025", d: "Fév – Juin 2025", cat: ["Hardware"], tags: ["STM32", "Robotique", "C"], desc: "S'arrête exactement à 20 cm d'un objet puis le suit dynamiquement.", with: "Inès Lixi", en: { t: "Autonomous STM32 robot", d: "Feb – Jun 2025", points: ["Programmed an STM32-based robot.", "Algorithm that stops exactly 20 cm from an object, then follows it dynamically."], tags: ["STM32", "Robotics", "C"], desc: "Stops exactly 20 cm from an object, then follows it dynamically." } },
+  { t: "🏆 Gagnant Hackathon Robotique (STM32)", img: ["/media/ismin-projets.png"], points: ["🏆 1ère place du Hackathon Robotique.", "Programmation et asservissement en langage C sur microcontrôleur STM32.", "Algorithme temps réel d'asservissement : arrêt calibré à exactement 20 cm puis suivi dynamique d'obstacles."], date: "2025", d: "Fév – Juin 2025", cat: ["Hardware"], tags: ["STM32", "Robotique", "C", "Hackathon Winner"], desc: "1ère place du Hackathon Robotique. Asservissement en C sur STM32 : verrouillage à 20 cm et poursuite dynamique.", with: "Inès Lixi", en: { t: "🏆 Robotics Hackathon Winner (STM32)", d: "Feb – Jun 2025", points: ["🏆 1st place in the Robotics Hackathon.", "C programming and closed-loop motor control on an STM32 microcontroller.", "Real-time obstacle tracking algorithm locking exactly at 20 cm from target and tracking motion dynamically."], tags: ["STM32", "Robotics", "C", "Hackathon Winner"], desc: "Robotics Hackathon Winner. Closed-loop control in C on STM32: locked at 20 cm and dynamic tracking." } },
   { t: "Chiffrement ASCON128", points: ["Machine d'état en SystemVerilog pour chiffrer et déchiffrer selon ASCON128.", "Rapport rédigé en Typst."], date: "2025", d: "Fév – Mai 2025", cat: ["Hardware", "Software"], tags: ["SystemVerilog", "Crypto", "Typst"], desc: "Machine d'état SystemVerilog pour chiffrer / déchiffrer selon ASCON128.", link: "https://github.com/Arthrir/ISMIN-ASCON-CSN", en: { t: "ASCON128 encryption", d: "Feb – May 2025", points: ["SystemVerilog state machine to encrypt and decrypt with ASCON128.", "Report written in Typst."], desc: "SystemVerilog state machine to encrypt / decrypt with ASCON128." } },
-  { t: "Jeu State.io multijoueur", img: ["/media/ismin-projets2.png"], points: ["Jeu multijoueur de conquête de territoires en C.", "Architecture client-serveur (sockets) et interface Ncurses.", "Rôle de lead dev du binôme."], date: "2025", d: "Fév – Avr 2025", cat: ["Software"], tags: ["C", "Sockets", "Ncurses", "Dev Lead"], desc: "Jeu de conquête de territoires en architecture client-serveur.", link: "https://github.com/Arthrir/ISMIN-Jeu_Stateio", with: "Inès Lixi", en: { t: "Multiplayer State.io game", d: "Feb – Apr 2025", points: ["Multiplayer territory-conquest game in C.", "Client-server architecture (sockets) and Ncurses interface.", "Lead developer of the pair."], desc: "Territory-conquest game built on a client-server architecture." } },
+  { t: "Jeu State.io multijoueur", img: ["/media/ismin-projets2.png"], points: ["Jeu multijoueur de conquête de territoires en C.", "Architecture client-serveur (sockets TCP/IP) et interface Ncurses.", "Rôle de lead dev du binôme."], date: "2025", d: "Fév – Avr 2025", cat: ["Software"], tags: ["C", "Sockets", "Ncurses", "Dev Lead"], desc: "Jeu de conquête de territoires en architecture client-serveur.", link: "https://github.com/Arthrir/ISMIN-Jeu_Stateio", with: "Inès Lixi", en: { t: "Multiplayer State.io game", d: "Feb – Apr 2025", points: ["Multiplayer territory-conquest game in C.", "Client-server architecture (TCP/IP sockets) and Ncurses interface.", "Lead developer of the pair."], desc: "Territory-conquest game built on a client-server architecture." } },
   { t: "Handi'Mines — sensibilisation", points: ["Organisation d'un événement handisport sur le campus.", "Ateliers cécifoot et showdown."], date: "2025", d: "Fév – Juin 2025", cat: ["Produit"], tags: ["Événementiel", "Communication"], desc: "Organisation d'un événement handisport : ateliers cécifoot et showdown.", en: { t: "Handi'Mines — awareness", d: "Feb – Jun 2025", points: ["Organized a disability sports event on campus.", "Blind football and showdown workshops."], tags: ["Events", "Communication"], desc: "Organized a disability sports event: blind football and showdown workshops." } },
   { t: "Velisud — Programme Entrep'", points: ["Conception technique et électronique d'un véhicule intermédiaire.", "Programme d'entrepreneuriat local, rôle de tech lead."], date: "2024", d: "Oct 2024 – Mar 2025", cat: ["Produit", "Hardware"], tags: ["Entrepreneuriat", "Tech Lead", "Électronique"], desc: "Conception technique et électronique d'un véhicule intermédiaire.", link: "/assets/VELISUD.pdf", en: { t: "Velisud — Entrepreneurship program", d: "Oct 2024 – Mar 2025", points: ["Technical and electronic design of an intermediate vehicle.", "Local entrepreneurship program, tech lead role."], tags: ["Entrepreneurship", "Tech Lead", "Electronics"], desc: "Technical and electronic design of an intermediate vehicle." } },
   { t: "Portfolio arthurdx.com", points: ["Design et développement de ce portfolio.", "Focus UI/UX, motion design, responsive et performances.", "Easter eggs : terminal Minitel, F1, Aim Lab, Blackjack."], date: "2024", d: "2024 – aujourd'hui", cat: ["Software", "Produit"], tags: ["Astro", "React", "Motion", "Figma"], desc: "Le site que vous lisez. Terrain d'expérimentation UI/UX, motion et performance.", current: true, en: { d: "2024 – present", points: ["Designed and built this portfolio.", "Focus on UI/UX, motion design, responsiveness and performance.", "Easter eggs: Minitel terminal, F1, Aim Lab, Blackjack."], desc: "The site you are reading. A playground for UI/UX, motion and performance." } },
-  { t: "TIPE — Blackjack", points: ["Simulation Python modélisant le bonheur du joueur (aversion à la perte).", "Optimisation des gains du casino à partir de ce modèle.", "Réalisé avec Paul Aubert."], date: "2023", d: "Jan 2023 – Juil 2024", cat: ["Software", "IA"], tags: ["Python", "Matplotlib"], desc: "Simulation modélisant le « bonheur » du joueur (aversion à la perte) pour optimiser les gains du casino.", en: { t: "TIPE research — Blackjack", d: "Jan 2023 – Jul 2024", points: ["Python simulation modeling player happiness (loss aversion).", "Optimized casino earnings based on this model.", "Done with Paul Aubert."], desc: "Simulation modeling player “happiness” (loss aversion) to optimize casino earnings." } },
+  { t: "TIPE — Modélisation du bonheur au Blackjack", points: ["Simulation Python modélisant le « bonheur » du joueur en intégrant l'aversion à la perte (Théorie des perspectives de Kahneman & Tversky).", "Optimisation algorithmique des gains et de la fidélisation du casino à partir de ce modèle comportemental.", "Projet de recherche CPGE réalisé avec Paul Aubert."], date: "2023", d: "Jan 2023 – Juil 2024", cat: ["Software", "IA"], tags: ["Python", "Théorie des jeux", "Matplotlib"], desc: "Simulation modélisant le « bonheur » du joueur (aversion à la perte) pour optimiser les gains du casino.", en: { t: "TIPE research — Player happiness model in Blackjack", d: "Jan 2023 – Jul 2024", points: ["Python simulation modeling player happiness using loss aversion (Kahneman & Tversky's Prospect Theory).", "Algorithmic optimization of casino revenue and retention based on this behavioral model.", "Preparatory class research done with Paul Aubert."], tags: ["Python", "Game Theory", "Matplotlib"], desc: "Simulation modeling player “happiness” (loss aversion) to optimize casino earnings." } },
+];
+
+type School = Loc<{
+  name: string;
+  logo: string;
+  degree: string;
+  place: string;
+  date: string;
+  badge?: string;
+  courses: string[];
+  goal: string;
+  link?: string;
+}>;
+
+const SCHOOLS: School[] = [
+  {
+    name: "Politecnico di Milano",
+    logo: "/logo/polimi.png",
+    degree: "Master in Design & Engineering",
+    place: "Milan, Italie",
+    date: "Sep 2026 — Fév 2027",
+    badge: "Semestre international",
+    courses: ["Product Design Studio", "UX Design", "Design & Manufacturing", "Virtual & Physical Prototyping"],
+    goal: "Maîtriser l'ergonomie, le prototypage rapide et l'UX pour placer l'utilisateur au centre de la conception matérielle — une compétence clé pour diriger des produits technologiques innovants.",
+    link: "https://www.polimi.it/",
+    en: {
+      place: "Milan, Italy",
+      date: "Sep 2026 — Feb 2027",
+      badge: "International semester",
+      goal: "Master ergonomics, rapid prototyping, and UX to put the user at the center of hardware design — a key skill for leading products in innovative tech companies.",
+    },
+  },
+  {
+    name: "Mines Saint-Étienne",
+    logo: "/logo/emse.png",
+    degree: "Diplôme d'ingénieur ISMIN",
+    place: "Campus Georges Charpak Provence, Gardanne",
+    date: "Sep 2024 — Juin 2027",
+    badge: "Grande École d'ingénieurs",
+    courses: ["Microélectronique & Informatique", "Microcontrôleurs & Architecture CPU", "FPGA & Sécurité matérielle", "IA pour la Production", "Cryptographie (ASCON)", "Entrepreneuriat"],
+    goal: "Formation d'ingénieur généraliste de haut niveau en systèmes embarqués, circuits intégrés et informatique, combinant rigueur scientifique, fabrication et gestion de projet.",
+    link: "https://www.mines-stetienne.fr/",
+    en: {
+      degree: "ISMIN Master of Science in Engineering",
+      place: "Gardanne, France",
+      date: "Sep 2024 — Jun 2027",
+      badge: "Top French Engineering School",
+      courses: ["Microelectronics & Computer Science", "Microcontrollers & CPU Architecture", "FPGA & Hardware Security", "AI for Manufacturing", "Cryptography (ASCON)", "Entrepreneurship"],
+      goal: "Top-tier engineering curriculum in embedded systems, integrated circuits, and computer science, bridging hardware, software and project management.",
+    },
+  },
+  {
+    name: "Lycée Pothier",
+    logo: "/logo/pothier.png",
+    degree: "Classes Préparatoires aux Grandes Écoles (CPGE)",
+    place: "Orléans, France",
+    date: "Sep 2022 — Juin 2024",
+    badge: "MPSI · MP*",
+    courses: ["Mathématiques approfondies", "Physique-Chimie", "Informatique théorique"],
+    goal: "Deux années de formation scientifique intensive développant rigueur conceptuelle, modélisation mathématique et endurance de travail.",
+    link: "https://lycee-pothier.fr/",
+    en: {
+      degree: "Intensive Scientific Preparatory Classes (CPGE)",
+      place: "Orléans, France",
+      date: "Sep 2022 — Jun 2024",
+      badge: "MPSI · MP*",
+      courses: ["Advanced Mathematics", "Physics & Chemistry", "Computer Science"],
+      goal: "Two years of intensive scientific training developing deep mathematical modeling, logical precision and high-performance problem solving.",
+    },
+  },
+  {
+    name: "Lycée Notre-Dame des Aydes",
+    logo: "/logo/nda.png",
+    degree: "Baccalauréat Général (Section Européenne Anglais)",
+    place: "Blois, France",
+    date: "Sep 2019 — Juin 2022",
+    badge: "Mention Bien",
+    courses: ["Mathématiques", "Physique-Chimie", "Maths Expertes", "HGGSP"],
+    goal: "Baccalauréat scientifique mention Bien avec parcours bilingue en Section Européenne.",
+    link: "https://aydes.fr/",
+    en: {
+      degree: "French High School Baccalaureate (European English Section)",
+      place: "Blois, France",
+      date: "Sep 2019 — Jun 2022",
+      badge: "Honors (Mention Bien)",
+      courses: ["Mathematics", "Physics & Chemistry", "Advanced Maths", "Geopolitics"],
+      goal: "Scientific Baccalaureate graduated with honors and bilingual European curriculum.",
+    },
+  },
 ];
 
 type Eng = Loc<EngBase>;
@@ -639,19 +728,28 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
         </div>
         <LangToggle className="mx-0.5" />
         <button onClick={() => window.dispatchEvent(new Event("open-cv"))} className="hidden rounded-full bg-ink px-3.5 py-1.5 text-[13px] font-medium text-paper transition-colors hover:bg-signal md:block">CV</button>
-        <button onClick={() => setMenu((m) => !m)} aria-label="Menu" aria-expanded={menu} className="flex items-center gap-2 rounded-full px-3 py-1.5 text-[13px] font-medium md:hidden">
+        <button onClick={() => setMenu((m) => !m)} aria-label="Menu" aria-expanded={menu} className="flex items-center gap-2 rounded-full bg-ink/5 border border-ink/10 px-3 py-1.5 text-[12.5px] font-semibold text-ink md:hidden">
           {nav.find((n) => n.id === section)?.label ?? "Menu"}
           <span className="flex w-3.5 flex-col gap-[3px]"><span className={`h-px bg-ink transition ${menu ? "translate-y-[2px] rotate-45" : ""}`} /><span className={`h-px bg-ink transition ${menu ? "-translate-y-[2px] -rotate-45" : ""}`} /></span>
         </button>
         <AnimatePresence>
           {menu && (
             <motion.div initial={{ opacity: 0, y: 8, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.96 }} transition={{ duration: 0.25, ease }}
-              className="glass absolute right-0 bottom-full left-0 mb-2 flex flex-col rounded-3xl p-2 md:hidden">
+              className="absolute right-0 bottom-full left-0 mb-3 flex flex-col rounded-2xl p-2 bg-paper/95 border border-ink/20 shadow-2xl backdrop-blur-2xl md:hidden">
               {nav.map((n, i) => (
-                <a key={n.id} href={`#${n.id}`} onClick={() => setMenu(false)} className={`flex items-baseline justify-between rounded-2xl px-4 py-3 text-lg font-medium ${section === n.id ? "bg-ink text-paper" : ""}`}>
+                <a key={n.id} href={`#${n.id}`} onClick={() => setMenu(false)} className={`flex items-baseline justify-between rounded-xl px-4 py-3 text-base font-medium transition-colors ${section === n.id ? "bg-ink text-paper" : "text-ink hover:bg-ink/5"}`}>
                   {n.label}<span className="font-mono text-[10px] opacity-50">0{i + 2}</span>
                 </a>
               ))}
+              <div className="mt-1 border-t border-ink/10 pt-2 px-1">
+                <button
+                  onClick={() => { setMenu(false); window.dispatchEvent(new Event("open-cv")); }}
+                  className="flex w-full items-center justify-between rounded-xl bg-ink/10 px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-signal hover:text-white"
+                >
+                  <span>{tr("Consulter mon CV", "View my resume")}</span>
+                  <Download className="size-4" />
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -734,7 +832,7 @@ function Page() {
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
   return (
-    <div className="relative min-h-screen overflow-x-clip pb-[calc(env(safe-area-inset-bottom)+84px)] md:pb-0">
+    <div className="relative min-h-screen overflow-x-clip">
       <AnimatePresence>{cv && <CvViewer onClose={() => setCv(false)} />}</AnimatePresence>
       <AnimatePresence>{legal && <Legal onClose={() => { history.replaceState(null, "", " "); setLegal(false); }} />}</AnimatePresence>
       <motion.div style={{ scaleX: bar }} className="fixed top-0 right-0 left-0 z-50 h-[2px] origin-left bg-signal md:hidden" />
@@ -774,11 +872,17 @@ function Page() {
               </span>
             ))}
           </h1>
-          <Reveal delay={0.6} className="mt-10 grid max-w-xl gap-8 sm:grid-cols-[auto_1fr]">
-            <Label className="pt-1">{tr("Rôle visé", "Target role")}</Label>
-            <p className="text-xl leading-snug">
-              {tr("Ingénieur en microélectronique, j'aspire à devenir ", "Microelectronics engineer aspiring to become a ")}<Hl className="font-medium">Product Manager</Hl>.
+          <Reveal delay={0.6} className="mt-8 max-w-xl">
+            <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
+              {tr(
+                "Étudiant en microélectronique et informatique, passionné par les innovations technologiques. À la recherche d'un stage de fin d'études (5+ mois) à partir d'avril 2027.",
+                "Microelectronics and Computer Science student, passionate about technological innovation. Currently seeking a 5+ month end-of-studies internship starting in April 2027."
+              )}
             </p>
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-mute">
+              <Label>{tr("Rôle visé :", "Target role:")}</Label>
+              <span className="font-semibold text-ink"><Hl>Product Owner / Product Manager</Hl> {tr("ou ingénierie hardware / software", "or hardware / software engineering")}</span>
+            </div>
           </Reveal>
           <Reveal delay={0.75} className="mt-10 flex flex-wrap gap-3">
             <a href="#roadmap" className="group flex items-center gap-2 bg-ink px-5 py-3.5 text-sm font-medium text-paper transition-colors hover:bg-signal">
@@ -827,6 +931,48 @@ function Page() {
           <p className="max-w-sm text-mute">{tr("Un PM pense en jalons. Voici les miens — survolez un composant pour l'ouvrir.", "A PM thinks in milestones. Here are mine — hover over a component to open it.")}</p>
         </div>
         <Circuit />
+
+        {/* ÉCOLES & FORMATION */}
+        <div className="mt-24 border-t border-ink pt-14">
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <Label>{tr("§02.b — Académique", "§02.b — Academics")}</Label>
+              <h3 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">{tr("Formation & Écoles.", "Education & Schools.")}</h3>
+            </div>
+            <p className="max-w-md text-sm text-mute">
+              {tr("Une triple culture : la rigueur scientifique des prépas, la profondeur microélectronique & logicielle des Mines, et le design / ergonomie du Polimi.", "A triple foundation: scientific rigor from preparatory classes, microelectronics & software depth from Mines, and design / ergonomics from Polimi.")}
+            </p>
+          </div>
+          <div className="grid gap-px border border-ink bg-ink md:grid-cols-2">
+            {SCHOOLS.map((raw) => loc(raw, lang)).map((s, i) => (
+              <Reveal key={s.name} delay={i * 0.08} className="bg-paper p-8 flex flex-col justify-between transition-colors hover:bg-white/40">
+                <div>
+                  <div className="flex items-start justify-between gap-4">
+                    <img src={s.logo} alt={s.name} className="size-12 rounded-lg bg-white object-contain p-1.5 ring-1 ring-line" />
+                    {s.badge && <span className="font-mono text-[10px] tracking-wider uppercase bg-ink/5 px-2 py-1 text-mute border border-ink/10">{s.badge}</span>}
+                  </div>
+                  <h4 className="mt-6 text-2xl font-semibold tracking-tight">{s.name}</h4>
+                  <p className="mt-1 text-sm font-medium text-signal">{s.degree}</p>
+                  <p className="mt-1 font-mono text-[11px] tracking-wider text-mute uppercase">{s.place} · {s.date}</p>
+                  <p className="mt-5 text-[15px] leading-relaxed text-ink/80">{s.goal}</p>
+                  <div className="mt-6 border-t border-line/60 pt-4">
+                    <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-2">{tr("Matières & enseignements clés :", "Key courses & curriculum:")}</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {s.courses.map((c) => <span key={c} className="border border-ink/20 bg-paper px-2 py-0.5 font-mono text-[10px] uppercase text-ink/80">{c}</span>)}
+                    </div>
+                  </div>
+                </div>
+                {s.link && (
+                  <div className="mt-6 pt-4 border-t border-line/40">
+                    <a href={s.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs font-medium text-ink hover:text-signal">
+                      {tr("Site officiel", "Official website")} <ArrowUpRight className="size-3.5" />
+                    </a>
+                  </div>
+                )}
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* EXPERIENCES */}
@@ -919,11 +1065,16 @@ function Page() {
       </section>
 
       {/* CONTACT */}
-      <section id="contact" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="relative overflow-hidden border-t border-ink">
+      <section id="contact" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="relative overflow-hidden border-t border-ink pb-28 md:pb-36">
         <div className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
           <Label>§08 — Contact</Label>
           <h2 className="mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-semibold tracking-[-0.05em]">{tr("Travaillons", "Let's work")}<br />{tr("ensemble", "together")}<span className="text-signal">.</span></h2>
-          <p className="mt-8 max-w-lg text-lg text-mute">{tr("Stage de fin d'études de 5+ mois à partir d'avril 2027 — Product Owner, Product Manager, ou ingénierie hardware / software.", "5+ month end-of-studies internship starting April 2027 — Product Owner, Product Manager, or hardware / software engineering.")}</p>
+          <p className="mt-8 max-w-xl text-lg text-mute leading-relaxed">
+            {tr(
+              "À la recherche d'un stage de fin d'études (5+ mois) à partir d'avril 2027 — Product Owner, Product Manager, ou ingénierie hardware / software.",
+              "Seeking a 5+ month end-of-studies internship starting April 2027 — Product Owner, Product Manager, or hardware / software engineering."
+            )}
+          </p>
           <button onClick={copy} className="group mt-12 flex items-center gap-4 border-b-2 border-ink pb-2 text-2xl font-medium md:text-4xl">
             contact@arthurdx.com
             <span className="grid size-10 place-items-center rounded-full bg-ink text-paper transition-colors group-hover:bg-signal">
@@ -946,18 +1097,45 @@ function Page() {
       </section>
 
       <footer className="bg-ink text-paper">
-        <div className="mx-auto grid max-w-[1400px] items-center gap-6 px-6 py-6 md:grid-cols-[1fr_auto] md:px-10">
-          <div>
-            <Logo className="h-7 w-auto text-paper" />
-            
-          </div>
-          <div className="flex gap-2">
-            {SOCIALS.map(({ I, l, h }) => (
-              <a key={l} href={h} target="_blank" rel="noreferrer" aria-label={l} className="grid size-9 place-items-center border border-paper/20 transition-colors hover:border-signal hover:bg-signal">
-                <I className="size-4" />
-              </a>
-            ))}
-            <a href="mailto:contact@arthurdx.com" aria-label="Email" className="grid size-9 place-items-center border border-paper/20 transition-colors hover:border-signal hover:bg-signal"><Mail className="size-4" /></a>
+        <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-6 px-6 py-5 md:px-10">
+          <a href="#top" onClick={tapLogo} aria-label={tr("Accueil", "Home")} className="transition-opacity hover:opacity-80">
+            <Logo className="h-6 w-auto text-paper" />
+          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://linkedin.com/in/arthur-doradoux"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              className="grid size-9 place-items-center border border-paper/20 text-paper transition-all hover:border-[#0A66C2] hover:bg-[#0A66C2] hover:text-white"
+            >
+              <LinkedInIcon className="size-4" />
+            </a>
+            <a
+              href="https://github.com/Arthrir"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+              className="grid size-9 place-items-center border border-paper/20 text-paper transition-all hover:border-white hover:bg-white hover:text-[#121211]"
+            >
+              <GitHubIcon className="size-4" />
+            </a>
+            <a
+              href="https://wa.me/33627883483"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="WhatsApp"
+              className="grid size-9 place-items-center border border-paper/20 text-paper transition-all hover:border-[#25D366] hover:bg-[#25D366] hover:text-white"
+            >
+              <WhatsAppIcon className="size-4" />
+            </a>
+            <a
+              href="mailto:contact@arthurdx.com"
+              aria-label="Email"
+              className="grid size-9 place-items-center border border-paper/20 text-paper transition-all hover:border-signal hover:bg-signal hover:text-white"
+            >
+              <Mail className="size-4" />
+            </a>
           </div>
         </div>
         <div className="border-t border-paper/10">
