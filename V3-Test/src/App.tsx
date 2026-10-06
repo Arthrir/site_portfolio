@@ -287,7 +287,7 @@ const PROJECTS: Project[] = [
     d: "Fév – Juin 2025",
     cat: ["Hardware", "Produit"],
     tags: ["STM32", "PCB", "KiCad", "PWM", "Électronique de puissance"],
-    desc: "Contrôle progressif d'actionneur via capteur capacitif sans contact mécanique et hacheur de puissance.",
+    desc: "Contrôle progressif de la vitesse par slider capacitif, hacheur de puissance et modulation PWM.",
     points: [
       "Conception et routage sous KiCad d'une carte électronique intégrant un capteur capacitif à 2 électrodes pour détecter l'approche et le glissement du doigt.",
       "Développement de l'algorithme d'acquisition capacitive et de filtrage numérique sur microcontrôleur STM32.",
@@ -297,9 +297,9 @@ const PROJECTS: Project[] = [
     en: {
       t: "Capacitive Sensor Regulated Fan",
       d: "Feb – Jun 2025",
-      desc: "Stepless actuator speed control via touch capacitive sensor, power chopper and PWM modulation.",
+      desc: "Stepless fan speed regulation via capacitive touch slider, power chopper, and PWM modulation.",
       points: [
-        "Designed and routed a custom PCB in KiCad integrating a 2-electrode capacitive slider sensor to track finger sliding without mechanical wear.",
+        "Designed and routed a custom PCB in KiCad integrating a 2-electrode capacitive slider sensor.",
         "Engineered capacitive signal acquisition and digital filtering routines on an STM32 microcontroller.",
         "Dimensioned a dedicated power chopper (MOSFET driver stage) with dynamic PWM modulation for smooth, stepless fan speed regulation.",
       ],
@@ -438,26 +438,26 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "Velisud — Programme Entrep'",
+    t: "Velisud — Les Entrep' Aix-Marseille",
     date: "2024",
     d: "Oct 2024 – Mar 2025",
     cat: ["Produit", "Hardware"],
     tags: ["Entrepreneuriat", "Tech Lead", "Électronique"],
-    desc: "Projet entrepreneurial de micro-mobilité durable et décarbonée pour territoires périurbains.",
+    desc: "Projet entrepreneurial de micro-mobilité durable développé dans le cadre du concours Les Entrep' Aix-Marseille.",
     points: [
       "Rôle de Tech Lead : définition du cahier des charges système et de l'architecture électronique.",
       "Étude de faisabilité énergétique, motorisation électrique et instrumentation embarquée.",
-      "Construction du business plan et soutenance finale devant le réseau d'entrepreneurs Les Entrep'.",
+      "Construction du business plan et pitch final devant le jury d'entrepreneurs du concours Les Entrep' Aix-Marseille.",
     ],
     link: "/assets/VELISUD.pdf",
     en: {
-      t: "Velisud — Entrepreneurship program",
+      t: "Velisud — Les Entrep' Aix-Marseille",
       d: "Oct 2024 – Mar 2025",
-      desc: "Sustainable micro-mobility entrepreneurial venture for regional daily commuting.",
+      desc: "Sustainable micro-mobility venture engineered within Les Entrep' Aix-Marseille entrepreneurship competition.",
       points: [
         "Tech Lead role defining system specifications and onboard electronic architecture.",
         "Energy feasibility study, electric powertrain sizing, and embedded sensor instrumentation.",
-        "Business plan formulation and final defense before the Les Entrep' jury panel.",
+        "Business plan formulation and final defense before the Les Entrep' Aix-Marseille entrepreneurship jury panel.",
       ],
       tags: ["Entrepreneurship", "Tech Lead", "Electronics"],
     },
