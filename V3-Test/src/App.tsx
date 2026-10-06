@@ -359,27 +359,76 @@ function Stacked({ ghost, children, n, dark = false }: { ghost: string; children
 type Detail = { kicker: string; title: string; meta?: string; logo?: string; lead?: string; points: string[]; tags?: string[]; img?: string[]; links?: { l: string; h: string }[]; with?: string };
 function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
   const { tr } = useLang();
+
+  // Support browser / mobile back gesture without resetting to site root
   useEffect(() => {
     if (!d) return;
-    const k = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", k);
+    const currentHash = window.location.hash;
+    const modalHash = "#detail";
+    window.history.pushState({ modalOpen: true }, "", modalHash);
+
+    const onPopState = () => {
+      onClose();
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (window.location.hash === modalHash) {
+          window.history.back();
+        } else {
+          onClose();
+        }
+      }
+    };
+
+    window.addEventListener("popstate", onPopState);
+    window.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
-    return () => { window.removeEventListener("keydown", k); document.body.style.overflow = ""; };
+
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+      if (window.location.hash === modalHash) {
+        window.history.replaceState(null, "", currentHash || window.location.pathname);
+      }
+    };
   }, [d, onClose]);
+
+  const handleClose = () => {
+    if (window.location.hash === "#detail") {
+      window.history.back();
+    } else {
+      onClose();
+    }
+  };
+
   return (
     <AnimatePresence>
       {d && (
         <motion.div className="fixed inset-0 z-50 flex justify-end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <div className="absolute inset-0 bg-ink/30 backdrop-blur-[2px]" onClick={onClose} />
+          <div className="absolute inset-0 bg-ink/30 backdrop-blur-[2px]" onClick={handleClose} />
           <motion.aside
             role="dialog" aria-modal aria-label={d.title}
             initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", stiffness: 260, damping: 32 }}
-            className="relative h-full w-full max-w-2xl overflow-y-auto bg-paper"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={{ left: 0.05, right: 0.6 }}
+            onDragEnd={(_e, info) => {
+              if (info.offset.x > 80 || info.velocity.x > 400) {
+                handleClose();
+              }
+            }}
+            className="relative h-full w-full max-w-2xl overflow-y-auto bg-paper touch-pan-y"
           >
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink bg-paper/90 px-8 py-4 backdrop-blur">
-              <Label>{d.kicker}</Label>
-              <button onClick={onClose} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase hover:text-signal">
-                {tr("Fermer", "Close")} <kbd className="border border-line px-1.5 py-0.5 text-[9px]">ESC</kbd>
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink bg-paper/90 px-6 py-4 backdrop-blur sm:px-8">
+              <div className="flex items-center gap-3">
+                {/* Mobile drag handle hint */}
+                <span className="block h-5 w-1 rounded-full bg-ink/20 sm:hidden" />
+                <Label>{d.kicker}</Label>
+              </div>
+              <button onClick={handleClose} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase hover:text-signal">
+                {tr("Fermer", "Close")} <kbd className="hidden sm:inline border border-line px-1.5 py-0.5 text-[9px]">ESC</kbd>
               </button>
             </div>
             <div className="px-8 py-12">
@@ -711,7 +760,7 @@ function Engagements({ onMinitel }: { onMinitel: () => void }) {
         {OTHERS.map((raw, i) => { const o = loc(raw, lang); return (
           <Reveal key={raw.role} delay={i * 0.04} className="bg-paper">
             <button onClick={() => setOpen(raw)} className="group flex w-full items-center gap-3 p-5 text-left transition-colors hover:bg-ink hover:text-paper">
-              <img src={o.logo} alt={o.org} className="size-9 rounded-md bg-white object-contain p-1 ring-1 ring-line grayscale transition group-hover:grayscale-0" />
+              <img src={o.logo} alt={o.org} className="size-9 rounded-md bg-white object-contain p-1 ring-1 ring-line transition group-hover:scale-105" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{o.role}</p>
                 <p className="truncate font-mono text-[10px] text-mute uppercase group-hover:text-paper/50">{o.org} · {o.date}</p>
