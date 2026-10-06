@@ -1270,8 +1270,8 @@ function Page() {
       </section>
 
       {/* CONTACT */}
-      <section id="contact" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="relative overflow-hidden border-t border-ink pb-28 md:pb-36">
-        <div className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="contact" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="relative overflow-hidden border-t border-ink pb-10 md:pb-14">
+        <div className="mx-auto max-w-[1400px] px-6 pt-20 pb-8 md:px-10 md:pt-28 md:pb-12">
           <Label>§08 — Contact</Label>
           <h2 className="mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-semibold tracking-[-0.05em]">{tr("Travaillons", "Let's work")}<br />{tr("ensemble", "together")}<span className="text-signal">.</span></h2>
           <p className="mt-8 max-w-xl text-lg text-mute leading-relaxed">
@@ -1295,7 +1295,7 @@ function Page() {
               <span>{tr("Envoyer un email", "Send an email")}</span>
             </button>
           </div>
-          <div className="mt-14 grid grid-cols-2 gap-px border border-ink bg-ink lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-px border border-ink bg-ink lg:grid-cols-4">
             {SOCIALS.map(({ I, l, h }) => (
               <a key={l} href={h} target="_blank" rel="noreferrer" className="group flex items-center justify-between bg-paper p-6 transition-colors hover:bg-ink hover:text-paper">
                 <span className="flex items-center gap-4"><I className="size-7" /><span className="text-xl font-medium">{l}</span></span>
