@@ -878,60 +878,75 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
   }, []);
   return (
     <>
-      {/* Nav liquid glass — la lentille glisse vers l'onglet survolé, puis revient sur la section active */}
-      <motion.nav initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.9, ease, delay: 0.2 }}
-        className="liquid fixed bottom-[calc(env(safe-area-inset-bottom)+14px)] left-1/2 z-40 md:top-[calc(env(safe-area-inset-top)+16px)] md:bottom-auto flex -translate-x-1/2 items-center gap-1 rounded-full p-1.5">
-        <a href="#top" onClick={onLogo} aria-label={tr("Accueil", "Home")} className="mr-1 ml-1.5 grid h-8 w-10 place-items-center rounded-full text-ink transition-colors hover:text-signal">
-          <Logo className="h-[18px] w-auto" />
-        </a>
-        <div ref={tabs} className="hidden touch-none items-center select-none md:flex" onPointerDown={onTabsDown} onPointerMove={onTabsMove} onPointerUp={onTabsUp} onPointerCancel={onTabsUp}>
-          {nav.map((n) => {
-            const lit = (pick ?? section) === n.id;
-            return (
-              <a key={n.id} data-tab={n.id} href={`#${n.id}`} draggable={false} onClick={(e) => { if (dragging) e.preventDefault(); setPick(n.id); }} className="relative px-3.5 py-1.5 text-[13px] font-medium">
-                {lit && (
-                  <motion.span
-                    layoutId="lens"
-                    className="lens absolute inset-0 rounded-full"
-                    animate={{ scale: dragging ? 1.28 : 1 }}
-                    transition={{ type: "spring", stiffness: 520, damping: 30, mass: 0.7 }}
-                  >
-                    <motion.span key={n.id} className="block size-full rounded-full" initial={{ scaleX: 1.18, scaleY: 0.82 }} animate={{ scaleX: 1, scaleY: 1 }} transition={{ type: "spring", stiffness: 300, damping: 12 }} />
-                  </motion.span>
-                )}
-                <span className={`relative inline-block transition-all duration-200 ${lit ? "text-ink" : "text-ink/70"} ${lit && dragging ? "scale-110" : ""}`}>{n.label}</span>
-              </a>
-            );
-          })}
-        </div>
-        <LangToggle className="mx-0.5" />
-        <button onClick={() => window.dispatchEvent(new Event("open-cv"))} className="hidden rounded-full bg-ink px-3.5 py-1.5 text-[13px] font-medium text-paper transition-colors hover:bg-signal md:block">CV</button>
-        <button onClick={() => setMenu((m) => !m)} aria-label="Menu" aria-expanded={menu} className="flex items-center gap-2 rounded-full bg-ink/5 border border-ink/10 px-3 py-1.5 text-[12.5px] font-semibold text-ink md:hidden">
-          {nav.find((n) => n.id === section)?.label ?? "Menu"}
-          <span className="flex w-3.5 flex-col gap-[3px]"><span className={`h-px bg-ink transition ${menu ? "translate-y-[2px] rotate-45" : ""}`} /><span className={`h-px bg-ink transition ${menu ? "-translate-y-[2px] -rotate-45" : ""}`} /></span>
-        </button>
-        <AnimatePresence>
-          {menu && (
-            <motion.div initial={{ opacity: 0, y: 8, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.96 }} transition={{ duration: 0.25, ease }}
-              className="absolute right-0 bottom-full left-0 mb-3 flex flex-col rounded-2xl p-2 bg-paper/95 border border-ink/20 shadow-2xl backdrop-blur-2xl md:hidden">
-              {nav.map((n, i) => (
-                <a key={n.id} href={`#${n.id}`} onClick={() => setMenu(false)} className={`flex items-baseline justify-between rounded-xl px-4 py-3 text-base font-medium transition-colors ${section === n.id ? "bg-ink text-paper" : "text-ink hover:bg-ink/5"}`}>
-                  {n.label}<span className="font-mono text-[10px] opacity-50">0{i + 2}</span>
+      {/* Navigation principale et bulle sélecteur de langue détachée */}
+      <div className="fixed top-3 left-4 right-4 z-40 flex items-center justify-between md:top-[calc(env(safe-area-inset-top)+16px)] md:left-1/2 md:right-auto md:-translate-x-1/2 md:gap-3">
+        <motion.nav
+          initial={{ y: -30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.9, ease, delay: 0.2 }}
+          className="relative flex items-center gap-1 rounded-full border border-ink/15 bg-paper/95 p-1.5 shadow-md backdrop-blur-xl md:border-0 md:bg-transparent md:p-1.5 md:shadow-none md:liquid"
+        >
+          <a href="#top" onClick={onLogo} aria-label={tr("Accueil", "Home")} className="mr-1 ml-1.5 grid h-8 w-10 place-items-center rounded-full text-ink transition-colors hover:text-signal">
+            <Logo className="h-[18px] w-auto" />
+          </a>
+          <div ref={tabs} className="hidden touch-none items-center select-none md:flex" onPointerDown={onTabsDown} onPointerMove={onTabsMove} onPointerUp={onTabsUp} onPointerCancel={onTabsUp}>
+            {nav.map((n) => {
+              const lit = (pick ?? section) === n.id;
+              return (
+                <a key={n.id} data-tab={n.id} href={`#${n.id}`} draggable={false} onClick={(e) => { if (dragging) e.preventDefault(); setPick(n.id); }} className="relative px-3.5 py-1.5 text-[13px] font-medium">
+                  {lit && (
+                    <motion.span
+                      layoutId="lens"
+                      className="lens absolute inset-0 rounded-full"
+                      animate={{ scale: dragging ? 1.28 : 1 }}
+                      transition={{ type: "spring", stiffness: 520, damping: 30, mass: 0.7 }}
+                    >
+                      <motion.span key={n.id} className="block size-full rounded-full" initial={{ scaleX: 1.18, scaleY: 0.82 }} animate={{ scaleX: 1, scaleY: 1 }} transition={{ type: "spring", stiffness: 300, damping: 12 }} />
+                    </motion.span>
+                  )}
+                  <span className={`relative inline-block transition-all duration-200 ${lit ? "text-ink" : "text-ink/70"} ${lit && dragging ? "scale-110" : ""}`}>{n.label}</span>
                 </a>
-              ))}
-              <div className="mt-1 border-t border-ink/10 pt-2 px-1">
-                <button
-                  onClick={() => { setMenu(false); window.dispatchEvent(new Event("open-cv")); }}
-                  className="flex w-full items-center justify-between rounded-xl bg-ink/10 px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-signal hover:text-white"
-                >
-                  <span>{tr("Consulter mon CV", "View my resume")}</span>
-                  <Download className="size-4" />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
+              );
+            })}
+          </div>
+          <button onClick={() => window.dispatchEvent(new Event("open-cv"))} className="hidden rounded-full bg-ink px-3.5 py-1.5 text-[13px] font-medium text-paper transition-colors hover:bg-signal md:block">CV</button>
+          <button onClick={() => setMenu((m) => !m)} aria-label="Menu" aria-expanded={menu} className="flex items-center gap-2 rounded-full bg-ink/5 border border-ink/10 px-3 py-1.5 text-[12.5px] font-semibold text-ink md:hidden">
+            {nav.find((n) => n.id === section)?.label ?? "Menu"}
+            <span className="flex w-3.5 flex-col gap-[3px]"><span className={`h-px bg-ink transition ${menu ? "translate-y-[2px] rotate-45" : ""}`} /><span className={`h-px bg-ink transition ${menu ? "-translate-y-[2px] -rotate-45" : ""}`} /></span>
+          </button>
+          <AnimatePresence>
+            {menu && (
+              <motion.div initial={{ opacity: 0, y: -8, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.96 }} transition={{ duration: 0.25, ease }}
+                className="absolute top-full left-0 right-0 mt-3 flex flex-col rounded-2xl p-2 bg-paper/98 border border-ink/20 shadow-2xl backdrop-blur-2xl md:hidden">
+                {nav.map((n, i) => (
+                  <a key={n.id} href={`#${n.id}`} onClick={() => setMenu(false)} className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition-colors ${section === n.id ? "bg-ink text-paper" : "text-ink hover:bg-ink/5"}`}>
+                    {n.label}<span className="font-mono text-[10px] opacity-50">0{i + 2}</span>
+                  </a>
+                ))}
+                <div className="mt-1 border-t border-ink/10 pt-2 px-1">
+                  <button
+                    onClick={() => { setMenu(false); window.dispatchEvent(new Event("open-cv")); }}
+                    className="flex w-full items-center justify-between rounded-xl bg-ink/10 px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-signal hover:text-white"
+                  >
+                    <span>{tr("Consulter mon CV", "View my resume")}</span>
+                    <Download className="size-4" />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.nav>
+
+        {/* Bulle sélecteur de langue détachée (mini-barre indépendante) */}
+        <motion.div
+          initial={{ y: -30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.9, ease, delay: 0.25 }}
+          className="rounded-full border border-ink/15 bg-paper/95 p-1.5 shadow-md backdrop-blur-xl md:liquid md:border-0 md:bg-transparent"
+        >
+          <LangToggle />
+        </motion.div>
+      </div>
     </>
   );
 }
