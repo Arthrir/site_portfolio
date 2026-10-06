@@ -670,6 +670,7 @@ function Projects() {
 /* ---------------- Engagements ---------------- */
 function Engagements({ onMinitel }: { onMinitel: () => void }) {
   const [open, setOpen] = useState<Eng | null>(null);
+  const [expandedMobile, setExpandedMobile] = useState(false);
   const { lang, tr } = useLang();
   const featured = useMemo(() => FEATURED.map((e) => loc(e, lang)), [lang]);
   return (
@@ -706,7 +707,7 @@ function Engagements({ onMinitel }: { onMinitel: () => void }) {
           </Reveal>
         ))}
       </div>
-      <div className="mt-px grid gap-px bg-ink/15 sm:grid-cols-2 lg:grid-cols-4">
+      <div className={`${expandedMobile ? "grid" : "hidden sm:grid"} mt-px gap-px bg-ink/15 sm:grid-cols-2 lg:grid-cols-4`}>
         {OTHERS.map((raw, i) => { const o = loc(raw, lang); return (
           <Reveal key={raw.role} delay={i * 0.04} className="bg-paper">
             <button onClick={() => setOpen(raw)} className="group flex w-full items-center gap-3 p-5 text-left transition-colors hover:bg-ink hover:text-paper">
@@ -719,6 +720,16 @@ function Engagements({ onMinitel }: { onMinitel: () => void }) {
             </button>
           </Reveal>
         ); })}
+      </div>
+      <div className="mt-6 flex justify-center sm:hidden">
+        <button
+          onClick={() => setExpandedMobile((e) => !e)}
+          className="flex items-center gap-2 rounded-full border border-ink bg-paper px-5 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-ink shadow-sm transition-colors hover:bg-ink hover:text-paper"
+        >
+          {expandedMobile
+            ? tr("Réduire les engagements ↑", "Collapse involvements ↑")
+            : tr(`Voir les autres rôles (${OTHERS.length}) ↓`, `View other roles (${OTHERS.length}) ↓`)}
+        </button>
       </div>
       <Sheet d={open && engDetail(loc(open, lang), lang)} onClose={() => setOpen(null)} />
     </>
