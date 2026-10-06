@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence, MotionValue } from "motion/react";
-import { ArrowUpRight, Command, Copy, Check, Download, Mail, Search, CornerDownLeft, Send } from "lucide-react";
+import { ArrowUpRight, Command, Copy, Check, Download, Mail, Search, CornerDownLeft, Send, ChevronDown } from "lucide-react";
 import Logo from "./components/Logo";
 import Legal from "./sections/Legal";
 import CvViewer from "./sections/CvViewer";
@@ -505,6 +505,7 @@ const PROJECTS: Project[] = [
 ];
 
 type School = Loc<{
+  id: string;
   name: string;
   logo: string;
   degree: string;
@@ -521,12 +522,13 @@ type School = Loc<{
 
 const SCHOOLS: School[] = [
   {
+    id: "polimi",
     name: "Politecnico di Milano",
     logo: "/logo/polimi.png",
     degree: "Master in Design & Engineering",
     place: "Milan, Italie",
     date: "Sep. 2026 — Fév. 2027",
-    badge: "Semestre international",
+    badge: "Semestre Erasmus",
     courses: [
       "Product Design Studio 1",
       "UX Design",
@@ -538,7 +540,7 @@ const SCHOOLS: School[] = [
     en: {
       place: "Milan, Italy",
       date: "Sep. 2026 — Feb. 2027",
-      badge: "International semester",
+      badge: "Erasmus semester",
       courses: [
         "Product Design Studio 1",
         "UX Design",
@@ -549,6 +551,7 @@ const SCHOOLS: School[] = [
     },
   },
   {
+    id: "mines",
     name: "Mines de Saint-Étienne",
     logo: "/logo/emse.png",
     degree: "Diplôme d'ingénieur ISMIN",
@@ -593,6 +596,7 @@ const SCHOOLS: School[] = [
     },
   },
   {
+    id: "prepa",
     name: "Lycée Pothier",
     logo: "/logo/pothier.png",
     degree: "Classes Préparatoires (MPSI / MP*)",
@@ -620,6 +624,7 @@ const SCHOOLS: School[] = [
     },
   },
   {
+    id: "bac",
     name: "Lycée Notre-Dame des Aydes",
     logo: "/logo/nda.png",
     degree: "Baccalauréat Mention Bien (Section Européenne)",
@@ -1352,7 +1357,7 @@ function Engagements({ onMinitel }: { onMinitel: () => void }) {
         {OTHERS.map((raw, i) => { const o = loc(raw, lang); return (
           <Reveal key={raw.role} delay={i * 0.04} className="bg-paper">
             <button onClick={() => setOpen(raw)} className="group flex w-full items-center gap-3 p-5 text-left transition-colors hover:bg-ink hover:text-paper">
-              <img src={o.logo} alt={o.org} className="size-9 rounded-md object-contain grayscale transition group-hover:grayscale-0 group-hover:scale-105" />
+              <img src={o.logo} alt={o.org} className="size-9 rounded-md bg-white p-1 ring-1 ring-line object-contain grayscale transition group-hover:grayscale-0 group-hover:scale-105" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{o.role}</p>
                 <p className="truncate font-mono text-[10px] text-mute uppercase group-hover:text-paper/50">{o.org} · {o.date}</p>
@@ -1651,6 +1656,7 @@ function Page() {
   const [contactModal, setContactModal] = useState(false);
   const [viaMinitel, setViaMinitel] = useState(false);
   const [cv, setCv] = useState(false);
+  const [openSchool, setOpenSchool] = useState<string | null>(null);
   useEffect(() => { const o = () => setCv(true); addEventListener("open-cv", o); return () => removeEventListener("open-cv", o); }, []);
   // un jeu lancé depuis le 3615 ramène au Minitel quand on le quitte
   const closeGame = () => { if (viaMinitel && game !== "minitel") setGame("minitel"); else { setGame(null); setViaMinitel(false); } };
@@ -1755,13 +1761,13 @@ function Page() {
           <Reveal delay={0.6} className="mt-8 max-w-xl">
             <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
               {tr(
-                "Élève-ingénieur en microélectronique et conception produit (Mines Saint-Étienne × Politecnico di Milano). À la recherche d'un stage de fin d'études de 5+ mois à partir d'avril 2027.",
-                "Engineering student in microelectronics and product design (Mines Saint-Étienne × Politecnico di Milano). Seeking a 5+ month end-of-studies internship starting April 2027."
+                "Élève-ingénieur en microélectronique, informatique et conception produit (Mines Saint-Étienne × Politecnico di Milano). À la recherche d'un stage de fin d'études de 5+ mois à partir d'avril 2027.",
+                "Engineering student in microelectronics, computer science, and product design (Mines Saint-Étienne × Politecnico di Milano). Seeking a 5+ month end-of-studies internship starting April 2027."
               )}
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] leading-normal text-ink/80">
               <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Rôles visés :", "Target roles:")}</span>
-              <span className="font-semibold text-ink">Product Owner / Product Manager</span>
+              <span className="font-semibold text-ink"><Hl>Product Owner / Product Manager</Hl></span>
               <span className="text-mute/40">·</span>
               <span className="font-medium text-ink/85">{tr("Prototypage, Test & Innovation Produit", "Prototyping, Testing & Product Innovation")}</span>
             </div>
@@ -1821,69 +1827,162 @@ function Page() {
               <Label>{tr("§02.b — Académique", "§02.b — Academics")}</Label>
               <h3 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">{tr("Formation & Écoles.", "Education & Schools.")}</h3>
             </div>
-            <p className="max-w-md text-sm text-mute">
-              {tr("Une triple culture : la rigueur scientifique des prépas, la profondeur microélectronique & logicielle des Mines, et le design / ergonomie du Polimi.", "A triple foundation: scientific rigor from preparatory classes, microelectronics & software depth from Mines, and design / ergonomics from Polimi.")}
-            </p>
+            <div className="max-w-md text-right md:text-left">
+              <p className="text-sm text-mute">
+                {tr("Une triple culture : la rigueur scientifique des prépas, la profondeur microélectronique & logicielle des Mines, et le design / ergonomie du Polimi.", "A triple foundation: scientific rigor from preparatory classes, microelectronics & software depth from Mines, and design / ergonomics from Polimi.")}
+              </p>
+              <p className="mt-1 font-mono text-[11px] text-signal/90">
+                {tr("Cliquez pour déplier · Double-cliquez pour situer sur le chronogramme ↑", "Click to expand · Double-click to highlight on timeline ↑")}
+              </p>
+            </div>
           </div>
-          <div className="grid gap-px border border-ink bg-ink md:grid-cols-2">
-            {SCHOOLS.map((raw) => loc(raw, lang)).map((s, i) => (
-              <Reveal key={s.name} delay={i * 0.08} className="bg-paper p-8 flex flex-col justify-between transition-colors hover:bg-white/40">
-                <div>
-                  <div className="flex items-start justify-between gap-4">
-                    <img src={s.logo} alt={s.name} className="size-12 rounded-lg bg-white object-contain p-1.5 ring-1 ring-line" />
-                    {s.badge && <span className="font-mono text-[10px] tracking-wider uppercase bg-ink/5 px-2 py-1 text-mute border border-ink/10">{s.badge}</span>}
-                  </div>
-                  <h4 className="mt-6 text-2xl font-semibold tracking-tight">{s.name}</h4>
-                  <p className="mt-1 text-sm font-medium text-signal">{s.degree}</p>
-                  <p className="mt-1 font-mono text-[11px] tracking-wider text-mute uppercase">{s.place} · {s.date}</p>
-                  {s.formation && (
-                    <div className="mt-4">
-                      <span className="font-mono text-[10px] tracking-wider text-mute uppercase block">{tr("Formation :", "Major:")}</span>
-                      <p className="mt-0.5 text-sm font-semibold text-ink">{s.formation}</p>
-                    </div>
-                  )}
 
-                  {s.troncCommun && s.troncCommun.length > 0 && (
-                    <div className="mt-4 border-t border-line/60 pt-3">
-                      <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-1.5">{tr("Tronc commun :", "Core curriculum:")}</span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {s.troncCommun.map((tc) => <span key={tc} className="border border-ink/20 bg-paper px-2 py-0.5 font-mono text-[10px] uppercase text-ink/80">{tc}</span>)}
+          <div className="space-y-3">
+            {SCHOOLS.map((raw) => loc(raw, lang)).map((s, i) => {
+              const isOpen = openSchool === s.id;
+              const selectCircuit = () => {
+                window.dispatchEvent(new CustomEvent("circuit-select", { detail: s.id }));
+                const el = document.getElementById("roadmap");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              };
+
+              return (
+                <Reveal key={s.id} delay={i * 0.05} className="overflow-hidden border border-ink/20 bg-paper transition-all duration-200 hover:border-ink">
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setOpenSchool((cur) => (cur === s.id ? null : s.id))}
+                    onDoubleClick={(e) => {
+                      e.preventDefault();
+                      selectCircuit();
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setOpenSchool((cur) => (cur === s.id ? null : s.id));
+                      }
+                    }}
+                    className={`group flex w-full cursor-pointer select-none items-center justify-between gap-4 p-5 transition-colors sm:p-6 ${isOpen ? "bg-white/60" : "hover:bg-white/40"}`}
+                  >
+                    <div className="flex min-w-0 items-center gap-4 sm:gap-5">
+                      <img
+                        src={s.logo}
+                        alt={s.name}
+                        className="size-12 shrink-0 rounded-lg bg-white object-contain p-1.5 ring-1 ring-line transition-transform duration-300 group-hover:scale-105 sm:size-14"
+                      />
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h4 className="text-lg font-semibold tracking-tight text-ink sm:text-xl">{s.name}</h4>
+                          {s.badge && (
+                            <span className="rounded border border-ink/15 bg-ink/5 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-mute">
+                              {s.badge}
+                            </span>
+                          )}
+                        </div>
+                        <p className="mt-0.5 truncate text-sm font-medium text-signal">{s.degree}</p>
+                        <p className="mt-0.5 font-mono text-[11px] uppercase tracking-wider text-mute">{s.place} · {s.date}</p>
                       </div>
                     </div>
-                  )}
 
-                  {s.electifs && s.electifs.length > 0 && (
-                    <div className="mt-3">
-                      <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-1.5">{tr("Électifs :", "Electives:")}</span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {s.electifs.map((el) => <span key={el} className="border border-signal/30 bg-signal/5 px-2 py-0.5 font-mono text-[10px] uppercase text-signal">{el}</span>)}
+                    <div className="flex shrink-0 items-center gap-3">
+                      <span className="hidden font-mono text-[10px] uppercase tracking-wider text-mute opacity-0 transition-opacity group-hover:opacity-100 md:inline-block">
+                        {isOpen ? tr("Fermer", "Collapse") : tr("Détails", "Details")}
+                      </span>
+                      <div className={`flex size-8 items-center justify-center rounded-full border border-ink/20 transition-transform duration-300 ${isOpen ? "rotate-180 bg-ink text-paper" : "group-hover:border-ink"}`}>
+                        <ChevronDown className="size-4" />
                       </div>
                     </div>
-                  )}
-
-                  {s.courses && s.courses.length > 0 && (
-                    <div className="mt-5 border-t border-line/60 pt-3">
-                      <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-1.5">{tr("Cours & spécialités :", "Courses & key subjects:")}</span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {s.courses.map((c) => <span key={c} className="border border-ink/20 bg-paper px-2 py-0.5 font-mono text-[10px] uppercase text-ink/80">{c}</span>)}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="mt-5 border-t border-line/60 pt-3">
-                    <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-1">{tr("Enjeu / Objectif :", "Goal & Takeaways:")}</span>
-                    <p className="text-[14px] leading-relaxed text-ink/80">{s.goal}</p>
                   </div>
-                </div>
-                {s.link && (
-                  <div className="mt-6 pt-4 border-t border-line/40">
-                    <a href={s.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs font-medium text-ink hover:text-signal">
-                      {tr("Site officiel", "Official website")} <ArrowUpRight className="size-3.5" />
-                    </a>
-                  </div>
-                )}
-              </Reveal>
-            ))}
+
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease }}
+                        className="overflow-hidden border-t border-ink/10 bg-white/40 px-5 pt-5 pb-6 sm:px-6"
+                      >
+                        {s.formation && (
+                          <div className="mb-4">
+                            <span className="block font-mono text-[10px] uppercase tracking-wider text-mute">{tr("Formation :", "Major:")}</span>
+                            <p className="mt-0.5 text-sm font-semibold text-ink">{s.formation}</p>
+                          </div>
+                        )}
+
+                        {s.troncCommun && s.troncCommun.length > 0 && (
+                          <div className="mb-4">
+                            <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-mute">{tr("Tronc commun :", "Core curriculum:")}</span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {s.troncCommun.map((tc) => (
+                                <span key={tc} className="border border-ink/20 bg-paper px-2 py-0.5 font-mono text-[10px] uppercase text-ink/80">
+                                  {tc}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {s.electifs && s.electifs.length > 0 && (
+                          <div className="mb-4">
+                            <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-mute">{tr("Électifs :", "Electives:")}</span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {s.electifs.map((el) => (
+                                <span key={el} className="border border-signal/30 bg-signal/5 px-2 py-0.5 font-mono text-[10px] uppercase text-signal">
+                                  {el}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {s.courses && s.courses.length > 0 && (
+                          <div className="mb-4">
+                            <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-mute">{tr("Cours & spécialités :", "Courses & key subjects:")}</span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {s.courses.map((c) => (
+                                <span key={c} className="border border-ink/20 bg-paper px-2 py-0.5 font-mono text-[10px] uppercase text-ink/80">
+                                  {c}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="mt-4 border-t border-line/60 pt-3">
+                          <span className="mb-1 block font-mono text-[10px] uppercase tracking-wider text-mute">{tr("Enjeu / Objectif :", "Goal & Takeaways:")}</span>
+                          <p className="text-[14px] leading-relaxed text-ink/85">{s.goal}</p>
+                        </div>
+
+                        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line/40 pt-4">
+                          {s.link ? (
+                            <a
+                              href={s.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1.5 text-xs font-medium text-ink hover:text-signal"
+                            >
+                              {tr("Site officiel", "Official website")} <ArrowUpRight className="size-3.5" />
+                            </a>
+                          ) : <span />}
+
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              selectCircuit();
+                            }}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-signal/40 bg-signal/10 px-3.5 py-1.5 font-mono text-[11px] font-medium text-signal transition-colors hover:bg-signal hover:text-white"
+                          >
+                            <span>{tr("Situer sur le chronogramme ↑", "View on timeline ↑")}</span>
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>

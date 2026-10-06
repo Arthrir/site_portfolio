@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { loc, useLang, type Lang, type Loc } from "../i18n";
@@ -139,7 +139,7 @@ const ITEMS: Loc<Item>[] = [
       "Direction de l'association (16 membres) et gestion d'un budget de plus de 25 000 €.",
       "Maintenance du réseau Wi-Fi/filaire de 150+ logements étudiants du campus.",
       "Organisation d'événements majeurs et LAN e-sport avec Riot Games et Red Bull.",
-      "Élu membre d'honneur à la fin de mon mandat : membre d'honneur actif jusqu'en mars 2027.",
+      "Élu membre d'honneur à la fin de mon mandat présidentiel.",
     ],
     en: {
       label: "MINITEL President",
@@ -148,7 +148,29 @@ const ITEMS: Loc<Item>[] = [
         "Led student association (16 members) and managed €25k+ budget.",
         "Campus Wi-Fi/wired network maintenance for 150+ student apartments.",
         "Organized major LAN events partnered with Riot Games & Red Bull.",
-        "Elected honorary member at the end of presidential term: serving as honorary member through March 2027.",
+        "Elected honorary member at the end of presidential term.",
+      ],
+    },
+  },
+  {
+    id: "minitel-honneur",
+    row: "ASSO",
+    label: "Membre d'honneur",
+    place: "Association étudiante, Gardanne",
+    from: "2026-03",
+    to: "2027-03",
+    details: [
+      "Élu membre d'honneur de l'association à l'issue de mon mandat de Président.",
+      "Accompagnement, conseil et transmission auprès du nouveau bureau de l'association.",
+      "Statut honorifique actif au sein de MINITEL jusqu'en mars 2027.",
+    ],
+    en: {
+      label: "Honorary Member",
+      place: "Student association, Gardanne",
+      details: [
+        "Elected honorary member of the association at the end of my presidential term.",
+        "Mentorship, advisory support and handover to the newly elected board.",
+        "Active honorary tenure within MINITEL through March 2027.",
       ],
     },
   },
@@ -156,19 +178,20 @@ const ITEMS: Loc<Item>[] = [
   {
     id: "polimi",
     row: "INTL",
-    label: "Politecnico di Milano",
+    label: "Erasmus · Polimi",
     place: "Politecnico di Milano, Milan, Italie",
     from: "2026-09",
     to: "2027-02",
     details: [
-      "Master in Design & Engineering.",
+      "Semestre international Erasmus — Master in Design & Engineering.",
       "Cours : Product Design Studio 1, UX Design, Design and Manufacturing, Virtual & Physical Prototyping.",
       "Enjeu : Maîtriser l'ergonomie, le prototypage rapide et l'UX pour placer l'utilisateur au centre de la conception matérielle.",
     ],
     en: {
+      label: "Erasmus · Polimi",
       place: "Politecnico di Milano, Milan, Italy",
       details: [
-        "Master in Design & Engineering.",
+        "Erasmus international semester — Master in Design & Engineering.",
         "Courses: Product Design Studio 1, UX Design, Design and Manufacturing, Virtual & Physical Prototyping.",
         "Goal: Master ergonomics, rapid prototyping, and UX to put the user at the center of hardware design.",
       ],
@@ -203,7 +226,7 @@ const ROWS: { key: Row; name: string; bus?: boolean }[] = [
   { key: "FORMATION", name: "FORMATION[2:0]", bus: true },
   { key: "STAGE", name: "STAGE" },
   { key: "ASSO", name: "ASSO" },
-  { key: "INTL", name: "INTL" },
+  { key: "INTL", name: "ERASMUS" },
   { key: "TARGET", name: "TARGET" },
 ];
 
@@ -241,6 +264,17 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
     const ro = new ResizeObserver(() => setAvail(el.clientWidth));
     ro.observe(el); setAvail(el.clientWidth);
     return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleSelect = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (customEvent.detail) {
+        setSel(customEvent.detail);
+      }
+    };
+    window.addEventListener("circuit-select", handleSelect);
+    return () => window.removeEventListener("circuit-select", handleSelect);
   }, []);
 
   const W = Math.max(960, avail - NAME_W - 2);
