@@ -433,11 +433,19 @@ const engDetail = (e: EngBase, lang: Lang): Detail => ({
   links: e.site ? [{ l: lang === "en" ? "Official website" : "Site officiel", h: e.site }] : undefined,
 });
 
+const FEATURED_PROJECT_TITLES = [
+  "FPGA — ECG & communication sécurisée",
+  "Terrariot — IoT qualité de l'air",
+  "Ventilateur à capteur capacitif",
+  "Robot autonome STM32",
+];
+
 /* ---------------- Projects ---------------- */
 const FILTERS: ("Tous" | Cat)[] = ["Tous", "Hardware", "Software", "IA", "Produit"];
 function Projects() {
   const [f, setF] = useState<(typeof FILTERS)[number]>("Tous");
   const [open, setOpen] = useState<number | null>(null);
+  const [expandedMobile, setExpandedMobile] = useState(false);
   const { lang, tr } = useLang();
   const all = useMemo(() => PROJECTS.map((p) => loc(p, lang)), [lang]);
   const list = all.filter((p) => f === "Tous" || p.cat.includes(f));
@@ -447,7 +455,7 @@ function Projects() {
         {FILTERS.map((x) => {
           const count = x === "Tous" ? PROJECTS.length : PROJECTS.filter((p) => p.cat.includes(x)).length;
           return (
-            <button key={x} onClick={() => setF(x)} className="relative px-4 py-2 text-sm font-medium">
+            <button key={x} onClick={() => { setF(x); setExpandedMobile(true); }} className="relative px-4 py-2 text-sm font-medium">
               {f === x && <motion.span layoutId="filter" className="absolute inset-0 bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
               <span className={`relative transition-colors ${f === x ? "text-paper" : ""}`}>{catLabel(x, lang)} <sup className="font-mono text-[9px] opacity-60">{count}</sup></span>
             </button>
@@ -456,35 +464,55 @@ function Projects() {
       </div>
       <motion.div layout className="grid gap-px bg-ink/15 sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
-          {list.map((p) => (
-            <motion.article
-              layout key={PROJECTS[all.indexOf(p)].t}
-              initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.45, ease }}
-              onClick={() => setOpen(all.indexOf(p))} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && setOpen(all.indexOf(p))}
-              className="group relative flex min-h-[220px] cursor-pointer flex-col bg-paper p-7 transition-colors duration-500 hover:bg-ink hover:text-paper"
-            >
-              <div className="flex items-start justify-between">
-                <span className="font-mono text-[11px] text-mute group-hover:text-paper/50">{p.d}</span>
-                {p.current && <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />Live</span>}
-              </div>
-              <h3 className="mt-8 text-xl leading-tight font-semibold tracking-tight">{p.t}</h3>
-              <p className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-mute group-hover:text-paper/70">{p.desc}</p>
-              <div className="mt-auto pt-6">
-                <div className="flex flex-wrap gap-1.5">
-                  {p.tags.slice(0, 3).map((t) => <span key={t} className="border border-current/20 px-1.5 py-0.5 font-mono text-[10px] uppercase opacity-70">{t}</span>)}
+          {list.map((p) => {
+            const origTitle = PROJECTS[all.indexOf(p)].t;
+            const isFeatured = FEATURED_PROJECT_TITLES.includes(origTitle);
+            const hiddenOnMobile = f === "Tous" && !expandedMobile && !isFeatured;
+            return (
+              <motion.article
+                layout key={origTitle}
+                initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.45, ease }}
+                onClick={() => setOpen(all.indexOf(p))} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && setOpen(all.indexOf(p))}
+                className={`${hiddenOnMobile ? "hidden sm:flex" : "flex"} group relative min-h-[220px] cursor-pointer flex-col bg-paper p-7 transition-colors duration-500 hover:bg-ink hover:text-paper`}
+              >
+                <div className="flex items-start justify-between">
+                  <span className="font-mono text-[11px] text-mute group-hover:text-paper/50">{p.d}</span>
+                  <div className="flex items-center gap-2">
+                    {isFeatured && f === "Tous" && !expandedMobile && <span className="font-mono text-[9px] uppercase tracking-wider text-signal bg-signal/10 px-1.5 py-0.5 border border-signal/20 sm:hidden">Phare</span>}
+                    {p.current && <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />Live</span>}
+                  </div>
                 </div>
-                <div className="mt-4 flex items-center justify-between text-xs">
-                  <span className="text-mute group-hover:text-paper/50">{p.with ? `${tr("avec", "with")} ${p.with}` : "Solo"}</span>
-                  <span className="flex items-center gap-1 font-medium text-signal">
-                    {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")} <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45" />
-                  </span>
+                <h3 className="mt-8 text-xl leading-tight font-semibold tracking-tight">{p.t}</h3>
+                <p className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-mute group-hover:text-paper/70">{p.desc}</p>
+                <div className="mt-auto pt-6">
+                  <div className="flex flex-wrap gap-1.5">
+                    {p.tags.slice(0, 3).map((t) => <span key={t} className="border border-current/20 px-1.5 py-0.5 font-mono text-[10px] uppercase opacity-70">{t}</span>)}
+                  </div>
+                  <div className="mt-4 flex items-center justify-between text-xs">
+                    <span className="text-mute group-hover:text-paper/50">{p.with ? `${tr("avec", "with")} ${p.with}` : "Solo"}</span>
+                    <span className="flex items-center gap-1 font-medium text-signal">
+                      {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")} <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </motion.article>
-          ))}
+              </motion.article>
+            );
+          })}
         </AnimatePresence>
       </motion.div>
+      {f === "Tous" && (
+        <div className="mt-6 flex justify-center sm:hidden">
+          <button
+            onClick={() => setExpandedMobile((e) => !e)}
+            className="flex items-center gap-2 rounded-full border border-ink bg-paper px-5 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-ink shadow-sm transition-colors hover:bg-ink hover:text-paper"
+          >
+            {expandedMobile
+              ? tr("Réduire à la sélection phare ↑", "Collapse to featured projects ↑")
+              : tr(`Voir tous les projets (${list.length}) ↓`, `View all projects (${list.length}) ↓`)}
+          </button>
+        </div>
+      )}
       <Sheet d={open !== null ? projectDetail(all[open], lang) : null} onClose={() => setOpen(null)} />
     </>
   );
