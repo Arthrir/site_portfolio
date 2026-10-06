@@ -40,7 +40,7 @@ body { background: var(--color-paper); color: var(--color-ink); font-family: var
   .lens { backdrop-filter: url(#lg-refract) saturate(170%) brightness(1.06); }
 }
 
-/* Barre de navigation : solide & contrastée sur mobile, verre liquide réfractant sur ordinateur */
+/* Vrai verre liquide : quasi transparent, bords qui réfractent le contenu (Chromium) */
 .liquid {
   background: rgba(239, 237, 231, 0.94);
   backdrop-filter: blur(20px) saturate(180%);
@@ -49,14 +49,14 @@ body { background: var(--color-paper); color: var(--color-ink); font-family: var
 }
 @media (min-width: 768px) {
   .liquid {
-    background: rgba(255, 255, 255, 0.28);
-    backdrop-filter: blur(14px) saturate(190%) brightness(1.05);
-    -webkit-backdrop-filter: blur(14px) saturate(190%) brightness(1.05);
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.85), inset -1px -1px 1px rgba(0, 0, 0, 0.06), 0 10px 30px -10px rgba(18, 18, 17, 0.25);
+    background: rgba(255,255,255,.14);
+    backdrop-filter: blur(6px) saturate(170%);
+    -webkit-backdrop-filter: blur(6px) saturate(170%);
+    border: none;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,.85), inset -1px -1px 0 rgba(255,255,255,.35), inset 0 0 12px rgba(255,255,255,.25), 0 8px 24px -10px rgba(18,18,17,.28);
   }
   @supports (backdrop-filter: url(#x)) {
-    .liquid { backdrop-filter: url(#lg-nav) blur(10px) saturate(180%) brightness(1.04); }
+    .liquid { backdrop-filter: url(#lg-nav) saturate(180%) brightness(1.04); }
   }
 }
 
