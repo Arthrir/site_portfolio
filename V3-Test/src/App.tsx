@@ -40,7 +40,7 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
     logo: "/logo/advantest.png",
     role: "Stage Ingénieur R&D Test Cell Integration",
     place: "Böblingen, Allemagne",
-    date: "Avr. 2026 — Juil. 2026",
+    date: "Avr. 2026 - Juil. 2026",
     idx: "02",
     points: [
       "Tests de PCBs de calibration destinés au test de puces IA/GPU.",
@@ -51,7 +51,7 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
     en: {
       role: "R&D Test Cell Integration Engineering Intern",
       place: "Böblingen, Germany",
-      date: "Apr. 2026 — Jul. 2026",
+      date: "Apr. 2026 - Jul. 2026",
       points: [
         "Testing calibration PCBs intended for AI/GPU chip testing.",
         "3D modeling and printing of an interface enclosure between the tester and the computer.",
@@ -108,7 +108,7 @@ const PROJECTS: Project[] = [
   {
     t: "Monitoring ECG sécurisé sur FPGA",
     date: "2026",
-    d: "Fév – Mar 2026",
+    d: "Fév - Mar 2026",
     cat: ["Hardware"],
     tags: ["FPGA", "SystemVerilog", "Python", "Vivado", "Zynq-7020"],
     desc: "Acquisition temps réel et sécurisation matérielle de flux biomédicaux sensibles face aux attaques physiques et logiques.",
@@ -121,7 +121,7 @@ const PROJECTS: Project[] = [
     with: "Yasmin Hadj-Said",
     en: {
       t: "Secure ECG Monitoring on FPGA",
-      d: "Feb – Mar 2026",
+      d: "Feb - Mar 2026",
       desc: "Real-time biomedical telemetry acquisition and hardware encryption against physical and side-channel threats.",
       points: [
         "Real-time biomedical acquisition and hardware encryption on a Zynq-7020 FPGA board using Vivado (Mines Saint-Étienne).",
@@ -133,9 +133,9 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "IA embarquée — détection de défauts",
+    t: "IA embarquée - détection de défauts",
     date: "2026",
-    d: "Fév – Mar 2026",
+    d: "Fév - Mar 2026",
     cat: ["IA", "Hardware"],
     tags: ["STM32", "C", "Python"],
     desc: "Maintenance prédictive industrielle exécutée localement sur microcontrôleur basse consommation.",
@@ -147,8 +147,8 @@ const PROJECTS: Project[] = [
     link: "https://github.com/Arthrir/ISMIN-IA_Embarquee_Projet",
     with: "Yasmin Hadj-Said",
     en: {
-      t: "Embedded AI — fault detection",
-      d: "Feb – Mar 2026",
+      t: "Embedded AI - fault detection",
+      d: "Feb - Mar 2026",
       desc: "Industrial predictive maintenance running locally on low-power microcontrollers.",
       points: [
         "Trained and quantized a Python classification model from vibration sensor datasets.",
@@ -160,7 +160,7 @@ const PROJECTS: Project[] = [
   {
     t: "IA pour le Manufacturing",
     date: "2026",
-    d: "Fév – Mar 2026",
+    d: "Fév - Mar 2026",
     cat: ["IA"],
     tags: ["Python", "ML", "Deep Learning"],
     desc: "Optimisation des cadences d'usinage et détection précoce de rebuts en environnement Usine 4.0.",
@@ -172,7 +172,7 @@ const PROJECTS: Project[] = [
     with: "Yasmin Hadj-Said",
     en: {
       t: "AI for Manufacturing",
-      d: "Feb – Mar 2026",
+      d: "Feb - Mar 2026",
       desc: "Machining throughput optimization and early defect detection for Industry 4.0.",
       points: [
         "Data cleaning and feature engineering on time-series telemetry from factory floor sensors.",
@@ -182,9 +182,9 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "Terrariot — IoT qualité de l'air",
+    t: "Projet IoT",
     date: "2025",
-    d: "Nov 2025 – Fév 2026",
+    d: "Nov 2025 - Fév 2026",
     cat: ["Hardware", "Produit"],
     tags: ["STM32", "Capteurs", "Impression 3D", "Inventor"],
     desc: "Station environnementale autonome pour le bien-être animal et le suivi de microclimats en parcs zoologiques.",
@@ -195,8 +195,8 @@ const PROJECTS: Project[] = [
     ],
     with: "Jade Diouri",
     en: {
-      t: "Terrariot — air quality IoT",
-      d: "Nov 2025 – Feb 2026",
+      t: "IoT Project",
+      d: "Nov 2025 - Feb 2026",
       desc: "Autonomous environmental monitoring station for animal welfare and zoo microclimates.",
       points: [
         "Selected and interfaced environmental sensor suite (temperature, humidity, CO2, VOC) with STM32.",
@@ -209,7 +209,7 @@ const PROJECTS: Project[] = [
   {
     t: "Processeur RISC-V en SystemVerilog",
     date: "2025",
-    d: "Oct 2025 – Jan 2026",
+    d: "Oct 2025 - Jan 2026",
     cat: ["Hardware"],
     tags: ["RISC-V", "SystemVerilog"],
     desc: "Cœur de calcul 32 bits pipeliné conçu de zéro selon les spécifications du jeu d'instructions ouvert.",
@@ -222,7 +222,7 @@ const PROJECTS: Project[] = [
     with: "Yasmin Hadj-Said",
     en: {
       t: "RISC-V processor in SystemVerilog",
-      d: "Oct 2025 – Jan 2026",
+      d: "Oct 2025 - Jan 2026",
       desc: "Pipelined 32-bit computing core designed from scratch according to open instruction set specifications.",
       points: [
         "Designed the datapath and control unit logic from scratch in SystemVerilog.",
@@ -236,7 +236,7 @@ const PROJECTS: Project[] = [
     t: "CPU RV32I sur Logisim",
     img: ["/media/ismin-projets.png"],
     date: "2025",
-    d: "Oct – Déc 2025",
+    d: "Oct - Déc 2025",
     cat: ["Hardware"],
     tags: ["RISC-V", "Logisim"],
     desc: "Modélisation logique schématique et simulation cycle par cycle d'un microprocesseur.",
@@ -248,7 +248,7 @@ const PROJECTS: Project[] = [
     with: "Inès Lixi",
     en: {
       t: "RV32I CPU in Logisim",
-      d: "Oct – Dec 2025",
+      d: "Oct - Dec 2025",
       desc: "Schematic logic design and cycle-by-cycle simulation of a microprocessor architecture.",
       points: [
         "Constructed complete schematic RV32I architecture in Logisim-evolution.",
@@ -260,7 +260,7 @@ const PROJECTS: Project[] = [
   {
     t: "Sécurité des réseaux",
     date: "2025",
-    d: "Oct 2025 – Jan 2026",
+    d: "Oct 2025 - Jan 2026",
     cat: ["Software"],
     tags: ["Python", "Linux", "OSINT"],
     desc: "Audit offensif d'infrastructures et banc d'outils automatisés pour l'analyse de vulnérabilités.",
@@ -272,7 +272,7 @@ const PROJECTS: Project[] = [
     with: "Yasmin Hadj-Said",
     en: {
       t: "Network security",
-      d: "Oct 2025 – Jan 2026",
+      d: "Oct 2025 - Jan 2026",
       desc: "Offensive infrastructure audit and automated tooling for vulnerability assessment.",
       points: [
         "Network reconnaissance and attack surface mapping in an isolated virtualized environment.",
@@ -282,10 +282,10 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "Ventilateur régulé par capteur capacitif",
+    t: "Projet Prototypage",
     img: ["/media/ismin-projets2.png"],
     date: "2025",
-    d: "Fév – Juin 2025",
+    d: "Fév - Juin 2025",
     cat: ["Hardware", "Produit"],
     tags: ["STM32", "PCB", "KiCad", "PWM", "Électronique de puissance"],
     desc: "Contrôle progressif de la vitesse par slider capacitif, hacheur de puissance et modulation PWM.",
@@ -296,8 +296,8 @@ const PROJECTS: Project[] = [
     ],
     with: "Inès Lixi",
     en: {
-      t: "Capacitive Sensor Regulated Fan",
-      d: "Feb – Jun 2025",
+      t: "Prototyping Project",
+      d: "Feb - Jun 2025",
       desc: "Stepless fan speed regulation via capacitive touch slider, power chopper, and PWM modulation.",
       points: [
         "Designed and routed a custom PCB in KiCad integrating a 2-electrode capacitive slider sensor.",
@@ -311,7 +311,7 @@ const PROJECTS: Project[] = [
     t: "Robot autonome STM32",
     img: ["/media/ismin-projets.png"],
     date: "2025",
-    d: "Fév – Juin 2025",
+    d: "Fév - Juin 2025",
     cat: ["Hardware"],
     tags: ["STM32", "Robotique", "C"],
     desc: "Navigation autonome réactive et asservissement de distance en boucle fermée.",
@@ -323,7 +323,7 @@ const PROJECTS: Project[] = [
     with: "Inès Lixi",
     en: {
       t: "Autonomous STM32 robot",
-      d: "Feb – Jun 2025",
+      d: "Feb - Jun 2025",
       desc: "Autonomous reactive navigation and closed-loop distance control.",
       points: [
         "Low-level C firmware development on STM32 (hardware timers, interrupts, PWM).",
@@ -339,7 +339,7 @@ const PROJECTS: Project[] = [
     d: "2024",
     cat: ["Produit", "Hardware"],
     tags: ["Hackathon", "STMicroelectronics", "Robotique", "AREM"],
-    desc: "Compétition de robotique par équipe organisée par l'AREM avec STMicroelectronics à Gardanne — 1er Prix.",
+    desc: "Compétition de robotique par équipe organisée par l'AREM avec STMicroelectronics à Gardanne - 1er Prix.",
     points: [
       "Lauréat du 1er Prix au Hackathon de robotique organisé par l'association AREM en partenariat avec STMicroelectronics.",
       "Sprint d'ingénierie et d'innovation en équipe sur 48h : architecture électronique, intégration de microcontrôleurs STM32 et programmation temps réel.",
@@ -350,7 +350,7 @@ const PROJECTS: Project[] = [
     en: {
       t: "STMicroelectronics Hackathon Victory",
       d: "2024",
-      desc: "Robotics team competition organized by AREM with STMicroelectronics in Gardanne — 1st Place.",
+      desc: "Robotics team competition organized by AREM with STMicroelectronics in Gardanne - 1st Place.",
       points: [
         "Awarded 1st Place at the robotics hackathon organized by AREM in partnership with STMicroelectronics.",
         "Intensive 48h sprint: electronic architecture, STM32 microcontroller integration and real-time control algorithms.",
@@ -363,7 +363,7 @@ const PROJECTS: Project[] = [
   {
     t: "Chiffrement ASCON-128 en SystemVerilog",
     date: "2025",
-    d: "Fév – Mai 2025",
+    d: "Fév - Mai 2025",
     cat: ["Hardware", "Software"],
     tags: ["SystemVerilog", "Crypto", "Vivado", "ModelSim"],
     desc: "Implémentation matérielle de bout en bout de l'algorithme de chiffrement léger ASCON-AEAD128 retenu par le NIST.",
@@ -377,7 +377,7 @@ const PROJECTS: Project[] = [
     with: "Yasmin Hadj-Said",
     en: {
       t: "ASCON-128 Encryption in SystemVerilog",
-      d: "Feb – May 2025",
+      d: "Feb - May 2025",
       desc: "End-to-end hardware implementation of the ASCON-AEAD128 lightweight authenticated encryption standard selected by NIST.",
       points: [
         "End-to-end digital circuit design in SystemVerilog guaranteeing confidentiality and authenticity of high-throughput data streams.",
@@ -392,7 +392,7 @@ const PROJECTS: Project[] = [
     t: "Jeu State.io multijoueur",
     img: ["/media/ismin-projets2.png"],
     date: "2025",
-    d: "Fév – Avr 2025",
+    d: "Fév - Avr 2025",
     cat: ["Software"],
     tags: ["C", "Sockets", "Ncurses", "Dev Lead"],
     desc: "Jeu de stratégie réseau en temps réel développé en C avec affichage dans le terminal.",
@@ -405,7 +405,7 @@ const PROJECTS: Project[] = [
     with: "Inès Lixi",
     en: {
       t: "Multiplayer State.io game",
-      d: "Feb – Apr 2025",
+      d: "Feb - Apr 2025",
       desc: "Real-time network strategy game written in C with terminal rendering.",
       points: [
         "Technical lead role overseeing code architecture and task distribution.",
@@ -415,9 +415,9 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "Handi'Mines — sensibilisation",
+    t: "Handi'Mines - sensibilisation",
     date: "2025",
-    d: "Fév – Juin 2025",
+    d: "Fév - Juin 2025",
     cat: ["Produit"],
     tags: ["Événementiel", "Communication"],
     desc: "Action d'inclusion étudiante et découverte des pratiques sportives adaptées.",
@@ -427,8 +427,8 @@ const PROJECTS: Project[] = [
       "Campagne de communication interne mobilisant étudiants et personnels des Mines.",
     ],
     en: {
-      t: "Handi'Mines — awareness",
-      d: "Feb – Jun 2025",
+      t: "Handi'Mines - awareness",
+      d: "Feb - Jun 2025",
       desc: "Campus student inclusion initiative exploring adapted sports practices.",
       points: [
         "Logistical management and partnership coordination with adaptive sports organizations.",
@@ -439,9 +439,9 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "Velisud — Les Entrep' Aix-Marseille",
+    t: "Velisud - Les Entrep' Aix-Marseille",
     date: "2024",
-    d: "Oct 2024 – Mar 2025",
+    d: "Oct 2024 - Mar 2025",
     cat: ["Produit", "Hardware"],
     tags: ["Entrepreneuriat", "Tech Lead", "Électronique"],
     desc: "Projet entrepreneurial de micro-mobilité durable développé dans le cadre du concours Les Entrep' Aix-Marseille.",
@@ -452,8 +452,8 @@ const PROJECTS: Project[] = [
     ],
     link: "/assets/VELISUD.pdf",
     en: {
-      t: "Velisud — Les Entrep' Aix-Marseille",
-      d: "Oct 2024 – Mar 2025",
+      t: "Velisud - Les Entrep' Aix-Marseille",
+      d: "Oct 2024 - Mar 2025",
       desc: "Sustainable micro-mobility venture engineered within Les Entrep' Aix-Marseille entrepreneurship competition.",
       points: [
         "Tech Lead role defining system specifications and onboard electronic architecture.",
@@ -466,7 +466,7 @@ const PROJECTS: Project[] = [
   {
     t: "Portfolio arthurdx.com",
     date: "2024",
-    d: "2024 – aujourd'hui",
+    d: "2024 - aujourd'hui",
     cat: ["Software", "Produit"],
     tags: ["Astro", "React", "Motion", "Figma"],
     desc: "Vitrine interactive personnelle pensée comme une pièce d'ingénierie logicielle.",
@@ -477,7 +477,7 @@ const PROJECTS: Project[] = [
       "Module rétro Minitel interactif, mini-jeux embarqués et optimisation des Core Web Vitals.",
     ],
     en: {
-      d: "2024 – present",
+      d: "2024 - present",
       desc: "Interactive personal showcase engineered with high-precision software craft.",
       points: [
         "Art direction in Figma and modern frontend architecture using Astro and React.",
@@ -487,9 +487,9 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "TIPE — Simulation Blackjack",
+    t: "TIPE - Simulation Blackjack",
     date: "2023",
-    d: "Jan 2023 – Juil 2024",
+    d: "Jan 2023 - Juil 2024",
     cat: ["Software"],
     tags: ["Python", "Simulation", "Matplotlib"],
     desc: "Modélisation stochastique et analyse comportementale de la théorie des jeux en CPGE.",
@@ -500,8 +500,8 @@ const PROJECTS: Project[] = [
       "Tracés statistiques Matplotlib et soutenance officielle de concours aux grandes écoles.",
     ],
     en: {
-      t: "TIPE — Blackjack simulation",
-      d: "Jan 2023 – Jul 2024",
+      t: "TIPE - Blackjack simulation",
+      d: "Jan 2023 - Jul 2024",
       desc: "Stochastic modeling and behavioral game theory research in preparatory classes.",
       points: [
         "Developed a Monte-Carlo simulation engine in Python processing millions of rounds.",
@@ -537,7 +537,7 @@ const SCHOOLS: School[] = [
     logo: "/logo/polimi.png",
     degree: "Master in Design & Engineering",
     place: "Milan, Italie",
-    date: "Sep. 2026 — Fév. 2027",
+    date: "Sep. 2026 - Fév. 2027",
     badge: "Semestre Erasmus",
     courses: [
       "Product Design Studio 1",
@@ -549,7 +549,7 @@ const SCHOOLS: School[] = [
     link: "https://www.polimi.it/",
     en: {
       place: "Milan, Italy",
-      date: "Sep. 2026 — Feb. 2027",
+      date: "Sep. 2026 - Feb. 2027",
       badge: "Erasmus semester",
       courses: [
         "Product Design Studio 1",
@@ -557,7 +557,7 @@ const SCHOOLS: School[] = [
         "Design and Manufacturing",
         "Virtual and Physical Prototyping",
       ],
-      goal: "Master ergonomics, rapid prototyping, and UX to put the user at the center of hardware design—a key skill for leading products in innovative tech companies.",
+      goal: "Master ergonomics, rapid prototyping, and UX to put the user at the center of hardware design-a key skill for leading products in innovative tech companies.",
     },
   },
   {
@@ -566,7 +566,7 @@ const SCHOOLS: School[] = [
     logo: "/logo/emse.png",
     degree: "Diplôme d'ingénieur ISMIN",
     place: "Gardanne, France",
-    date: "Sep. 2024 — Juin 2027",
+    date: "Sep. 2024 - Juin 2027",
     badge: "Grande École d'ingénieurs",
     formation: "Microélectronique et Informatique",
     troncCommun: [
@@ -587,7 +587,7 @@ const SCHOOLS: School[] = [
       name: "Mines Saint-Étienne",
       degree: "ISMIN Engineering Degree",
       place: "Gardanne, France",
-      date: "Sep. 2024 — Jun. 2027",
+      date: "Sep. 2024 - Jun. 2027",
       badge: "Top French Engineering School",
       formation: "Microelectronics and Computer Science",
       troncCommun: [
@@ -611,7 +611,7 @@ const SCHOOLS: School[] = [
     logo: "/logo/pothier.png",
     degree: "Classes Préparatoires (MPSI / MP*)",
     place: "Orléans, France",
-    date: "Sep. 2022 — Juin 2024",
+    date: "Sep. 2022 - Juin 2024",
     badge: "MPSI · MP*",
     courses: [
       "Mathématiques",
@@ -623,7 +623,7 @@ const SCHOOLS: School[] = [
     en: {
       degree: "Intensive Preparatory Classes (CPGE)",
       place: "Orléans, France",
-      date: "Sep. 2022 — Jun. 2024",
+      date: "Sep. 2022 - Jun. 2024",
       badge: "MPSI · MP*",
       courses: [
         "Mathematics",
@@ -639,7 +639,7 @@ const SCHOOLS: School[] = [
     logo: "/logo/nda.png",
     degree: "Baccalauréat Mention Bien (Section Européenne)",
     place: "Blois, France",
-    date: "Sep. 2019 — Juin 2022",
+    date: "Sep. 2019 - Juin 2022",
     badge: "Mention Bien",
     courses: [
       "Mathématiques",
@@ -653,7 +653,7 @@ const SCHOOLS: School[] = [
     en: {
       degree: "High School Diploma with Honors (European Track)",
       place: "Blois, France",
-      date: "Sep. 2019 — Jun. 2022",
+      date: "Sep. 2019 - Jun. 2022",
       badge: "Honors (Mention Bien)",
       courses: [
         "Mathematics",
@@ -672,28 +672,28 @@ type Eng = Loc<EngBase>;
 type EngBase = { logo: string; org: string; role: string; date: string; desc: string[]; tags?: string[]; site?: string; with?: string; img?: string[]; action?: "minitel" };
 type Feat = EngBase & { stats: string[][]; points: string[] };
 const FEATURED: Loc<Feat>[] = [
-  { logo: "/logo/minitel.png", org: "MINITEL", role: "Président", date: "Mar 2025 — Mar 2026", action: "minitel", stats: [["16", "membres"], ["150+", "logements connectés"], ["25k€", "budget"]], points: ["Réseau Wi-Fi & filaire du campus", "LAN avec Riot Games & Red Bull", "Membre d'honneur jusqu'en mars 2027"], site: "https://minitel.emse.fr/",
-    en: { role: "President", date: "Mar 2025 — Mar 2026", stats: [["16", "members"], ["150+", "connected housing units"], ["€25k", "budget"]], points: ["Campus Wi-Fi & wired network", "LAN parties with Riot Games & Red Bull", "Honorary member through March 2027"],
+  { logo: "/logo/minitel.png", org: "MINITEL", role: "Président", date: "Mar 2025 - Mar 2026", action: "minitel", stats: [["16", "membres"], ["150+", "logements connectés"], ["25k€", "budget"]], points: ["Réseau Wi-Fi & filaire du campus", "LAN avec Riot Games & Red Bull", "Membre d'honneur jusqu'en mars 2027"], site: "https://minitel.emse.fr/",
+    en: { role: "President", date: "Mar 2025 - Mar 2026", stats: [["16", "members"], ["150+", "connected housing units"], ["€25k", "budget"]], points: ["Campus Wi-Fi & wired network", "LAN parties with Riot Games & Red Bull", "Honorary member through March 2027"],
       desc: ["Student association for computing, networking and gaming. Led the association (16 members) and drove its major projects.", "Managed and maintained the campus Wi-Fi and wired internet network serving 150+ student apartments.", "Organized events and LAN parties in partnership with Riot Games and Red Bull.", "Coordinated teams, planned events and managed a budget of over €25,000.", "Elected honorary member of the association at the end of my presidential term, continuing as honorary member through March 2027."],
       tags: ["Team management", "Network administration", "Budget", "Partnerships"] },
     desc: ["Association étudiante d'informatique, réseau et gaming. Direction de l'association (16 membres) et pilotage des projets majeurs.", "Gestion et maintenance du réseau internet Wi-Fi et filaire du campus : plus de 150 appartements étudiants.", "Organisation d'événements et de LAN en partenariat avec Riot Games et Red Bull.", "Coordination des équipes, planification d'événements et gestion d'un budget supérieur à 25 000 €.", "Élu membre d'honneur de l'association à la fin de mon mandat présidentiel, membre d'honneur actif jusqu'en mars 2027."],
     tags: ["Management d'équipe", "Administration réseau", "Budget", "Partenariats"], img: ["/media/lan_lol_minitel.jpeg", "/media/affiche_lan_lol.png", "/media/minitel-3d-vlad.png"] },
-  { logo: "/logo/emse.png", org: "Mines Saint-Étienne", role: "Élu au comité de l'enseignement", date: "Fév 2026 — aujourd'hui", stats: [["3000", "élèves représentés"], ["ISMIN", "& ICM"]], points: ["Décisions sur les programmes pédagogiques", "Porte-parole des promotions", "Gestion des parties prenantes"], site: "https://www.mines-stetienne.fr/", with: "Laure Rivier",
-    en: { role: "Elected member, Academic Committee", date: "Feb 2026 — present", stats: [["3000", "students represented"], ["ISMIN", "& ICM"]], points: ["Decisions on academic curricula", "Spokesperson for my cohorts", "Stakeholder management"],
+  { logo: "/logo/emse.png", org: "Mines Saint-Étienne", role: "Élu au comité de l'enseignement", date: "Fév 2026 - aujourd'hui", stats: [["3000+", "élèves représentés"], ["ISMIN", "& ICM"]], points: ["Décisions sur les programmes pédagogiques", "Porte-parole des promotions", "Gestion des parties prenantes"], site: "https://www.mines-stetienne.fr/", with: "Laure Rivier",
+    en: { role: "Elected member, Academic Committee", date: "Feb 2026 - present", stats: [["3000+", "students represented"], ["ISMIN", "& ICM"]], points: ["Decisions on academic curricula", "Spokesperson for my cohorts", "Stakeholder management"],
       desc: ["Take part in Academic Committee meetings, where major changes to the school's curricula are discussed, decided and presented.", "Representative and spokesperson for the ISMIN and ICM cohorts."],
       tags: ["Institutional communication", "Mediation", "Stakeholders"] },
     desc: ["Participation aux réunions du comité de l'enseignement, où sont discutés, décidés et présentés les grands changements des programmes pédagogiques de l'école.", "Représentant et porte-parole des promotions ISMIN et ICM."],
     tags: ["Communication institutionnelle", "Médiation", "Parties prenantes"] },
 ];
 const OTHERS: Eng[] = [
-  { logo: "/logo/emse.png", org: "Mines Saint-Étienne", role: "Représentant de promotion", date: "2024 — auj.", with: "Laure Rivier", desc: ["Réunions mensuelles avec la direction du campus pour remonter les points clés de la promotion.", "Liaison active avec les professeurs pour des ajustements de cours ou d'évaluations.", "Création de questionnaires et centralisation des avis et ressentis."], en: { role: "Class representative", date: "2024 — present", desc: ["Monthly meetings with campus leadership to escalate the class's key concerns.", "Active liaison with faculty to adjust courses and assessments.", "Designed surveys and consolidated student feedback."] } },
-  { logo: "/logo/emse.png", org: "Mines Saint-Étienne", role: "Ambassadeur communication", date: "2025 — auj.", desc: ["Refonte intégrale de la plaquette Alpha du cursus ISMIN pour les futurs élèves ingénieurs.", "Écriture de scripts pour des capsules vidéo destinées aux réseaux sociaux de l'école.", "Réalisation d'une vidéo de présentation de l'uniforme de Mines Saint-Étienne."], en: { role: "Communications ambassador", date: "2025 — present", desc: ["Complete redesign of the ISMIN program brochure for prospective engineering students.", "Wrote scripts for short videos on the school's social media.", "Produced a video presenting the Mines Saint-Étienne uniform."] } },
+  { logo: "/logo/emse.png", org: "Mines Saint-Étienne", role: "Représentant de promotion", date: "2024 - auj.", with: "Laure Rivier", desc: ["Réunions mensuelles avec la direction du campus pour remonter les points clés de la promotion.", "Liaison active avec les professeurs pour des ajustements de cours ou d'évaluations.", "Création de questionnaires et centralisation des avis et ressentis."], en: { role: "Class representative", date: "2024 - present", desc: ["Monthly meetings with campus leadership to escalate the class's key concerns.", "Active liaison with faculty to adjust courses and assessments.", "Designed surveys and consolidated student feedback."] } },
+  { logo: "/logo/emse.png", org: "Mines Saint-Étienne", role: "Ambassadeur communication", date: "2025 - auj.", desc: ["Refonte intégrale de la plaquette Alpha du cursus ISMIN pour les futurs élèves ingénieurs.", "Écriture de scripts pour des capsules vidéo destinées aux réseaux sociaux de l'école.", "Réalisation d'une vidéo de présentation de l'uniforme de Mines Saint-Étienne."], en: { role: "Communications ambassador", date: "2025 - present", desc: ["Complete redesign of the ISMIN program brochure for prospective engineering students.", "Wrote scripts for short videos on the school's social media.", "Produced a video presenting the Mines Saint-Étienne uniform."] } },
   { logo: "/logo/alumni.png", org: "Alumni Mines", role: "Relai de la promotion", date: "À vie", with: "Laure Rivier", desc: ["Représentation de la promotion auprès du réseau des anciens pour assurer la communication, organiser des événements de networking et faciliter la collaboration professionnelle."], site: "https://www.mines-saint-etienne.org/", en: { role: "Class liaison", date: "For life", desc: ["Represent my class within the alumni network: handling communication, organizing networking events and fostering professional collaboration."] } },
-  { logo: "/logo/jmp.png", org: "Junior Mines Provence", role: "Responsable communication & marketing", date: "2025 — auj.", desc: ["Junior-Entreprise du campus Georges Charpak Provence de Mines Saint-Étienne.", "Responsable de la communication et du marketing : image de marque, réseaux sociaux et supports de prospection."], site: "https://www.junior-mines-provence.fr/", en: { role: "Head of communications & marketing", date: "2025 — present", desc: ["Junior Enterprise of the Mines Saint-Étienne Georges Charpak Provence campus.", "In charge of communications and marketing: brand image, social media and prospecting materials."] } },
-  { logo: "/logo/bde.jpeg", org: "BDE", role: "Responsable uniformes & merch", date: "2025 — 2026", desc: ["Responsable uniformes et merchandising du Bureau des Élèves.", "Gestion des commandes et de la distribution des uniformes et produits dérivés."], site: "https://bde-emse.fr/", en: { role: "Uniforms & merch lead", desc: ["In charge of uniforms and merchandise for the Student Union.", "Managed orders and distribution of uniforms and branded products."] } },
+  { logo: "/logo/jmp.png", org: "Junior Mines Provence", role: "Responsable communication & marketing", date: "2025 - auj.", desc: ["Junior-Entreprise du campus Georges Charpak Provence de Mines Saint-Étienne.", "Responsable de la communication et du marketing : image de marque, réseaux sociaux et supports de prospection."], site: "https://www.junior-mines-provence.fr/", en: { role: "Head of communications & marketing", date: "2025 - present", desc: ["Junior Enterprise of the Mines Saint-Étienne Georges Charpak Provence campus.", "In charge of communications and marketing: brand image, social media and prospecting materials."] } },
+  { logo: "/logo/bde.jpeg", org: "BDE", role: "Responsable uniformes & merch", date: "2025 - 2026", desc: ["Responsable uniformes et merchandising du Bureau des Élèves.", "Gestion des commandes et de la distribution des uniformes et produits dérivés."], site: "https://bde-emse.fr/", en: { role: "Uniforms & merch lead", desc: ["In charge of uniforms and merchandise for the Student Union.", "Managed orders and distribution of uniforms and branded products."] } },
   { logo: "/logo/fei.jpeg", org: "FEI", role: "Chargé logistique", date: "2025", desc: ["Accueil et guidage des entreprises.", "Bon déroulement des conférences et résolution des problèmes logistiques sur site."], site: "https://fei-aix.com/", en: { role: "Logistics officer", desc: ["Welcomed and guided partner companies.", "Ensured conferences ran smoothly and solved on-site logistics issues."] } },
-  { logo: "/logo/solidar-ismin.jpg", org: "Solidar'ISMIN", role: "Pôle prévention HVSSD", date: "2025 — 2026", desc: ["Formation de tous les bureaux associatifs du campus aux enjeux de harcèlement et violences (HVSSD) via une formation en réalité virtuelle."], en: { role: "Harassment prevention team", desc: ["Trained every student association board on campus on harassment and sexual and gender-based violence through a virtual reality program."] } },
-  { logo: "/logo/comif.jpeg", org: "COMIF", role: "Serveur au bar étudiant", date: "2025 — 2026", desc: ["Service quotidien pendant les pauses et soirées associatives, gestion des transactions et service client."], en: { role: "Student bar server", desc: ["Daily service during breaks and association evenings, handling transactions and customer service."] } },
+  { logo: "/logo/solidar-ismin.jpg", org: "Solidar'ISMIN", role: "Pôle prévention HVSSD", date: "2025 - 2026", desc: ["Formation de tous les bureaux associatifs du campus aux enjeux de harcèlement et violences (HVSSD) via une formation en réalité virtuelle."], en: { role: "Harassment prevention team", desc: ["Trained every student association board on campus on harassment and sexual and gender-based violence through a virtual reality program."] } },
+  { logo: "/logo/comif.jpeg", org: "COMIF", role: "Serveur au bar étudiant", date: "2025 - 2026", desc: ["Service quotidien pendant les pauses et soirées associatives, gestion des transactions et service client."], en: { role: "Student bar server", desc: ["Daily service during breaks and association evenings, handling transactions and customer service."] } },
 ];
 
 /* ---------------- Primitives ---------------- */
@@ -1093,19 +1093,11 @@ const engDetail = (e: EngBase, lang: Lang): Detail => ({
   links: e.site ? [{ l: lang === "en" ? "Official website" : "Site officiel", h: e.site }] : undefined,
 });
 
-const FEATURED_PROJECT_TITLES = [
-  "Monitoring ECG sécurisé sur FPGA",
-  "Terrariot — IoT qualité de l'air",
-  "Ventilateur régulé par capteur capacitif",
-  "Victoire au Hackathon STMicroelectronics",
-];
-
 /* ---------------- Projects ---------------- */
 const FILTERS: ("Tous" | Cat)[] = ["Tous", "Hardware", "Software", "IA", "Produit"];
 function Projects() {
   const [f, setF] = useState<(typeof FILTERS)[number]>("Tous");
   const [open, setOpen] = useState<number | null>(null);
-  const [expandedMobile, setExpandedMobile] = useState(false);
   const { lang, tr } = useLang();
   const all = useMemo(() => PROJECTS.map((p) => loc(p, lang)), [lang]);
   const list = all.filter((p) => f === "Tous" || p.cat.includes(f));
@@ -1115,7 +1107,7 @@ function Projects() {
         {FILTERS.map((x) => {
           const count = x === "Tous" ? PROJECTS.length : PROJECTS.filter((p) => p.cat.includes(x)).length;
           return (
-            <button key={x} onClick={() => { setF(x); setExpandedMobile(true); }} className="relative px-4 py-2 text-sm font-medium">
+            <button key={x} onClick={() => setF(x)} className="relative px-4 py-2 text-sm font-medium">
               {f === x && <motion.span layoutId="filter" className="absolute inset-0 bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
               <span className={`relative transition-colors ${f === x ? "text-paper" : ""}`}>{catLabel(x, lang)} <sup className="font-mono text-[9px] opacity-60">{count}</sup></span>
             </button>
@@ -1126,20 +1118,17 @@ function Projects() {
         <AnimatePresence mode="popLayout">
           {list.map((p) => {
             const origTitle = PROJECTS[all.indexOf(p)].t;
-            const isFeatured = FEATURED_PROJECT_TITLES.includes(origTitle);
-            const hiddenOnMobile = f === "Tous" && !expandedMobile && !isFeatured;
             return (
               <motion.article
                 layout key={origTitle}
                 initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.45, ease }}
                 onClick={() => setOpen(all.indexOf(p))} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && setOpen(all.indexOf(p))}
-                className={`${hiddenOnMobile ? "hidden sm:flex" : "flex"} group relative min-h-[220px] cursor-pointer flex-col bg-paper p-7 transition-colors duration-500 hover:bg-ink hover:text-paper`}
+                className="flex group relative min-h-[220px] cursor-pointer flex-col bg-paper p-7 transition-colors duration-500 hover:bg-ink hover:text-paper"
               >
                 <div className="flex items-start justify-between">
                   <span className="font-mono text-[11px] text-mute group-hover:text-paper/50">{p.d}</span>
                   <div className="flex items-center gap-2">
-                    {isFeatured && f === "Tous" && !expandedMobile && <span className="font-mono text-[9px] uppercase tracking-wider text-signal bg-signal/10 px-1.5 py-0.5 border border-signal/20 sm:hidden">Phare</span>}
                     {p.current && <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />Live</span>}
                   </div>
                 </div>
@@ -1167,18 +1156,6 @@ function Projects() {
           })}
         </AnimatePresence>
       </motion.div>
-      {f === "Tous" && (
-        <div className="mt-6 flex justify-center sm:hidden">
-          <button
-            onClick={() => setExpandedMobile((e) => !e)}
-            className="flex items-center gap-2 rounded-full border border-ink bg-paper px-5 py-2.5 font-mono text-xs font-semibold uppercase tracking-wider text-ink shadow-sm transition-colors hover:bg-ink hover:text-paper"
-          >
-            {expandedMobile
-              ? tr("Réduire à la sélection phare ↑", "Collapse to featured projects ↑")
-              : tr(`Voir tous les projets (${list.length}) ↓`, `View all projects (${list.length}) ↓`)}
-          </button>
-        </div>
-      )}
       <Sheet d={open !== null ? projectDetail(all[open], lang) : null} onClose={() => setOpen(null)} />
     </>
   );
@@ -1266,8 +1243,8 @@ function Palette({ open, onClose, onGame }: { open: boolean; onClose: () => void
     { label: tr("Ouvrir GitHub", "Open GitHub"), hint: tr("Externe", "External"), run: () => window.open("https://github.com/Arthrir") },
     { label: "3615 MINITEL", hint: tr("Jeux", "Games"), run: () => onGame("minitel") },
     { label: "Grand Prix F1", hint: tr("Jeux", "Games"), run: () => onGame("f1") },
-    { label: "Aim Lab — Team Vitality", hint: tr("Jeux", "Games"), run: () => onGame("aim") },
-    { label: tr("Blackjack — modèle TIPE", "Blackjack — TIPE model"), hint: tr("Jeux", "Games"), run: () => onGame("blackjack") },
+    { label: "Aim Lab - Team Vitality", hint: tr("Jeux", "Games"), run: () => onGame("aim") },
+    { label: tr("Blackjack - modèle TIPE", "Blackjack - TIPE model"), hint: tr("Jeux", "Games"), run: () => onGame("blackjack") },
   ];
   const list = actions.filter((a) => a.label.toLowerCase().includes(q.toLowerCase()));
 
@@ -1561,7 +1538,7 @@ function Page() {
     return () => window.removeEventListener("keydown", k);
   }, []);
 
-  // Mobile : taps rapides sur le logo — 3 = F1, 5 = Aim Lab, 7 = Blackjack
+  // Mobile : taps rapides sur le logo - 3 = F1, 5 = Aim Lab, 7 = Blackjack
   const tapLogo = (e: React.MouseEvent) => {
     const r = taps.current;
     r.n++;
@@ -1627,7 +1604,7 @@ function Page() {
               </span>
             ))}
           </h1>
-          <Reveal delay={0.6} className="mt-8 max-w-xl space-y-4">
+          <Reveal delay={0.6} className="mt-8 max-w-2xl space-y-4">
             <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
               {tr(
                 "Élève-ingénieur en microélectronique, informatique et conception produit aux Mines Saint-Étienne × Politecnico di Milano.",
@@ -1692,7 +1669,7 @@ function Page() {
       {/* VISION */}
       <section id="vision" className="mx-auto max-w-[1400px] px-6 py-32 md:px-10 md:py-44">
         <div className="grid gap-10 md:grid-cols-[200px_1fr]">
-          <Label>§01 — Vision</Label>
+          <Label>§01 - Vision</Label>
           <Manifesto />
         </div>
       </section>
@@ -1701,7 +1678,7 @@ function Page() {
       <section id="roadmap" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
           <Stacked ghost={tr("Parcours", "Journey")} n="02">{tr("Ma roadmap.", "My roadmap.")}</Stacked>
-          <p className="max-w-sm text-mute">{tr("Un PM pense en jalons. Voici les miens — survolez un composant pour l'ouvrir.", "A PM thinks in milestones. Here are mine — hover over a component to open it.")}</p>
+          <p className="max-w-sm text-mute">{tr("Un PM pense en jalons. Voici les miens - survolez un composant pour l'ouvrir.", "A PM thinks in milestones. Here are mine - hover over a component to open it.")}</p>
         </div>
         <Circuit onMinitel={() => setGame("minitel")} />
 
@@ -1709,10 +1686,10 @@ function Page() {
         <div id="ecoles-formation" className="mt-24 border-t border-ink pt-14">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <Label>{tr("§02.b — Académique", "§02.b — Academics")}</Label>
+              <Label>{tr("§02.b - Académique", "§02.b - Academics")}</Label>
               <h3 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">{tr("Formation & Écoles.", "Education & Schools.")}</h3>
             </div>
-            <div className="max-w-md text-right md:text-left">
+            <div className="max-w-md mt-4 md:mt-0 text-left">
               <p className="text-sm text-mute">
                 {tr("Une triple culture : la rigueur scientifique des prépas, la profondeur microélectronique & logicielle des Mines, et le design / ergonomie du Polimi.", "A triple foundation: scientific rigor from preparatory classes, microelectronics & software depth from Mines, and design / ergonomics from Polimi.")}
               </p>
@@ -1879,12 +1856,17 @@ function Page() {
           <div className="mt-14">
             {EXPERIENCES.map((raw) => loc(raw, lang)).map((x, i) => (
               <Reveal key={x.co} delay={i * 0.1}>
-                <article className="group grid gap-8 border-t border-paper/15 py-12 md:grid-cols-[80px_1.1fr_1fr]">
-                  <img src={x.logo} alt={x.co} className={`size-14 rounded-lg object-contain p-2 ${x.co.startsWith("PHINIA") ? "bg-ink ring-1 ring-paper/20" : "bg-white"}`} />
+                <article className="group flex flex-col gap-6 border-t border-paper/15 py-12 md:grid md:grid-cols-[80px_1.1fr_1fr] md:gap-8">
+                  <div className="flex items-center gap-4 md:block">
+                    <img src={x.logo} alt={x.co} className={`size-14 rounded-lg object-contain p-2 ${x.co.startsWith("PHINIA") ? "bg-ink ring-1 ring-paper/20" : "bg-white"}`} />
+                    <h3 className="text-3xl font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-1 md:hidden">{x.co}</h3>
+                  </div>
                   <div>
-                    <h3 className="text-4xl font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-2 md:text-6xl">{x.co}</h3>
-                    <p className="mt-3 text-paper/70">{x.role}</p>
-                    <p className="mt-1 font-mono text-[11px] tracking-wider text-paper/40 uppercase">{x.place} · {x.date}</p>
+                    <h3 className="hidden text-4xl font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-2 md:block md:text-6xl">{x.co}</h3>
+                    <p className="mt-1 text-lg font-medium text-paper/90 md:mt-3">{x.role}</p>
+                    <p className="mt-2 text-base text-paper/60">
+                      {x.place} · <Hl className="font-semibold px-1 py-0.5 rounded-sm">{x.date}</Hl>
+                    </p>
                   </div>
                   <div>
                     <ul className="space-y-3">
@@ -1916,7 +1898,7 @@ function Page() {
       <section id="engagements" style={{ "--color-signal": "#8B5CF6" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
           <Stacked ghost="Leadership" n="05">{tr("Engagements.", "Involvement.")}</Stacked>
-          <p className="max-w-sm text-mute">{tr("Là où j'ai appris à aligner des gens, un budget et une deadline — le cœur du métier de PO.", "Where I learned to align people, a budget and a deadline — the core of a PO's job.")}</p>
+          <p className="max-w-sm text-mute">{tr("Là où j'ai appris à aligner des gens, un budget et une deadline - le cœur du métier de PO.", "Where I learned to align people, a budget and a deadline - the core of a PO's job.")}</p>
         </div>
         <Engagements onMinitel={() => setGame("minitel")} />
       </section>
@@ -1972,8 +1954,8 @@ function Page() {
             <ul className="mt-6 space-y-4 text-base">
               {[
                 { title: "TOEIC 955 / 990 · TOEFL · Cambridge", sub: tr("Niveau C1 officiel", "Official C1 proficiency") },
-                { title: "Label HandiManagement — Companieros × Carrefour", sub: tr("Sensibilisation et intégration du handicap en entreprise", "Workplace disability inclusion & management") },
-                { title: tr("PSC1 — Prévention & Secours Civiques", "PSC1 — First aid certification"), sub: tr("Gestes d'urgence et premiers secours", "Emergency first aid procedures") },
+                { title: "Label HandiManagement - Companieros × Carrefour", sub: tr("Sensibilisation et intégration du handicap en entreprise", "Workplace disability inclusion & management") },
+                { title: tr("PSC1 - Prévention & Secours Civiques", "PSC1 - First aid certification"), sub: tr("Gestes d'urgence et premiers secours", "Emergency first aid procedures") },
               ].map((c) => (
                 <li key={c.title} className="flex items-start gap-3 leading-snug">
                   <span className="mt-2.5 h-[2px] w-3.5 shrink-0 rounded-full bg-signal" />
@@ -1991,7 +1973,7 @@ function Page() {
       {/* CONTACT */}
       <section id="contact" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="relative overflow-hidden border-t border-ink pb-10 md:pb-14">
         <div className="mx-auto max-w-[1400px] px-6 pt-20 pb-8 md:px-10 md:pt-28 md:pb-12">
-          <Label>§08 — Contact</Label>
+          <Label>§08 - Contact</Label>
           <h2 className="mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-semibold tracking-[-0.05em]">{tr("Travaillons", "Let's work")}<br />{tr("ensemble", "together")}<span className="text-signal">.</span></h2>
           <p className="mt-8 max-w-xl text-lg text-mute leading-relaxed">
             {tr(
@@ -2022,8 +2004,14 @@ function Page() {
               </a>
             ))}
             <button onClick={() => setCv(true)} className="group flex items-center justify-between bg-paper p-6 text-left transition-colors hover:bg-ink hover:text-paper">
-              <span className="flex items-center gap-4"><Download className="size-7" /><span className="text-xl font-medium">{tr("CV", "Resume")}</span></span>
-              <span className="font-mono text-[10px] tracking-[0.14em] text-mute uppercase group-hover:text-paper/60">FR · EN</span>
+              <span className="flex items-center gap-4">
+                <Download className="size-7" />
+                <span className="flex flex-col gap-0.5">
+                  <span className="text-xl font-medium">{tr("CV", "Resume")}</span>
+                  <span className="font-mono text-[10px] tracking-[0.14em] text-mute uppercase group-hover:text-paper/60">FR · EN</span>
+                </span>
+              </span>
+              <ArrowUpRight className="size-5 transition-transform group-hover:rotate-45" />
             </button>
           </div>
         </div>
