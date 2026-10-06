@@ -922,17 +922,13 @@ function Stacked({ ghost, children, n, dark = false }: { ghost: string; children
   const x = useTransform(scrollYProgress, [0, 1], ["8%", "-16%"]);
   return (
     <div ref={ref} className="relative">
-      {/* 
-        Sur les conteneurs avec overflow-hidden et padding (ex: px-6 / md:px-10), le texte ghost
-        glissant vers la gauche était brutalement tranché par la boîte parente avant le bord de l'écran.
-        Un masque en dégradé doux (mask-image) adoucit naturellement les bords gauche et droite
-        pour un fondu éditorial fluide, sans coupure nette.
-      */}
-      <div className="-mx-6 px-6 md:-mx-10 md:px-10 overflow-visible [mask-image:linear-gradient(to_right,transparent_0%,black_48px,black_calc(100%-48px),transparent_100%)]">
-        <motion.div style={{ x }} aria-hidden className={`pointer-events-none font-serif text-[clamp(4.5rem,15vw,13rem)] leading-[0.8] whitespace-nowrap italic select-none ${dark ? "text-outline-paper opacity-30" : "text-outline opacity-25"}`}>
-          {ghost}
-        </motion.div>
-      </div>
+      <motion.div
+        style={{ x }}
+        aria-hidden
+        className={`pointer-events-none font-serif text-[clamp(4.5rem,15vw,13rem)] leading-[0.8] whitespace-nowrap italic select-none ${dark ? "text-outline-paper opacity-30" : "text-outline opacity-25"}`}
+      >
+        {ghost}
+      </motion.div>
       <div className="relative -mt-[0.32em] flex items-baseline gap-5 text-[clamp(2.4rem,6vw,5.2rem)] md:pl-2">
         <span className="font-mono text-[11px] tracking-[0.14em] text-signal">§{n}</span>
         <h2 className="leading-[0.95] font-semibold tracking-[-0.035em]">{children}</h2>
@@ -1922,13 +1918,13 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
 
       {/* ENGAGEMENTS */}
-      <section id="engagements" style={{ "--color-signal": "#E10600" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 pb-32 md:px-10">
+      <section id="engagements" style={{ "--color-signal": "#E10600" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
           <Stacked ghost="Leadership" n="05">{tr("Engagements.", "Involvement.")}</Stacked>
           <p className="max-w-sm text-mute">{tr("Là où j'ai appris à aligner des gens, un budget et une deadline — le cœur du métier de PO.", "Where I learned to align people, a budget and a deadline — the core of a PO's job.")}</p>
@@ -1937,13 +1933,13 @@ function Page() {
       </section>
 
       {/* PASSIONS */}
-      <section id="passions" style={{ "--color-signal": "#E10600" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 pb-32 md:px-10">
+      <section id="passions" style={{ "--color-signal": "#E10600" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Personnalité", "Personality")} n="06">Passions.</Stacked></div>
         <Passions Label={Label} />
       </section>
 
       {/* STACK */}
-      <section id="stack" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] overflow-hidden px-6 py-32 md:px-10">
+      <section id="stack" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost="Toolbox" n="07"><Hl>{tr("Du transistor au ", "From transistor to ")}<span className="font-serif font-normal italic">{tr("produit", "product")}</span>.</Hl></Stacked></div>
         <div className="border-t border-ink">
           {STACK.map((raw) => loc(raw, lang)).map((s, i) => (
