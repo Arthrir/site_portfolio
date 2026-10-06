@@ -230,7 +230,9 @@ const ROWS: { key: Row; name: string; bus?: boolean }[] = [
   { key: "TARGET", name: "TARGET" },
 ];
 
-const TODAY = "2026-10";
+// Date du jour calculée dynamiquement (ex: 2026-10, ou 2027-04 selon la date système réelle)
+const now = new Date();
+const TODAY = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 /* ======================================================================== */
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -306,6 +308,10 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
       document.getElementById("experiences")?.scrollIntoView({ behavior: "smooth" });
     } else if (it.id === "minitel" || it.row === "ASSO") {
       document.getElementById("engagements")?.scrollIntoView({ behavior: "smooth" });
+    } else if (it.row === "FORMATION" || it.row === "INTL") {
+      window.dispatchEvent(new CustomEvent("school-open", { detail: it.id }));
+      const el = document.getElementById("ecoles-formation");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -391,8 +397,27 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                   });
                   d += ` L${x(T1)} ${mid}`;
                 } else {
+                  // Ligne logique : si deux segments se touchent ou s'enchaînent (comme Président -> Membre d'honneur),
+                  // on reste au niveau haut HI et on insère un séparateur oblique/croisement propre sans effondrement à zéro
                   d = `M${x(T0)} ${lo}`;
-                  seg.forEach(({ a, b }) => { d += ` L${a} ${lo} L${a} ${hi} L${b} ${hi} L${b} ${lo}`; });
+                  let curX = x(T0);
+                  seg.forEach(({ a, b }, idx) => {
+                    if (a > curX) {
+                      d += ` L${a} ${lo} L${a} ${hi}`;
+                    } else if (a <= curX) {
+                      // Transition directe au niveau haut avec un léger motif triangulaire / marqueur de passage de relais
+                      d += ` L${a} ${hi}`;
+                    }
+                    d += ` L${b} ${hi}`;
+                    const next = seg[idx + 1];
+                    if (!next || next.a > b) {
+                      d += ` L${b} ${lo}`;
+                      curX = b;
+                    } else {
+                      // Le segment suivant commence directement ici : on reste à hi ou on fait un biseau
+                      curX = b;
+                    }
+                  });
                   d += ` L${x(T1)} ${lo}`;
                 }
                 return (
@@ -404,9 +429,25 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                         : <rect key={`s${i.id}`} x={a} y={hi} width={b - a} height={lo - hi} fill="var(--color-signal)" opacity={0.12} />
                     ))}
                     <motion.path d={d} fill="none" stroke="var(--color-ink)" strokeWidth={1} strokeDasharray={dashed ? "4 3" : undefined} {...draw(ri)} />
+                    
+                    {/* Séparateur élégant de transition entre deux mandats/états consécutifs */}
+                    {!r.bus && seg.map(({ b }, idx) => {
+                      const next = seg[idx + 1];
+                      if (next && Math.abs(next.a - b) <= 2) {
+                        return (
+                          <g key={`trans-${idx}`} className="stroke-ink" strokeWidth={1.2}>
+                            <line x1={b - 3} y1={hi} x2={b + 3} y2={lo} strokeDasharray="2 1" />
+                            <polygon points={`${b - 2},${hi} ${b + 2},${hi} ${b},${hi + 4}`} fill="var(--color-ink)" />
+                          </g>
+                        );
+                      }
+                      return null;
+                    })}
+
                     {seg.map(({ i, a, b }) => {
                       const on = i.id === sel;
-                      const inside = b - a > i.label.length * 7.6 + 16;
+                      const textWidth = i.label.length * 7.5 + 14;
+                      const inside = b - a > textWidth;
                       return (
                         <g key={i.id} role="button" tabIndex={0} aria-pressed={on} aria-label={`${i.label}, ${fmtRange(i)}`}
                           className="cursor-pointer outline-none"
@@ -419,7 +460,7 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                               else setSel(i.id);
                             }
                           }}>
-                          <rect x={a} y={top + 4} width={inside ? b - a : b - a + i.label.length * 7.6 + 16} height={ROW_H - 8} fill="transparent" />
+                          <rect x={a} y={top + 4} width={inside ? b - a : b - a + textWidth} height={ROW_H - 8} fill="transparent" />
                           <motion.text
                             x={inside ? a + (r.bus ? SLOPE + 6 : 8) : b + 6} y={mid + 4.5}
                             fontSize={13} className={`font-sans ${on ? "fill-signal" : "fill-ink"}`} fontWeight={on ? 600 : 500}
@@ -486,6 +527,17 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                   </a>
                 </div>
               )}
+              {(item.row === "FORMATION" || item.row === "INTL") && (
+                <div className="mt-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => handleAction(item)}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline"
+                  >
+                    {tr("Voir le programme détaillé ↓", "View detailed curriculum ↓")} <ArrowUpRight className="size-3.5" />
+                  </button>
+                </div>
+              )}
             </div>
             <div>
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -499,6 +551,15 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                   <span className="font-mono text-[10px] uppercase tracking-wider text-mute border border-ink/10 px-2 py-0.5 rounded">
                     {tr("Double-clic pour voir l'engagement", "Double-click to view involvement")}
                   </span>
+                )}
+                {(item.row === "FORMATION" || item.row === "INTL") && (
+                  <button
+                    type="button"
+                    onClick={() => handleAction(item)}
+                    className="font-mono text-[10px] uppercase tracking-wider text-mute border border-ink/20 px-2.5 py-1 rounded hover:border-ink hover:text-ink transition-colors"
+                  >
+                    {tr("Double-clic pour ouvrir le dépliant", "Double-click to open school card")}
+                  </button>
                 )}
               </div>
               <p className="mt-1 text-[15px] text-mute">{item.place}</p>

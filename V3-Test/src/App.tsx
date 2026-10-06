@@ -105,29 +105,30 @@ type Project = Loc<ProjectBase>;
 type ProjectBase = { t: string; d: string; date: string; cat: Cat[]; tags: string[]; desc: string; link?: string; with?: string; current?: boolean; points?: string[]; img?: string[] };
 const PROJECTS: Project[] = [
   {
-    t: "FPGA — ECG & communication sécurisée",
+    t: "Monitoring ECG sécurisé sur FPGA",
     date: "2026",
     d: "Fév – Mar 2026",
     cat: ["Hardware"],
-    tags: ["FPGA", "SystemVerilog", "Python", "Vivado"],
-    desc: "Sécurisation matérielle de flux biomédicaux sensibles face aux attaques physiques et logiques.",
+    tags: ["FPGA", "SystemVerilog", "Python", "Vivado", "Zynq-7020"],
+    desc: "Acquisition temps réel et sécurisation matérielle de flux biomédicaux sensibles face aux attaques physiques et logiques.",
     points: [
-      "Conception d'une architecture FPGA dédiée au déchiffrement temps réel de signaux ECG.",
-      "Implémentation matérielle de l'algorithme cryptographique ASCON-128 en SystemVerilog.",
-      "Vérification et banc de test sous Vivado avec simulation des vecteurs d'attaque.",
-      "Interface avec un dashboard Python pour la visualisation télémétrique des constantes vitales.",
+      "Acquisition temps réel et chiffrement matériel de signaux ECG sur carte FPGA Zynq-7020 sous Vivado (Mines Saint-Étienne).",
+      "Gestion précise des communications I2C et UART par machine d'états (FSM) cadencée à 50 MHz.",
+      "Architecture matérielle articulée autour d'un cœur de chiffrement ASCON-128 interagissant avec une RAM double port pour sécuriser les trames ECG à la volée.",
+      "Développement en aval d'une chaîne logicielle en Python comprenant un émulateur matériel pour les tests, le déchiffrement des données et une interface graphique de monitoring en direct capable d'analyser l'onde ECG, détecter le complexe PQRST et afficher le rythme cardiaque en temps réel.",
     ],
     with: "Yasmin Hadj-Said",
     en: {
-      t: "FPGA — ECG & secure communication",
+      t: "Secure ECG Monitoring on FPGA",
       d: "Feb – Mar 2026",
-      desc: "Hardware-level security for sensitive biomedical data streams against physical and logical threats.",
+      desc: "Real-time biomedical telemetry acquisition and hardware encryption against physical and side-channel threats.",
       points: [
-        "Designed a dedicated FPGA architecture for real-time decryption of ECG signals.",
-        "Hardware implementation of the ASCON-128 cryptographic algorithm in SystemVerilog.",
-        "Simulation and testbench validation in Vivado with attack-vector simulations.",
-        "Bridged to a Python telemetry dashboard for real-time vital signs visualization.",
+        "Real-time biomedical acquisition and hardware encryption on a Zynq-7020 FPGA board using Vivado (Mines Saint-Étienne).",
+        "Deterministic 50 MHz finite-state machine (FSM) orchestrating I2C and UART communications.",
+        "Architecture built around an ASCON-128 cryptographic core interacting with dual-port RAM to secure ECG frames on the fly.",
+        "Complete downstream Python suite featuring a hardware emulator for testbench validation, secure decryption, and a live GUI dashboard analyzing ECG waveforms, detecting PQRST complexes and tracking heart rate in real time.",
       ],
+      tags: ["FPGA", "SystemVerilog", "Python", "Vivado", "Zynq-7020"],
     },
   },
   {
@@ -280,28 +281,29 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "Ventilateur à capteur capacitif",
+    t: "Ventilateur régulé par capteur capacitif",
     img: ["/media/ismin-projets2.png"],
     date: "2025",
     d: "Fév – Juin 2025",
     cat: ["Hardware", "Produit"],
-    tags: ["STM32", "PCB", "KiCad", "C"],
-    desc: "IHM tactile sans contact mécanique et contrôle d'actionneur à commande progressive.",
+    tags: ["STM32", "PCB", "KiCad", "PWM", "Électronique de puissance"],
+    desc: "Contrôle progressif d'actionneur via capteur capacitif sans contact mécanique et hacheur de puissance.",
     points: [
-      "Routage d'une carte électronique personnalisée sous KiCad intégrant les pistes capacitives.",
-      "Algorithme d'acquisition différentielle sur STM32 pour interpréter la position du doigt.",
-      "Asservissement PWM de la vitesse de rotation du ventilateur sans à-coups.",
+      "Conception et routage sous KiCad d'une carte électronique intégrant un capteur capacitif à 2 électrodes pour détecter l'approche et le glissement du doigt.",
+      "Développement de l'algorithme d'acquisition capacitive et de filtrage numérique sur microcontrôleur STM32.",
+      "Dimensionnement d'un hacheur de puissance (transistor MOSFET de commutation) et génération d'un signal PWM calibré pour faire varier la vitesse du ventilateur de manière parfaitement fluide.",
     ],
     with: "Inès Lixi",
     en: {
-      t: "Capacitive-sensor fan",
+      t: "Capacitive Sensor Regulated Fan",
       d: "Feb – Jun 2025",
-      desc: "Solid-state touch interface and stepless actuator control without mechanical wear.",
+      desc: "Stepless actuator speed control via touch capacitive sensor, power chopper and PWM modulation.",
       points: [
-        "Custom PCB layout in KiCad integrating copper touch electrodes and driver circuitry.",
-        "Differential signal acquisition algorithm on STM32 to track sliding finger position.",
-        "Smooth PWM duty cycle modulation for stepless fan speed control.",
+        "Designed and routed a custom PCB in KiCad integrating a 2-electrode capacitive slider sensor to track finger sliding without mechanical wear.",
+        "Engineered capacitive signal acquisition and digital filtering routines on an STM32 microcontroller.",
+        "Dimensioned a dedicated power chopper (MOSFET driver stage) with dynamic PWM modulation for smooth, stepless fan speed regulation.",
       ],
+      tags: ["STM32", "PCB", "KiCad", "PWM", "Power Electronics"],
     },
   },
   {
@@ -331,51 +333,58 @@ const PROJECTS: Project[] = [
     },
   },
   {
-    t: "🏆 Hackathon — 1er Prix",
-    date: "2025",
-    d: "2025",
+    t: "🏆 Victoire au Hackathon STMicroelectronics",
+    date: "2024",
+    d: "2024",
     cat: ["Produit", "Hardware"],
-    tags: ["Hackathon", "Prototypage", "Innovation"],
-    desc: "Sprint d'innovation matériel et logiciel récompensé par la première place du jury.",
+    tags: ["Hackathon", "STMicroelectronics", "Robotique", "AREM"],
+    desc: "Compétition de robotique par équipe organisée par l'AREM avec STMicroelectronics à Gardanne — 1er Prix.",
     points: [
-      "Lauréat de la 1ère place parmi l'ensemble des équipes participantes de l'école.",
-      "Itération éclair sous contrainte de 48h : architecture, assemblage et programmation fonctionnelle.",
-      "Présentation synthétique et démonstration en direct du prototype opérationnel devant le jury.",
+      "Lauréat du 1er Prix au Hackathon de robotique organisé par l'association AREM en partenariat avec STMicroelectronics.",
+      "Sprint d'ingénierie et d'innovation en équipe sur 48h : architecture électronique, intégration de microcontrôleurs STM32 et programmation temps réel.",
+      "Pitch exécutif et démonstration en direct du système robotique autonome devant les ingénieurs et experts de STMicroelectronics.",
+      "Projet mené en équipe avec Yasmin Hadj-Said, Inès Lixi, Typhaine Lavaud et Elouan Marron.",
     ],
+    with: "Yasmin Hadj-Said, Inès Lixi, Typhaine Lavaud, Elouan Marron",
     en: {
-      t: "🏆 Hackathon — 1st Place",
-      d: "2025",
-      desc: "Hardware & software innovation sprint awarded first place by the judging panel.",
+      t: "🏆 STMicroelectronics Hackathon Victory",
+      d: "2024",
+      desc: "Robotics team competition organized by AREM with STMicroelectronics in Gardanne — 1st Place.",
       points: [
-        "Awarded 1st place among all participating engineering teams.",
-        "Fast-paced 48h iteration: architecture design, hardware assembly and functional coding.",
-        "Live technical demonstration and executive pitch in front of the judging panel.",
+        "Awarded 1st Place at the robotics hackathon organized by AREM in partnership with STMicroelectronics.",
+        "Intensive 48h sprint: electronic architecture, STM32 microcontroller integration and real-time control algorithms.",
+        "Executive technical pitch and live demo of the operational robotic platform in front of STMicroelectronics engineers.",
+        "Accomplished as a multidisciplinary team with Yasmin Hadj-Said, Inès Lixi, Typhaine Lavaud, and Elouan Marron.",
       ],
-      tags: ["Hackathon", "Prototyping", "Innovation"],
+      tags: ["Hackathon", "STMicroelectronics", "Robotics", "AREM"],
     },
   },
   {
-    t: "Chiffrement ASCON128",
+    t: "Chiffrement ASCON-128 en SystemVerilog",
     date: "2025",
     d: "Fév – Mai 2025",
     cat: ["Hardware", "Software"],
-    tags: ["SystemVerilog", "Crypto", "Typst"],
-    desc: "Accélérateur matériel pour le standard de cryptographie légère sélectionné par le NIST.",
+    tags: ["SystemVerilog", "Crypto", "Vivado", "ModelSim"],
+    desc: "Implémentation matérielle de bout en bout de l'algorithme de chiffrement léger ASCON-AEAD128 retenu par le NIST.",
     points: [
-      "Conception d'une machine d'états finis (FSM) optimisée pour le chiffrement/déchiffrement ASCON-128.",
-      "Synthèse et simulation sous ModelSim/Vivado pour garantir l'intégrité des trames chiffrées.",
-      "Documentation technique et benchmark de consommation de ressources rédigés sous Typst.",
+      "Conception et développement d'un circuit numérique en SystemVerilog garantissant la confidentialité et l'authenticité des échanges de données.",
+      "Modélisation matérielle des couches de permutation (addition de constantes, substitution non-linéaire par S-box, diffusion linéaire).",
+      "Création d'une machine d'états finis (FSM) optimisée pour piloter les 4 phases clés du protocole : initialisation, traitement des données associées, chiffrement/déchiffrement du texte et finalisation (tag d'authentification).",
+      "Intégration de l'architecture globale, bancs de test (testbenches) et validation complète du système via des outils de simulation pour assurer la fiabilité du circuit et le débogage des signaux.",
     ],
     link: "https://github.com/Arthrir/ISMIN-ASCON-CSN",
+    with: "Yasmin Hadj-Said",
     en: {
-      t: "ASCON128 encryption",
+      t: "ASCON-128 Encryption in SystemVerilog",
       d: "Feb – May 2025",
-      desc: "Hardware accelerator for the lightweight cryptography standard selected by NIST.",
+      desc: "End-to-end hardware implementation of the ASCON-AEAD128 lightweight authenticated encryption standard selected by NIST.",
       points: [
-        "Designed an optimized finite-state machine (FSM) for ASCON-128 encryption and decryption.",
-        "Synthesized and simulated in ModelSim/Vivado to guarantee payload integrity.",
-        "Comprehensive technical documentation and resource footprint benchmark written in Typst.",
+        "End-to-end digital circuit design in SystemVerilog guaranteeing confidentiality and authenticity of high-throughput data streams.",
+        "RTL modeling of cryptographic permutation layers: constant addition, non-linear S-box substitution, and linear diffusion matrix.",
+        "Engineered an optimized finite-state machine (FSM) steering the 4 core phases: initialization, associated data processing, plaintext ciphering/deciphering, and final authentication tag generation.",
+        "Comprehensive simulation and verification testbenches in Vivado/ModelSim ensuring signal integrity and zero-defect cryptographic outputs.",
       ],
+      tags: ["SystemVerilog", "Crypto", "Vivado", "ModelSim"],
     },
   },
   {
@@ -708,34 +717,34 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
  * - Option C : Commutateur RUN / DEBUG (LED verte RUN / orange DBG, fige ou active les signaux).
  * -------------------------------------------------------------------------- */
 
-// Traces principales reliant le boîtier central aux pads périphériques
+// Traces principales reliant le boîtier central aux pads périphériques (avec canaux de signaux aux couleurs pop)
 const BUS_TRACES = [
   // Top bus (D0..D3 + VDD rail)
-  "M149 126 V44",
-  "M171 126 V44",
-  "M193 126 V44", // VDD rail (porte C1)
-  "M215 126 V44",
-  "M237 126 V44",
+  { d: "M149 126 V44", color: "#06B6D4" }, // Cyan (D0 / High-speed)
+  { d: "M171 126 V44", color: "#10B981" }, // Emerald (D1 / Signal)
+  { d: "M193 126 V44", color: "#F59E0B" }, // Amber VDD rail (porte C1)
+  { d: "M215 126 V44", color: "#8B5CF6" }, // Violet (D2 / Clock)
+  { d: "M237 126 V44", color: "#F43F5E" }, // Rose (D3 / Strobe)
 
   // Bottom bus (D4..D7 + GND rail + Analog)
-  "M149 274 V356",
-  "M171 274 V356",
-  "M193 274 V356", // GND rail (porte C2)
-  "M215 274 V356",
-  "M237 274 V356",
-  "M259 274 V310 H281 V356", // Analog power rail (porte C3)
+  { d: "M149 274 V356", color: "#06B6D4" }, // Cyan
+  { d: "M171 274 V356", color: "#10B981" }, // Emerald
+  { d: "M193 274 V356", color: "#71717A" }, // Gray GND rail (porte C2)
+  { d: "M215 274 V356", color: "#8B5CF6" }, // Violet
+  { d: "M237 274 V356", color: "#F43F5E" }, // Rose
+  { d: "M259 274 V310 H281 V356", color: "#F59E0B" }, // Amber Analog rail (porte C3)
 
   // Left bus (SPI: SCK, MISO, MOSI, CS)
-  "M126 171 H44",
-  "M126 193 H44",
-  "M126 215 H44",
-  "M126 237 H44",
+  { d: "M126 171 H44", color: "#06B6D4" }, // Cyan
+  { d: "M126 193 H44", color: "#10B981" }, // Emerald
+  { d: "M126 215 H44", color: "#8B5CF6" }, // Violet
+  { d: "M126 237 H44", color: "#F43F5E" }, // Rose
 
   // Right bus (UART TX + I2C SCL/SDA + VREF)
-  "M270 149 H356", // UART TX (porte TP2_TX)
-  "M270 171 H356",
-  "M270 193 H356",
-  "M270 259 H356", // VREF (porte TP4_VREF et C4)
+  { d: "M270 149 H356", color: "#06B6D4" }, // Cyan UART TX (porte TP2_TX)
+  { d: "M270 171 H356", color: "#10B981" }, // Emerald I2C SCL
+  { d: "M270 193 H356", color: "#8B5CF6" }, // Violet I2C SDA
+  { d: "M270 259 H356", color: "#F59E0B" }, // Amber VREF (porte TP4_VREF et C4)
 ];
 
 // Condensateurs CMS (0603) — 100% opaques et montés directement sur leurs pistes
@@ -765,6 +774,15 @@ function Die() {
 
   // Option C : Commutateur RUN / DEBUG
   const [isDebug, setIsDebug] = useState(false);
+
+  // Commande PWM Ventilateur (Prototype capteur capacitif & hacheur de puissance)
+  const [fanSpeed, setFanSpeed] = useState<0 | 1 | 2 | 3>(2); // 0=Stop, 1=33%, 2=66%, 3=100%
+  const fanPwmDuty = isDebug ? 0 : fanSpeed === 0 ? 0 : fanSpeed === 1 ? 33 : fanSpeed === 2 ? 66 : 100;
+  const fanAnimDuration = isDebug || fanSpeed === 0 ? 999999 : fanSpeed === 1 ? 2.2 : fanSpeed === 2 ? 0.9 : 0.35;
+
+  const cycleFanSpeed = () => {
+    setFanSpeed((s) => ((s + 1) % 4) as 0 | 1 | 2 | 3);
+  };
 
   const triggerClockPulse = () => {
     setPulseCount((c) => c + 1);
@@ -1023,19 +1041,20 @@ function Die() {
           </g>
 
           {/* =================================================================
-              BUS PRINCIPAUX RELIÉS AUX PADS & AUX COMPOSANTS
+          {/* =================================================================
+              BUS PRINCIPAUX MULTI-COULEURS RELIÉS AUX PADS & AUX COMPOSANTS
               ================================================================= */}
-          {BUS_TRACES.map((d) => (
-            <g key={d}>
-              <path d={d} className="stroke-line/90" strokeWidth="1.25" strokeLinejoin="round" fill="none" />
+          {BUS_TRACES.map((trace) => (
+            <g key={trace.d}>
+              <path d={trace.d} className="stroke-line/90" strokeWidth="1.25" strokeLinejoin="round" fill="none" />
               {!isDebug && (
                 <motion.path
-                  d={d}
+                  d={trace.d}
                   fill="none"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="stroke-signal"
+                  stroke={trace.color}
                   initial={{ pathLength: 0, pathOffset: 0 }}
                   animate={{ pathLength: [0, 0.28, 0], pathOffset: [0, 0.65, 1] }}
                   transition={{ duration: animDuration, repeat: Infinity, ease: "easeInOut" }}
@@ -1043,6 +1062,114 @@ function Die() {
               )}
             </g>
           ))}
+
+          {/* =================================================================
+              BLOC FPGA & PORTES LOGIQUES NUMÉRIQUES (BOTTOM-RIGHT)
+              Portes AND, OR, NOT interconnectées façon bloc logique configurable (CLB / FPGA)
+              ================================================================= */}
+          {/* Piste d'interconnexion vers le boîtier central (270, 215 -> 305, 215) */}
+          <path d="M270 215 H310 V198 H326" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <path d="M303 237 H326" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {!isDebug && (
+            <motion.path
+              d="M270 215 H310 V198 H326"
+              fill="none"
+              strokeWidth="1.6"
+              stroke="#8B5CF6"
+              initial={{ pathLength: 0, pathOffset: 0 }}
+              animate={{ pathLength: [0, 0.4, 0], pathOffset: [0, 0.6, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+            />
+          )}
+
+          {/* Porte ET (AND gate) — CLB Slice A */}
+          <g transform="translate(326, 190)">
+            <path d="M0 0 H8 A8 8 0 0 1 8 16 H0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" />
+            <text x="5" y="10" fontSize="4.5" textAnchor="middle" className="font-mono font-bold fill-ink">AND</text>
+            {/* Ligne de sortie vers porte inverseur NOT */}
+            <path d="M16 8 H24" className="stroke-line" strokeWidth="1.2" />
+          </g>
+
+          {/* Inverseur / NOT gate avec bulle d'inversion */}
+          <g transform="translate(350, 194)">
+            <polygon points="0,0 8,4 0,8" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.1" />
+            <circle cx="9.5" cy="4" r="1.5" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.1" />
+          </g>
+
+          {/* Porte OU (OR gate) — CLB Slice B */}
+          <g transform="translate(326, 228)">
+            <path d="M0 0 Q6 8 0 16 Q10 16 16 8 Q10 0 0 0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.2" />
+            <text x="6" y="10" fontSize="4.5" textAnchor="middle" className="font-mono font-bold fill-ink">OR</text>
+          </g>
+
+          {/* =================================================================
+              VENTILATEUR PWM & HACHEUR DE PUISSANCE (PROTOTYPE ARTHUR)
+              Capteur capacitif -> Régulation PWM -> Hacheur MOSFET -> Hélice tournante
+              ================================================================= */}
+          {/* Ligne d'alimentation PWM depuis die (237, 274 -> vers transistor MOSFET Q1 à 325, 305) */}
+          <path d="M237 274 V292 H315 V305" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {!isDebug && fanSpeed > 0 && (
+            <motion.path
+              d="M237 274 V292 H315 V305"
+              fill="none"
+              strokeWidth="1.6"
+              stroke="#06B6D4"
+              initial={{ pathLength: 0, pathOffset: 0 }}
+              animate={{ pathLength: [0, 0.45, 0], pathOffset: [0, 0.55, 1] }}
+              transition={{ duration: fanAnimDuration * 1.2, repeat: Infinity, ease: "linear" }}
+            />
+          )}
+
+          {/* Transistor MOSFET de puissance (Q1 / Hacheur) */}
+          <g transform="translate(315, 305)">
+            {/* Boîtier CMS DPAK / SOT-223 */}
+            <rect x="-5" y="-5" width="10" height="10" rx="1" fill="#18181B" stroke="#09090B" strokeWidth="0.75" />
+            <rect x="-4" y="-7" width="8" height="2" fill="#94A3B8" />
+            <rect x="-3" y="5" width="2" height="2.5" fill="#94A3B8" />
+            <rect x="1" y="5" width="2" height="2.5" fill="#94A3B8" />
+            <text x="7" y="2" fontSize="4.5" className="fill-mute font-mono">Q1_MOS</text>
+          </g>
+
+          {/* Ligne vers le moteur du ventilateur */}
+          <path d="M315 315 V332 H332" className="stroke-line" strokeWidth="1.25" fill="none" />
+
+          {/* Ventilateur interactif avec hélice animée par le PWM */}
+          <g
+            className="cursor-pointer"
+            onClick={cycleFanSpeed}
+            transform="translate(346, 332)"
+          >
+            {/* Cadre extérieur du ventilateur (protection / chassis 3D) */}
+            <rect x="-14" y="-14" width="28" height="28" rx="4" fill="#F1F5F9" stroke="#334155" strokeWidth="1.2" />
+            <circle cx="0" cy="0" r="12" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="11.5" className="fill-white/80" />
+
+            {/* Hélice rotative à 4 pales aérodynamiques — Vitesse asservie au PWM */}
+            <motion.g
+              animate={!isDebug && fanSpeed > 0 ? { rotate: 360 } : { rotate: 0 }}
+              transition={{
+                repeat: Infinity,
+                duration: fanAnimDuration,
+                ease: "linear",
+              }}
+            >
+              {/* Moyeu central */}
+              <circle cx="0" cy="0" r="3.2" fill="#1E293B" />
+              {/* Pales incurvées */}
+              <path d="M0 -3 C4 -7 9 -7 9 -3 C9 0 4 0 0 -2 Z" fill="#0EA5E9" />
+              <path d="M3 0 C7 4 7 9 3 9 C0 9 0 4 2 0 Z" fill="#0EA5E9" />
+              <path d="M0 3 C-4 7 -9 7 -9 3 C-9 0 -4 0 0 2 Z" fill="#0284C7" />
+              <path d="M-3 0 C-7 -4 -7 -9 -3 -9 C0 -9 0 -4 -2 0 Z" fill="#0284C7" />
+            </motion.g>
+
+            {/* Noyau central du moteur */}
+            <circle cx="0" cy="0" r="1.8" fill="#F8FAFC" stroke="#0F172A" strokeWidth="0.6" />
+
+            {/* Sérigraphie indicateur PWM sous le ventilateur */}
+            <text x="0" y="20" fontSize="4.5" textAnchor="middle" className="fill-mute font-mono font-semibold">
+              PWM {fanPwmDuty}%
+            </text>
+          </g>
 
           {/* Condensateurs CMS (0603) — 100% SOLIDES ET OPAQUES */}
           {SM_CAPS.map((cap) => (
@@ -1080,10 +1207,10 @@ function Die() {
             <text x="6" y="-3" fontSize="5" className="fill-mute font-mono">TP2_TX</text>
           </g>
 
-          <g transform="translate(295, 259)">
+          <g transform="translate(288, 259)">
             <circle cx="0" cy="0" r="3.2" className="fill-signal/15 stroke-signal" strokeWidth="1" />
             <circle cx="0" cy="0" r="1.2" className="fill-signal" />
-            <text x="6" y="-3" fontSize="5" className="fill-mute font-mono">TP4_VREF</text>
+            <text x="-4" y="9" fontSize="5" textAnchor="end" className="fill-mute font-mono">TP4_VREF</text>
           </g>
 
           {/* =================================================================
@@ -1164,6 +1291,17 @@ function Die() {
           <span>{clockSurge ? "PULSE 120MHz" : "TEST CLK"}</span>
         </button>
 
+        {/* Option D : Ventilateur PWM & Hacheur */}
+        <button
+          type="button"
+          onClick={cycleFanSpeed}
+          className={`flex items-center gap-1.5 rounded px-2 py-0.5 font-semibold transition ${fanSpeed > 0 ? "border border-cyan-500/40 bg-cyan-500/15 text-cyan-600" : "border border-ink/20 bg-ink/5 text-mute"}`}
+          title="Réguler la vitesse PWM du ventilateur (Hacheur)"
+        >
+          <span className={`size-1.5 rounded-full ${fanSpeed > 0 ? "bg-cyan-500 shadow-[0_0_6px_#06b6d4]" : "bg-ink/30"}`} />
+          <span>PWM: {fanPwmDuty}%</span>
+        </button>
+
         {/* Option C : Commutateur Run / Debug */}
         <button
           type="button"
@@ -1178,7 +1316,7 @@ function Die() {
 
       {/* Légende bas */}
       <div className="mt-2 flex items-center justify-between px-1 font-mono text-[10px] text-mute uppercase">
-        <span>fig. 01 — banc silicium interactif</span>
+        <span>fig. 01 — banc silicium & logique fpga</span>
         <span className="text-signal">
           {isDebug ? "PAUSED (DEBUG HALT)" : clockSurge ? "CLOCK ×3.6 (PULSE)" : hot ? "CLOCK ×2.0 (ACTIVE)" : "32.768 KHZ"}
         </span>
@@ -1551,10 +1689,10 @@ const engDetail = (e: EngBase, lang: Lang): Detail => ({
 });
 
 const FEATURED_PROJECT_TITLES = [
-  "FPGA — ECG & communication sécurisée",
+  "Monitoring ECG sécurisé sur FPGA",
   "Terrariot — IoT qualité de l'air",
-  "Ventilateur à capteur capacitif",
-  "Robot autonome STM32",
+  "Ventilateur régulé par capteur capacitif",
+  "🏆 Victoire au Hackathon STMicroelectronics",
 ];
 
 /* ---------------- Projects ---------------- */
@@ -1815,8 +1953,8 @@ function Rail() {
             {/* Roues avant */}
             <rect x="0" y="15" width="2.5" height="5" rx="1" className="fill-ink" />
             <rect x="9.5" y="15" width="2.5" height="5" rx="1" className="fill-ink" />
-            {/* Châssis orange orienté vers le bas (nez à y=24) */}
-            <path d="M6 3 L8.5 6 L8 19 L6 24 L4 19 L3.5 6 Z" className="fill-signal" />
+            {/* Châssis rouge course vif (Ferrari / Rosso Corsa #E10600) orienté vers le bas (nez à y=24) */}
+            <path d="M6 3 L8.5 6 L8 19 L6 24 L4 19 L3.5 6 Z" fill="#E10600" />
             {/* Aileron avant (en bas) */}
             <rect x="0" y="22" width="12" height="3" rx="0.8" className="fill-ink" />
             {/* Cockpit / Halo */}
@@ -1980,6 +2118,14 @@ function Page() {
   const [cv, setCv] = useState(false);
   const [openSchool, setOpenSchool] = useState<string | null>(null);
   useEffect(() => { const o = () => setCv(true); addEventListener("open-cv", o); return () => removeEventListener("open-cv", o); }, []);
+  useEffect(() => {
+    const handleOpenSchool = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (customEvent.detail) setOpenSchool(customEvent.detail);
+    };
+    window.addEventListener("school-open", handleOpenSchool);
+    return () => window.removeEventListener("school-open", handleOpenSchool);
+  }, []);
   // un jeu lancé depuis le 3615 ramène au Minitel quand on le quitte
   const closeGame = () => { if (viaMinitel && game !== "minitel") setGame("minitel"); else { setGame(null); setViaMinitel(false); } };
   const taps = useRef({ n: 0, t: 0 as ReturnType<typeof setTimeout> | 0 });
@@ -2094,7 +2240,7 @@ function Page() {
           <motion.figure
             initial={{ opacity: 0, y: 30, rotate: 0 }} animate={{ opacity: 1, y: 0, rotate: -4 }} transition={{ duration: 1.2, ease, delay: 0.9 }}
             whileHover={{ rotate: 0, scale: 1.04 }}
-            className="group absolute -top-10 left-0 w-24 bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 sm:w-28 sm:-top-8 sm:-left-2 md:-top-10 md:-left-16 md:w-36"
+            className="group absolute -top-12 -left-3 w-[105px] bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 sm:w-32 sm:-top-10 sm:-left-6 md:-top-12 md:-left-20 md:w-40"
           >
             <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
             <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
@@ -2131,7 +2277,7 @@ function Page() {
         <Circuit onMinitel={() => setGame("minitel")} />
 
         {/* ÉCOLES & FORMATION */}
-        <div className="mt-24 border-t border-ink pt-14">
+        <div id="ecoles-formation" className="mt-24 border-t border-ink pt-14">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
               <Label>{tr("§02.b — Académique", "§02.b — Academics")}</Label>
@@ -2327,13 +2473,13 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#10B981" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
 
       {/* ENGAGEMENTS */}
-      <section id="engagements" style={{ "--color-signal": "#E10600" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
+      <section id="engagements" style={{ "--color-signal": "#8B5CF6" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
           <Stacked ghost="Leadership" n="05">{tr("Engagements.", "Involvement.")}</Stacked>
           <p className="max-w-sm text-mute">{tr("Là où j'ai appris à aligner des gens, un budget et une deadline — le cœur du métier de PO.", "Where I learned to align people, a budget and a deadline — the core of a PO's job.")}</p>
@@ -2342,13 +2488,13 @@ function Page() {
       </section>
 
       {/* PASSIONS */}
-      <section id="passions" style={{ "--color-signal": "#E10600" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
+      <section id="passions" style={{ "--color-signal": "#F43F5E" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Personnalité", "Personality")} n="06">Passions.</Stacked></div>
         <Passions Label={Label} />
       </section>
 
       {/* STACK */}
-      <section id="stack" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="stack" style={{ "--color-signal": "#06B6D4" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost="Toolbox" n="07"><Hl>{tr("Du transistor au ", "From transistor to ")}<span className="font-serif font-normal italic">{tr("produit", "product")}</span>.</Hl></Stacked></div>
         <div className="border-t border-ink">
           {STACK.map((raw) => loc(raw, lang)).map((s, i) => (
