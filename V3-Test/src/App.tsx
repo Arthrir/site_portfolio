@@ -1488,7 +1488,12 @@ function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
                 </div>
               )}
               <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-line pt-6">
-                {d.with && <span className="mr-auto text-sm text-mute">{tr("En binôme avec", "Teamed with")} <Person name={d.with} /></span>}
+                {d.with && (
+                  <span className="mr-auto text-sm text-mute">
+                    {d.with.includes(",") ? tr("En équipe avec", "Teamed with") : tr("En binôme avec", "Teamed with")}{" "}
+                    <Person name={d.with} />
+                  </span>
+                )}
                 {d.links?.map((l) => (
                   <a key={l.h} href={l.h} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-ink px-4 py-2.5 text-sm font-medium text-paper hover:bg-signal">{l.l} <ArrowUpRight className="size-4" /></a>
                 ))}
@@ -1717,9 +1722,15 @@ function Projects() {
                   <div className="flex flex-wrap gap-1.5">
                     {p.tags.slice(0, 3).map((t) => <span key={t} className="border border-current/20 px-1.5 py-0.5 font-mono text-[10px] uppercase opacity-70">{t}</span>)}
                   </div>
-                  <div className="mt-4 flex items-center justify-between text-xs">
-                    <span className="text-mute group-hover:text-paper/50">{p.with ? `${tr("avec", "with")} ${p.with}` : ""}</span>
-                    <span className="flex items-center gap-1 font-medium text-signal">
+                  <div className="mt-4 flex items-center justify-between gap-2 text-xs">
+                    <span className="truncate text-mute group-hover:text-paper/50" title={p.with ? `${tr("avec", "with")} ${p.with}` : undefined}>
+                      {p.with
+                        ? p.with.includes(",")
+                          ? tr(`Équipe (${p.with.split(",").length + 1} pers.)`, `Team (${p.with.split(",").length + 1})`)
+                          : `${tr("avec", "with")} ${p.with}`
+                        : ""}
+                    </span>
+                    <span className="flex shrink-0 items-center gap-1 font-medium text-signal">
                       {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")} <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45" />
                     </span>
                   </div>
