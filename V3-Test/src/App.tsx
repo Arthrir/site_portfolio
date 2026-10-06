@@ -1722,7 +1722,7 @@ function Projects() {
                     {p.tags.slice(0, 3).map((t) => <span key={t} className="border border-current/20 px-1.5 py-0.5 font-mono text-[10px] uppercase opacity-70">{t}</span>)}
                   </div>
                   <div className="mt-4 flex items-center justify-between text-xs">
-                    <span className="text-mute group-hover:text-paper/50">{p.with ? `${tr("avec", "with")} ${p.with}` : "Solo"}</span>
+                    <span className="text-mute group-hover:text-paper/50">{p.with ? `${tr("avec", "with")} ${p.with}` : ""}</span>
                     <span className="flex items-center gap-1 font-medium text-signal">
                       {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")} <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45" />
                     </span>
@@ -2461,7 +2461,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#EAB308" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#CA8A04" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
@@ -2497,76 +2497,47 @@ function Page() {
             </Reveal>
           ))}
         </div>
-        <div className="mt-20 grid gap-8 lg:grid-cols-2">
-          {/* Carte Langues */}
-          <div className="rounded-2xl border border-ink/20 bg-paper/60 p-7 md:p-8 shadow-sm backdrop-blur-sm transition-all hover:border-ink/40">
-            <div className="flex items-center justify-between border-b border-ink/10 pb-4">
-              <Label className="text-ink/80">{tr("Langues de travail", "Working Languages")}</Label>
-              <span className="font-mono text-[10px] uppercase tracking-wider text-mute">FR · EN · DE</span>
-            </div>
+        <div className="mt-16 grid gap-12 lg:grid-cols-2">
+          <div>
+            <Label>{tr("Langues", "Languages")}</Label>
             <div className="mt-6 space-y-6">
               {LANGS.map((raw) => loc(raw, lang)).map((l, i) => (
-                <div key={i} className="group">
-                  <div className="flex items-baseline justify-between">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-lg font-semibold tracking-tight text-ink">{l.l}</span>
-                      <span className="rounded bg-ink/5 px-2 py-0.5 font-mono text-[11px] font-semibold text-signal">{l.v}</span>
-                    </div>
-                    <span className="font-mono text-xs text-mute group-hover:text-ink">{l.p}%</span>
+                <div key={i}>
+                  <div className="flex justify-between text-base">
+                    <span className="font-semibold text-ink">{l.l}</span>
+                    <span className="font-mono text-xs text-mute">{l.v}</span>
                   </div>
-                  <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-ink/10">
+                  <div className="mt-2.5 h-[3px] bg-line">
                     <motion.div
-                      className="h-full rounded-full bg-signal"
+                      className="h-full origin-left bg-ink"
                       style={{ width: `${l.p}%` }}
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
                       viewport={{ once: true }}
-                      transition={{ duration: 1.1, ease, delay: i * 0.12 }}
+                      transition={{ duration: 1.2, ease, delay: i * 0.12 }}
                     />
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Carte Certifications */}
-          <div className="rounded-2xl border border-ink/20 bg-paper/60 p-7 md:p-8 shadow-sm backdrop-blur-sm transition-all hover:border-ink/40">
-            <div className="flex items-center justify-between border-b border-ink/10 pb-4">
-              <Label className="text-ink/80">{tr("Certifications & Distinctions", "Certifications & Accreditations")}</Label>
-              <span className="font-mono text-[10px] uppercase tracking-wider text-signal font-semibold">VALIDÉES</span>
-            </div>
-            <div className="mt-6 space-y-4">
+          <div>
+            <Label>Certifications</Label>
+            <ul className="mt-6 space-y-4 text-base">
               {[
-                {
-                  title: "TOEIC 955 / 990 (Niveau C1)",
-                  sub: tr("Score officiel · Cambridge English & TOEFL", "Official Score · Cambridge English & TOEFL"),
-                  badge: "Langues",
-                },
-                {
-                  title: "Label HandiManagement",
-                  sub: tr("Inclusion et management des situations de handicap en entreprise", "Workplace disability inclusion and management accreditation"),
-                  badge: "RSE / Management",
-                },
-                {
-                  title: tr("PSC1 — Prévention & Secours Civiques", "PSC1 — First Aid & Civilian Rescue"),
-                  sub: tr("Formation premiers secours et gestes d'urgence", "Emergency first aid and life-saving rescue procedures"),
-                  badge: "Sécurité",
-                },
+                { title: "TOEIC 955 / 990 · TOEFL · Cambridge", sub: tr("Niveau C1 officiel", "Official C1 proficiency") },
+                { title: "Label HandiManagement — Companieros × Carrefour", sub: tr("Sensibilisation et intégration du handicap en entreprise", "Workplace disability inclusion & management") },
+                { title: tr("PSC1 — Prévention & Secours Civiques", "PSC1 — First aid certification"), sub: tr("Gestes d'urgence et premiers secours", "Emergency first aid procedures") },
               ].map((c) => (
-                <div key={c.title} className="flex items-start gap-4 rounded-xl border border-ink/10 bg-white/70 p-4 transition-all hover:border-ink/30 hover:bg-white">
-                  <div className="mt-1 flex size-5 shrink-0 items-center justify-center rounded-full bg-signal/15 text-signal">
-                    <Check className="size-3 stroke-[2.5]" />
+                <li key={c.title} className="flex items-start gap-3 leading-snug">
+                  <span className="mt-2.5 h-[2px] w-3.5 shrink-0 rounded-full bg-signal" />
+                  <div>
+                    <span className="font-semibold text-ink">{c.title}</span>
+                    <span className="block font-mono text-xs text-mute mt-0.5">{c.sub}</span>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-baseline justify-between gap-2">
-                      <h4 className="text-[15px] font-semibold text-ink">{c.title}</h4>
-                      <span className="rounded border border-ink/10 bg-ink/5 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-mute">{c.badge}</span>
-                    </div>
-                    <p className="mt-0.5 text-xs text-mute leading-relaxed">{c.sub}</p>
-                  </div>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       </section>
