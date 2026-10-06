@@ -1484,12 +1484,24 @@ function Rail() {
         ); })}
         <motion.div style={{ top }} className="pointer-events-none absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform group-active/rail:scale-125">
           <svg width="12" height="26" viewBox="0 0 12 26" className="drop-shadow-sm">
-            <rect x="0" y="1" width="12" height="3" rx="1" className="fill-ink" />
-            <rect x="0" y="22" width="12" height="3" rx="1" className="fill-ink" />
-            <rect x="0" y="6" width="2.5" height="5" rx="1" className="fill-ink" /><rect x="9.5" y="6" width="2.5" height="5" rx="1" className="fill-ink" />
-            <rect x="0" y="16" width="2.5" height="5" rx="1" className="fill-ink" /><rect x="9.5" y="16" width="2.5" height="5" rx="1" className="fill-ink" />
-            <path d="M6 2 L8 7 L8.5 20 L6 23 L3.5 20 L4 7 Z" className="fill-signal" />
-            <circle cx="6" cy="13" r="1.3" className="fill-ink" />
+            {/* Aileron arrière (en haut) */}
+            <rect x="0" y="1" width="12" height="3" rx="0.8" className="fill-ink" />
+            {/* Roues arrière */}
+            <rect x="0" y="5" width="2.5" height="5" rx="1" className="fill-ink" />
+            <rect x="9.5" y="5" width="2.5" height="5" rx="1" className="fill-ink" />
+            {/* Roues avant */}
+            <rect x="0" y="15" width="2.5" height="5" rx="1" className="fill-ink" />
+            <rect x="9.5" y="15" width="2.5" height="5" rx="1" className="fill-ink" />
+            {/* Châssis orange orienté vers le bas (nez à y=24) */}
+            <path d="M6 3 L8.5 6 L8 19 L6 24 L4 19 L3.5 6 Z" className="fill-signal" />
+            {/* Aileron avant (en bas) */}
+            <rect x="0" y="22" width="12" height="3" rx="0.8" className="fill-ink" />
+            {/* Cockpit / Halo */}
+            <ellipse cx="6" cy="13" rx="1.6" ry="2.6" className="fill-ink" />
+            {/* Casque jaune du pilote */}
+            <circle cx="6" cy="13" r="1.3" fill="#FACC15" />
+            {/* Visière orientée vers l'avant (vers le bas) */}
+            <path d="M5.1 13.6 H6.9" stroke="#0A0A0A" strokeWidth="0.6" strokeLinecap="round" />
           </svg>
         </motion.div>
       </div>
