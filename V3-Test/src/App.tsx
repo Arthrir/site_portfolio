@@ -1355,8 +1355,7 @@ function Page() {
         <div className="border-t border-paper/10">
           <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-4 px-6 py-3 md:px-10">
             <span className="font-mono text-[11px] tracking-[0.14em] text-paper/40 uppercase">© 2026 Arthur Doradoux · <a href="#mentions-legales" className="hover:text-paper">{tr("Mentions légales", "Legal notice")}</a></span>
-            <LangToggle dark />
-            <span className="font-mono text-[11px] tracking-[0.14em] text-paper/30 uppercase">{tr("Il y a des secrets", "There are secrets")}</span>
+            <span className="hidden font-mono text-[11px] tracking-[0.14em] text-paper/30 uppercase md:inline">{tr("Easter eggs cachés dans la page", "Easter eggs hidden in the page")}</span>
           </div>
         </div>
       </footer>
