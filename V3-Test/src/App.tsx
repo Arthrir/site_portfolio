@@ -1738,7 +1738,13 @@ function Page() {
         <div className="grid-bg pointer-events-none absolute inset-0 -z-10 opacity-50 [mask-image:radial-gradient(ellipse_at_70%_45%,black,transparent_70%)]" />
         <motion.div style={{ y: heroY, opacity: heroO }}>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2">
-            <span className="flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />{tr("Disponible — avril 2027", "Available — April 2027")}</span>
+            <span className="flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase">
+              <span className="relative flex size-2 items-center justify-center">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
+              </span>
+              <span className="text-ink font-medium">{tr("Disponible — avril 2027", "Available — April 2027")}</span>
+            </span>
             <Label>Mines Saint-Étienne × Politecnico di Milano</Label>
           </motion.div>
           <h1 className="text-[clamp(3.4rem,10vw,9.5rem)] leading-[0.86] font-semibold tracking-[-0.05em]">
@@ -1753,13 +1759,15 @@ function Page() {
           <Reveal delay={0.6} className="mt-8 max-w-xl">
             <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
               {tr(
-                "Étudiant en microélectronique et informatique, passionné par les innovations technologiques. À la recherche d'un stage de fin d'études (5+ mois) à partir d'avril 2027.",
-                "Microelectronics and Computer Science student, passionate about technological innovation. Currently seeking a 5+ month end-of-studies internship starting in April 2027."
+                "Élève-ingénieur en microélectronique et conception produit (Mines Saint-Étienne × Politecnico di Milano). À la recherche d'un stage de fin d'études de 5+ mois à partir d'avril 2027.",
+                "Engineering student in microelectronics and product design (Mines Saint-Étienne × Politecnico di Milano). Seeking a 5+ month end-of-studies internship starting April 2027."
               )}
             </p>
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-mute">
-              <Label>{tr("Rôle visé :", "Target role:")}</Label>
-              <span className="font-semibold text-ink"><Hl>Product Owner / Product Manager</Hl> {tr("ou ingénierie hardware / software", "or hardware / software engineering")}</span>
+            <div className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] leading-normal text-ink/80">
+              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Rôles visés :", "Target roles:")}</span>
+              <span className="font-semibold text-ink">Product Owner / Product Manager</span>
+              <span className="text-mute/40">·</span>
+              <span className="font-medium text-ink/85">{tr("Prototypage, Test & Innovation Produit", "Prototyping, Testing & Product Innovation")}</span>
             </div>
           </Reveal>
           <Reveal delay={0.75} className="mt-10 flex flex-wrap gap-3">
@@ -1980,8 +1988,8 @@ function Page() {
           <h2 className="mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-semibold tracking-[-0.05em]">{tr("Travaillons", "Let's work")}<br />{tr("ensemble", "together")}<span className="text-signal">.</span></h2>
           <p className="mt-8 max-w-xl text-lg text-mute leading-relaxed">
             {tr(
-              "À la recherche d'un stage de fin d'études (5+ mois) à partir d'avril 2027 — Product Owner, Product Manager, ou ingénierie hardware / software.",
-              "Seeking a 5+ month end-of-studies internship starting April 2027 — Product Owner, Product Manager, or hardware / software engineering."
+              "À la recherche d'un stage de fin d'études (5+ mois) à partir d'avril 2027 — Product Owner, Product Manager, Prototypage & Innovation Produit.",
+              "Seeking a 5+ month end-of-studies internship starting April 2027 — Product Owner, Product Manager, Prototyping & Product Innovation."
             )}
           </p>
           <div className="mt-12 flex flex-wrap items-center gap-6">

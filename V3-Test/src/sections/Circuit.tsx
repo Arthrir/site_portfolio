@@ -182,16 +182,16 @@ const ITEMS: Loc<Item>[] = [
     to: "2027-09",
     details: [
       "À la recherche d'un stage de fin d'études (5+ mois) dès avril 2027.",
-      "Rôles cibles : Product Owner, Product Manager ou ingénierie hardware/software innovante.",
-      "Passerelle naturelle entre excellence technique et vision produit orientée utilisateur.",
+      "Rôles cibles : Product Owner, Product Manager, Prototypage & Innovation Produit.",
+      "Passerelle naturelle entre excellence hardware/système et vision produit orientée utilisateur.",
     ],
     en: {
       label: "PO / PM Internship",
       place: "5+ months, starting April 2027",
       details: [
         "Seeking an end-of-studies internship (5+ months) starting April 2027.",
-        "Target roles: Product Owner, Product Manager, or innovative HW/SW engineering.",
-        "Natural bridge connecting engineering rigor and user-centric product vision.",
+        "Target roles: Product Owner, Product Manager, Prototyping & Product Innovation.",
+        "Natural bridge connecting hardware engineering, prototyping and user-centric product vision.",
       ],
     },
   },
