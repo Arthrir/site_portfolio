@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "motion/react";
-import { ArrowUpRight, Gamepad2 } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { loc, useLang, type Lang, type Loc } from "../i18n";
 
 /* ============================================================================
@@ -136,17 +136,19 @@ const ITEMS: Loc<Item>[] = [
     from: "2025-03",
     to: "2026-03",
     details: [
-      "Direction de l'association (16 membres) et budget de plus de 25 000 €.",
-      "Maintenance du réseau Wi-Fi/filaire de 150+ logements du campus.",
-      "Organisation d'événements et LAN e-sport avec Riot Games et Red Bull.",
+      "Direction de l'association (16 membres) et gestion d'un budget de plus de 25 000 €.",
+      "Maintenance du réseau Wi-Fi/filaire de 150+ logements étudiants du campus.",
+      "Organisation d'événements majeurs et LAN e-sport avec Riot Games et Red Bull.",
+      "Élu membre d'honneur à la fin de mon mandat : membre d'honneur actif jusqu'en mars 2027.",
     ],
     en: {
       label: "MINITEL President",
       place: "Student association, Gardanne",
       details: [
         "Led student association (16 members) and managed €25k+ budget.",
-        "Campus Wi-Fi/wired network maintenance for 150+ student homes.",
+        "Campus Wi-Fi/wired network maintenance for 150+ student apartments.",
         "Organized major LAN events partnered with Riot Games & Red Bull.",
+        "Elected honorary member at the end of presidential term: serving as honorary member through March 2027.",
       ],
     },
   },
@@ -268,9 +270,7 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
   const handleAction = (it: Item) => {
     if (it.row === "STAGE") {
       document.getElementById("experiences")?.scrollIntoView({ behavior: "smooth" });
-    } else if (it.id === "minitel") {
-      onMinitel ? onMinitel() : document.getElementById("engagements")?.scrollIntoView({ behavior: "smooth" });
-    } else if (it.row === "ASSO") {
+    } else if (it.id === "minitel" || it.row === "ASSO") {
       document.getElementById("engagements")?.scrollIntoView({ behavior: "smooth" });
     }
   };
@@ -442,15 +442,14 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                   </a>
                 </div>
               )}
-              {item.id === "minitel" && (
+              {item.row === "ASSO" && (
                 <div className="mt-3 pt-2">
-                  <button
-                    onClick={() => (onMinitel ? onMinitel() : document.getElementById("engagements")?.scrollIntoView({ behavior: "smooth" }))}
+                  <a
+                    href="#engagements"
                     className="inline-flex items-center gap-1.5 text-xs font-semibold text-signal hover:underline"
                   >
-                    <Gamepad2 className="size-3.5" />
-                    {tr("Lancer Minitel 3D", "Launch Minitel 3D")}
-                  </button>
+                    {tr("Voir dans les engagements", "View in involvements")} <ArrowUpRight className="size-3.5" />
+                  </a>
                 </div>
               )}
             </div>
@@ -462,9 +461,9 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
                     {tr("Double-clic pour voir le stage", "Double-click to view internship")}
                   </span>
                 )}
-                {item.id === "minitel" && (
+                {item.row === "ASSO" && (
                   <span className="font-mono text-[10px] uppercase tracking-wider text-mute border border-ink/10 px-2 py-0.5 rounded">
-                    {tr("Double-clic pour lancer le jeu", "Double-click to launch game")}
+                    {tr("Double-clic pour voir l'engagement", "Double-click to view involvement")}
                   </span>
                 )}
               </div>
