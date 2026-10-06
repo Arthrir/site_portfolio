@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence, MotionValue } from "motion/react";
-import { ArrowUpRight, Command, Copy, Check, Download, Mail, Search, CornerDownLeft } from "lucide-react";
+import { ArrowUpRight, Command, Copy, Check, Download, Mail, Search, CornerDownLeft, Send } from "lucide-react";
 import Logo from "./components/Logo";
 import Legal from "./sections/Legal";
 import CvViewer from "./sections/CvViewer";
@@ -422,6 +422,155 @@ function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
   );
 }
 
+function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { tr } = useLang();
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+
+  useEffect(() => {
+    if (!open) {
+      setStatus("idle");
+      setFormData({ name: "", email: "", message: "" });
+      return;
+    }
+    const k = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", k);
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", k); document.body.style.overflow = ""; };
+  }, [open, onClose]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: "87fde94b-7057-4663-9e22-63385526c25a",
+          subject: "Nouveau message direct depuis le portfolio (V3) !",
+          from_name: "Arthur Doradoux - Portfolio V3",
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus("success");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={onClose} />
+          <motion.div
+            role="dialog"
+            aria-modal
+            initial={{ scale: 0.94, opacity: 0, y: 16 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.94, opacity: 0, y: 16 }}
+            transition={{ type: "spring", stiffness: 320, damping: 28 }}
+            className="relative w-full max-w-lg rounded-2xl border border-ink bg-paper p-7 shadow-2xl md:p-9"
+          >
+            <div className="flex items-center justify-between border-b border-ink/15 pb-4">
+              <Label>{tr("Message direct", "Direct message")}</Label>
+              <button onClick={onClose} className="font-mono text-[11px] uppercase tracking-wider text-mute hover:text-signal">
+                {tr("Fermer", "Close")} ✕
+              </button>
+            </div>
+
+            {status === "success" ? (
+              <div className="py-10 text-center">
+                <div className="mx-auto mb-4 grid size-12 place-items-center rounded-full bg-signal text-white">
+                  <Check className="size-6" />
+                </div>
+                <h3 className="text-2xl font-semibold tracking-tight">{tr("Message envoyé !", "Message sent!")}</h3>
+                <p className="mt-2 text-sm text-mute">
+                  {tr("Merci ! Je vous réponds au plus vite sur votre adresse email.", "Thank you! I will reply to your email address as soon as possible.")}
+                </p>
+                <button
+                  onClick={onClose}
+                  className="mt-6 rounded-full bg-ink px-6 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-signal"
+                >
+                  {tr("Fermer", "Close")}
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+                <div>
+                  <label className="block font-mono text-[11px] font-semibold uppercase tracking-wider text-ink/70">
+                    {tr("Votre nom", "Your name")} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder={tr("Arthur Dupont", "John Doe")}
+                    className="mt-1.5 w-full rounded-lg border border-ink/20 bg-white/70 px-4 py-2.5 text-sm text-ink outline-none transition focus:border-ink focus:bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-[11px] font-semibold uppercase tracking-wider text-ink/70">
+                    {tr("Votre adresse email", "Your email address")} *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="nom@entreprise.com"
+                    className="mt-1.5 w-full rounded-lg border border-ink/20 bg-white/70 px-4 py-2.5 text-sm text-ink outline-none transition focus:border-ink focus:bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block font-mono text-[11px] font-semibold uppercase tracking-wider text-ink/70">
+                    {tr("Message", "Message")} *
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    placeholder={tr("Bonjour Arthur, nous serions ravis d'échanger à propos d'une opportunité...", "Hello Arthur, we would love to connect regarding an opportunity...")}
+                    className="mt-1.5 w-full resize-none rounded-lg border border-ink/20 bg-white/70 px-4 py-2.5 text-sm text-ink outline-none transition focus:border-ink focus:bg-white"
+                  />
+                </div>
+
+                {status === "error" && (
+                  <p className="font-mono text-xs text-signal">
+                    {tr("Une erreur est survenue lors de l'envoi. Veuillez utiliser contact@arthurdx.com.", "An error occurred while sending. Please use contact@arthurdx.com directly.")}
+                  </p>
+                )}
+
+                <div className="flex items-center justify-between pt-2">
+                  <span className="font-mono text-[10px] text-mute">Web3Forms · direct inbox</span>
+                  <button
+                    type="submit"
+                    disabled={status === "sending"}
+                    className="flex items-center gap-2 rounded-full bg-ink px-6 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-signal disabled:opacity-60"
+                  >
+                    {status === "sending" ? tr("Envoi...", "Sending...") : tr("Envoyer", "Send")}
+                    <Send className="size-3.5" />
+                  </button>
+                </div>
+              </form>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 const CAT_EN: Record<Cat, string> = { Hardware: "Hardware", Software: "Software", IA: "AI", Produit: "Product" };
 const catLabel = (c: Cat | "Tous", lang: Lang) => (lang === "en" ? (c === "Tous" ? "All" : CAT_EN[c]) : c);
 const projectDetail = (p: ProjectBase, lang: Lang): Detail => ({
@@ -804,6 +953,7 @@ function Page() {
   }, []);
   useEffect(() => { document.body.style.overflow = legal ? "hidden" : ""; }, [legal]);
   const [game, setGame] = useState<Game | null>(null);
+  const [contactModal, setContactModal] = useState(false);
   const [viaMinitel, setViaMinitel] = useState(false);
   const [cv, setCv] = useState(false);
   useEffect(() => { const o = () => setCv(true); addEventListener("open-cv", o); return () => removeEventListener("open-cv", o); }, []);
@@ -1104,12 +1254,21 @@ function Page() {
               "Seeking a 5+ month end-of-studies internship starting April 2027 — Product Owner, Product Manager, or hardware / software engineering."
             )}
           </p>
-          <button onClick={copy} className="group mt-12 flex items-center gap-4 border-b-2 border-ink pb-2 text-2xl font-medium md:text-4xl">
-            contact@arthurdx.com
-            <span className="grid size-10 place-items-center rounded-full bg-ink text-paper transition-colors group-hover:bg-signal">
-              {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
-            </span>
-          </button>
+          <div className="mt-12 flex flex-wrap items-center gap-6">
+            <button onClick={copy} className="group flex items-center gap-4 border-b-2 border-ink pb-2 text-2xl font-medium md:text-4xl">
+              contact@arthurdx.com
+              <span className="grid size-10 place-items-center rounded-full bg-ink text-paper transition-colors group-hover:bg-signal">
+                {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+              </span>
+            </button>
+            <button
+              onClick={() => setContactModal(true)}
+              className="flex items-center gap-2 rounded-full border border-ink bg-ink px-6 py-3 text-sm font-semibold tracking-wide text-paper transition-all hover:bg-signal hover:border-signal"
+            >
+              <Send className="size-4" />
+              <span>{tr("Envoyer un message direct", "Send direct message")}</span>
+            </button>
+          </div>
           <div className="mt-14 grid grid-cols-2 gap-px border border-ink bg-ink lg:grid-cols-4">
             {SOCIALS.map(({ I, l, h }) => (
               <a key={l} href={h} target="_blank" rel="noreferrer" className="group flex items-center justify-between bg-paper p-6 transition-colors hover:bg-ink hover:text-paper">
@@ -1192,6 +1351,7 @@ function Page() {
         </AnimatePresence>
       </Suspense>
       <Palette open={palette} onClose={() => setPalette(false)} onGame={setGame} />
+      <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
     </div>
   );
 }
