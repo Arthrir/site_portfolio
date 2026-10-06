@@ -1319,8 +1319,8 @@ const PEOPLE: Record<string, string> = {
   "Inès Lixi": "https://www.linkedin.com/in/in%C3%A8s-lixi-979654329",
   "Jade Diouri": "https://www.linkedin.com/in/jade-diouri-7a4688328",
   "Laure Rivier": "https://www.linkedin.com/in/laure-rivier-83060a328",
-  "Typhaine Lavaud": "https://www.linkedin.com/in/typhaine-lavaud",
-  "Elouan Marron": "https://www.linkedin.com/in/elouan-marron",
+  "Typhaine Lavaud": "https://fr.linkedin.com/in/typhaine-lavaud-048929251",
+  "Elouan Marron": "https://fr.linkedin.com/in/mrbrownfr",
 };
 function Person({ name }: { name: string }) {
   const parts = name.split(/,\s*/);
