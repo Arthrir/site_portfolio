@@ -920,11 +920,27 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
               );
             })}
           </div>
+          <div className="flex items-center gap-1.5 md:hidden">
+            <button
+              onClick={() => window.dispatchEvent(new Event("open-cv"))}
+              className="flex h-8 items-center rounded-full bg-ink px-3 font-mono text-[11px] font-semibold text-paper transition-colors hover:bg-signal active:scale-95"
+            >
+              CV
+            </button>
+            <button
+              onClick={() => setMenu((m) => !m)}
+              aria-label="Menu"
+              aria-expanded={menu}
+              className="flex h-8 items-center gap-1.5 rounded-full bg-ink/5 px-2.5 text-[12px] font-semibold text-ink transition-colors hover:bg-ink/10 active:scale-95"
+            >
+              <span className="max-w-[70px] truncate">{nav.find((n) => n.id === section)?.label ?? "Menu"}</span>
+              <span className="flex w-3 flex-col gap-[3px]">
+                <span className={`h-px bg-ink transition-transform duration-200 ${menu ? "translate-y-[2px] rotate-45" : ""}`} />
+                <span className={`h-px bg-ink transition-transform duration-200 ${menu ? "-translate-y-[2px] -rotate-45" : ""}`} />
+              </span>
+            </button>
+          </div>
           <button onClick={() => window.dispatchEvent(new Event("open-cv"))} className="hidden rounded-full bg-ink px-3.5 py-1.5 text-[13px] font-medium text-paper transition-colors hover:bg-signal md:block">CV</button>
-          <button onClick={() => setMenu((m) => !m)} aria-label="Menu" aria-expanded={menu} className="flex items-center gap-2 rounded-full bg-ink/5 border border-ink/10 px-3 py-1.5 text-[12.5px] font-semibold text-ink md:hidden">
-            {nav.find((n) => n.id === section)?.label ?? "Menu"}
-            <span className="flex w-3.5 flex-col gap-[3px]"><span className={`h-px bg-ink transition ${menu ? "translate-y-[2px] rotate-45" : ""}`} /><span className={`h-px bg-ink transition ${menu ? "-translate-y-[2px] -rotate-45" : ""}`} /></span>
-          </button>
           <AnimatePresence>
             {menu && (
               <motion.div initial={{ opacity: 0, y: -8, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.96 }} transition={{ duration: 0.25, ease }}
