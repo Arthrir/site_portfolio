@@ -699,67 +699,106 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
   );
 }
 
-/* ---------------- Chip die (hero visual) ---------------- */
-const TRACES = [
-  // Differential pair top-left
-  "M150 130 V90 H90 V40 H78",
-  "M158 130 V95 H98 V40 H100",
-  // High-speed serial bus top-right
-  "M242 130 V80 H310 V40 H322",
-  "M250 130 V72 H332 V40 H344",
-  // Clock line & control left
-  "M130 160 H80 V120 H40 V108",
-  "M130 180 H70 V220 H40 V240",
-  "M130 220 H90 V270 H40 V284",
-  // SPI / I2C bus right
-  "M270 165 H320 V110 H360 V98",
-  "M270 185 H330 V210 H360 V220",
-  "M270 235 H315 V300 H360 V306",
-  // Power / Ground & Analog bottom
-  "M160 270 V320 H110 V360 H100",
-  "M180 270 V335 H155 V360 H144",
-  "M220 270 V335 H245 V360 H254",
-  "M240 270 V315 H290 V360 H298",
+/* ---------------- Chip die (hero visual) ----------------
+ * PCB microélectronique interactif :
+ * - Traces 100% alignées sur les pads périphériques (aucune ligne dans le vide).
+ * - Condensateurs de découplage (0603) et points de test (TP) directement soudés sur les pistes.
+ * - Option A : Banc logique XOR (boutons A/B, porte logique, LED de sortie avec résistance).
+ * - Option B : Bouton Test / Pulse Clock (impulsion d'horloge, LED CLK, surrégime 120 MHz).
+ * - Option C : Commutateur RUN / DEBUG (LED verte RUN / orange DBG, fige ou active les signaux).
+ * -------------------------------------------------------------------------- */
+
+// Traces principales reliant le boîtier central aux pads périphériques
+const BUS_TRACES = [
+  // Top bus (D0..D3 + VDD rail)
+  "M149 126 V44",
+  "M171 126 V44",
+  "M193 126 V44", // VDD rail (porte C1)
+  "M215 126 V44",
+  "M237 126 V44",
+
+  // Bottom bus (D4..D7 + GND rail + Analog)
+  "M149 274 V356",
+  "M171 274 V356",
+  "M193 274 V356", // GND rail (porte C2)
+  "M215 274 V356",
+  "M237 274 V356",
+  "M259 274 V310 H281 V356", // Analog power rail (porte C3)
+
+  // Left bus (SPI: SCK, MISO, MOSI, CS)
+  "M126 171 H44",
+  "M126 193 H44",
+  "M126 215 H44",
+  "M126 237 H44",
+
+  // Right bus (UART TX + I2C SCL/SDA + VREF)
+  "M270 149 H356", // UART TX (porte TP2_TX)
+  "M270 171 H356",
+  "M270 193 H356",
+  "M270 259 H356", // VREF (porte TP4_VREF et C4)
 ];
 
-// Test points on PCB
-const TEST_POINTS = [
-  { x: 110, y: 150, label: "TP1_CLK" },
-  { x: 290, y: 140, label: "TP2_TX" },
-  { x: 105, y: 250, label: "TP3_RST" },
-  { x: 295, y: 260, label: "TP4_VREF" },
-];
-
-// Surface mount decoupling capacitors (0402 / 0603 packages)
+// Condensateurs CMS (0603) directement montés sur leurs pistes
 const SM_CAPS = [
-  { x: 112, y: 110, vertical: false },
-  { x: 278, y: 105, vertical: true },
-  { x: 114, y: 285, vertical: true },
-  { x: 276, y: 280, vertical: false },
+  { x: 193, y: 85, vertical: true, label: "C1_VDD" },   // Découplage VDD top
+  { x: 193, y: 315, vertical: true, label: "C2_GND" },  // Découplage GND bottom
+  { x: 281, y: 332, vertical: true, label: "C3_ANA" },  // Découplage alimentation analogique
+  { x: 325, y: 259, vertical: false, label: "C4_VREF" },// Filtre VREF
 ];
 
 function Die() {
   const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0), my = useMotionValue(0);
-  const rx = useSpring(useTransform(my, [-1, 1], [10, -10]), { stiffness: 120, damping: 18 });
-  const ry = useSpring(useTransform(mx, [-1, 1], [-10, 10]), { stiffness: 120, damping: 18 });
+  const rx = useSpring(useTransform(my, [-1, 1], [8, -8]), { stiffness: 120, damping: 18 });
+  const ry = useSpring(useTransform(mx, [-1, 1], [-8, 8]), { stiffness: 120, damping: 18 });
   const [hot, setHot] = useState(false);
   const { tr } = useLang();
 
+  // Option A : Banc logique (2 entrées -> 1 sortie XOR)
+  const [logicA, setLogicA] = useState(false);
+  const [logicB, setLogicB] = useState(true);
+  const logicOut = logicA !== logicB; // Porte XOR : A ⊕ B
+
+  // Option B : Bouton Test / Pulse Clock
+  const [clockSurge, setClockSurge] = useState(false);
+  const [pulseCount, setPulseCount] = useState(0);
+
+  // Option C : Commutateur RUN / DEBUG
+  const [isDebug, setIsDebug] = useState(false);
+
+  const triggerClockPulse = () => {
+    setPulseCount((c) => c + 1);
+    setClockSurge(true);
+    setTimeout(() => setClockSurge(false), 850);
+  };
+
+  const animDuration = isDebug ? 999999 : clockSurge ? 0.45 : hot ? 1.0 : 2.2;
+
   return (
-    <div
-      ref={ref}
-      className="relative aspect-square w-full pb-8 [perspective:1200px]"
-      onPointerMove={(e) => {
-        const r = ref.current!.getBoundingClientRect();
-        mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
-        my.set(((e.clientY - r.top) / r.height) * 2 - 1);
-      }}
-      onPointerEnter={() => setHot(true)}
-      onPointerLeave={() => { mx.set(0); my.set(0); setHot(false); }}
-    >
-      <motion.div style={{ rotateX: rx, rotateY: ry }} className="absolute inset-0 [transform-style:preserve-3d]">
-        <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible">
+    <div className="relative w-full max-w-[420px] pb-6 [perspective:1200px]">
+      <motion.div
+        ref={ref}
+        style={{ rotateX: rx, rotateY: ry }}
+        className="relative aspect-square w-full [transform-style:preserve-3d]"
+        onPointerMove={(e) => {
+          const r = ref.current!.getBoundingClientRect();
+          mx.set(((e.clientX - r.left) / r.width) * 2 - 1);
+          my.set(((e.clientY - r.top) / r.height) * 2 - 1);
+        }}
+        onPointerEnter={() => setHot(true)}
+        onPointerLeave={() => { mx.set(0); my.set(0); setHot(false); }}
+      >
+        <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible select-none">
+          <defs>
+            <filter id="glow-led" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
           {/* PCB Ground plane fiducials */}
           <circle cx="28" cy="28" r="4" className="fill-none stroke-ink/30" strokeWidth="1" />
           <circle cx="28" cy="28" r="1.5" className="fill-ink/50" />
@@ -767,10 +806,12 @@ function Die() {
           <circle cx="372" cy="28" r="1.5" className="fill-ink/50" />
           <circle cx="372" cy="372" r="4" className="fill-none stroke-ink/30" strokeWidth="1" />
           <circle cx="372" cy="372" r="1.5" className="fill-ink/50" />
+          <circle cx="28" cy="372" r="4" className="fill-none stroke-ink/30" strokeWidth="1" />
+          <circle cx="28" cy="372" r="1.5" className="fill-ink/50" />
 
-          {/* Peripheral SMD Pads (QFP/BGA package perimeter) */}
+          {/* Peripheral SMD Pads (13 pads par côté, coordonnées exactes au pixel) */}
           {Array.from({ length: 13 }).map((_, i) => (
-            <g key={`pads-${i}`} className="fill-ink/80 transition-colors">
+            <g key={`pads-${i}`} className="fill-ink/80">
               <rect x={56 + i * 22} y={30} width={10} height={14} rx={1} />
               <rect x={56 + i * 22} y={356} width={10} height={14} rx={1} />
               <rect x={30} y={56 + i * 22} width={14} height={10} rx={1} />
@@ -778,73 +819,249 @@ function Die() {
             </g>
           ))}
 
-          {/* PCB Routing Traces */}
-          {TRACES.map((d, i) => (
+          {/* =================================================================
+              CIRCUITS SPÉCIFIQUES INTERACTIFS (OPTIONS A, B, C)
+              ================================================================= */}
+
+          {/* OPTION B (TOP-LEFT) : PISTES & BOUTON CLOCK PULSE */}
+          {/* Ligne d'alimentation du bouton depuis le pad 1 (83, 44) */}
+          <path d="M83 44 V62" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne de sortie d'horloge reliant le bouton, la LED, R_CLK et TP1 vers le die (126, 155) */}
+          <path d="M83 78 V155 H126" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {!isDebug && (
+            <motion.path
+              d="M83 78 V155 H126"
+              fill="none"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="stroke-signal"
+              initial={{ pathLength: 0, pathOffset: 0 }}
+              animate={{ pathLength: [0, 0.35, 0], pathOffset: [0, 0.65, 1] }}
+              transition={{ duration: clockSurge ? 0.3 : 1.2, repeat: Infinity, ease: "linear" }}
+            />
+          )}
+
+          {/* Bouton poussoir tactile CLOCK (interactif dans le SVG) */}
+          <g
+            className="cursor-pointer transition-transform active:scale-95"
+            onClick={triggerClockPulse}
+          >
+            <rect x="74" y="62" width="18" height="16" rx="2" className="fill-paper stroke-ink/40" strokeWidth="1" />
+            <circle cx="83" cy="70" r="5" className={clockSurge ? "fill-signal" : "fill-ink/30 stroke-ink/50"} strokeWidth="1" />
+            <text x="83" y="72" fontSize="4.5" textAnchor="middle" className="font-mono font-bold fill-paper pointer-events-none">CLK</text>
+            <text x="68" y="72" fontSize="5" className="fill-mute font-mono">PULSE</text>
+          </g>
+
+          {/* LED Horloge (LED_CLK) */}
+          <g transform="translate(83, 100)">
+            <rect x="-3" y="-5" width="6" height="10" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
+            <circle
+              cx="0"
+              cy="0"
+              r="2.5"
+              filter={clockSurge ? "url(#glow-led)" : undefined}
+              className={clockSurge ? "fill-amber-400" : isDebug ? "fill-ink/30" : "fill-emerald-500"}
+            />
+            <text x="7" y="2" fontSize="5" className="fill-mute font-mono">LED_CLK</text>
+          </g>
+
+          {/* Résistance CMS R_CLK */}
+          <g transform="translate(83, 122)">
+            <rect x="-4" y="-3" width="8" height="6" rx="0.5" className="fill-ink/30 stroke-ink/50" strokeWidth="0.75" />
+            <rect x="-4" y="-3" width="2" height="6" className="fill-ink/70" />
+            <rect x="2" y="-3" width="2" height="6" className="fill-ink/70" />
+            <text x="8" y="2" fontSize="5" className="fill-mute font-mono">R_CLK</text>
+          </g>
+
+          {/* Point de test TP1_CLK */}
+          <g transform="translate(105, 155)">
+            <circle cx="0" cy="0" r="3.2" className="fill-signal/15 stroke-signal" strokeWidth="1" />
+            <circle cx="0" cy="0" r="1.2" className="fill-signal" />
+            <text x="-4" y="-5" fontSize="5" className="fill-mute font-mono">TP1_CLK</text>
+          </g>
+
+          {/* OPTION A (TOP-RIGHT) : BANC LOGIQUE XOR INTERACTIF */}
+          {/* Ligne d'alim pad 10 (281, 44) vers SW_A (295, 57) */}
+          <path d="M281 44 V54 H295 V57" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne d'alim pad 12 (325, 44) vers SW_B (335, 57) */}
+          <path d="M325 44 V54 H335 V57" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Sorties boutons vers entrées porte XOR */}
+          <path d="M295 73 V83 H307" className={logicA ? "stroke-signal" : "stroke-line"} strokeWidth="1.25" fill="none" />
+          <path d="M335 73 V89 H307" className={logicB ? "stroke-signal" : "stroke-line"} strokeWidth="1.25" fill="none" />
+          {/* Sortie de porte XOR vers LED_Y et pad 3 droite (356, 127) */}
+          <path d="M323 86 H328 V127 H356" className={logicOut ? "stroke-signal" : "stroke-line"} strokeWidth={logicOut ? "1.6" : "1.25"} fill="none" />
+
+          {/* Bouton A */}
+          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)}>
+            <rect x="287" y="57" width="16" height="16" rx="2" className="fill-paper stroke-ink/40" strokeWidth="1" />
+            <circle cx="295" cy="65" r="5" className={logicA ? "fill-signal" : "fill-ink/20 stroke-ink/40"} strokeWidth="1" />
+            <text x="295" y="67" fontSize="5" textAnchor="middle" className={`font-mono font-bold ${logicA ? "fill-white" : "fill-ink"}`}>A</text>
+            <text x="295" y="52" fontSize="5" textAnchor="middle" className="fill-mute font-mono">{logicA ? "1" : "0"}</text>
+          </g>
+
+          {/* Bouton B */}
+          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)}>
+            <rect x="327" y="57" width="16" height="16" rx="2" className="fill-paper stroke-ink/40" strokeWidth="1" />
+            <circle cx="335" cy="65" r="5" className={logicB ? "fill-signal" : "fill-ink/20 stroke-ink/40"} strokeWidth="1" />
+            <text x="335" y="67" fontSize="5" textAnchor="middle" className={`font-mono font-bold ${logicB ? "fill-white" : "fill-ink"}`}>B</text>
+            <text x="335" y="52" fontSize="5" textAnchor="middle" className="fill-mute font-mono">{logicB ? "1" : "0"}</text>
+          </g>
+
+          {/* Symbole Porte XOR (schématique) */}
+          <g transform="translate(307, 78)">
+            <path d="M-2 2 C1 7, 1 11, -2 16" className="stroke-ink/60" strokeWidth="1" fill="none" />
+            <path d="M1 2 C5 6, 10 7, 16 9 C10 11, 5 12, 1 16 C3 11, 3 7, 1 2 Z" className="fill-paper stroke-ink/80" strokeWidth="1" />
+            <text x="4" y="11" fontSize="4.5" className="fill-ink font-mono font-bold">⊕</text>
+          </g>
+
+          {/* Résistance CMS R_LOGIC */}
+          <g transform="translate(328, 104)">
+            <rect x="-3" y="-4" width="6" height="8" rx="0.5" className="fill-ink/30 stroke-ink/50" strokeWidth="0.75" />
+            <rect x="-3" y="-4" width="6" height="2" className="fill-ink/70" />
+            <rect x="-3" y="2" width="6" height="2" className="fill-ink/70" />
+          </g>
+
+          {/* LED de sortie Banc Logique (LED_Y) */}
+          <g transform="translate(328, 118)">
+            <rect x="-4" y="-3" width="8" height="6" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
+            <circle
+              cx="0"
+              cy="0"
+              r="2.8"
+              filter={logicOut ? "url(#glow-led)" : undefined}
+              className={logicOut ? "fill-amber-400" : "fill-ink/30"}
+            />
+            <text x="7" y="2" fontSize="5" className="fill-mute font-mono">LED_Y {logicOut ? "=1" : "=0"}</text>
+          </g>
+
+          {/* OPTION C (BOTTOM-LEFT) : COMMUTATEUR RUN / DEBUG */}
+          {/* Ligne vers die pin (126, 255) */}
+          <path d="M83 255 H126" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Ligne vers pad bottom 1 (83, 356) avec TP3_RST */}
+          <path d="M83 255 V356" className={isDebug ? "stroke-amber-500" : "stroke-line"} strokeWidth="1.25" fill="none" />
+
+          {/* Interrupteur à glissière RUN / DEBUG (interactif) */}
+          <g className="cursor-pointer" onClick={() => setIsDebug((d) => !d)}>
+            {/* Boîtier switch */}
+            <rect x="71" y="295" width="24" height="13" rx="2" className="fill-paper stroke-ink/50" strokeWidth="1" />
+            {/* Rainure */}
+            <rect x="74" y="299" width="18" height="5" rx="1" className="fill-ink/20" />
+            {/* Curseur mobile */}
+            <rect
+              x={isDebug ? "84" : "74"}
+              y="297"
+              width="8"
+              height="9"
+              rx="1.5"
+              className={isDebug ? "fill-amber-500 shadow-sm" : "fill-emerald-600 shadow-sm"}
+            />
+            <text x="64" y="304" fontSize="5" className="fill-mute font-mono">RUN</text>
+            <text x="98" y="304" fontSize="5" className="fill-mute font-mono">DBG</text>
+          </g>
+
+          {/* Voyants LED RUN (vert) & DEBUG (orange) */}
+          <g transform="translate(71, 280)">
+            <circle cx="0" cy="0" r="2.2" filter={!isDebug ? "url(#glow-led)" : undefined} className={!isDebug ? "fill-emerald-500" : "fill-ink/20"} />
+            <text x="-1" y="-4" fontSize="4.5" textAnchor="middle" className="fill-mute font-mono">RUN</text>
+          </g>
+          <g transform="translate(95, 280)">
+            <circle cx="0" cy="0" r="2.2" filter={isDebug ? "url(#glow-led)" : undefined} className={isDebug ? "fill-amber-500" : "fill-ink/20"} />
+            <text x="-1" y="-4" fontSize="4.5" textAnchor="middle" className="fill-mute font-mono">DBG</text>
+          </g>
+
+          {/* Point de test TP3_RST */}
+          <g transform="translate(83, 328)">
+            <circle cx="0" cy="0" r="3.2" className="fill-signal/15 stroke-signal" strokeWidth="1" />
+            <circle cx="0" cy="0" r="1.2" className="fill-signal" />
+            <text x="6" y="2" fontSize="5" className="fill-mute font-mono">TP3_RST</text>
+          </g>
+
+          {/* =================================================================
+              BUS PRINCIPAUX RELIÉS AUX PADS & AUX COMPOSANTS
+              ================================================================= */}
+          {BUS_TRACES.map((d) => (
             <g key={d}>
               <path d={d} className="stroke-line/90" strokeWidth="1.25" strokeLinejoin="round" fill="none" />
-              <motion.path
-                d={d} fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="stroke-signal"
-                initial={{ pathLength: 0, pathOffset: 0 }}
-                animate={{ pathLength: [0, 0.22, 0], pathOffset: [0, 0.65, 1] }}
-                transition={{ duration: hot ? 1.0 : 2.5, repeat: Infinity, delay: i * 0.22, ease: "easeInOut" }}
-              />
+              {!isDebug && (
+                <motion.path
+                  d={d}
+                  fill="none"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="stroke-signal"
+                  initial={{ pathLength: 0, pathOffset: 0 }}
+                  animate={{ pathLength: [0, 0.28, 0], pathOffset: [0, 0.65, 1] }}
+                  transition={{ duration: animDuration, repeat: Infinity, ease: "easeInOut" }}
+                />
+              )}
             </g>
           ))}
 
-          {/* SMD Capacitors / Resistors */}
-          {SM_CAPS.map((cap, i) => (
-            <g key={`smd-${i}`} transform={`translate(${cap.x}, ${cap.y})`}>
+          {/* Condensateurs CMS (0603) directement insérés sur les pistes */}
+          {SM_CAPS.map((cap) => (
+            <g key={cap.label} transform={`translate(${cap.x}, ${cap.y})`}>
               {cap.vertical ? (
                 <>
                   <rect x="-4" y="-8" width="8" height="16" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
                   <rect x="-4" y="-8" width="8" height="3" className="fill-ink/70" />
                   <rect x="-4" y="5" width="8" height="3" className="fill-ink/70" />
+                  <text x="6" y="2" fontSize="5" className="fill-mute font-mono">{cap.label}</text>
                 </>
               ) : (
                 <>
                   <rect x="-8" y="-4" width="16" height="8" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
                   <rect x="-8" y="-4" width="3" height="8" className="fill-ink/70" />
                   <rect x="5" y="-4" width="3" height="8" className="fill-ink/70" />
+                  <text x="-8" y="-6" fontSize="5" className="fill-mute font-mono">{cap.label}</text>
                 </>
               )}
             </g>
           ))}
 
-          {/* Test Points with circular ring */}
-          {TEST_POINTS.map((tp) => (
-            <g key={tp.label}>
-              <circle cx={tp.x} cy={tp.y} r="3" className="fill-signal/20 stroke-signal" strokeWidth="1" />
-              <circle cx={tp.x} cy={tp.y} r="1" className="fill-signal" />
-              <text x={tp.x + 5} y={tp.y - 4} fontSize="6" className="fill-mute font-mono tracking-tight">{tp.label}</text>
-            </g>
-          ))}
+          {/* Points de test TP2_TX et TP4_VREF (exactement sur les pistes) */}
+          <g transform="translate(300, 149)">
+            <circle cx="0" cy="0" r="3.2" className="fill-signal/15 stroke-signal" strokeWidth="1" />
+            <circle cx="0" cy="0" r="1.2" className="fill-signal" />
+            <text x="6" y="-3" fontSize="5" className="fill-mute font-mono">TP2_TX</text>
+          </g>
 
-          {/* QFP / QFN IC Package Body */}
+          <g transform="translate(295, 259)">
+            <circle cx="0" cy="0" r="3.2" className="fill-signal/15 stroke-signal" strokeWidth="1" />
+            <circle cx="0" cy="0" r="1.2" className="fill-signal" />
+            <text x="6" y="-3" fontSize="5" className="fill-mute font-mono">TP4_VREF</text>
+          </g>
+
+          {/* =================================================================
+              BOÎTIER CENTRAL IC PACKAGE (STM32 / RISC-V)
+              ================================================================= */}
           <g>
-            {/* Package Outline with Pin 1 chamfer / index corner */}
+            {/* Corps du composant QFP avec chanfrein Pin 1 */}
             <path
               d="M142 126 H270 V274 H126 V142 Z"
               className="fill-ink"
             />
-            {/* Pin 1 dimple marker */}
+            {/* Repère Pin 1 */}
             <circle cx="140" cy="140" r="4.5" className="fill-paper/20 stroke-paper/40" strokeWidth="0.75" />
 
-            {/* Exposed Thermal Pad / Heat Slug */}
+            {/* Thermal Pad / Slug en cuivre */}
             <rect x="146" y="146" width="48" height="48" rx="2" className="fill-signal" />
             <g className="stroke-paper/20" strokeWidth="0.75">
               <line x1="146" y1="146" x2="194" y2="194" />
               <line x1="194" y1="146" x2="146" y2="194" />
             </g>
 
-            {/* Laser Marking / Silkscreen on IC Package */}
+            {/* Marquage laser sérigraphié */}
             <g className="font-mono text-paper">
               <text x="146" y="218" fontSize="8" letterSpacing="0.8" className="fill-paper/50">STM32 / RISC-V ARCH</text>
               <text x="146" y="234" fontSize="12" fontWeight="600" letterSpacing="1.2" className="fill-paper">AD-27 / PM</text>
               <text x="146" y="249" fontSize="7.5" letterSpacing="1.2" className="fill-signal">MINES-EMSE × POLIMI</text>
-              <text x="146" y="262" fontSize="6.5" letterSpacing="0.5" className="fill-paper/40">LOT: 2027-APR · HW/SW/PRD</text>
+              <text x="146" y="262" fontSize="6.5" letterSpacing="0.5" className={isDebug ? "fill-amber-400 font-bold" : "fill-paper/40"}>
+                {isDebug ? "HALT: STEP MODE" : clockSurge ? "CLK: 120 MHz (OVERCLOCK)" : "LOT: 2027-APR · HW/SW/PRD"}
+              </text>
             </g>
 
-            {/* Microelectronic Bus Tracks inside IC Package */}
+            {/* Pistes de bus internes microélectroniques */}
             <g className="stroke-paper/10" strokeWidth="0.75">
               {Array.from({ length: 6 }).map((_, i) => (
                 <line key={`sub-${i}`} x1={202 + i * 11} y1="146" x2={202 + i * 11} y2="200" />
@@ -854,11 +1071,62 @@ function Die() {
         </svg>
       </motion.div>
 
-      {/* Caption bottom bar with safe vertical offset to prevent any overlapping */}
-      <div className="pointer-events-none absolute -bottom-6 left-0 right-0 flex items-center justify-between px-1">
-        <Label>{tr("fig. 01 — silicium → produit", "fig. 01 — silicon → product")}</Label>
-        <span className="font-mono text-[10px] tracking-wider uppercase text-signal">
-          {hot ? "clock ×2.4 (active)" : "32.768 khz (idle)"}
+      {/* Mini-Banc interactif toolbar (accessible aussi bien par clic direct sur le SVG que par ces boutons) */}
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink/20 bg-paper/90 p-2.5 font-mono text-[10px] sm:text-[11px] backdrop-blur-sm">
+        {/* Option A : Banc Logique XOR */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-mute font-semibold">XOR:</span>
+          <button
+            type="button"
+            onClick={() => setLogicA((v) => !v)}
+            className={`rounded px-1.5 py-0.5 font-bold transition-colors ${logicA ? "bg-signal text-white" : "border border-ink/20 bg-ink/5 text-ink hover:bg-ink/10"}`}
+            title="Basculer l'entrée logique A"
+          >
+            A={logicA ? "1" : "0"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setLogicB((v) => !v)}
+            className={`rounded px-1.5 py-0.5 font-bold transition-colors ${logicB ? "bg-signal text-white" : "border border-ink/20 bg-ink/5 text-ink hover:bg-ink/10"}`}
+            title="Basculer l'entrée logique B"
+          >
+            B={logicB ? "1" : "0"}
+          </button>
+          <span className="text-mute">→</span>
+          <span className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-bold ${logicOut ? "bg-amber-500/15 text-amber-600" : "bg-ink/5 text-mute"}`}>
+            <span className={`size-1.5 rounded-full ${logicOut ? "bg-amber-500 shadow-[0_0_6px_#f59e0b]" : "bg-ink/30"}`} />
+            Y={logicOut ? "1" : "0"}
+          </span>
+        </div>
+
+        {/* Option B : Bouton Test / Pulse Clock */}
+        <button
+          type="button"
+          onClick={triggerClockPulse}
+          className="flex items-center gap-1.5 rounded border border-ink/20 bg-ink/5 px-2 py-0.5 font-semibold text-ink transition hover:bg-ink hover:text-paper active:scale-95"
+          title="Envoyer une impulsion d'horloge"
+        >
+          <span className={`size-1.5 rounded-full ${clockSurge ? "bg-amber-400 shadow-[0_0_8px_#f59e0b]" : "bg-emerald-500"}`} />
+          <span>{clockSurge ? "PULSE 120MHz" : "TEST CLK"}</span>
+        </button>
+
+        {/* Option C : Commutateur Run / Debug */}
+        <button
+          type="button"
+          onClick={() => setIsDebug((d) => !d)}
+          className={`flex items-center gap-1.5 rounded px-2 py-0.5 font-semibold transition ${isDebug ? "border border-amber-500/40 bg-amber-500/15 text-amber-600" : "border border-emerald-500/40 bg-emerald-500/15 text-emerald-700"}`}
+          title="Basculer entre le mode exécution et débogage"
+        >
+          <span className={`size-1.5 rounded-full ${isDebug ? "bg-amber-500 shadow-[0_0_6px_#f59e0b]" : "bg-emerald-500 shadow-[0_0_6px_#10b981]"}`} />
+          <span>{isDebug ? "MODE: DEBUG" : "MODE: RUN"}</span>
+        </button>
+      </div>
+
+      {/* Légende bas */}
+      <div className="mt-2 flex items-center justify-between px-1 font-mono text-[10px] text-mute uppercase">
+        <span>fig. 01 — banc silicium interactif</span>
+        <span className="text-signal">
+          {isDebug ? "PAUSED (DEBUG HALT)" : clockSurge ? "CLOCK ×3.6 (PULSE)" : hot ? "CLOCK ×2.0 (ACTIVE)" : "32.768 KHZ"}
         </span>
       </div>
     </div>
