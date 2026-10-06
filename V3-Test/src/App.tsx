@@ -738,12 +738,12 @@ const BUS_TRACES = [
   "M270 259 H356", // VREF (porte TP4_VREF et C4)
 ];
 
-// Condensateurs CMS (0603) directement montés sur leurs pistes
+// Condensateurs CMS (0603) — 100% opaques et montés directement sur leurs pistes
 const SM_CAPS = [
-  { x: 193, y: 85, vertical: true, label: "C1_VDD" },   // Découplage VDD top
-  { x: 193, y: 315, vertical: true, label: "C2_GND" },  // Découplage GND bottom
-  { x: 281, y: 332, vertical: true, label: "C3_ANA" },  // Découplage alimentation analogique
-  { x: 325, y: 259, vertical: false, label: "C4_VREF" },// Filtre VREF
+  { x: 193, y: 85, vertical: true, label: "C1" },   // Découplage VDD top
+  { x: 193, y: 315, vertical: true, label: "C2" },  // Découplage GND bottom
+  { x: 281, y: 332, vertical: true, label: "C3" },  // Découplage alimentation analogique
+  { x: 325, y: 259, vertical: false, label: "C4" }, // Filtre VREF
 ];
 
 function Die() {
@@ -790,8 +790,8 @@ function Die() {
       >
         <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible select-none">
           <defs>
-            <filter id="glow-led" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="3.5" result="blur" />
+            <filter id="glow-led" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -827,10 +827,12 @@ function Die() {
           {/* Ligne d'alimentation du bouton depuis le pad 1 (83, 44) */}
           <path d="M83 44 V62" className="stroke-line" strokeWidth="1.25" fill="none" />
           {/* Ligne de sortie d'horloge reliant le bouton, la LED, R_CLK et TP1 vers le die (126, 155) */}
-          <path d="M83 78 V155 H126" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <path d="M83 78 V95" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <path d="M83 105 V117" className="stroke-line" strokeWidth="1.25" fill="none" />
+          <path d="M83 127 V155 H126" className="stroke-line" strokeWidth="1.25" fill="none" />
           {!isDebug && (
             <motion.path
-              d="M83 78 V155 H126"
+              d="M83 127 V155 H126"
               fill="none"
               strokeWidth="2"
               strokeLinecap="round"
@@ -841,35 +843,41 @@ function Die() {
             />
           )}
 
-          {/* Bouton poussoir tactile CLOCK (interactif dans le SVG) */}
+          {/* Bouton poussoir tactile CLOCK (solide et opaque) */}
           <g
             className="cursor-pointer transition-transform active:scale-95"
             onClick={triggerClockPulse}
           >
-            <rect x="74" y="62" width="18" height="16" rx="2" className="fill-paper stroke-ink/40" strokeWidth="1" />
-            <circle cx="83" cy="70" r="5" className={clockSurge ? "fill-signal" : "fill-ink/30 stroke-ink/50"} strokeWidth="1" />
-            <text x="83" y="72" fontSize="4.5" textAnchor="middle" className="font-mono font-bold fill-paper pointer-events-none">CLK</text>
-            <text x="68" y="72" fontSize="5" className="fill-mute font-mono">PULSE</text>
+            {/* Boîtier métallique CMS */}
+            <rect x="74" y="62" width="18" height="16" rx="2" fill="#E2E8F0" stroke="#475569" strokeWidth="1" />
+            <rect x="76" y="64" width="14" height="12" rx="1" fill="#CBD5E1" />
+            {/* Pastille actionneur */}
+            <circle cx="83" cy="70" r="4.8" fill={clockSurge ? "#FF4D00" : "#64748B"} stroke="#334155" strokeWidth="0.8" />
+            <text x="83" y="72" fontSize="4.2" textAnchor="middle" className="font-mono font-bold fill-white pointer-events-none">CLK</text>
+            <text x="67" y="72" fontSize="5" className="fill-mute font-mono">PULSE</text>
           </g>
 
-          {/* LED Horloge (LED_CLK) */}
+          {/* LED Horloge (LED_CLK) — composant CMS opaque */}
           <g transform="translate(83, 100)">
-            <rect x="-3" y="-5" width="6" height="10" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
+            <rect x="-4" y="-5" width="8" height="10" rx="1" fill="#E2E8F0" stroke="#64748B" strokeWidth="0.75" />
+            <rect x="-4" y="-5" width="8" height="2" fill="#94A3B8" />
+            <rect x="-4" y="3" width="8" height="2" fill="#94A3B8" />
             <circle
               cx="0"
               cy="0"
               r="2.5"
               filter={clockSurge ? "url(#glow-led)" : undefined}
-              className={clockSurge ? "fill-amber-400" : isDebug ? "fill-ink/30" : "fill-emerald-500"}
+              fill={clockSurge ? "#F59E0B" : isDebug ? "#64748B" : "#10B981"}
             />
             <text x="7" y="2" fontSize="5" className="fill-mute font-mono">LED_CLK</text>
           </g>
 
-          {/* Résistance CMS R_CLK */}
+          {/* Résistance CMS R_CLK — 100% opaque */}
           <g transform="translate(83, 122)">
-            <rect x="-4" y="-3" width="8" height="6" rx="0.5" className="fill-ink/30 stroke-ink/50" strokeWidth="0.75" />
-            <rect x="-4" y="-3" width="2" height="6" className="fill-ink/70" />
-            <rect x="2" y="-3" width="2" height="6" className="fill-ink/70" />
+            <rect x="-4" y="-3" width="8" height="6" rx="0.5" fill="#18181B" stroke="#09090B" strokeWidth="0.75" />
+            <rect x="-4" y="-3" width="2" height="6" fill="#E4E4E7" />
+            <rect x="2" y="-3" width="2" height="6" fill="#E4E4E7" />
+            <line x1="0" y1="-2" x2="0" y2="2" stroke="#71717A" strokeWidth="0.6" />
             <text x="8" y="2" fontSize="5" className="fill-mute font-mono">R_CLK</text>
           </g>
 
@@ -880,93 +888,131 @@ function Die() {
             <text x="-4" y="-5" fontSize="5" className="fill-mute font-mono">TP1_CLK</text>
           </g>
 
-          {/* OPTION A (TOP-RIGHT) : BANC LOGIQUE XOR INTERACTIF */}
-          {/* Ligne d'alim pad 10 (281, 44) vers SW_A (295, 57) */}
-          <path d="M281 44 V54 H295 V57" className="stroke-line" strokeWidth="1.25" fill="none" />
-          {/* Ligne d'alim pad 12 (325, 44) vers SW_B (335, 57) */}
-          <path d="M325 44 V54 H335 V57" className="stroke-line" strokeWidth="1.25" fill="none" />
-          {/* Sorties boutons vers entrées porte XOR */}
-          <path d="M295 73 V83 H307" className={logicA ? "stroke-signal" : "stroke-line"} strokeWidth="1.25" fill="none" />
-          <path d="M335 73 V89 H307" className={logicB ? "stroke-signal" : "stroke-line"} strokeWidth="1.25" fill="none" />
-          {/* Sortie de porte XOR vers LED_Y et pad 3 droite (356, 127) */}
-          <path d="M323 86 H328 V127 H356" className={logicOut ? "stroke-signal" : "stroke-line"} strokeWidth={logicOut ? "1.6" : "1.25"} fill="none" />
+          {/* =================================================================
+              OPTION A (TOP-RIGHT) : BANC LOGIQUE XOR PARFAITEMENT PLANAIRE
+              (Zero croisement de pistes, symboles géométriques stricts ANSI)
+              ================================================================= */}
 
-          {/* Bouton A */}
+          {/* Alimentation bouton A depuis pad 10 (281, 44) */}
+          <path d="M281 44 V60 H285 V62" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Alimentation bouton B depuis pad 11 (303, 44) */}
+          <path d="M303 44 V52 H272 V86 H285" className="stroke-line" strokeWidth="1.25" fill="none" />
+
+          {/* Pistes de sortie A et B entrant horizontalement dans la porte XOR */}
+          <path d="M293 70 H304" className={logicA ? "stroke-signal" : "stroke-line"} strokeWidth={logicA ? "1.6" : "1.25"} fill="none" />
+          <path d="M293 92 H304" className={logicB ? "stroke-signal" : "stroke-line"} strokeWidth={logicB ? "1.6" : "1.25"} fill="none" />
+
+          {/* Piste de sortie de la porte XOR vers R_LOGIC, LED_Y et pad 3 droite (356, 127) */}
+          <path d="M328 81 H342 V97" className={logicOut ? "stroke-signal" : "stroke-line"} strokeWidth={logicOut ? "1.6" : "1.25"} fill="none" />
+          <path d="M342 107 V115" className={logicOut ? "stroke-signal" : "stroke-line"} strokeWidth={logicOut ? "1.6" : "1.25"} fill="none" />
+          <path d="M342 125 V127 H356" className={logicOut ? "stroke-signal" : "stroke-line"} strokeWidth={logicOut ? "1.6" : "1.25"} fill="none" />
+
+          {/* Bouton tactile A (solide) */}
           <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)}>
-            <rect x="287" y="57" width="16" height="16" rx="2" className="fill-paper stroke-ink/40" strokeWidth="1" />
-            <circle cx="295" cy="65" r="5" className={logicA ? "fill-signal" : "fill-ink/20 stroke-ink/40"} strokeWidth="1" />
-            <text x="295" y="67" fontSize="5" textAnchor="middle" className={`font-mono font-bold ${logicA ? "fill-white" : "fill-ink"}`}>A</text>
-            <text x="295" y="52" fontSize="5" textAnchor="middle" className="fill-mute font-mono">{logicA ? "1" : "0"}</text>
+            <rect x="277" y="62" width="16" height="16" rx="2" fill="#E2E8F0" stroke="#475569" strokeWidth="1" />
+            <circle cx="285" cy="70" r="4.8" fill={logicA ? "#FF4D00" : "#64748B"} stroke="#334155" strokeWidth="0.8" />
+            <text x="285" y="72" fontSize="4.5" textAnchor="middle" className="font-mono font-bold fill-white pointer-events-none">A</text>
+            <text x="285" y="58" fontSize="5" textAnchor="middle" className="fill-mute font-mono">{logicA ? "1" : "0"}</text>
           </g>
 
-          {/* Bouton B */}
+          {/* Bouton tactile B (solide) */}
           <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)}>
-            <rect x="327" y="57" width="16" height="16" rx="2" className="fill-paper stroke-ink/40" strokeWidth="1" />
-            <circle cx="335" cy="65" r="5" className={logicB ? "fill-signal" : "fill-ink/20 stroke-ink/40"} strokeWidth="1" />
-            <text x="335" y="67" fontSize="5" textAnchor="middle" className={`font-mono font-bold ${logicB ? "fill-white" : "fill-ink"}`}>B</text>
-            <text x="335" y="52" fontSize="5" textAnchor="middle" className="fill-mute font-mono">{logicB ? "1" : "0"}</text>
+            <rect x="277" y="84" width="16" height="16" rx="2" fill="#E2E8F0" stroke="#475569" strokeWidth="1" />
+            <circle cx="285" cy="92" r="4.8" fill={logicB ? "#FF4D00" : "#64748B"} stroke="#334155" strokeWidth="0.8" />
+            <text x="285" y="94" fontSize="4.5" textAnchor="middle" className="font-mono font-bold fill-white pointer-events-none">B</text>
+            <text x="285" y="106" fontSize="5" textAnchor="middle" className="fill-mute font-mono">{logicB ? "1" : "0"}</text>
           </g>
 
-          {/* Symbole Porte XOR (schématique) */}
-          <g transform="translate(307, 78)">
-            <path d="M-2 2 C1 7, 1 11, -2 16" className="stroke-ink/60" strokeWidth="1" fill="none" />
-            <path d="M1 2 C5 6, 10 7, 16 9 C10 11, 5 12, 1 16 C3 11, 3 7, 1 2 Z" className="fill-paper stroke-ink/80" strokeWidth="1" />
-            <text x="4" y="11" fontSize="4.5" className="fill-ink font-mono font-bold">⊕</text>
+          {/* Porte Logique XOR standard ANSI (courbes nettes, zéro artefact) */}
+          <g>
+            {/* Arc d'entrée isolé arrière XOR */}
+            <path d="M300 65 Q306 81 300 97" fill="none" stroke="#18181B" strokeWidth="1.3" strokeLinecap="round" />
+            {/* Corps de la porte XOR */}
+            <path
+              d="M304 65 Q318 67 328 81 Q318 95 304 97 Q310 81 304 65 Z"
+              fill="#FFFFFF"
+              stroke="#18181B"
+              strokeWidth="1.3"
+              strokeLinejoin="round"
+            />
+            <text x="314" y="60" fontSize="5" textAnchor="middle" className="fill-mute font-mono font-bold">XOR</text>
           </g>
 
-          {/* Résistance CMS R_LOGIC */}
-          <g transform="translate(328, 104)">
-            <rect x="-3" y="-4" width="6" height="8" rx="0.5" className="fill-ink/30 stroke-ink/50" strokeWidth="0.75" />
-            <rect x="-3" y="-4" width="6" height="2" className="fill-ink/70" />
-            <rect x="-3" y="2" width="6" height="2" className="fill-ink/70" />
+          {/* Résistance CMS R_LOGIC — solide et opaque */}
+          <g transform="translate(342, 102)">
+            <rect x="-3" y="-5" width="6" height="10" rx="0.5" fill="#18181B" stroke="#09090B" strokeWidth="0.75" />
+            <rect x="-3" y="-5" width="6" height="2.5" fill="#E4E4E7" />
+            <rect x="-3" y="2.5" width="6" height="2.5" fill="#E4E4E7" />
+            <line x1="-2" y1="0" x2="2" y2="0" stroke="#71717A" strokeWidth="0.6" />
           </g>
 
-          {/* LED de sortie Banc Logique (LED_Y) */}
-          <g transform="translate(328, 118)">
-            <rect x="-4" y="-3" width="8" height="6" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
+          {/* LED de sortie Banc Logique (LED_Y) — solide et opaque */}
+          <g transform="translate(342, 120)">
+            <rect x="-4" y="-4" width="8" height="8" rx="1" fill="#E2E8F0" stroke="#64748B" strokeWidth="0.75" />
+            <rect x="-4" y="-4" width="8" height="2" fill="#94A3B8" />
+            <rect x="-4" y="2" width="8" height="2" fill="#94A3B8" />
             <circle
               cx="0"
               cy="0"
-              r="2.8"
+              r="2.5"
               filter={logicOut ? "url(#glow-led)" : undefined}
-              className={logicOut ? "fill-amber-400" : "fill-ink/30"}
+              fill={logicOut ? "#F59E0B" : "#64748B"}
             />
-            <text x="7" y="2" fontSize="5" className="fill-mute font-mono">LED_Y {logicOut ? "=1" : "=0"}</text>
+            <text x="6" y="2" fontSize="5" className="fill-mute font-mono">LED_Y {logicOut ? "=1" : "=0"}</text>
           </g>
 
-          {/* OPTION C (BOTTOM-LEFT) : COMMUTATEUR RUN / DEBUG */}
-          {/* Ligne vers die pin (126, 255) */}
-          <path d="M83 255 H126" className="stroke-line" strokeWidth="1.25" fill="none" />
-          {/* Ligne vers pad bottom 1 (83, 356) avec TP3_RST */}
-          <path d="M83 255 V356" className={isDebug ? "stroke-amber-500" : "stroke-line"} strokeWidth="1.25" fill="none" />
+          {/* =================================================================
+              OPTION C (BOTTOM-LEFT) : VRAI COMMUTATEUR SPDT PROPRE
+              (Pistes reliées aux broches du commutateur, aucune ligne qui traverse)
+              ================================================================= */}
 
-          {/* Interrupteur à glissière RUN / DEBUG (interactif) */}
+          {/* Piste de commande reliée au die (126, 255) depuis la broche centrale COM (83, 292) */}
+          <path d="M83 292 V255 H126" className="stroke-line" strokeWidth="1.25" fill="none" />
+          {/* Piste vers pad bottom 1 (83, 356) avec TP3_RST depuis la broche COM inférieure (83, 308) */}
+          <path d="M83 308 V356" className={isDebug ? "stroke-amber-500" : "stroke-line"} strokeWidth="1.25" fill="none" />
+
+          {/* Pistes vers les voyants LED RUN et DBG depuis les broches gauche/droite du commutateur */}
+          <path d="M76 292 V278" className={!isDebug ? "stroke-emerald-600" : "stroke-line"} strokeWidth="1.25" fill="none" />
+          <path d="M90 292 V278" className={isDebug ? "stroke-amber-500" : "stroke-line"} strokeWidth="1.25" fill="none" />
+
+          {/* Voyants LED CMS solides RUN (vert) & DBG (ambre) */}
+          <g transform="translate(76, 274)">
+            <rect x="-3" y="-4" width="6" height="8" rx="1" fill="#E2E8F0" stroke="#64748B" strokeWidth="0.6" />
+            <circle cx="0" cy="0" r="2.2" filter={!isDebug ? "url(#glow-led)" : undefined} fill={!isDebug ? "#10B981" : "#64748B"} />
+            <text x="0" y="-6" fontSize="4.5" textAnchor="middle" className="fill-mute font-mono font-semibold">RUN</text>
+          </g>
+          <g transform="translate(90, 274)">
+            <rect x="-3" y="-4" width="6" height="8" rx="1" fill="#E2E8F0" stroke="#64748B" strokeWidth="0.6" />
+            <circle cx="0" cy="0" r="2.2" filter={isDebug ? "url(#glow-led)" : undefined} fill={isDebug ? "#F59E0B" : "#64748B"} />
+            <text x="0" y="-6" fontSize="4.5" textAnchor="middle" className="fill-mute font-mono font-semibold">DBG</text>
+          </g>
+
+          {/* Interrupteur SPDT à glissière CMS — solide et réaliste */}
           <g className="cursor-pointer" onClick={() => setIsDebug((d) => !d)}>
-            {/* Boîtier switch */}
-            <rect x="71" y="295" width="24" height="13" rx="2" className="fill-paper stroke-ink/50" strokeWidth="1" />
-            {/* Rainure */}
-            <rect x="74" y="299" width="18" height="5" rx="1" className="fill-ink/20" />
-            {/* Curseur mobile */}
+            {/* Broches de soudure métalliques au-dessus et en-dessous */}
+            <rect x="74" y="290" width="4" height="4" fill="#94A3B8" />
+            <rect x="81" y="290" width="4" height="4" fill="#94A3B8" />
+            <rect x="88" y="290" width="4" height="4" fill="#94A3B8" />
+            <rect x="81" y="306" width="4" height="4" fill="#94A3B8" />
+
+            {/* Boîtier métallique chromé du commutateur */}
+            <rect x="71" y="294" width="24" height="12" rx="2" fill="#E2E8F0" stroke="#475569" strokeWidth="1" />
+            {/* Glissière intérieure sombre */}
+            <rect x="74" y="297.5" width="18" height="5" rx="1" fill="#1E293B" />
+            {/* Curseur mobile moleté */}
             <rect
               x={isDebug ? "84" : "74"}
-              y="297"
+              y="295.5"
               width="8"
               height="9"
               rx="1.5"
-              className={isDebug ? "fill-amber-500 shadow-sm" : "fill-emerald-600 shadow-sm"}
+              fill={isDebug ? "#F59E0B" : "#10B981"}
+              stroke="#0F172A"
+              strokeWidth="0.8"
             />
-            <text x="64" y="304" fontSize="5" className="fill-mute font-mono">RUN</text>
-            <text x="98" y="304" fontSize="5" className="fill-mute font-mono">DBG</text>
-          </g>
-
-          {/* Voyants LED RUN (vert) & DEBUG (orange) */}
-          <g transform="translate(71, 280)">
-            <circle cx="0" cy="0" r="2.2" filter={!isDebug ? "url(#glow-led)" : undefined} className={!isDebug ? "fill-emerald-500" : "fill-ink/20"} />
-            <text x="-1" y="-4" fontSize="4.5" textAnchor="middle" className="fill-mute font-mono">RUN</text>
-          </g>
-          <g transform="translate(95, 280)">
-            <circle cx="0" cy="0" r="2.2" filter={isDebug ? "url(#glow-led)" : undefined} className={isDebug ? "fill-amber-500" : "fill-ink/20"} />
-            <text x="-1" y="-4" fontSize="4.5" textAnchor="middle" className="fill-mute font-mono">DBG</text>
+            {/* Stries de préhension sur le curseur */}
+            <line x1={isDebug ? "86.5" : "76.5"} y1="297.5" x2={isDebug ? "86.5" : "76.5"} y2="302.5" stroke="#FFFFFF" strokeWidth="0.6" />
+            <line x1={isDebug ? "89.5" : "79.5"} y1="297.5" x2={isDebug ? "89.5" : "79.5"} y2="302.5" stroke="#FFFFFF" strokeWidth="0.6" />
           </g>
 
           {/* Point de test TP3_RST */}
@@ -998,22 +1044,30 @@ function Die() {
             </g>
           ))}
 
-          {/* Condensateurs CMS (0603) directement insérés sur les pistes */}
+          {/* Condensateurs CMS (0603) — 100% SOLIDES ET OPAQUES */}
           {SM_CAPS.map((cap) => (
             <g key={cap.label} transform={`translate(${cap.x}, ${cap.y})`}>
               {cap.vertical ? (
                 <>
-                  <rect x="-4" y="-8" width="8" height="16" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
-                  <rect x="-4" y="-8" width="8" height="3" className="fill-ink/70" />
-                  <rect x="-4" y="5" width="8" height="3" className="fill-ink/70" />
-                  <text x="6" y="2" fontSize="5" className="fill-mute font-mono">{cap.label}</text>
+                  {/* Pastille de soudure PCB */}
+                  <rect x="-4.5" y="-8.5" width="9" height="17" rx="0.5" fill="#71717A" />
+                  {/* Corps céramique sombre 100% opaque */}
+                  <rect x="-4" y="-8" width="8" height="16" rx="1" fill="#27272A" stroke="#09090B" strokeWidth="0.75" />
+                  {/* Embouts étamés argentés solides */}
+                  <rect x="-4" y="-8" width="8" height="3.5" fill="#E4E4E7" stroke="#71717A" strokeWidth="0.4" />
+                  <rect x="-4" y="4.5" width="8" height="3.5" fill="#E4E4E7" stroke="#71717A" strokeWidth="0.4" />
+                  <text x="6" y="2" fontSize="5" className="fill-mute font-mono font-medium">{cap.label}</text>
                 </>
               ) : (
                 <>
-                  <rect x="-8" y="-4" width="16" height="8" rx="1" className="fill-ink/20 stroke-ink/40" strokeWidth="0.75" />
-                  <rect x="-8" y="-4" width="3" height="8" className="fill-ink/70" />
-                  <rect x="5" y="-4" width="3" height="8" className="fill-ink/70" />
-                  <text x="-8" y="-6" fontSize="5" className="fill-mute font-mono">{cap.label}</text>
+                  {/* Pastille de soudure PCB */}
+                  <rect x="-8.5" y="-4.5" width="17" height="9" rx="0.5" fill="#71717A" />
+                  {/* Corps céramique sombre 100% opaque */}
+                  <rect x="-8" y="-4" width="16" height="8" rx="1" fill="#27272A" stroke="#09090B" strokeWidth="0.75" />
+                  {/* Embouts étamés argentés solides */}
+                  <rect x="-8" y="-4" width="3.5" height="8" fill="#E4E4E7" stroke="#71717A" strokeWidth="0.4" />
+                  <rect x="4.5" y="-4" width="3.5" height="8" fill="#E4E4E7" stroke="#71717A" strokeWidth="0.4" />
+                  <text x="-8" y="-6" fontSize="5" className="fill-mute font-mono font-medium">{cap.label}</text>
                 </>
               )}
             </g>
@@ -2007,16 +2061,6 @@ function Page() {
       <header id="top" ref={heroRef} className="relative mx-auto grid min-h-[100svh] max-w-[1400px] items-center gap-12 px-6 pt-[calc(env(safe-area-inset-top)+84px)] pb-20 md:px-10 md:pt-28 md:pb-16 lg:grid-cols-[1.25fr_1fr]">
         <div className="grid-bg pointer-events-none absolute inset-0 -z-10 opacity-50 [mask-image:radial-gradient(ellipse_at_70%_45%,black,transparent_70%)]" />
         <motion.div style={{ y: heroY, opacity: heroO }}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2">
-            <span className="flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase">
-              <span className="relative flex size-2 items-center justify-center">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
-              </span>
-              <span className="text-ink font-medium">{tr("Disponible — avril 2027", "Available — April 2027")}</span>
-            </span>
-            <Label>Mines Saint-Étienne × Politecnico di Milano</Label>
-          </motion.div>
           <h1 className="text-[clamp(3.4rem,10vw,9.5rem)] leading-[0.86] font-semibold tracking-[-0.05em]">
             {["Arthur", "Doradoux"].map((w, i) => (
               <span key={w} className="block overflow-hidden pb-[0.06em]">
@@ -2029,15 +2073,13 @@ function Page() {
           <Reveal delay={0.6} className="mt-8 max-w-xl">
             <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
               {tr(
-                "Élève-ingénieur en microélectronique, informatique et conception produit (Mines Saint-Étienne × Politecnico di Milano). À la recherche d'un stage de fin d'études de 5+ mois à partir d'avril 2027.",
-                "Engineering student in microelectronics, computer science, and product design (Mines Saint-Étienne × Politecnico di Milano). Seeking a 5+ month end-of-studies internship starting April 2027."
+                "Élève-ingénieur en microélectronique, informatique et conception produit (Mines Saint-Étienne × Politecnico di Milano). À la recherche d'un stage de fin d'études de 5+ mois dès avril 2027, orienté prototypage, test et innovation produit.",
+                "Engineering student in microelectronics, computer science, and product design (Mines Saint-Étienne × Politecnico di Milano). Seeking a 5+ month end-of-studies internship starting April 2027, focused on prototyping, testing, and product innovation."
               )}
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] leading-normal text-ink/80">
-              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Rôles visés :", "Target roles:")}</span>
+              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Rôle visé :", "Target role:")}</span>
               <span className="font-semibold text-ink"><Hl>Product Owner / Product Manager</Hl></span>
-              <span className="text-mute/40">·</span>
-              <span className="font-medium text-ink/85">{tr("Prototypage, Test & Innovation Produit", "Prototyping, Testing & Product Innovation")}</span>
             </div>
           </Reveal>
           <Reveal delay={0.75} className="mt-10 flex flex-wrap gap-3">
