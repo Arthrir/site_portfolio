@@ -2520,7 +2520,12 @@ function Page() {
                   </div>
                   <div>
                     <ul className="space-y-3">
-                      {x.points.map((p) => <li key={p} className="flex gap-3 leading-snug"><span className="mt-2 h-px w-3 shrink-0 bg-signal" />{p}</li>)}
+                      {x.points.map((p) => (
+                        <li key={p} className="flex gap-3 leading-snug">
+                          <span className="mt-2.5 h-[2px] w-3.5 shrink-0 rounded-full bg-signal" />
+                          <span>{p}</span>
+                        </li>
+                      ))}
                     </ul>
                     <div className="mt-6 flex flex-wrap gap-1.5">
                       {x.tags.map((t) => <span key={t} className="border border-paper/20 px-2 py-1 font-mono text-[10px] tracking-wider uppercase text-paper/70">{t}</span>)}
