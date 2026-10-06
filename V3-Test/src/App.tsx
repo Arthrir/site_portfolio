@@ -359,25 +359,40 @@ function Stacked({ ghost, children, n, dark = false }: { ghost: string; children
 type Detail = { kicker: string; title: string; meta?: string; logo?: string; lead?: string; points: string[]; tags?: string[]; img?: string[]; links?: { l: string; h: string }[]; with?: string };
 function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
   const { tr } = useLang();
+  const closingRef = useRef(false);
+
+  // Safe dismiss helper that handles history without double callback
+  const dismiss = () => {
+    if (closingRef.current) return;
+    closingRef.current = true;
+    if (window.location.hash === "#detail") {
+      window.history.back();
+    }
+    onClose();
+  };
 
   // Support browser / mobile back gesture without resetting to site root
   useEffect(() => {
-    if (!d) return;
+    if (!d) {
+      closingRef.current = false;
+      return;
+    }
+    closingRef.current = false;
     const currentHash = window.location.hash;
     const modalHash = "#detail";
-    window.history.pushState({ modalOpen: true }, "", modalHash);
+
+    if (currentHash !== modalHash) {
+      window.history.pushState({ modalOpen: true }, "", modalHash);
+    }
 
     const onPopState = () => {
+      closingRef.current = true;
       onClose();
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (window.location.hash === modalHash) {
-          window.history.back();
-        } else {
-          onClose();
-        }
+        dismiss();
       }
     };
 
@@ -395,28 +410,23 @@ function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
     };
   }, [d, onClose]);
 
-  const handleClose = () => {
-    if (window.location.hash === "#detail") {
-      window.history.back();
-    } else {
-      onClose();
-    }
-  };
-
   return (
     <AnimatePresence>
       {d && (
         <motion.div className="fixed inset-0 z-50 flex justify-end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <div className="absolute inset-0 bg-ink/30 backdrop-blur-[2px]" onClick={handleClose} />
+          <div className="absolute inset-0 bg-ink/30 backdrop-blur-[2px]" onClick={dismiss} />
           <motion.aside
             role="dialog" aria-modal aria-label={d.title}
-            initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", stiffness: 260, damping: 32 }}
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 35 }}
             drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={{ left: 0.05, right: 0.6 }}
+            dragConstraints={{ left: 0 }}
+            dragElastic={{ left: 0, right: 0.8 }}
             onDragEnd={(_e, info) => {
-              if (info.offset.x > 80 || info.velocity.x > 400) {
-                handleClose();
+              if (info.offset.x > 80 || info.velocity.x > 300) {
+                dismiss();
               }
             }}
             className="relative h-full w-full max-w-2xl overflow-y-auto bg-paper touch-pan-y"
@@ -427,7 +437,7 @@ function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
                 <span className="block h-5 w-1 rounded-full bg-ink/20 sm:hidden" />
                 <Label>{d.kicker}</Label>
               </div>
-              <button onClick={handleClose} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase hover:text-signal">
+              <button onClick={dismiss} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase hover:text-signal">
                 {tr("Fermer", "Close")} <kbd className="hidden sm:inline border border-line px-1.5 py-0.5 text-[9px]">ESC</kbd>
               </button>
             </div>
