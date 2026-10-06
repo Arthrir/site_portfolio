@@ -2135,18 +2135,27 @@ function Page() {
                 "Engineering student in microelectronics, computer science, and product design at Mines Saint-Étienne × Politecnico di Milano."
               )}
             </p>
-            <p className="text-[16px] leading-relaxed text-ink">
-              <Hl className="font-semibold">{tr("Recherche de stage de fin d'études", "Seeking end-of-studies internship")}</Hl>{" "}
-              <span className="text-ink/85">
+            <div className="pt-2">
+              <p className="text-xl sm:text-2xl font-bold tracking-tight text-ink">
+                {tr("Recherche de stage de fin d'études", "Seeking end-of-studies internship")}{" "}
+                <span className="font-semibold text-signal text-base sm:text-lg">
+                  {tr("(5+ mois dès avril 2027)", "(5+ months from April 2027)")}
+                </span>
+              </p>
+              <p className="mt-1 text-[16px] sm:text-[17px] leading-relaxed text-ink/80">
                 {tr(
-                  "(5+ mois dès avril 2027) : Prototypage, test, gestion de projet technique et innovation produit.",
-                  "(5+ months starting April 2027): Prototyping, testing, technical project management, and product innovation."
+                  "Prototypage, test, gestion de projet technique et innovation produit.",
+                  "Prototyping, testing, technical project management, and product innovation."
                 )}
+              </p>
+            </div>
+            <div className="pt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] sm:text-[16px] leading-normal text-ink/80">
+              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">
+                {tr("Objectif professionnel :", "Career target:")}
               </span>
-            </p>
-            <div className="pt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[15px] leading-normal text-ink/80">
-              <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">{tr("Objectif professionnel :", "Career target:")}</span>
-              <span className="font-semibold text-ink"><Hl>Product Owner / Product Manager</Hl></span>
+              <span className="font-semibold text-ink">
+                {tr("Devenir Product Owner / Product Manager", "Become Product Owner / Product Manager")}
+              </span>
             </div>
           </Reveal>
           <Reveal delay={0.75} className="mt-10 flex flex-wrap gap-3">
