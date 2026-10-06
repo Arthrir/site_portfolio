@@ -35,16 +35,54 @@ const NAV: Loc<{ id: string; label: string }>[] = [
 
 const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; date: string; idx: string; points: string[]; tags: string[] }>[] = [
   {
-    co: "Advantest", logo: "/logo/advantest.png", role: "R&D Test Cell Integration Engineer", place: "Böblingen, Allemagne", date: "Avr — Juil 2026", idx: "02",
-    en: { place: "Böblingen, Germany", date: "Apr — Jul 2026", points: ["Testing calibration PCBs for AI / GPU chips", "Designed & 3D-printed a tester ↔ PC interface enclosure", "Precision measurements: microscope, VNA, TDR"] },
-    points: ["Test de PCB de calibration pour puces IA / GPU", "Conception & impression 3D d'une enceinte d'interface testeur ↔ PC", "Mesures de précision : microscope, VNA, TDR"],
+    co: "Advantest",
+    logo: "/logo/advantest.png",
+    role: "Stage Ingénieur R&D Test Cell Integration",
+    place: "Böblingen, Allemagne",
+    date: "Avr. 2026 — Juil. 2026",
+    idx: "02",
+    points: [
+      "Tests de PCBs de calibration destinés au test de puces IA/GPU.",
+      "Modélisation et impression 3D d'un boîtier d'interface entre le testeur et l'ordinateur.",
+      "Mesures et analyses de précision sur des PCBs à l'aide de Microscope, VNA et TDR.",
+    ],
     tags: ["Hardware Testing", "PCB Calibration", "3D Printing", "VNA / TDR"],
+    en: {
+      role: "R&D Test Cell Integration Engineering Intern",
+      place: "Böblingen, Germany",
+      date: "Apr. 2026 — Jul. 2026",
+      points: [
+        "Testing calibration PCBs intended for AI/GPU chip testing.",
+        "3D modeling and printing of an interface enclosure between the tester and the computer.",
+        "Precision measurements and analysis on PCBs using a microscope, VNA and TDR.",
+      ],
+    },
   },
   {
-    co: "PHINIA Delphi", logo: "/logo/phinia.png", role: "Hardware Systems Engineer", place: "Blois, France", date: "Jan — Fév 2025", idx: "01",
-    en: { date: "Jan — Feb 2025", points: ["Set up injection systems on a 24V ECU platform", "Validated ECU functions for a hydrogen application", "Thermal characterization over CAN after a 12V → 24V adaptation"] },
-    points: ["Mise en place de systèmes d'injection sur plateforme ECU 24V", "Validation de fonctions ECU pour application hydrogène", "Caractérisation thermique via CAN après adaptation 12V → 24V"],
-    tags: ["Embedded", "CAN", "Thermal", "Validation"],
+    co: "PHINIA Delphi",
+    logo: "/logo/phinia.png",
+    role: "Stage Ingénieur Systèmes Hardware",
+    place: "Blois, France",
+    date: "Jan. 2025 — Fév. 2025",
+    idx: "01",
+    points: [
+      "Configuration et tests de systèmes d'injection (plateforme ECU 24V).",
+      "Découverte des bancs de tests industriels et des protocoles de validation hardware.",
+      "Validation fonctionnelle d'ECU avec application Hydrogène (H2).",
+      "Caractérisation thermique d'un ECU via communication CAN après adaptation de 12V à 24V.",
+    ],
+    tags: ["Embedded Systems", "CAN Communication", "Thermal Characterization", "Hardware Validation"],
+    en: {
+      role: "Hardware Systems Engineering Intern",
+      place: "Blois, France",
+      date: "Jan. 2025 — Feb. 2025",
+      points: [
+        "Configured and tested hardware/software using a 24V ECU platform.",
+        "Introduction to industrial test benches and hardware validation protocols.",
+        "Functional validation of ECUs for hydrogen-related applications.",
+        "Performed thermal characterization using CAN communication after adaptation from 12V to 24V.",
+      ],
+    },
   },
 ];
 
@@ -91,7 +129,10 @@ type School = Loc<{
   place: string;
   date: string;
   badge?: string;
-  courses: string[];
+  formation?: string;
+  troncCommun?: string[];
+  electifs?: string[];
+  courses?: string[];
   goal: string;
   link?: string;
 }>;
@@ -102,72 +143,129 @@ const SCHOOLS: School[] = [
     logo: "/logo/polimi.png",
     degree: "Master in Design & Engineering",
     place: "Milan, Italie",
-    date: "Sep 2026 — Fév 2027",
+    date: "Sep. 2026 — Fév. 2027",
     badge: "Semestre international",
-    courses: ["Product Design Studio", "UX Design", "Design & Manufacturing", "Virtual & Physical Prototyping"],
-    goal: "Maîtriser l'ergonomie, le prototypage rapide et l'UX pour placer l'utilisateur au centre de la conception matérielle — une compétence clé pour diriger des produits technologiques innovants.",
+    courses: [
+      "Product Design Studio 1",
+      "UX Design",
+      "Design and Manufacturing",
+      "Virtual and Physical Prototyping",
+    ],
+    goal: "Maîtriser l'ergonomie, le prototypage rapide et l'UX pour placer l'utilisateur au centre de la conception matérielle. Une compétence clé pour diriger des produits dans les entreprises technologiques innovantes.",
     link: "https://www.polimi.it/",
     en: {
       place: "Milan, Italy",
-      date: "Sep 2026 — Feb 2027",
+      date: "Sep. 2026 — Feb. 2027",
       badge: "International semester",
-      goal: "Master ergonomics, rapid prototyping, and UX to put the user at the center of hardware design — a key skill for leading products in innovative tech companies.",
+      courses: [
+        "Product Design Studio 1",
+        "UX Design",
+        "Design and Manufacturing",
+        "Virtual and Physical Prototyping",
+      ],
+      goal: "Master ergonomics, rapid prototyping, and UX to put the user at the center of hardware design—a key skill for leading products in innovative tech companies.",
     },
   },
   {
-    name: "Mines Saint-Étienne",
+    name: "Mines de Saint-Étienne",
     logo: "/logo/emse.png",
     degree: "Diplôme d'ingénieur ISMIN",
-    place: "Campus Georges Charpak Provence, Gardanne",
-    date: "Sep 2024 — Juin 2027",
+    place: "Gardanne, France",
+    date: "Sep. 2024 — Juin 2027",
     badge: "Grande École d'ingénieurs",
-    courses: ["Microélectronique & Informatique", "Microcontrôleurs & Architecture CPU", "FPGA & Sécurité matérielle", "IA pour la Production", "Cryptographie (ASCON)", "Entrepreneuriat"],
+    formation: "Microélectronique et Informatique",
+    troncCommun: [
+      "Microcontrôleurs",
+      "Traitement du Signal",
+      "Architecture CPU",
+      "Électronique Numérique/Analogique",
+      "Cryptographie",
+    ],
+    electifs: [
+      "IA pour la Production",
+      "FPGA & Sécurité",
+      "Entrepreneuriat",
+    ],
     goal: "Formation d'ingénieur généraliste de haut niveau en systèmes embarqués, circuits intégrés et informatique, combinant rigueur scientifique, fabrication et gestion de projet.",
     link: "https://www.mines-stetienne.fr/",
     en: {
-      degree: "ISMIN Master of Science in Engineering",
+      name: "Mines Saint-Étienne",
+      degree: "ISMIN Engineering Degree",
       place: "Gardanne, France",
-      date: "Sep 2024 — Jun 2027",
+      date: "Sep. 2024 — Jun. 2027",
       badge: "Top French Engineering School",
-      courses: ["Microelectronics & Computer Science", "Microcontrollers & CPU Architecture", "FPGA & Hardware Security", "AI for Manufacturing", "Cryptography (ASCON)", "Entrepreneurship"],
+      formation: "Microelectronics and Computer Science",
+      troncCommun: [
+        "Microcontrollers",
+        "Signal Processing",
+        "CPU Architecture",
+        "Digital/Analog Electronics",
+        "Cryptography",
+      ],
+      electifs: [
+        "AI for Production",
+        "FPGA and Security",
+        "Entrepreneurship",
+      ],
       goal: "Top-tier engineering curriculum in embedded systems, integrated circuits, and computer science, bridging hardware, software and project management.",
     },
   },
   {
     name: "Lycée Pothier",
     logo: "/logo/pothier.png",
-    degree: "Classes Préparatoires aux Grandes Écoles (CPGE)",
+    degree: "Classes Préparatoires (MPSI / MP*)",
     place: "Orléans, France",
-    date: "Sep 2022 — Juin 2024",
+    date: "Sep. 2022 — Juin 2024",
     badge: "MPSI · MP*",
-    courses: ["Mathématiques approfondies", "Physique-Chimie", "Informatique théorique"],
-    goal: "Deux années de formation scientifique intensive développant rigueur conceptuelle, modélisation mathématique et endurance de travail.",
+    courses: [
+      "Mathématiques",
+      "Physique",
+      "Informatique",
+    ],
+    goal: "Deux années de formation scientifique intensive (CPGE) développant rigueur conceptuelle, modélisation mathématique et endurance de travail.",
     link: "https://lycee-pothier.fr/",
     en: {
-      degree: "Intensive Scientific Preparatory Classes (CPGE)",
+      degree: "Intensive Preparatory Classes (CPGE)",
       place: "Orléans, France",
-      date: "Sep 2022 — Jun 2024",
+      date: "Sep. 2022 — Jun. 2024",
       badge: "MPSI · MP*",
-      courses: ["Advanced Mathematics", "Physics & Chemistry", "Computer Science"],
-      goal: "Two years of intensive scientific training developing deep mathematical modeling, logical precision and high-performance problem solving.",
+      courses: [
+        "Mathematics",
+        "Physics",
+        "Computer Science",
+      ],
+      goal: "Two years of intensive scientific preparatory training developing deep mathematical modeling, logical precision and high-performance problem solving.",
     },
   },
   {
     name: "Lycée Notre-Dame des Aydes",
     logo: "/logo/nda.png",
-    degree: "Baccalauréat Général (Section Européenne Anglais)",
+    degree: "Baccalauréat Mention Bien (Section Européenne)",
     place: "Blois, France",
-    date: "Sep 2019 — Juin 2022",
+    date: "Sep. 2019 — Juin 2022",
     badge: "Mention Bien",
-    courses: ["Mathématiques", "Physique-Chimie", "Maths Expertes", "HGGSP"],
-    goal: "Baccalauréat scientifique mention Bien avec parcours bilingue en Section Européenne.",
+    courses: [
+      "Mathématiques",
+      "Physique-Chimie",
+      "HGGSP",
+      "Option Maths Expertes",
+      "Section Européenne Anglais",
+    ],
+    goal: "Baccalauréat scientifique mention Bien avec parcours bilingue en Section Européenne et renforcement en mathématiques expertes.",
     link: "https://aydes.fr/",
     en: {
-      degree: "French High School Baccalaureate (European English Section)",
+      degree: "High School Diploma with Honors (European Track)",
       place: "Blois, France",
-      date: "Sep 2019 — Jun 2022",
+      date: "Sep. 2019 — Jun. 2022",
       badge: "Honors (Mention Bien)",
-      courses: ["Mathematics", "Physics & Chemistry", "Advanced Maths", "Geopolitics"],
+      courses: [
+        "Mathematics",
+        "Physics",
+        "Chemistry",
+        "Geopolitics",
+        "Advanced Mathematics option",
+        "European Track",
+      ],
       goal: "Scientific Baccalaureate graduated with honors and bilingual European curriculum.",
     },
   },
@@ -1234,12 +1332,43 @@ function Page() {
                   <h4 className="mt-6 text-2xl font-semibold tracking-tight">{s.name}</h4>
                   <p className="mt-1 text-sm font-medium text-signal">{s.degree}</p>
                   <p className="mt-1 font-mono text-[11px] tracking-wider text-mute uppercase">{s.place} · {s.date}</p>
-                  <p className="mt-5 text-[15px] leading-relaxed text-ink/80">{s.goal}</p>
-                  <div className="mt-6 border-t border-line/60 pt-4">
-                    <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-2">{tr("Matières & enseignements clés :", "Key courses & curriculum:")}</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {s.courses.map((c) => <span key={c} className="border border-ink/20 bg-paper px-2 py-0.5 font-mono text-[10px] uppercase text-ink/80">{c}</span>)}
+                  {s.formation && (
+                    <div className="mt-4">
+                      <span className="font-mono text-[10px] tracking-wider text-mute uppercase block">{tr("Formation :", "Major:")}</span>
+                      <p className="mt-0.5 text-sm font-semibold text-ink">{s.formation}</p>
                     </div>
+                  )}
+
+                  {s.troncCommun && s.troncCommun.length > 0 && (
+                    <div className="mt-4 border-t border-line/60 pt-3">
+                      <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-1.5">{tr("Tronc commun :", "Core curriculum:")}</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {s.troncCommun.map((tc) => <span key={tc} className="border border-ink/20 bg-paper px-2 py-0.5 font-mono text-[10px] uppercase text-ink/80">{tc}</span>)}
+                      </div>
+                    </div>
+                  )}
+
+                  {s.electifs && s.electifs.length > 0 && (
+                    <div className="mt-3">
+                      <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-1.5">{tr("Électifs :", "Electives:")}</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {s.electifs.map((el) => <span key={el} className="border border-signal/30 bg-signal/5 px-2 py-0.5 font-mono text-[10px] uppercase text-signal">{el}</span>)}
+                      </div>
+                    </div>
+                  )}
+
+                  {s.courses && s.courses.length > 0 && (
+                    <div className="mt-5 border-t border-line/60 pt-3">
+                      <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-1.5">{tr("Cours & spécialités :", "Courses & key subjects:")}</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {s.courses.map((c) => <span key={c} className="border border-ink/20 bg-paper px-2 py-0.5 font-mono text-[10px] uppercase text-ink/80">{c}</span>)}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="mt-5 border-t border-line/60 pt-3">
+                    <span className="font-mono text-[10px] tracking-wider text-mute uppercase block mb-1">{tr("Enjeu / Objectif :", "Goal & Takeaways:")}</span>
+                    <p className="text-[14px] leading-relaxed text-ink/80">{s.goal}</p>
                   </div>
                 </div>
                 {s.link && (

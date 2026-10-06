@@ -16,18 +16,184 @@ type Item = { id: string; row: Row; label: string; place: string; from: string; 
 
 const ITEMS: Loc<Item>[] = [
   // --- Formation (bus multi-bit) ---
-  { id: "bac", row: "FORMATION", label: "BAC EURO", place: "Blois", from: "2019-09", to: "2022-06", details: ["Mention Bien", "Maths, physique-chimie, HGGSP, Maths Expertes"], en: { label: "EUROPEAN BAC", details: ["Graduated with honors (Mention Bien)", "Maths, physics-chemistry, geopolitics (HGGSP), advanced maths"] } },
-  { id: "prepa", row: "FORMATION", label: "PRÉPA MPSI-MP*", place: "Lycée Pothier, Orléans", from: "2022-09", to: "2024-06", details: ["MPSI puis MP*", "Mathématiques, physique, informatique"], en: { label: "PREP MPSI - MP*", place: "Lycée Pothier, Orléans", details: ["MPSI then MP* (intensive preparatory classes)", "Mathematics, physics, computer science"] } },
-  { id: "mines", row: "FORMATION", label: "Mines Saint-Étienne · ISMIN", place: "Mines Saint-Étienne, Gardanne", from: "2024-09", to: "2027-09", details: ["Microélectronique & informatique", "Microcontrôleurs, FPGA & sécurité", "IA pour la production, entrepreneuriat"], en: { details: ["Microelectronics & computer science", "Microcontrollers, FPGA & security", "AI for manufacturing, entrepreneurship"] } },
+  {
+    id: "bac",
+    row: "FORMATION",
+    label: "BAC EURO",
+    place: "Lycée Notre-Dame des Aydes, Blois",
+    from: "2019-09",
+    to: "2022-06",
+    details: [
+      "Baccalauréat Mention Bien (Section Européenne)",
+      "Spécialités : Mathématiques, Physique-Chimie, HGGSP. Option Maths Expertes.",
+    ],
+    en: {
+      label: "EUROPEAN BAC",
+      place: "Lycée Notre-Dame des Aydes, Blois",
+      details: [
+        "High School Diploma with Honors (European Track)",
+        "Specialties: Mathematics, Physics, Chemistry, Geopolitics, Advanced Mathematics option.",
+      ],
+    },
+  },
+  {
+    id: "prepa",
+    row: "FORMATION",
+    label: "PRÉPA MPSI-MP*",
+    place: "Lycée Pothier, Orléans",
+    from: "2022-09",
+    to: "2024-06",
+    details: [
+      "Classes Préparatoires aux Grandes Écoles (MPSI puis MP*)",
+      "Spécialités : Mathématiques, Physique, Informatique.",
+      "Deux ans de formation intensive développant rigueur et endurance.",
+    ],
+    en: {
+      label: "PREP MPSI - MP*",
+      place: "Lycée Pothier, Orléans",
+      details: [
+        "Intensive Preparatory Classes (MPSI then MP*)",
+        "Curriculum: Mathematics, Physics, Computer Science.",
+        "Two years of high-intensity scientific problem-solving training.",
+      ],
+    },
+  },
+  {
+    id: "mines",
+    row: "FORMATION",
+    label: "Mines Saint-Étienne · ISMIN",
+    place: "Mines de Saint-Étienne, Gardanne",
+    from: "2024-09",
+    to: "2027-09",
+    details: [
+      "Diplôme d'ingénieur ISMIN — Microélectronique et Informatique.",
+      "Tronc commun : Microcontrôleurs, Traitement du Signal, Architecture CPU, Électronique Numérique/Analogique, Cryptographie.",
+      "Électifs : IA pour la Production, FPGA & Sécurité, Entrepreneuriat.",
+    ],
+    en: {
+      place: "Mines Saint-Étienne, Gardanne",
+      details: [
+        "ISMIN Engineering Degree — Microelectronics and Computer Science.",
+        "Core: Microcontrollers, Signal Processing, CPU Architecture, Digital/Analog Electronics, Cryptography.",
+        "Electives: AI for Production, FPGA and Security, Entrepreneurship.",
+      ],
+    },
+  },
   // --- Stages ---
-  { id: "phinia", row: "STAGE", label: "PHINIA", place: "Blois", from: "2025-01", to: "2025-02", details: ["ECU 24V, validation H2", "Caractérisation thermique via CAN"], en: { details: ["24V ECU, H2 validation", "Thermal characterization over CAN"] } },
-  { id: "advantest", row: "STAGE", label: "Advantest", place: "Böblingen, Allemagne", from: "2026-04", to: "2026-07", details: ["Calibration de PCB pour test de puces IA/GPU", "VNA, TDR", "Enceinte imprimée 3D"], en: { place: "Böblingen, Germany", details: ["PCB calibration for AI/GPU chip testing", "VNA, TDR", "3D-printed enclosure"] } },
+  {
+    id: "phinia",
+    row: "STAGE",
+    label: "PHINIA",
+    place: "PHINIA Delphi, Blois",
+    from: "2025-01",
+    to: "2025-02",
+    details: [
+      "Stage Ingénieur Systèmes Hardware : plateforme ECU 24V.",
+      "Configuration et tests de systèmes d'injection et bancs de tests industriels.",
+      "Validation fonctionnelle d'ECU avec application Hydrogène (H2).",
+      "Caractérisation thermique d'un ECU via communication CAN (12V → 24V).",
+    ],
+    en: {
+      place: "PHINIA Delphi, Blois",
+      details: [
+        "Hardware Systems Engineering Intern: 24V ECU platform.",
+        "Configured and tested hardware/software and industrial test benches.",
+        "Functional validation of ECUs for hydrogen applications (H2).",
+        "Thermal characterization over CAN communication (12V → 24V adaptation).",
+      ],
+    },
+  },
+  {
+    id: "advantest",
+    row: "STAGE",
+    label: "Advantest",
+    place: "Advantest, Böblingen, Allemagne",
+    from: "2026-04",
+    to: "2026-07",
+    details: [
+      "Stage Ingénieur R&D Test Cell Integration.",
+      "Tests de PCBs de calibration destinés au test de puces IA/GPU.",
+      "Modélisation et impression 3D d'un boîtier d'interface testeur ↔ PC.",
+      "Mesures et analyses de précision sur PCBs (Microscope, VNA, TDR).",
+    ],
+    en: {
+      place: "Advantest, Böblingen, Germany",
+      details: [
+        "R&D Test Cell Integration Engineering Intern.",
+        "Testing calibration PCBs intended for AI/GPU chip testing.",
+        "3D modeling and printing of tester ↔ PC interface enclosure.",
+        "Precision measurements and analysis on PCBs (Microscope, VNA, TDR).",
+      ],
+    },
+  },
   // --- Associations ---
-  { id: "minitel", row: "ASSO", label: "Président MINITEL", place: "Association étudiante", from: "2025-03", to: "2026-03", details: ["Fédérer, structurer, livrer", "Là où l'envie du produit est née"], en: { label: "MINITEL President", place: "Student association", details: ["Rally, structure, deliver", "Where my drive for product was born"] } },
+  {
+    id: "minitel",
+    row: "ASSO",
+    label: "Président MINITEL",
+    place: "Association étudiante, Gardanne",
+    from: "2025-03",
+    to: "2026-03",
+    details: [
+      "Direction de l'association (16 membres) et budget de plus de 25 000 €.",
+      "Maintenance du réseau Wi-Fi/filaire de 150+ logements du campus.",
+      "Organisation d'événements et LAN e-sport avec Riot Games et Red Bull.",
+    ],
+    en: {
+      label: "MINITEL President",
+      place: "Student association, Gardanne",
+      details: [
+        "Led student association (16 members) and managed €25k+ budget.",
+        "Campus Wi-Fi/wired network maintenance for 150+ student homes.",
+        "Organized major LAN events partnered with Riot Games & Red Bull.",
+      ],
+    },
+  },
   // --- International ---
-  { id: "polimi", row: "INTL", label: "Politecnico di Milano", place: "Milan · Design & Engineering", from: "2026-09", to: "2027-02" /* ≈ */, details: ["Product Design Studio", "UX Design", "Virtual & Physical Prototyping"], en: { place: "Milan · Design & Engineering" } },
+  {
+    id: "polimi",
+    row: "INTL",
+    label: "Politecnico di Milano",
+    place: "Politecnico di Milano, Milan, Italie",
+    from: "2026-09",
+    to: "2027-02",
+    details: [
+      "Master in Design & Engineering.",
+      "Cours : Product Design Studio 1, UX Design, Design and Manufacturing, Virtual & Physical Prototyping.",
+      "Enjeu : Maîtriser l'ergonomie, le prototypage rapide et l'UX pour placer l'utilisateur au centre de la conception matérielle.",
+    ],
+    en: {
+      place: "Politecnico di Milano, Milan, Italy",
+      details: [
+        "Master in Design & Engineering.",
+        "Courses: Product Design Studio 1, UX Design, Design and Manufacturing, Virtual & Physical Prototyping.",
+        "Goal: Master ergonomics, rapid prototyping, and UX to put the user at the center of hardware design.",
+      ],
+    },
+  },
   // --- Objectif ---
-  { id: "target", row: "TARGET", label: "Stage PO / PM", place: "5+ mois, à partir d'avril 2027", from: "2027-04", to: "2027-09", details: ["Product Owner / Product Manager", "ou ingénierie hard/soft"], en: { label: "PO / PM internship", place: "5+ months, starting April 2027", details: ["Product Owner / Product Manager", "or hardware/software engineering"] } },
+  {
+    id: "target",
+    row: "TARGET",
+    label: "Stage PO / PM",
+    place: "5+ mois, à partir d'avril 2027",
+    from: "2027-04",
+    to: "2027-09",
+    details: [
+      "À la recherche d'un stage de fin d'études (5+ mois) dès avril 2027.",
+      "Rôles cibles : Product Owner, Product Manager ou ingénierie hardware/software innovante.",
+      "Passerelle naturelle entre excellence technique et vision produit orientée utilisateur.",
+    ],
+    en: {
+      label: "PO / PM Internship",
+      place: "5+ months, starting April 2027",
+      details: [
+        "Seeking an end-of-studies internship (5+ months) starting April 2027.",
+        "Target roles: Product Owner, Product Manager, or innovative HW/SW engineering.",
+        "Natural bridge connecting engineering rigor and user-centric product vision.",
+      ],
+    },
+  },
 ];
 
 const ROWS: { key: Row; name: string; bus?: boolean }[] = [
