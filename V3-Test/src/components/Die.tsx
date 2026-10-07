@@ -251,93 +251,129 @@ export default function Die() {
 
           {/* =================================================================
               4. BANC MULTI-PORTES FLUIDE ET CONNECTÉ (HAUT-DROITE)
-              Boutons A et B alimentant les rails A et B avec Vias et pistes propres
+              Boutons poussoirs tactiles réels (6x6mm SMD) alimentant les rails A et B
               ================================================================= */}
-          {/* Bouton Tactile A à (252, 28) - Bouton élargi à 44x24 pour texte aéré */}
-          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(252, 28)">
-            <rect x="0" y="0" width="44" height="24" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
-            <circle cx="12" cy="12" r="5.5" fill={logicA ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
-            <text x="27" y="14.5" fontSize="6.5" fontWeight="bold" fill={logicA ? "#FF4D00" : "#E2E8F0"}>
-              A:{valA}
+          {/* Bouton Poussoir Tactile SMD A à (252, 28) */}
+          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(252, 26)">
+            {/* 4 pattes de soudure métalliques aux 4 coins */}
+            <rect x="-3" y="2" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="-3" y="18" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="24" y="2" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="24" y="18" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+
+            {/* Corps métallique du boîtier bouton poussoir 6x6mm */}
+            <rect x="0" y="0" width="24" height="24" rx="2" fill="#181A22" stroke="#475569" strokeWidth="0.8" />
+            <circle cx="12" cy="12" r="9" fill="#111216" stroke="#334155" strokeWidth="0.6" />
+            {/* Actionneur central rond (plongeur / bouton) */}
+            <circle
+              cx="12"
+              cy="12"
+              r="6.5"
+              fill={logicA ? "#FF4D00" : "#334155"}
+              stroke={logicA ? "#FF7A33" : "#475569"}
+              strokeWidth="0.8"
+              filter={logicA ? "url(#glow-led)" : undefined}
+            />
+            {/* Étiquette sérigraphie au-dessus du bouton */}
+            <text x="12" y="-3.5" textAnchor="middle" fontSize="4.8" fontWeight="bold" fill={logicA ? "#FF4D00" : "#E2E8F0"}>
+              BTN A ({valA})
             </text>
           </g>
 
-          {/* Bouton Tactile B à (252, 68) - Bouton élargi à 44x24 pour texte aéré */}
-          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(252, 68)">
-            <rect x="0" y="0" width="44" height="24" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
-            <circle cx="12" cy="12" r="5.5" fill={logicB ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
-            <text x="27" y="14.5" fontSize="6.5" fontWeight="bold" fill={logicB ? "#FF4D00" : "#E2E8F0"}>
-              B:{valB}
+          {/* Bouton Poussoir Tactile SMD B à (252, 68) */}
+          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(252, 66)">
+            {/* 4 pattes de soudure métalliques aux 4 coins */}
+            <rect x="-3" y="2" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="-3" y="18" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="24" y="2" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="24" y="18" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+
+            {/* Corps métallique du boîtier bouton poussoir 6x6mm */}
+            <rect x="0" y="0" width="24" height="24" rx="2" fill="#181A22" stroke="#475569" strokeWidth="0.8" />
+            <circle cx="12" cy="12" r="9" fill="#111216" stroke="#334155" strokeWidth="0.6" />
+            {/* Actionneur central rond (plongeur / bouton) */}
+            <circle
+              cx="12"
+              cy="12"
+              r="6.5"
+              fill={logicB ? "#FF4D00" : "#334155"}
+              stroke={logicB ? "#FF7A33" : "#475569"}
+              strokeWidth="0.8"
+              filter={logicB ? "url(#glow-led)" : undefined}
+            />
+            {/* Étiquette sérigraphie au-dessus du bouton */}
+            <text x="12" y="-3.5" textAnchor="middle" fontSize="4.8" fontWeight="bold" fill={logicB ? "#FF4D00" : "#E2E8F0"}>
+              BTN B ({valB})
             </text>
           </g>
 
           {/* RAILS DE DISTRIBUTION PARALLÈLES :
-              Sortie A part de (296, 40) -> Rail A (orange quand A=1) à x=316
-              Sortie B part de (296, 80) -> Rail B (orange quand B=1) à x=324 */}
+              Sortie A part du pad droit du bouton A (277, 38) -> Rail A à x=304
+              Sortie B part du pad droit du bouton B (277, 78) -> Rail B à x=316 */}
           <path
-            d="M 296 40 H 316 V 141"
+            d="M 277 38 H 304 V 141"
             stroke={logicA ? "#FF4D00" : "#52525B"}
             strokeWidth={logicA ? 1.6 : 1}
             fill="none"
           />
           <path
-            d="M 296 80 H 324 V 151"
+            d="M 277 78 H 316 V 151"
             stroke={logicB ? "#FF4D00" : "#52525B"}
             strokeWidth={logicB ? 1.6 : 1}
             fill="none"
           />
 
           {/* Entrées directes depuis A et B vers les broches 1 et 2 du processeur */}
-          <path d="M 306 40 V 145 H 274" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
-          <circle cx="306" cy="40" r="1.3" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <path d="M 290 38 V 145 H 274" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <circle cx="290" cy="38" r="1.3" fill={logicA ? "#FF4D00" : "#52525B"} />
 
-          <path d="M 302 80 V 160 H 274" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
-          <circle cx="302" cy="80" r="1.3" fill={logicB ? "#FF4D00" : "#52525B"} />
+          <path d="M 285 78 V 160 H 274" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <circle cx="285" cy="78" r="1.3" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 --- */}
-          {/* Entrée A du XOR : couche supérieure continue (x=316 -> x=334) */}
-          <path d="M 316 44 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <circle cx="316" cy="44" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          {/* Entrée A du XOR : couche supérieure continue (x=304 -> x=348) */}
+          <path d="M 304 44 H 348" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <circle cx="304" cy="44" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
 
           {/* Entrée B du XOR : VIAS + PISTE EN POINTILLÉS (couche interne) */}
-          {/* Via d'entrée sur le rail B (324, 56) */}
-          <g transform="translate(324, 56)">
-            <circle cx="0" cy="0" r="2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="0.8" fill={logicB ? "#FF4D00" : "#27272A"} />
+          {/* Via d'entrée sur le rail B (316, 56) */}
+          <g transform="translate(316, 56)">
+            <circle cx="0" cy="0" r="2.2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="0.9" fill={logicB ? "#FF4D00" : "#27272A"} />
           </g>
-          {/* Piste en pointillés représentant le routage en couche interne */}
+          {/* Trajet couche interne en pointillés jusqu'au via de sortie (316 -> 336) */}
           <path
-            d="M 324 56 H 329"
+            d="M 316 56 H 336"
             stroke={logicB ? "#FF4D00" : "#52525B"}
             strokeWidth={logicB ? 1.5 : 1}
-            strokeDasharray="2 1.5"
+            strokeDasharray="2.5 1.5"
             fill="none"
           />
-          {/* Via de remontée à la surface en amont de la porte (329, 56) */}
-          <g transform="translate(329, 56)">
-            <circle cx="0" cy="0" r="2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="0.8" fill={logicB ? "#FF4D00" : "#27272A"} />
+          {/* Via de remontée à la surface à bonne distance de la porte (336, 56) */}
+          <g transform="translate(336, 56)">
+            <circle cx="0" cy="0" r="2.2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="0.9" fill={logicB ? "#FF4D00" : "#27272A"} />
           </g>
-          {/* Segment de surface branché parfaitement à l'entrée de la porte (329 -> 334) */}
-          <path d="M 329 56 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          {/* Piste de surface parfaitement dégagée de tout arc (336 -> 348) */}
+          <path d="M 336 56 H 348" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
 
-          {/* Corps de la porte XOR normalisé ANSI (entrées en 334, 44 et 334, 56) */}
+          {/* Corps de la porte XOR normalisé ANSI (porte positionnée de x=348 à x=368) */}
           <g>
-            {/* Arc d'entrée séparé (spécifique au symbole XOR) */}
-            <path d="M 330 40 Q 335 50 330 60" fill="none" stroke="#3F3F46" strokeWidth="1.3" strokeLinecap="round" />
+            {/* Arc d'entrée séparé (spécifique au symbole XOR) de x=344 */}
+            <path d="M 344 40 Q 349 50 344 60" fill="none" stroke="#3F3F46" strokeWidth="1.3" strokeLinecap="round" />
             {/* Corps principal XOR */}
             <path
-              d="M 334 40 Q 346 43 354 50 Q 346 57 334 60 Q 339 50 334 40 Z"
+              d="M 348 40 Q 360 43 368 50 Q 360 57 348 60 Q 353 50 348 40 Z"
               fill="#181A22"
               stroke="#FF4D00"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="344" y="36" fontSize="4.8" textAnchor="middle" fill="#FF4D00" fontWeight="bold">XOR</text>
+            <text x="358" y="36" fontSize="4.8" textAnchor="middle" fill="#FF4D00" fontWeight="bold">XOR</text>
 
             {/* Sortie XOR vers LED probe */}
-            <path d="M 354 50 H 368" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth={outXOR ? 1.6 : 1} fill="none" />
-            <g transform="translate(368, 50)">
+            <path d="M 368 50 H 380" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth={outXOR ? 1.6 : 1} fill="none" />
+            <g transform="translate(380, 50)">
               <circle cx="0" cy="0" r="3.2" fill={outXOR ? "#FF4D00" : "#27272A"} filter={outXOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
               <text x="5" y="2.2" fontSize="5" fontWeight="bold" fill={outXOR ? "#FF4D00" : "#71717A"}>
                 ={outXOR ? "1" : "0"}
@@ -346,7 +382,7 @@ export default function Die() {
           </g>
 
           {/* Ligne de sortie XOR vers Pin 3 (y=175) avec résistance R1 */}
-          <path d="M 358 50 V 62 H 384 V 175 H 274" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth={1.2} fill="none" />
+          <path d="M 372 50 V 62 H 392 V 175 H 274" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
           <g transform="translate(330, 175)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
@@ -355,24 +391,24 @@ export default function Die() {
           </g>
 
           {/* --- PORTE 2 : AND (Y = A · B) à y=98 --- */}
-          <path d="M 316 93 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <path d="M 324 103 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
-          <circle cx="316" cy="93" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="324" cy="103" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+          <path d="M 304 93 H 348" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <path d="M 316 103 H 348" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <circle cx="304" cy="93" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="316" cy="103" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           <g>
             <path
-              d="M 334 89 H 344 A 9 9 0 0 1 344 107 H 334 Z"
+              d="M 348 89 H 358 A 9 9 0 0 1 358 107 H 348 Z"
               fill="#181A22"
               stroke="#10B981"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="343" y="85" fontSize="4.8" textAnchor="middle" fill="#10B981" fontWeight="bold">AND</text>
+            <text x="357" y="85" fontSize="4.8" textAnchor="middle" fill="#10B981" fontWeight="bold">AND</text>
 
             {/* Sortie AND vers LED probe */}
-            <path d="M 353 98 H 368" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={outAND ? 1.6 : 1} fill="none" />
-            <g transform="translate(368, 98)">
+            <path d="M 367 98 H 380" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={outAND ? 1.6 : 1} fill="none" />
+            <g transform="translate(380, 98)">
               <circle cx="0" cy="0" r="3.2" fill={outAND ? "#10B981" : "#27272A"} filter={outAND ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
               <text x="5" y="2.2" fontSize="5" fontWeight="bold" fill={outAND ? "#10B981" : "#71717A"}>
                 ={outAND ? "1" : "0"}
@@ -381,7 +417,7 @@ export default function Die() {
           </g>
 
           {/* Ligne de sortie AND vers Pin 4 (y=190) avec résistance R2 */}
-          <path d="M 356 98 V 110 H 374 V 190 H 274" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={1.2} fill="none" />
+          <path d="M 370 98 V 110 H 384 V 190 H 274" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={1.2} fill="none" />
           <g transform="translate(330, 190)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
@@ -390,25 +426,24 @@ export default function Die() {
           </g>
 
           {/* --- PORTE 3 : OR (Y = A + B) à y=146 --- */}
-          {/* Lignes d'entrée depuis les rails verticaux x=316 et x=324 se terminant exactement sur l'arc arrière à x=334 */}
-          <path d="M 316 141 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <path d="M 324 151 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
-          <circle cx="316" cy="141" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="324" cy="151" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+          <path d="M 304 141 H 348" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <path d="M 316 151 H 348" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <circle cx="304" cy="141" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="316" cy="151" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           <g>
             <path
-              d="M 334 137 Q 339 146 334 155 Q 345 155 354 146 Q 345 137 334 137 Z"
+              d="M 348 137 Q 353 146 348 155 Q 359 155 368 146 Q 359 137 348 137 Z"
               fill="#181A22"
               stroke="#8B5CF6"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="343" y="133" fontSize="4.8" textAnchor="middle" fill="#8B5CF6" fontWeight="bold">OR</text>
+            <text x="357" y="133" fontSize="4.8" textAnchor="middle" fill="#8B5CF6" fontWeight="bold">OR</text>
 
             {/* Sortie OR vers LED probe */}
-            <path d="M 354 146 H 368" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={outOR ? 1.6 : 1} fill="none" />
-            <g transform="translate(368, 146)">
+            <path d="M 368 146 H 380" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={outOR ? 1.6 : 1} fill="none" />
+            <g transform="translate(380, 146)">
               <circle cx="0" cy="0" r="3.2" fill={outOR ? "#8B5CF6" : "#27272A"} filter={outOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
               <text x="5" y="2.2" fontSize="5" fontWeight="bold" fill={outOR ? "#8B5CF6" : "#71717A"}>
                 ={outOR ? "1" : "0"}
@@ -417,7 +452,7 @@ export default function Die() {
           </g>
 
           {/* Ligne de sortie OR vers Pin 5 (y=205) avec résistance R3 */}
-          <path d="M 354 146 H 366 V 205 H 274" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <path d="M 368 146 H 376 V 205 H 274" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={1.2} fill="none" />
           <g transform="translate(330, 205)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
