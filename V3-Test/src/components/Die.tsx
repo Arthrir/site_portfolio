@@ -2,24 +2,25 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useLang } from "../i18n";
 
-/* ---------------- Die / EDA Lab (Logisim-evolution Style) ----------------
- * Esthétique schématique pure CAO / EDA :
- * - Grille orthogonale à pas de 10px (points discrets comme Logisim / KiCad EEschema)
- * - Lignes de bus et fils vert franc émeraude (#009933 / #16a34a) et noir (#000000)
- * - Portes logiques ANSI géométriques pures (sans arrondis mous ni style "dessin animé IA")
- * - Blocs fonctionnels carrés, nets, étiquetés aux normes d'ingénierie (RV32I, ALU, REGFILE, ROM, CLK)
- * - Véritable circuit interactif avec toggles A, B, porte logique, sorties, et affichage 7-segments / LEDs
+/* ---------------- Die / Silicon Chip EDA Lab ----------------
+ * Hybride haute précision technique :
+ * - Boîtier silicium noir mat & cuivre orange (#FF4D00 / #0D0E12)
+ * - Chanfrein Pin 1, pastilles CMS périphériques, repères fiduciels PCB
+ * - Schéma micro-architectural Logisim-evolution intégré (ALU, registres, bus)
+ * - Banc de test logique interactif : entrées A et B, porte ANSI (XOR, AND, OR), sortie probe
+ * - Afficheur HEX + décodage ASM temps réel (ex: xor a2, a0, a1)
+ * - Références concrètes aux architectures étudiées : RISC-V RV32I, STM32, bancs de test industriels
  * -------------------------------------------------------------------------- */
 
 export default function Die() {
   const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const rx = useSpring(useTransform(my, [-1, 1], [6, -6]), { stiffness: 140, damping: 20 });
-  const ry = useSpring(useTransform(mx, [-1, 1], [-6, 6]), { stiffness: 140, damping: 20 });
+  const rx = useSpring(useTransform(my, [-1, 1], [7, -7]), { stiffness: 140, damping: 20 });
+  const ry = useSpring(useTransform(mx, [-1, 1], [-7, 7]), { stiffness: 140, damping: 20 });
   const { tr } = useLang();
 
-  // Inputs interactifs
+  // Entrées logiques interactives
   const [inA, setInA] = useState(true);
   const [inB, setInB] = useState(false);
   const [gateType, setGateType] = useState<"XOR" | "AND" | "OR">("XOR");
@@ -31,7 +32,7 @@ export default function Die() {
     if (!isRunning) return;
     const interval = setInterval(() => {
       setClockTick((t) => (t + 1) % 16);
-    }, 450);
+    }, 420);
     return () => clearInterval(interval);
   }, [isRunning]);
 
@@ -46,7 +47,12 @@ export default function Die() {
   // Valeurs de bus 8 bits simulées
   const busValA = inA ? 0x2a : 0x05;
   const busValB = inB ? 0x13 : 0x02;
-  const aluOut = gateType === "XOR" ? busValA ^ busValB : gateType === "AND" ? busValA & busValB : busValA | busValB;
+  const aluOut =
+    gateType === "XOR"
+      ? busValA ^ busValB
+      : gateType === "AND"
+      ? busValA & busValB
+      : busValA | busValB;
 
   return (
     <div className="relative w-full max-w-[420px] pb-6 [perspective:1200px]">
@@ -66,13 +72,26 @@ export default function Die() {
       >
         <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible font-mono text-[10px]">
           <defs>
-            {/* Grille de points Logisim */}
-            <pattern id="eda-grid" width="10" height="10" patternUnits="userSpaceOnUse">
-              <circle cx="1" cy="1" r="0.6" fill="#18181B" opacity="0.18" />
+            {/* Grille technique EDA fine */}
+            <pattern id="chip-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="0.5" fill="#3F3F46" opacity="0.3" />
             </pattern>
-            {/* Lueur pour LEDs vertes actives */}
-            <filter id="led-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="2" result="blur" />
+
+            {/* Hachures cuivre / thermal slug */}
+            <pattern id="copper-hatch" width="6" height="6" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#9A3412" strokeWidth="1.2" />
+            </pattern>
+
+            {/* Lueur pour signaux actifs */}
+            <filter id="glow-orange" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -80,356 +99,448 @@ export default function Die() {
             </filter>
           </defs>
 
-          {/* FOND SCHÉMATIQUE CAD BLANC CASSE */}
-          <rect width="400" height="400" fill="#FDFCF7" stroke="#18181B" strokeWidth="1.5" />
-          <rect width="400" height="400" fill="url(#eda-grid)" pointerEvents="none" />
+          {/* =================================================================
+              1. SUBSTRAT PCB NOIR PROFOND & PASTILLES DE CONTACT (LEADFRAME)
+              ================================================================= */}
+          {/* PCB Base */}
+          <rect width="400" height="400" rx="3" fill="#0C0D10" stroke="#27272A" strokeWidth="1.5" />
+          <rect width="400" height="400" fill="url(#chip-grid)" pointerEvents="none" />
 
-          {/* BANDEAU EN-TÊTE CAD LOGISIM / SCHEMATIC */}
-          <rect x="0" y="0" width="400" height="22" fill="#F3F2EB" stroke="#18181B" strokeWidth="1" />
-          <text x="10" y="15" fontSize="8" fontWeight="bold" fill="#18181B" letterSpacing="0.5">
-            EDA :: ISMIN-RV32I_CORE.circ [LOGISIM-EVOLUTION]
-          </text>
-          <text x="390" y="15" textAnchor="end" fontSize="7.5" fill="#52525B">
-            CLK: {isRunning ? "2.2 Hz" : "HALT"} · RATIO 1:1
-          </text>
+          {/* Repères fiduciels de précision PCB (4 coins) */}
+          {[
+            { cx: 20, cy: 20 },
+            { cx: 380, cy: 20 },
+            { cx: 20, cy: 380 },
+            { cx: 380, cy: 380 },
+          ].map((f, i) => (
+            <g key={`fid-${i}`}>
+              <circle cx={f.cx} cy={f.cy} r="4" fill="none" stroke="#52525B" strokeWidth="1" />
+              <circle cx={f.cx} cy={f.cy} r="1.5" fill="#FF4D00" />
+            </g>
+          ))}
+
+          {/* Pastilles périphériques CMS (14 pads par côté) */}
+          {Array.from({ length: 14 }).map((_, i) => (
+            <g key={`pads-${i}`}>
+              {/* Haut */}
+              <rect x={44 + i * 22} y={10} width={9} height={14} rx={1} fill="#52525B" stroke="#3F3F46" strokeWidth="0.5" />
+              <line x1={48.5 + i * 22} y1={24} x2={48.5 + i * 22} y2={32} stroke="#3F3F46" strokeWidth="1" />
+              {/* Bas */}
+              <rect x={44 + i * 22} y={376} width={9} height={14} rx={1} fill="#52525B" stroke="#3F3F46" strokeWidth="0.5" />
+              <line x1={48.5 + i * 22} y1={368} x2={48.5 + i * 22} y2={376} stroke="#3F3F46" strokeWidth="1" />
+              {/* Gauche */}
+              <rect x={10} y={44 + i * 22} width={14} height={9} rx={1} fill="#52525B" stroke="#3F3F46" strokeWidth="0.5" />
+              <line x1={24} y1={48.5 + i * 22} x2={32} y2={48.5 + i * 22} stroke="#3F3F46" strokeWidth="1" />
+              {/* Droite */}
+              <rect x={376} y={44 + i * 22} width={14} height={9} rx={1} fill="#52525B" stroke="#3F3F46" strokeWidth="0.5" />
+              <line x1={368} y1={48.5 + i * 22} x2={376} y2={48.5 + i * 22} stroke="#3F3F46" strokeWidth="1" />
+            </g>
+          ))}
 
           {/* =================================================================
-              MODULE 1 : GÉNÉRATEUR D'HORLOGE & REGISTRE D'ÉTAT (Top-Left)
+              2. BOÎTIER IC NOIR CENTRAL (CHIP PACKAGE AVEC CHANFREIN PIN 1)
               ================================================================= */}
-          <g transform="translate(18, 32)">
-            <rect x="0" y="0" width="100" height="46" fill="#FFFFFF" stroke="#18181B" strokeWidth="1" />
-            <text x="6" y="11" fontSize="7" fontWeight="bold" fill="#18181B">CLK_GEN / FSM</text>
+          {/* Corps principal QFP / QFN chanfreiné en haut à gauche */}
+          <path
+            d="M 58 32 H 368 V 368 H 32 V 58 Z"
+            fill="#121318"
+            stroke="#27272A"
+            strokeWidth="1.5"
+          />
 
-            {/* Bouton Run/Halt */}
+          {/* Repère Pin 1 (Index laser orange) */}
+          <circle cx="48" cy="48" r="4.5" fill="none" stroke="#FF4D00" strokeWidth="1" />
+          <circle cx="48" cy="48" r="2" fill="#FF4D00" />
+          <text x="56" y="50" fontSize="5.5" fill="#A1A1AA" fontWeight="bold">PIN 1</text>
+
+          {/* Bandeau supérieur de sérigraphie laser */}
+          <line x1="68" y1="32" x2="68" y2="52" stroke="#27272A" strokeWidth="1" />
+          <text x="76" y="44" fontSize="7" fontWeight="bold" fill="#F4F4F5" letterSpacing="0.6">
+            ISMIN-RV32I CORE :: SOC DIE [REV 3.4]
+          </text>
+          <text x="360" y="44" textAnchor="end" fontSize="6.5" fill="#71717A">
+            {isRunning ? "CLK 120 MHz" : "HALT"} · QFP-144
+          </text>
+          <line x1="32" y1="54" x2="368" y2="54" stroke="#27272A" strokeWidth="1" />
+
+          {/* =================================================================
+              3. TOP-LEFT : MODULE D'HORLOGE & CONTRÔLE FSM
+              ================================================================= */}
+          <g transform="translate(42, 64)">
+            <rect x="0" y="0" width="112" height="58" fill="#181920" stroke="#27272A" strokeWidth="1" />
+            <text x="6" y="11" fontSize="6.5" fontWeight="bold" fill="#E4E4E7">
+              SYS_CLK / FSM GEN
+            </text>
+
+            {/* Bouton Run / Halt */}
             <g className="cursor-pointer" onClick={() => setIsRunning((r) => !r)}>
-              <rect x="6" y="17" width="38" height="14" fill={isRunning ? "#DCFCE7" : "#FEE2E2"} stroke="#18181B" strokeWidth="0.8" />
-              <text x="25" y="27" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill={isRunning ? "#15803D" : "#B91C1C"}>
+              <rect
+                x="6"
+                y="18"
+                width="38"
+                height="15"
+                rx="1"
+                fill={isRunning ? "#052e16" : "#450a0a"}
+                stroke={isRunning ? "#22C55E" : "#EF4444"}
+                strokeWidth="1"
+              />
+              <text
+                x="25"
+                y="28.5"
+                textAnchor="middle"
+                fontSize="6.5"
+                fontWeight="bold"
+                fill={isRunning ? "#4ADE80" : "#F87171"}
+              >
                 {isRunning ? "RUN" : "HALT"}
               </text>
             </g>
 
-            {/* LED Pulse Clock */}
+            {/* LED clignotante SYS_CLK */}
             <circle
               cx="54"
-              cy="24"
-              r="4"
-              fill={clockTick % 2 === 0 ? "#22C55E" : "#D4D4D8"}
-              stroke="#18181B"
+              cy="25.5"
+              r="4.5"
+              fill={clockTick % 2 === 0 ? "#FF4D00" : "#27272A"}
+              stroke="#52525B"
               strokeWidth="0.8"
-              filter={clockTick % 2 === 0 ? "url(#led-glow)" : undefined}
+              filter={clockTick % 2 === 0 ? "url(#glow-orange)" : undefined}
             />
-            <text x="62" y="26.5" fontSize="6.5" fill="#52525B">SYS_CLK</text>
+            <text x="63" y="27.5" fontSize="6" fill="#A1A1AA">CLK_PULSE</text>
 
-            {/* Compteur de cycle 4-bits */}
-            <text x="6" y="40" fontSize="6" fill="#71717A">
-              CYCLE: 0x{clockTick.toString(16).toUpperCase()}
+            {/* Compteur de cycle hexadécimal */}
+            <text x="6" y="48" fontSize="6" fill="#71717A">
+              CYCLE: 0x{clockTick.toString(16).toUpperCase().padStart(2, "0")}
             </text>
-            <text x="60" y="40" fontSize="6" fill="#15803D" fontWeight="bold">
-              [ACTIVE]
+            <text x="62" y="48" fontSize="6" fill="#22C55E" fontWeight="bold">
+              [LOCKED]
             </text>
           </g>
 
           {/* =================================================================
-              MODULE 2 : BANQUE D'ENTRÉES LOGIQUES ET SIGNAUX (Top-Right)
-              Interrupteurs DIP / Logisim Pin Inputs [A] et [B]
+              4. TOP-RIGHT : BANC DE TEST LOGIQUE (IN_A, IN_B, OP GATE, PROBE)
+              Accessible, non masqué par la photo polaroid
               ================================================================= */}
-          <g transform="translate(132, 32)">
-            <rect x="0" y="0" width="250" height="46" fill="#FFFFFF" stroke="#18181B" strokeWidth="1" />
-            <text x="8" y="11" fontSize="7" fontWeight="bold" fill="#18181B">
+          <g transform="translate(164, 64)">
+            <rect x="0" y="0" width="194" height="58" fill="#181920" stroke="#27272A" strokeWidth="1" />
+            <text x="8" y="11" fontSize="6.5" fontWeight="bold" fill="#E4E4E7">
               LOGIC TESTBENCH :: DUAL-INPUT GATE STAGE
             </text>
 
-            {/* Input Pin A */}
+            {/* Bouton Input A */}
             <g className="cursor-pointer" onClick={() => setInA((v) => !v)} transform="translate(8, 17)">
-              <rect x="0" y="0" width="38" height="16" fill={inA ? "#18181B" : "#F4F4F5"} stroke="#18181B" strokeWidth="1" />
-              <text x="19" y="11" textAnchor="middle" fontSize="7" fontWeight="bold" fill={inA ? "#FFFFFF" : "#18181B"}>
-                IN_A [{inA ? "1" : "0"}]
+              <rect
+                x="0"
+                y="0"
+                width="34"
+                height="16"
+                rx="1"
+                fill={inA ? "#FF4D00" : "#27272A"}
+                stroke={inA ? "#FF7A33" : "#3F3F46"}
+                strokeWidth="1"
+              />
+              <text x="17" y="11" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill={inA ? "#FFFFFF" : "#A1A1AA"}>
+                A = {inA ? "1" : "0"}
               </text>
             </g>
 
-            {/* Input Pin B */}
-            <g className="cursor-pointer" onClick={() => setInB((v) => !v)} transform="translate(54, 17)">
-              <rect x="0" y="0" width="38" height="16" fill={inB ? "#18181B" : "#F4F4F5"} stroke="#18181B" strokeWidth="1" />
-              <text x="19" y="11" textAnchor="middle" fontSize="7" fontWeight="bold" fill={inB ? "#FFFFFF" : "#18181B"}>
-                IN_B [{inB ? "1" : "0"}]
+            {/* Bouton Input B */}
+            <g className="cursor-pointer" onClick={() => setInB((v) => !v)} transform="translate(48, 17)">
+              <rect
+                x="0"
+                y="0"
+                width="34"
+                height="16"
+                rx="1"
+                fill={inB ? "#FF4D00" : "#27272A"}
+                stroke={inB ? "#FF7A33" : "#3F3F46"}
+                strokeWidth="1"
+              />
+              <text x="17" y="11" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill={inB ? "#FFFFFF" : "#A1A1AA"}>
+                B = {inB ? "1" : "0"}
               </text>
             </g>
 
-            {/* Sélecteur de porte (XOR / AND / OR) */}
+            {/* Bouton sélecteur de porte logique */}
             <g
               className="cursor-pointer"
               onClick={() => setGateType((g) => (g === "XOR" ? "AND" : g === "AND" ? "OR" : "XOR"))}
-              transform="translate(100, 17)"
+              transform="translate(88, 17)"
             >
-              <rect x="0" y="0" width="48" height="16" fill="#F4F4F5" stroke="#18181B" strokeWidth="1" />
-              <text x="24" y="11" textAnchor="middle" fontSize="7" fontWeight="bold" fill="#09090B">
-                OP: {gateType} ▾
+              <rect x="0" y="0" width="44" height="16" rx="1" fill="#27272A" stroke="#52525B" strokeWidth="1" />
+              <text x="22" y="11" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill="#F4F4F5">
+                {gateType} ▾
               </text>
             </g>
 
-            {/* Probe de sortie */}
-            <g transform="translate(160, 17)">
-              <rect x="0" y="0" width="82" height="16" fill={outVal ? "#DCFCE7" : "#F4F4F5"} stroke="#18181B" strokeWidth="1" />
+            {/* Sonde de sortie OUT LED */}
+            <g transform="translate(138, 17)">
+              <rect
+                x="0"
+                y="0"
+                width="48"
+                height="16"
+                rx="1"
+                fill={outVal ? "#064e3b" : "#27272A"}
+                stroke={outVal ? "#10B981" : "#3F3F46"}
+                strokeWidth="1"
+              />
               <circle
                 cx="10"
                 cy="8"
                 r="3.5"
-                fill={outVal ? "#16A34A" : "#A1A1AA"}
-                stroke="#18181B"
-                strokeWidth="0.8"
-                filter={outVal ? "url(#led-glow)" : undefined}
+                fill={outVal ? "#22C55E" : "#71717A"}
+                filter={outVal ? "url(#glow-green)" : undefined}
               />
-              <text x="19" y="11" fontSize="7" fontWeight="bold" fill={outVal ? "#15803D" : "#52525B"}>
-                OUT = {outVal ? "1 (HIGH)" : "0 (LOW)"}
+              <text x="19" y="11" fontSize="6.5" fontWeight="bold" fill={outVal ? "#4ADE80" : "#A1A1AA"}>
+                Y = {outVal ? "1" : "0"}
               </text>
             </g>
+
+            {/* Pistes internes du banc logique */}
+            <path d="M 25 33 V 44 H 90" fill="none" stroke={inA ? "#FF4D00" : "#3F3F46"} strokeWidth="1.2" />
+            <path d="M 65 33 V 48 H 90" fill="none" stroke={inB ? "#FF4D00" : "#3F3F46"} strokeWidth="1.2" />
+
+            {/* Mini porte ANSI dessinée */}
+            <g transform="translate(92, 40)">
+              {gateType === "XOR" ? (
+                <g>
+                  <path d="M0 2 Q4 8 0 14" fill="none" stroke="#FF4D00" strokeWidth="1.2" />
+                  <path d="M3 2 Q14 3 20 8 Q14 13 3 14 Q7 8 3 2 Z" fill="#181920" stroke="#FF4D00" strokeWidth="1.2" />
+                </g>
+              ) : gateType === "AND" ? (
+                <path d="M0 2 H10 A6 6 0 0 1 10 14 H0 Z" fill="#181920" stroke="#FF4D00" strokeWidth="1.2" />
+              ) : (
+                <path d="M0 2 Q4 8 0 14 Q10 14 18 8 Q10 2 0 2 Z" fill="#181920" stroke="#FF4D00" strokeWidth="1.2" />
+              )}
+            </g>
+            <path d="M 112 48 H 155" fill="none" stroke={outVal ? "#22C55E" : "#3F3F46"} strokeWidth="1.4" />
+            <circle cx="155" cy="48" r="2" fill={outVal ? "#22C55E" : "#3F3F46"} />
           </g>
 
           {/* =================================================================
-              CÂBLAGE SCHÉMATIQUE ORTHOGONAL (Fils Logisim stricts)
+              5. CENTRE DU CHIP : SLUG CUIVRE ORANGE + ARCHITECTURE LOGISIM
               ================================================================= */}
-          {/* Fil Horloge vers Unité Centrale */}
-          <path
-            d="M 68,78 V 110 H 95"
-            fill="none"
-            stroke={isRunning ? "#16A34A" : "#71717A"}
-            strokeWidth="1.5"
-            strokeLinecap="square"
-          />
-          <circle cx="95" cy="110" r="2" fill="#18181B" />
+          {/* SLUG EN CUIVRE ORANGE (HEATSINK THERMAL PAD ICONIQUE DU DÉBUT) */}
+          <g transform="translate(42, 132)">
+            {/* Base cuivre orange franc */}
+            <rect x="0" y="0" width="76" height="76" rx="2" fill="#EA580C" stroke="#FF7A33" strokeWidth="1.2" />
+            {/* Trame striée cuivre */}
+            <rect x="0" y="0" width="76" height="76" fill="url(#copper-hatch)" opacity="0.45" />
 
-          {/* Fils A & B vers la porte logique */}
-          <path
-            d="M 151,78 V 104 H 195"
-            fill="none"
-            stroke={inA ? "#16A34A" : "#18181B"}
-            strokeWidth={inA ? "1.75" : "1"}
-            strokeLinecap="square"
-          />
-          <path
-            d="M 197,78 V 116 H 195"
-            fill="none"
-            stroke={inB ? "#16A34A" : "#18181B"}
-            strokeWidth={inB ? "1.75" : "1"}
-            strokeLinecap="square"
-          />
+            {/* Lignes diagonales de dissipation thermique */}
+            <line x1="0" y1="0" x2="76" y2="76" stroke="#FFEDD5" strokeWidth="0.8" opacity="0.3" />
+            <line x1="76" y1="0" x2="0" y2="76" stroke="#FFEDD5" strokeWidth="0.8" opacity="0.3" />
 
-          {/* =================================================================
-              PORTE LOGIQUE CENTRALE (Représentation ANSI stricte Logisim)
-              ================================================================= */}
-          <g transform="translate(195, 96)">
-            {gateType === "XOR" ? (
-              <g>
-                <path d="M0 6 Q6 15 0 24" fill="none" stroke="#18181B" strokeWidth="1.3" />
-                <path d="M4 6 Q18 8 26 15 Q18 22 4 24 Q10 15 4 6 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.3" />
-                <text x="12" y="17" fontSize="5.5" fontWeight="bold" fill="#18181B">XOR</text>
-              </g>
-            ) : gateType === "AND" ? (
-              <g>
-                <path d="M0 6 H14 A9 9 0 0 1 14 24 H0 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.3" />
-                <text x="11" y="17" fontSize="5.5" fontWeight="bold" fill="#18181B">AND</text>
-              </g>
-            ) : (
-              <g>
-                <path d="M0 6 Q6 15 0 24 Q14 24 24 15 Q14 6 0 6 Z" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.3" />
-                <text x="9" y="17" fontSize="5.5" fontWeight="bold" fill="#18181B">OR</text>
-              </g>
-            )}
+            {/* Sérigraphie laser au centre du slug */}
+            <rect x="6" y="20" width="64" height="36" fill="#121318" stroke="#FF4D00" strokeWidth="1" />
+            <text x="38" y="32" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill="#FF4D00">
+              THERMAL SLUG
+            </text>
+            <text x="38" y="42" textAnchor="middle" fontSize="5.5" fill="#E4E4E7">
+              DIE: RV32I-CM4
+            </text>
+            <text x="38" y="50" textAnchor="middle" fontSize="5" fill="#A1A1AA">
+              EMSE × POLIMI
+            </text>
           </g>
 
-          {/* Fil de sortie de la porte logique vers l'ALU */}
+          {/* BUS ORTHOGONAUX RELIANT LE SLUG À L'ALU */}
+          <path d="M 118 150 H 132" fill="none" stroke="#FF4D00" strokeWidth="1.5" />
+          <path d="M 118 190 H 132" fill="none" stroke="#FF4D00" strokeWidth="1.5" />
+
+          {/* BLOC ALU LOGISIM (ARITHMETIC LOGIC UNIT - TRAPÈZE CAO PUR) */}
+          <g transform="translate(132, 135)">
+            <polygon
+              points="0,0 46,16 46,54 0,70 0,42 12,35 0,28"
+              fill="#181920"
+              stroke="#FF4D00"
+              strokeWidth="1.4"
+              strokeLinejoin="round"
+            />
+            <text x="22" y="38" textAnchor="middle" fontSize="8.5" fontWeight="bold" fill="#F4F4F5">
+              ALU
+            </text>
+            <text x="22" y="46" textAnchor="middle" fontSize="5" fill="#FF4D00" fontWeight="bold">
+              {gateType}
+            </text>
+
+            {/* Étiquettes des broches ALU */}
+            <text x="3" y="15" fontSize="5" fill="#A1A1AA">A</text>
+            <text x="3" y="62" fontSize="5" fill="#A1A1AA">B</text>
+            <text x="40" y="37" fontSize="5" fill="#22C55E" fontWeight="bold">Y</text>
+          </g>
+
+          {/* BUS DE SORTIE ALU VERS LE BLOC INSTRUCTION & REGISTRES */}
           <path
-            d="M 221,111 H 250 V 135 H 220"
+            d="M 178 170 H 198"
             fill="none"
-            stroke={outVal ? "#16A34A" : "#18181B"}
-            strokeWidth={outVal ? "1.75" : "1"}
+            stroke={outVal ? "#22C55E" : "#FF4D00"}
+            strokeWidth="2"
             strokeLinecap="square"
           />
-          <circle cx="221" cy="111" r="2" fill="#18181B" />
+          <circle cx="178" cy="170" r="2" fill="#FF4D00" />
+          {isRunning && (
+            <motion.circle
+              cx="178"
+              cy="170"
+              r="2.5"
+              fill="#22C55E"
+              animate={{ cx: [178, 198] }}
+              transition={{ duration: 0.6, repeat: Infinity, ease: "linear" }}
+            />
+          )}
 
-          {/* =================================================================
-              MODULE 3 : CŒUR PROCESSEUR RV32I / BLOC LOGISIM CENTRAL
-              Bloc fonctionnel net, sharp, rectiligne
-              ================================================================= */}
-          <g transform="translate(18, 120)">
-            <rect x="0" y="0" width="364" height="150" fill="#FFFFFF" stroke="#18181B" strokeWidth="1.5" />
-
-            {/* Titre du module */}
-            <rect x="0" y="0" width="364" height="18" fill="#F4F4F5" stroke="#18181B" strokeWidth="1" />
-            <text x="8" y="12.5" fontSize="7.5" fontWeight="bold" fill="#18181B">
-              CORE 0 :: RV32I RISC-V CPU (ISMIN ARCHITECTURE)
+          {/* BANQUE DE REGISTRES & DÉCODEUR ASM (BLOC DROIT NOIR & ORANGE) */}
+          <g transform="translate(198, 130)">
+            <rect x="0" y="0" width="160" height="80" fill="#181920" stroke="#27272A" strokeWidth="1" />
+            <rect x="0" y="0" width="160" height="15" fill="#121318" stroke="#27272A" strokeWidth="0.8" />
+            <text x="6" y="10.5" fontSize="6.5" fontWeight="bold" fill="#F4F4F5">
+              REGISTERS & INSTRUCTION DECODE
             </text>
-            <text x="356" y="12.5" textAnchor="end" fontSize="7" fill="#71717A">
-              32-BIT PIPELINED · SINGLE ISSUE
-            </text>
 
-            {/* BLOC : BANQUE DE REGISTRES (REG_FILE) */}
-            <g transform="translate(12, 28)">
-              <rect x="0" y="0" width="85" height="110" fill="#FAFAFA" stroke="#18181B" strokeWidth="1" />
-              <text x="42.5" y="12" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill="#18181B">
-                REGFILE x0..x31
+            {/* Afficheur 7-Segments HEX ALU OUT */}
+            <g transform="translate(6, 20)">
+              <rect x="0" y="0" width="62" height="20" fill="#0C0D10" stroke="#FF4D00" strokeWidth="0.8" />
+              <text
+                x="31"
+                y="14"
+                textAnchor="middle"
+                fontSize="10"
+                fontFamily="monospace"
+                fill="#FF4D00"
+                fontWeight="bold"
+                letterSpacing="1"
+              >
+                0x0{aluOut.toString(16).toUpperCase()}
               </text>
-              <line x1="0" y1="17" x2="85" y2="17" stroke="#18181B" strokeWidth="0.8" />
+              <text x="0" y="27" fontSize="5" fill="#71717A">HEX_ALU_OUT</text>
+            </g>
 
-              {/* Lignes de registres visualisées comme Logisim */}
+            {/* Instruction ASM courante */}
+            <g transform="translate(74, 20)">
+              <rect x="0" y="0" width="80" height="20" fill="#0C0D10" stroke="#27272A" strokeWidth="0.8" />
+              <text x="5" y="9" fontSize="5" fontWeight="bold" fill="#71717A">ASM OP:</text>
+              <text x="5" y="16" fontSize="6" fontFamily="monospace" fill="#4ADE80" fontWeight="bold">
+                {gateType.toLowerCase()} a2, a0, a1
+              </text>
+              <text x="0" y="27" fontSize="5" fill="#71717A">RISC-V PIPELINE</text>
+            </g>
+
+            {/* Registres visualisés */}
+            <g transform="translate(6, 32)">
               {[
-                { r: "x1 (ra)", val: "0x00400120" },
-                { r: "x2 (sp)", val: "0x7FFFF000" },
-                { r: "x10 (a0)", val: inA ? "0x00000001" : "0x00000000" },
-                { r: "x11 (a1)", val: inB ? "0x00000001" : "0x00000000" },
-                { r: "x12 (a2)", val: outVal ? "0x00000001" : "0x00000000" },
-                { r: "x13 (t0)", val: `0x000000${aluOut.toString(16).padStart(2, "0")}` },
-              ].map((reg, i) => (
-                <g key={reg.r} transform={`translate(4, ${26 + i * 14})`}>
-                  <rect x="0" y="0" width="77" height="11" fill="#FFFFFF" stroke="#E4E4E7" strokeWidth="0.75" />
-                  <text x="3" y="8" fontSize="5.5" fontWeight="600" fill="#3F3F46">{reg.r}</text>
-                  <text x="74" y="8" textAnchor="end" fontSize="5.5" fontFamily="monospace" fill="#15803D">{reg.val}</text>
+                { r: "x10 (a0)", v: inA ? "0x01" : "0x00" },
+                { r: "x11 (a1)", v: inB ? "0x01" : "0x00" },
+                { r: "x12 (a2)", v: outVal ? "0x01" : "0x00" },
+                { r: "x13 (t0)", v: `0x${aluOut.toString(16).toUpperCase().padStart(2, "0")}` },
+              ].map((reg, idx) => (
+                <g key={reg.r} transform={`translate(${idx * 37.5}, 12)`}>
+                  <rect x="0" y="0" width="35" height="18" fill="#121318" stroke="#27272A" strokeWidth="0.6" />
+                  <text x="3" y="8" fontSize="4.8" fill="#A1A1AA">{reg.r}</text>
+                  <text x="3" y="15" fontSize="5.2" fontWeight="bold" fill={idx === 2 && outVal ? "#4ADE80" : "#FF4D00"}>
+                    {reg.v}
+                  </text>
                 </g>
               ))}
             </g>
 
-            {/* BUS DE CONNEXION INTERNE VERT */}
-            <path d="M 97,55 H 125" fill="none" stroke="#16A34A" strokeWidth="1.5" strokeLinecap="square" />
-            <path d="M 97,95 H 125" fill="none" stroke="#16A34A" strokeWidth="1.5" strokeLinecap="square" />
+            {/* Flags de contrôle */}
+            <text x="6" y="74" fontSize="5" fill="#71717A">
+              STATUS: ZERO={outVal ? "0" : "1"} · CARRY=0 · EX_STAGE=ACTIVE
+            </text>
+          </g>
 
-            {/* BLOC : ALU (ARITHMETIC LOGIC UNIT - VÉRITABLE FORME TRAPÉZOÏDALE CAO) */}
-            <g transform="translate(125, 36)">
-              {/* Forme classique de l'ALU en CAO */}
-              <polygon
-                points="0,0 52,18 52,56 0,74 0,44 14,37 0,30"
-                fill="#FAFAFA"
-                stroke="#18181B"
-                strokeWidth="1.2"
-                strokeLinejoin="round"
-              />
-              <text x="26" y="40" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#18181B">
-                ALU
-              </text>
-              <text x="26" y="48" textAnchor="middle" fontSize="5.5" fill="#52525B">
-                {gateType} / ADD
-              </text>
+          {/* =================================================================
+              6. BAS DU CHIP : ARCHITECTURES CIBLES & COMPOSANTS CMS RÉELS
+              ================================================================= */}
+          <g transform="translate(42, 220)">
+            <rect x="0" y="0" width="316" height="88" fill="#181920" stroke="#27272A" strokeWidth="1" />
+            <rect x="0" y="0" width="316" height="15" fill="#121318" stroke="#27272A" strokeWidth="0.8" />
+            <text x="8" y="10.5" fontSize="6.5" fontWeight="bold" fill="#F4F4F5">
+              TARGET PLATFORMS & EMBEDDED ARCHITECTURES
+            </text>
+            <text x="308" y="10.5" textAnchor="end" fontSize="6" fill="#FF4D00">
+              ISMIN × POLIMI EXPERTISE
+            </text>
 
-              {/* Pins d'entrées ALU */}
-              <text x="4" y="16" fontSize="5.5" fill="#71717A">A</text>
-              <text x="4" y="66" fontSize="5.5" fill="#71717A">B</text>
-              <text x="46" y="39" fontSize="5.5" fill="#15803D" fontWeight="bold">Y</text>
+            {/* 3 Blocs cibles techniques nets */}
+            {/* 1. RISC-V RV32I */}
+            <g transform="translate(8, 20)">
+              <rect x="0" y="0" width="94" height="60" fill="#121318" stroke="#27272A" strokeWidth="0.8" />
+              <text x="6" y="13" fontSize="6.5" fontWeight="bold" fill="#F4F4F5">RISC-V RV32I</text>
+              <text x="6" y="24" fontSize="5.5" fill="#FF4D00">Custom Pipelined Core</text>
+              <text x="6" y="35" fontSize="5" fill="#A1A1AA">Logisim & Verilog RTL</text>
+              <text x="6" y="46" fontSize="5" fill="#71717A">Dual-issue / ALU</text>
+              <circle cx="86" cy="12" r="2.5" fill="#22C55E" />
             </g>
 
-            {/* Ligne de sortie ALU vers bus de données */}
-            <path d="M 177,73 H 205" fill="none" stroke="#16A34A" strokeWidth="2" strokeLinecap="square" />
-            <circle cx="177" cy="73" r="2" fill="#18181B" />
+            {/* 2. STM32 ARM Microcontrollers */}
+            <g transform="translate(111, 20)">
+              <rect x="0" y="0" width="94" height="60" fill="#121318" stroke="#27272A" strokeWidth="0.8" />
+              <text x="6" y="13" fontSize="6.5" fontWeight="bold" fill="#F4F4F5">STM32 Microcontrollers</text>
+              <text x="6" y="24" fontSize="5.5" fill="#FF4D00">ARM Cortex-M4 / C</text>
+              <text x="6" y="35" fontSize="5" fill="#A1A1AA">Capacitive Sensing</text>
+              <text x="6" y="46" fontSize="5" fill="#71717A">FreeRTOS / Low Power</text>
+              <circle cx="86" cy="12" r="2.5" fill="#22C55E" />
+            </g>
 
-            {/* BLOC : MÉMOIRE D'INSTRUCTIONS & ROM (INSTRUCTION FETCH / DECODE) */}
-            <g transform="translate(205, 28)">
-              <rect x="0" y="0" width="145" height="110" fill="#FAFAFA" stroke="#18181B" strokeWidth="1" />
-              <text x="72.5" y="12" textAnchor="middle" fontSize="6.5" fontWeight="bold" fill="#18181B">
-                PROGRAM COUNTER & INSTRUCTION DECODE
-              </text>
-              <line x1="0" y1="17" x2="145" y2="17" stroke="#18181B" strokeWidth="0.8" />
-
-              {/* 7-Segment Display / Code hexadécimal */}
-              <g transform="translate(8, 24)">
-                <rect x="0" y="0" width="60" height="22" fill="#18181B" />
-                <text x="30" y="15" textAnchor="middle" fontSize="11" fontFamily="monospace" fill="#22C55E" fontWeight="bold" letterSpacing="1.5">
-                  0x0{aluOut.toString(16).toUpperCase()}
-                </text>
-                <text x="0" y="30" fontSize="5.5" fill="#52525B">HEX_ALU_OUT</text>
-              </g>
-
-              {/* Instruction ASM courante */}
-              <g transform="translate(74, 24)">
-                <rect x="0" y="0" width="63" height="22" fill="#F4F4F5" stroke="#E4E4E7" strokeWidth="0.8" />
-                <text x="5" y="10" fontSize="5.5" fontWeight="bold" fill="#09090B">ASM INSTRUCTION:</text>
-                <text x="5" y="18" fontSize="6" fontFamily="monospace" fill="#15803D" fontWeight="bold">
-                  {gateType.toLowerCase()} a2, a0, a1
-                </text>
-              </g>
-
-              {/* Microcode / Status flags */}
-              <g transform="translate(8, 62)">
-                <text x="0" y="0" fontSize="6" fontWeight="bold" fill="#18181B">FLAGS / HARZARD UNIT:</text>
-                <g transform="translate(0, 6)">
-                  <rect x="0" y="0" width="28" height="12" fill={outVal ? "#DCFCE7" : "#F4F4F5"} stroke="#18181B" strokeWidth="0.6" />
-                  <text x="14" y="8.5" textAnchor="middle" fontSize="5.5" fill={outVal ? "#15803D" : "#71717A"} fontWeight="bold">
-                    ZERO: {outVal ? "0" : "1"}
-                  </text>
-                </g>
-                <g transform="translate(34, 6)">
-                  <rect x="0" y="0" width="28" height="12" fill="#F4F4F5" stroke="#18181B" strokeWidth="0.6" />
-                  <text x="14" y="8.5" textAnchor="middle" fontSize="5.5" fill="#71717A">
-                    CARRY: 0
-                  </text>
-                </g>
-                <g transform="translate(68, 6)">
-                  <rect x="0" y="0" width="28" height="12" fill="#F4F4F5" stroke="#18181B" strokeWidth="0.6" />
-                  <text x="14" y="8.5" textAnchor="middle" fontSize="5.5" fill="#71717A">
-                    SIGN: 0
-                  </text>
-                </g>
-                <g transform="translate(102, 6)">
-                  <rect x="0" y="0" width="28" height="12" fill="#DCFCE7" stroke="#18181B" strokeWidth="0.6" />
-                  <text x="14" y="8.5" textAnchor="middle" fontSize="5.5" fill="#15803D" fontWeight="bold">
-                    FWD: OK
-                  </text>
-                </g>
-              </g>
-
-              {/* Bus de contrôle */}
-              <text x="8" y="96" fontSize="5.5" fill="#71717A">
-                BUS: WB=1 · MEM=0 · EX=1 · REG_WRITE=1
-              </text>
+            {/* 3. Infineon / Powertrain (Phinia Stage) */}
+            <g transform="translate(214, 20)">
+              <rect x="0" y="0" width="94" height="60" fill="#121318" stroke="#27272A" strokeWidth="0.8" />
+              <text x="6" y="13" fontSize="6.5" fontWeight="bold" fill="#F4F4F5">Automotive & Power</text>
+              <text x="6" y="24" fontSize="5.5" fill="#FF4D00">AURIX / Bancs de test</text>
+              <text x="6" y="35" fontSize="5" fill="#A1A1AA">PHINIA Stage Powertrain</text>
+              <text x="6" y="46" fontSize="5" fill="#71717A">Hardware Testing & ECUs</text>
+              <circle cx="86" cy="12" r="2.5" fill="#22C55E" />
             </g>
           </g>
 
           {/* =================================================================
-              MODULE 4 : PÉRIPHÉRIQUES & TARGET CHIPS (Bas de schéma)
-              Mention des architectures étudiées & expérimentées (STM32 / Infineon / RISC-V)
+              7. COMPOSANTS PASSIFS CMS 0603 & POINTS DE TEST (TP)
               ================================================================= */}
-          <g transform="translate(18, 282)">
-            <rect x="0" y="0" width="364" height="74" fill="#FFFFFF" stroke="#18181B" strokeWidth="1" />
-            <rect x="0" y="0" width="364" height="16" fill="#F3F2EB" stroke="#18181B" strokeWidth="0.8" />
-            <text x="8" y="11" fontSize="7" fontWeight="bold" fill="#18181B">
-              TARGET PLATFORMS & EMBEDDED INTEGRATION
-            </text>
-            <text x="356" y="11" textAnchor="end" fontSize="6.5" fill="#52525B">
-              ISMIN × POLIMI EXPERTISE
-            </text>
-
-            {/* 3 Blocs cibles sharp */}
-            {/* 1. RISC-V Custom Core */}
-            <g transform="translate(8, 22)">
-              <rect x="0" y="0" width="112" height="44" fill="#FAFAFA" stroke="#18181B" strokeWidth="0.8" />
-              <text x="6" y="12" fontSize="6.5" fontWeight="bold" fill="#18181B">RISC-V RV32I</text>
-              <text x="6" y="22" fontSize="5.5" fill="#52525B">Pipelined Core · Logisim</text>
-              <text x="6" y="32" fontSize="5" fill="#71717A">SystemVerilog RTL</text>
-              <circle cx="102" cy="12" r="3" fill="#16A34A" />
+          {/* Condensateurs CMS de découplage C1, C2, C3, C4 */}
+          {[
+            { x: 52, y: 326, l: "C1" },
+            { x: 120, y: 326, l: "C2" },
+            { x: 236, y: 326, l: "C3" },
+            { x: 330, y: 326, l: "C4" },
+          ].map((c) => (
+            <g key={c.l} transform={`translate(${c.x}, ${c.y})`}>
+              {/* Corps sombre céramique */}
+              <rect x="-8" y="-4" width="16" height="8" rx="1" fill="#27272A" stroke="#3F3F46" strokeWidth="0.6" />
+              {/* Embouts étamés argentés */}
+              <rect x="-8" y="-4" width="3" height="8" fill="#E4E4E7" />
+              <rect x="5" y="-4" width="3" height="8" fill="#E4E4E7" />
+              <text x="0" y="-6" textAnchor="middle" fontSize="4.8" fill="#71717A">{c.l}</text>
             </g>
+          ))}
 
-            {/* 2. STM32 Embedded HW */}
-            <g transform="translate(126, 22)">
-              <rect x="0" y="0" width="112" height="44" fill="#FAFAFA" stroke="#18181B" strokeWidth="0.8" />
-              <text x="6" y="12" fontSize="6.5" fontWeight="bold" fill="#18181B">STM32 Microcontrollers</text>
-              <text x="6" y="22" fontSize="5.5" fill="#52525B">ARM Cortex-M · C / RTOS</text>
-              <text x="6" y="32" fontSize="5" fill="#71717A">Capacitive Sensing & IoT</text>
-              <circle cx="102" cy="12" r="3" fill="#16A34A" />
+          {/* Points de test de précision TP1 à TP4 avec anneaux cuivre */}
+          {[
+            { x: 80, y: 326, l: "TP1_CLK", active: isRunning },
+            { x: 178, y: 326, l: "TP2_ALU", active: true },
+            { x: 282, y: 326, l: "TP3_GATE", active: outVal },
+          ].map((tp) => (
+            <g key={tp.l} transform={`translate(${tp.x}, ${tp.y})`}>
+              <circle cx="0" cy="0" r="3.2" fill="none" stroke="#FF4D00" strokeWidth="0.8" />
+              <circle cx="0" cy="0" r="1.2" fill={tp.active ? "#FF4D00" : "#52525B"} />
+              <text x="6" y="2" fontSize="5" fill="#A1A1AA">{tp.l}</text>
             </g>
+          ))}
 
-            {/* 3. Automotive / Industrial Powertrain (Phinia context) */}
-            <g transform="translate(244, 22)">
-              <rect x="0" y="0" width="112" height="44" fill="#FAFAFA" stroke="#18181B" strokeWidth="0.8" />
-              <text x="6" y="12" fontSize="6.5" fontWeight="bold" fill="#18181B">Automotive & Power</text>
-              <text x="6" y="22" fontSize="5.5" fill="#52525B">AURIX / Industrial HW</text>
-              <text x="6" y="32" fontSize="5" fill="#71717A">Bancs de test & Électronique</text>
-              <circle cx="102" cy="12" r="3" fill="#16A34A" />
-            </g>
-          </g>
-
-          {/* Connecteurs de bus en peigne (Style Logisim Wire Probe en bas) */}
-          <g transform="translate(18, 362)">
-            {Array.from({ length: 18 }).map((_, i) => (
-              <g key={`pin-${i}`} transform={`translate(${i * 20.5}, 0)`}>
-                <line x1="8" y1="0" x2="8" y2="12" stroke="#18181B" strokeWidth="1" />
-                <rect x="6" y="12" width="4" height="6" fill={i % 3 === 0 ? "#16A34A" : "#18181B"} />
+          {/* Connecteurs de bus en peigne inférieur */}
+          <g transform="translate(42, 346)">
+            {Array.from({ length: 16 }).map((_, i) => (
+              <g key={`pin-${i}`} transform={`translate(${i * 20}, 0)`}>
+                <line x1="6" y1="0" x2="6" y2="12" stroke="#3F3F46" strokeWidth="1" />
+                <rect
+                  x="4"
+                  y="10"
+                  width="4"
+                  height="6"
+                  fill={i % 4 === 0 ? "#FF4D00" : i % 2 === 0 ? "#22C55E" : "#52525B"}
+                />
               </g>
             ))}
           </g>
@@ -438,7 +549,7 @@ export default function Die() {
 
       {/* Légende bas discrète et technique */}
       <div className="mt-3 flex items-center justify-between px-1 font-mono text-[10px] text-mute uppercase">
-        <span>fig. 01 — processeur rv32i & schéma logisim</span>
+        <span>fig. 01 — processeur rv32i & chip silicium interactif</span>
         <span className="text-signal font-semibold">
           {isRunning ? `RUNNING (OP: ${gateType})` : "CLK HALTED"}
         </span>
