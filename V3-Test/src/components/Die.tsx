@@ -170,55 +170,75 @@ export default function Die() {
 
           {/* =================================================================
               4. BANC MULTI-PORTES FLUIDE ET CONNECTÉ (HAUT-DROITE)
-              Boutons A et B alimentant les rails A et B sans aucun croisement
+              Boutons A et B alimentant les rails A et B avec Vias et pistes propres
               ================================================================= */}
-          {/* Bouton Tactile A à (260, 30) */}
-          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(260, 30)">
-            <rect x="0" y="0" width="38" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
-            <circle cx="12" cy="11" r="5.5" fill={logicA ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
-            <text x="24" y="14" fontSize="6.5" fontWeight="bold" fill={logicA ? "#FF4D00" : "#E2E8F0"}>
+          {/* Bouton Tactile A à (252, 28) - Bouton élargi à 44x24 pour texte aéré */}
+          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(252, 28)">
+            <rect x="0" y="0" width="44" height="24" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
+            <circle cx="12" cy="12" r="5.5" fill={logicA ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
+            <text x="27" y="14.5" fontSize="6.5" fontWeight="bold" fill={logicA ? "#FF4D00" : "#E2E8F0"}>
               A:{valA}
             </text>
           </g>
 
-          {/* Bouton Tactile B à (260, 68) */}
-          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(260, 68)">
-            <rect x="0" y="0" width="38" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
-            <circle cx="12" cy="11" r="5.5" fill={logicB ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
-            <text x="24" y="14" fontSize="6.5" fontWeight="bold" fill={logicB ? "#FF4D00" : "#E2E8F0"}>
+          {/* Bouton Tactile B à (252, 68) - Bouton élargi à 44x24 pour texte aéré */}
+          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(252, 68)">
+            <rect x="0" y="0" width="44" height="24" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
+            <circle cx="12" cy="12" r="5.5" fill={logicB ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
+            <text x="27" y="14.5" fontSize="6.5" fontWeight="bold" fill={logicB ? "#FF4D00" : "#E2E8F0"}>
               B:{valB}
             </text>
           </g>
 
           {/* RAILS DE DISTRIBUTION PARALLÈLES :
-              Rail A (orange quand A=1) à x=316
-              Rail B (orange quand B=1) à x=324 */}
+              Sortie A part de (296, 40) -> Rail A (orange quand A=1) à x=316
+              Sortie B part de (296, 80) -> Rail B (orange quand B=1) à x=324 */}
           <path
-            d="M 298 41 H 316 V 160"
+            d="M 296 40 H 316 V 160"
             stroke={logicA ? "#FF4D00" : "#52525B"}
             strokeWidth={logicA ? 1.6 : 1}
             fill="none"
           />
           <path
-            d="M 298 79 H 324 V 168"
+            d="M 296 80 H 324 V 168"
             stroke={logicB ? "#FF4D00" : "#52525B"}
             strokeWidth={logicB ? 1.6 : 1}
             fill="none"
           />
 
           {/* Entrées directes depuis A et B vers les broches 1 et 2 du processeur */}
-          <path d="M 308 41 V 145 H 274" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
-          <circle cx="308" cy="41" r="1.3" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <path d="M 306 40 V 145 H 274" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <circle cx="306" cy="40" r="1.3" fill={logicA ? "#FF4D00" : "#52525B"} />
 
-          <path d="M 304 79 V 160 H 274" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
-          <circle cx="304" cy="79" r="1.3" fill={logicB ? "#FF4D00" : "#52525B"} />
+          <path d="M 302 80 V 160 H 274" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <circle cx="302" cy="80" r="1.3" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 --- */}
-          {/* Lignes d'entrée depuis les rails vers XOR */}
+          {/* Entrée A du XOR : couche supérieure (ligne continue depuis x=316) */}
           <path d="M 316 45 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <path d="M 324 55 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
           <circle cx="316" cy="45" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="324" cy="55" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+
+          {/* Entrée B du XOR : VIAS + PISTE EN POINTILLÉS (couche interne / sous-face du PCB) */}
+          {/* Via d'entrée sur le rail B (324, 55) */}
+          <g transform="translate(324, 55)">
+            <circle cx="0" cy="0" r="2.2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="0.9" fill={logicB ? "#FF4D00" : "#27272A"} />
+          </g>
+          {/* Piste en pointillés représentant le routage en couche interne */}
+          <path
+            d="M 324 55 H 331"
+            stroke={logicB ? "#FF4D00" : "#52525B"}
+            strokeWidth={logicB ? 1.5 : 1}
+            strokeDasharray="2.5 1.5"
+            fill="none"
+          />
+          {/* Via de remontée à la surface juste avant le pin de la XOR (331, 55) */}
+          <g transform="translate(331, 55)">
+            <circle cx="0" cy="0" r="2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.7" />
+            <circle cx="0" cy="0" r="0.8" fill={logicB ? "#FF4D00" : "#27272A"} />
+          </g>
+          {/* Court segment de surface vers la porte (331 à 334) */}
+          <path d="M 331 55 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
 
           <g>
             <path d="M 330 42 Q 335 50 330 58" fill="none" stroke="#27272A" strokeWidth="1.3" strokeLinecap="round" />
@@ -320,9 +340,20 @@ export default function Die() {
             <text x="0" y="-4.5" textAnchor="middle" fontSize="4" fill="#71717A">R3 (1k)</text>
           </g>
 
+          {/* Lignes de retour/interruption vers les pins 6, 7, 8 de droite */}
+          <path d="M 360 220 H 274" stroke="#71717A" strokeWidth="1.1" fill="none" />
+          <text x="350" y="217" textAnchor="end" fontSize="3.8" fill="#71717A">INT0</text>
+
+          <path d="M 360 235 H 274" stroke="#71717A" strokeWidth="1.1" fill="none" />
+          <text x="350" y="232" textAnchor="end" fontSize="3.8" fill="#71717A">INT1</text>
+
+          <path d="M 360 250 H 274" stroke="#71717A" strokeWidth="1.1" fill="none" />
+          <text x="350" y="247" textAnchor="end" fontSize="3.8" fill="#71717A">GPIO7</text>
+
           {/* =================================================================
-              5. BAS DU CHIP TOTALEMENT CONNECTÉ : UART, I2C, STATUS LEDS, GPIO
-              Aucun pin dans le vide, circuit matériel réel et vivant !
+              5. BAS DU CHIP & BAS-DROITE TOTALEMENT CONNECTÉ
+              UART, I2C, STATUS LEDS, CONNECTEUR JTAG / SWD EN BAS À DROITE
+              Tous les composants orientés dans l'axe de leurs pistes !
               ================================================================= */}
           {/* 1. Interface UART (TX / RX) connectée aux pins 1 & 2 du bas (x=145, 160) */}
           <path d="M 145 274 V 330" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
@@ -337,15 +368,25 @@ export default function Die() {
           </g>
           <text x="152.5" y="356" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">UART</text>
 
-          {/* 2. Bus I2C (SDA / SCL) avec réseau de pull-up RP1 aux pins 3 & 4 (x=175, 190) */}
+          {/* 2. Bus I2C (SDA / SCL) avec résistances de pull-up R4 & R5 verticales alignées sur les pistes ! */}
           <path d="M 175 274 V 330" stroke="#8B5CF6" strokeWidth="1.2" fill="none" />
           <path d="M 190 274 V 330" stroke="#A855F7" strokeWidth="1.2" fill="none" />
-          <g transform="translate(182.5, 305)">
-            <rect x="-8" y="-3.5" width="16" height="7" rx="0.5" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
-            <rect x="-8" y="-3.5" width="2" height="7" fill="#E4E4E7" />
-            <rect x="6" y="-3.5" width="2" height="7" fill="#E4E4E7" />
-            <text x="0" y="-4.8" textAnchor="middle" fontSize="3.8" fill="#71717A">RP1 (4.7k)</text>
+          {/* R4 Pullup sur SDA (verticale : largeur 6, hauteur 12, contacts en haut et en bas) */}
+          <g transform="translate(175, 302)">
+            <rect x="-3" y="-6" width="6" height="12" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
+            <rect x="-3" y="-6" width="6" height="2.5" fill="#E4E4E7" />
+            <rect x="-3" y="3.5" width="6" height="2.5" fill="#E4E4E7" />
+            <text x="-5" y="1" textAnchor="end" fontSize="3.8" fill="#71717A">R4</text>
           </g>
+          {/* R5 Pullup sur SCL (verticale : largeur 6, hauteur 12, contacts en haut et en bas) */}
+          <g transform="translate(190, 302)">
+            <rect x="-3" y="-6" width="6" height="12" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
+            <rect x="-3" y="-6" width="6" height="2.5" fill="#E4E4E7" />
+            <rect x="-3" y="3.5" width="6" height="2.5" fill="#E4E4E7" />
+            <text x="6" y="1" textAnchor="start" fontSize="3.8" fill="#71717A">R5</text>
+          </g>
+          <text x="182.5" y="290" textAnchor="middle" fontSize="3.8" fill="#71717A">4.7k PULLUP</text>
+
           <g transform="translate(175, 336)">
             <circle cx="0" cy="0" r="2.2" fill="none" stroke="#8B5CF6" strokeWidth="0.7" />
             <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">SDA</text>
@@ -356,14 +397,14 @@ export default function Die() {
           </g>
           <text x="182.5" y="356" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">I2C</text>
 
-          {/* 3. Ligne GND avec condensateur C2 à pin 5 (x=205) */}
+          {/* 3. Ligne GND avec condensateur C2 vertical à pin 5 (x=205) */}
           <path d="M 205 274 V 360" stroke="#71717A" strokeWidth="1.2" fill="none" />
           <g transform="translate(205, 305)">
-            <rect x="-7" y="-3.5" width="14" height="7" rx="0.5" fill="#52525B" />
-            <rect x="-6.5" y="-3" width="13" height="6" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
-            <rect x="-6.5" y="-3" width="3" height="6" fill="#E4E4E7" />
-            <rect x="3.5" y="-3" width="3" height="6" fill="#E4E4E7" />
-            <text x="0" y="-5" textAnchor="middle" fontSize="4" fill="#71717A">C2 (GND)</text>
+            <rect x="-3.5" y="-7" width="7" height="14" rx="0.5" fill="#52525B" />
+            <rect x="-3" y="-6.5" width="6" height="13" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
+            <rect x="-3" y="-6.5" width="6" height="3" fill="#E4E4E7" />
+            <rect x="-3" y="3.5" width="6" height="3" fill="#E4E4E7" />
+            <text x="-5.5" y="1" textAnchor="end" fontSize="3.8" fill="#71717A">C2</text>
           </g>
           <g transform="translate(205, 360)">
             <circle cx="0" cy="0" r="2.8" fill="none" stroke="#71717A" strokeWidth="0.8" />
@@ -392,6 +433,35 @@ export default function Die() {
             <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">PWR</text>
           </g>
           <text x="235" y="356" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">STATUS</text>
+
+          {/* 5. EN BAS À DROITE : PORT DE DÉBOGAGE / PROGRAMMATION JTAG / SWD (10-PIN CONNECTOR) */}
+          <g transform="translate(305, 305)">
+            {/* Boîtier connecteur header 2x5 */}
+            <rect x="0" y="0" width="56" height="34" rx="2" fill="#111216" stroke="#475569" strokeWidth="1" />
+            <rect x="3" y="3" width="50" height="28" fill="#181A22" stroke="#27272A" strokeWidth="0.6" />
+            <text x="28" y="-3.5" textAnchor="middle" fontSize="4.8" fontWeight="bold" fill="#FF4D00">JTAG / SWD</text>
+
+            {/* Rangée de 5 broches x 2 rangées */}
+            {Array.from({ length: 5 }).map((_, col) => (
+              <g key={`jtag-${col}`}>
+                {/* Pin rangée supérieure */}
+                <circle cx={10 + col * 9} cy={10} r="2.4" fill="#27272A" stroke="#D4D4D8" strokeWidth="0.6" />
+                <circle cx={10 + col * 9} cy={10} r="0.9" fill="#F59E0B" />
+                {/* Pin rangée inférieure */}
+                <circle cx={10 + col * 9} cy={24} r="2.4" fill="#27272A" stroke="#D4D4D8" strokeWidth="0.6" />
+                <circle cx={10 + col * 9} cy={24} r="0.9" fill="#F59E0B" />
+              </g>
+            ))}
+
+            {/* Repère Pin 1 */}
+            <path d="M 6 6 L 6 12 L 12 6 Z" fill="#FF4D00" />
+            <text x="28" y="42" textAnchor="middle" fontSize="3.8" fill="#71717A">DEBUG PROBE J1</text>
+          </g>
+          {/* Pistes de debug reliant le microcontrôleur au port JTAG */}
+          <path d="M 274 235 H 290 V 315 H 305" stroke="#71717A" strokeWidth="0.9" strokeDasharray="3 2" fill="none" />
+          <path d="M 274 250 H 295 V 325 H 305" stroke="#71717A" strokeWidth="0.9" strokeDasharray="3 2" fill="none" />
+          <text x="298" y="312" fontSize="3.5" fill="#71717A" textAnchor="end">SWDIO</text>
+          <text x="298" y="322" fontSize="3.5" fill="#71717A" textAnchor="end">SWCLK</text>
 
           {/* =================================================================
               6. BOÎTIER CENTRAL IC QFP (CHIP SILICIUM AVEC BROCHES REELLES)
