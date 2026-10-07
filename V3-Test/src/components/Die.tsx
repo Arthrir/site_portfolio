@@ -6,19 +6,16 @@ import { useLang } from "../i18n";
  * Conception électronique & CAO :
  * - Fond 100% transparent (fond crème du portfolio préservé).
  * - Câblage orthogonal 100% connecté et sans aucun croisement :
- *   - Bouton A (Orange) et Bouton B (Cyan) avec sorties parfaitement centrées sur l'axe du composant.
- *   - VDD 3.3V routé proprement en haut sans croiser les points de test TP1, TP2, TP3.
- *   - Rail B continu partant du pin B de XOR (y=56) jusqu'au pin 2 du CPU (y=160).
+ *   - VDD 3.3V routé simplement et directement vers les boutons A et B (aucune ligne en pointillés inutile, texte VDD bien visible en haut).
+ *   - Points de test TP1, TP2, TP3 décalés vers la gauche (x=220, 228, 236) : AUCUN contact avec le Bouton B !
+ *   - Bouton A (Orange) et Bouton B (Cyan) avec 2 pastilles CMS épurées, sorties parfaitement centrées sur l'axe (y=38 et y=78).
  *   - Porte XOR avec identité couleur unique (Magenta néon #EC4899) pour la distinguer totalement de l'entrée A (Orange).
  *   - Portes logiques (XOR Magenta, AND Vert, OR Violet) avec sondes strictement dans les limites du PCB.
- * - Synchronisation dynamique de la couleur du site :
- *   - Liée directement aux combinaisons logiques des portes (A, B) :
- *     (0,0) -> Orange | (1,0) -> Cyan | (0,1) -> Vert | (1,1) -> Violet.
- *   - Notification instantanée de 2s sur le mini écran OLED I2C en haut.
- * - Bas de carte entièrement connecté :
- *   - Toutes les pistes descendent au centre exact (cx, cy) des cercles (LEDs, pads, bus).
- *   - Connecteur SWD / JTAG 6 broches entièrement câblé avec pistes visibles pénétrant chaque broche.
- * - Bouton poussoir tactile CMS réaliste (RESET) avec dôme rouge et clic interactif à gauche.
+ * - Connecteur SWD / JTAG 6 broches sans aucun court-circuit :
+ *   - RST ne traverse plus JAMAIS le GND (connecté directement à sa broche sans croisement).
+ *   - Broches GND reliées entre elles et solidement connectées au plan de masse avec symbole de terre GND (⏚).
+ *   - Broche 3V3 alimentée proprement et sérigraphies 100% visibles.
+ * - Bouton RESET matériel inédit : Micro-switch CMS horizontal rectangulaire 3x6mm avec actionneur capsule rouge et étiquette NRST.
  * - Cœur RISC-V SoC avec architecture exacte :
  *   - REGFILE 128B (32x 32-bit = 1024 bits = 128 octets réels pour les registres x0..x31).
  *   - Registre matériel invariant x0 (zero) = 0x00.
@@ -185,7 +182,7 @@ export default function Die({ onColorChange }: DieProps) {
               + MODULE MINI ÉCRAN OLED I2C QUI DÉFILE (HAUT-DROITE PINS)
               ================================================================= */}
           {/* Ligne VDD 3.3V vers Pin 5 du haut (x=205) */}
-          <path d="M 205 24 V 126" stroke="#D97706" strokeWidth="1.2" fill="none" />
+          <path d="M 205 22 V 126" stroke="#D97706" strokeWidth="1.2" fill="none" />
           <g transform="translate(205, 52)">
             <rect x="-3" y="-5.5" width="6" height="11" fill="#52525B" />
             <rect x="-3" y="-5" width="6" height="10" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
@@ -193,17 +190,19 @@ export default function Die({ onColorChange }: DieProps) {
             <rect x="-3" y="2.5" width="6" height="2.5" fill="#E4E4E7" />
             <text x="6" y="1" textAnchor="start" fontSize="3.8" fill="#71717A">C1</text>
           </g>
-          <g transform="translate(205, 24)">
+          <g transform="translate(205, 22)">
             <circle cx="0" cy="0" r="2.4" fill="none" stroke="#D97706" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1" fill="#D97706" />
-            {/* Texte VDD placé à gauche avec marge, aucun chevauchement */}
-            <text x="-6" y="1.5" textAnchor="end" fontSize="4.2" fontWeight="bold" fill="#71717A">VDD 3.3V</text>
+            {/* Texte VDD 3.3V parfaitement dégagé au-dessus du pad, 100% visible */}
+            <text x="0" y="-5.5" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill="#D97706">VDD 3.3V</text>
           </g>
 
-          {/* Ligne d'alimentation VDD vers les boutons : passe par le haut (y=16)
-              pour NE PAS chevaucher les points de test TP1, TP2, TP3 ! */}
-          <path d="M 205 24 V 16 H 241 V 85" stroke="#D97706" strokeWidth="1" strokeDasharray="3 2" fill="none" />
-          <circle cx="241" cy="16" r="1.2" fill="#D97706" />
+          {/* Alimentation VDD simple, directe et propre vers les boutons A et B :
+              Part de (205, 22) -> va directement à (244, 22) -> descend vers Button A (244, 38) et Button B (244, 78) */}
+          <path d="M 205 22 H 244 V 78" stroke="#D97706" strokeWidth="1.2" fill="none" />
+          <circle cx="244" cy="22" r="1.2" fill="#D97706" />
+          <circle cx="244" cy="38" r="1.3" fill="#D97706" />
+          <circle cx="244" cy="78" r="1.3" fill="#D97706" />
 
           {/* MINI ÉCRAN OLED SSD1306 (0.91" 128x32) BRANCHÉ SUR LE BUS I2C / GPIO EN HAUT */}
           <path d="M 145 126 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
@@ -250,25 +249,26 @@ export default function Die({ onColorChange }: DieProps) {
             </g>
           </g>
 
-          {/* Broches 6, 7, 8 du haut (x=220, 235, 250) reliées à des points de test GPIO TP1, TP2, TP3
-              Aucun câble ne passe à côté : zone parfaitement dégagée ! */}
+          {/* Points de test GPIO TP1, TP2, TP3 regroupés proprement à gauche de x=240 :
+              AUCUN contact ni superposition avec le Bouton B ou ses pistes ! */}
           <path d="M 220 126 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
           <circle cx="220" cy="76" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
           <circle cx="220" cy="76" r="0.8" fill="#71717A" />
           <text x="220" y="68" textAnchor="middle" fontSize="3.6" fill="#71717A">TP1</text>
 
-          <path d="M 235 126 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
-          <circle cx="235" cy="76" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
-          <circle cx="235" cy="76" r="0.8" fill="#71717A" />
-          <text x="235" y="68" textAnchor="middle" fontSize="3.6" fill="#71717A">TP2</text>
+          <path d="M 235 126 V 110 H 228 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
+          <circle cx="228" cy="76" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
+          <circle cx="228" cy="76" r="0.8" fill="#71717A" />
+          <text x="228" y="68" textAnchor="middle" fontSize="3.6" fill="#71717A">TP2</text>
 
-          <path d="M 250 126 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
-          <circle cx="250" cy="76" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
-          <circle cx="250" cy="76" r="0.8" fill="#71717A" />
-          <text x="250" y="68" textAnchor="middle" fontSize="3.6" fill="#71717A">TP3</text>
+          <path d="M 250 126 V 116 H 236 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
+          <circle cx="236" cy="76" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
+          <circle cx="236" cy="76" r="0.8" fill="#71717A" />
+          <text x="236" y="68" textAnchor="middle" fontSize="3.6" fill="#71717A">TP3</text>
 
           {/* =================================================================
               3. HORLOGE OSCILLATEUR QUARTZ 120 MHz & BOUTON TACTILE RESET CMS (GAUCHE)
+              Micro-switch tactile CMS horizontal 3x6mm avec actionneur capsule rouge
               ================================================================= */}
           {/* Oscillateur Quartz 120 MHz Y1 relié au pin CLK_IN (y=175) */}
           <g transform="translate(44, 162)">
@@ -287,61 +287,63 @@ export default function Die({ onColorChange }: DieProps) {
           />
           <text x="110" y="169" textAnchor="middle" fontSize="4" fill="#71717A">CLK_IN</text>
 
-          {/* BOUTON POUSSOIR TACTILE RESET CMS RÉALISTE AVEC ACTIONNEUR ROUGE ET CLIC */}
+          {/* NOUVEAU BOUTON RESET : MICRO-SWITCH CMS HORIZONTAL 3x6mm (FORME TOTALEMENT DISTINCTE DE A & B) */}
           <g
             className="cursor-pointer group"
             onClick={handleReset}
-            transform="translate(46, 208)"
+            transform="translate(48, 212)"
           >
-            {/* 4 pattes de soudure métalliques CMS */}
-            <rect x="-3" y="2" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="-3" y="18" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="24" y="2" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="24" y="18" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            {/* Ailettes de fixation métalliques latérales CMS */}
+            <rect x="-4" y="3" width="4" height="10" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="34" y="3" width="4" height="10" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
 
-            {/* Boîtier métallique chromé du bouton poussoir */}
-            <rect x="0" y="0" width="24" height="24" rx="2" fill="#181A22" stroke="#64748B" strokeWidth="0.8" />
-            <circle cx="12" cy="12" r="9" fill="#0F172A" stroke="#334155" strokeWidth="0.6" />
+            {/* Boîtier rectangulaire en acier brossé / CMS 3x6mm */}
+            <rect x="0" y="0" width="34" height="16" rx="2" fill="#181A22" stroke="#64748B" strokeWidth="0.8" />
+            
+            {/* Rivets de sertissage métalliques aux deux extrémités */}
+            <circle cx="5" cy="8" r="1.2" fill="#0F172A" stroke="#475569" strokeWidth="0.4" />
+            <circle cx="29" cy="8" r="1.2" fill="#0F172A" stroke="#475569" strokeWidth="0.4" />
 
-            {/* Plongeur tactile central rouge vif */}
-            <circle
-              cx="12"
-              cy="12"
-              r={isResetting ? "5.5" : "6.5"}
+            {/* Actionneur tactile central oblong / capsule rouge vif */}
+            <rect
+              x="9"
+              y="3.5"
+              width="16"
+              height="9"
+              rx="4.5"
               fill={isResetting ? "#B91C1C" : "#EF4444"}
               stroke="#FCA5A5"
-              strokeWidth="0.8"
+              strokeWidth="0.7"
               filter={isResetting ? "url(#glow-led)" : undefined}
             />
+            <circle cx="17" cy="8" r="2.2" fill={isResetting ? "#EF4444" : "#F87171"} />
 
-            {/* Sérigraphie industrielle */}
-            <text x="12" y="-4" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill="#EF4444">
+            {/* Sérigraphie industrielle nette au-dessus et au-dessous */}
+            <text x="17" y="-4" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill="#EF4444">
               RESET
             </text>
-            <text x="12" y="30" textAnchor="middle" fontSize="3.6" fill="#71717A">
-              SW1 · NRST
+            <text x="17" y="24" textAnchor="middle" fontSize="3.6" fill="#71717A">
+              NRST · SW1
             </text>
           </g>
 
-          {/* Piste NRST reliant la sortie droite du bouton au Pin 6 gauche du microcontrôleur (y=220) */}
-          <path d="M 73 220 H 126" stroke="#EF4444" strokeWidth="1.2" fill="none" />
-          <circle cx="100" cy="220" r="1.4" fill="#EF4444" />
-          <text x="100" y="215" textAnchor="middle" fontSize="4" fill="#71717A">NRST</text>
+          {/* Piste NRST reliant la patte droite du switch Reset au Pin 6 gauche du CPU (y=220) */}
+          <path d="M 86 220 H 126" stroke="#EF4444" strokeWidth="1.2" fill="none" />
+          <circle cx="106" cy="220" r="1.4" fill="#EF4444" />
+          <text x="106" y="215" textAnchor="middle" fontSize="4" fill="#71717A">NRST</text>
 
           {/* =================================================================
               4. BANC MULTI-PORTES FLUIDE ET CONNECTÉ (HAUT-DROITE)
-              Bouton A (ORANGE) & Bouton B (CYAN) avec connexions parfaitement centrées !
+              Bouton A (ORANGE) & Bouton B (CYAN) avec sorties 100% centrées sur l'axe (y=38 & y=78)
               Porte XOR : COULEUR UNIQUE (MAGENTA NÉON #EC4899) pour ne pas confondre avec l'entrée A !
               Rails orthogonaux sans coupure : Rail B relie fermement le XOR pin B jusqu'au bas !
               ================================================================= */}
-          {/* Bouton Poussoir Tactile SMD A à (243, 27) - ACCENT ORANGE (#FF4D00)
-              Centre exact du bouton : (254, 38) */}
-          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(243, 27)">
-            {/* 4 pattes de soudure métalliques */}
-            <rect x="-3" y="3" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="-3" y="15" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="22" y="3" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="22" y="15" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+          {/* Bouton Poussoir Tactile SMD A à (246, 27) - ACCENT ORANGE (#FF4D00)
+              Centre exact du bouton : (257, 38) */}
+          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(246, 27)">
+            {/* 2 pattes de soudure CMS nettes (Gauche = VDD in, Droite = OUT) */}
+            <rect x="-3" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="22" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
 
             {/* Boîtier 22x22mm */}
             <rect x="0" y="0" width="22" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="0.8" />
@@ -356,19 +358,18 @@ export default function Die({ onColorChange }: DieProps) {
               strokeWidth="0.8"
               filter={logicA ? "url(#glow-led)" : undefined}
             />
-            <text x="11" y="-4" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicA ? "#FF4D00" : "#71717A"}>
+            {/* Sérigraphie au-dessus du bouton, aucun fil qui traverse le texte */}
+            <text x="11" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicA ? "#FF4D00" : "#71717A"}>
               BTN A ({valA})
             </text>
           </g>
 
-          {/* Bouton Poussoir Tactile SMD B à (243, 67) - ACCENT CYAN (#06B6D4)
-              Centre exact du bouton : (254, 78) */}
-          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(243, 67)">
-            {/* 4 pattes de soudure métalliques */}
-            <rect x="-3" y="3" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="-3" y="15" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="22" y="3" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="22" y="15" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+          {/* Bouton Poussoir Tactile SMD B à (246, 67) - ACCENT CYAN (#06B6D4)
+              Centre exact du bouton : (257, 78) */}
+          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(246, 67)">
+            {/* 2 pattes de soudure CMS nettes */}
+            <rect x="-3" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="22" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
 
             {/* Boîtier 22x22mm */}
             <rect x="0" y="0" width="22" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="0.8" />
@@ -383,19 +384,13 @@ export default function Die({ onColorChange }: DieProps) {
               strokeWidth="0.8"
               filter={logicB ? "url(#glow-led)" : undefined}
             />
-            <text x="11" y="-4" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicB ? "#06B6D4" : "#71717A"}>
+            <text x="11" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicB ? "#06B6D4" : "#71717A"}>
               BTN B ({valB})
             </text>
           </g>
 
-          {/* SORTIES DES BOUTONS PARFAITEMENT CENTRÉES SUR L'AXE (y=38 pour A, y=78 pour B) :
-              Les pattes droites sont reliées, et la piste sort exactement au centre ! */}
-          {/* Pont et sortie pour Bouton A à y=38 */}
-          <path d="M 265 30 H 268 V 46 H 265" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1" fill="none" />
+          {/* SORTIES DES BOUTONS PARFAITEMENT CENTRÉES SUR L'AXE (y=38 pour A, y=78 pour B) */}
           <path d="M 268 38 H 286" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.6 : 1} fill="none" />
-
-          {/* Pont et sortie pour Bouton B à y=78 */}
-          <path d="M 265 70 H 268 V 86 H 265" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth="1" fill="none" />
           <path d="M 268 78 H 300" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.6 : 1} fill="none" />
 
           {/* RAIL A VERTICAL (Orange) : va de y=38 à y=145 (Pin 1 du CPU) */}
@@ -421,8 +416,7 @@ export default function Die({ onColorChange }: DieProps) {
           <circle cx="300" cy="160" r="1.4" fill={logicB ? "#06B6D4" : "#52525B"} />
 
           {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 ---
-              COULEUR EXCLUSIVE : MAGENTA NÉON (#EC4899)
-              Permet une distinction immédiate entre l'entrée A (Orange), l'entrée B (Cyan) et la sortie XOR (Magenta) ! */}
+              COULEUR EXCLUSIVE : MAGENTA NÉON (#EC4899) */}
           {/* Entrée A du XOR (Orange, x=286 -> x=322, y=44) */}
           <path d="M 286 44 H 322" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.4 : 1} fill="none" />
           <circle cx="286" cy="44" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
@@ -432,9 +426,7 @@ export default function Die({ onColorChange }: DieProps) {
 
           {/* Corps de la porte XOR (Magenta #EC4899) */}
           <g>
-            {/* Arc d'entrée XOR séparé */}
             <path d="M 319 40 Q 323 50 319 60" fill="none" stroke="#64748B" strokeWidth="1.2" strokeLinecap="round" />
-            {/* Corps principal XOR */}
             <path
               d="M 322 40 Q 334 43 342 50 Q 334 57 322 60 Q 326 50 322 40 Z"
               fill="#181A22"
@@ -452,7 +444,7 @@ export default function Die({ onColorChange }: DieProps) {
             </text>
           </g>
 
-          {/* Piste de retour XOR vers Pin 3 du processeur (y=175) avec résistance R1 (Magenta) */}
+          {/* Piste de retour XOR vers Pin 3 du CPU (y=175) avec résistance R1 (Magenta) */}
           <path d="M 346 50 V 62 H 368 V 175 H 274" stroke={outXOR ? "#EC4899" : "#52525B"} strokeWidth={1.1} fill="none" />
           <g transform="translate(324, 175)">
             <rect x="-5" y="-2.5" width="10" height="5" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
@@ -485,7 +477,7 @@ export default function Die({ onColorChange }: DieProps) {
             </text>
           </g>
 
-          {/* Piste de retour AND vers Pin 4 du processeur (y=190) avec résistance R2 */}
+          {/* Piste de retour AND vers Pin 4 du CPU (y=190) avec résistance R2 */}
           <path d="M 345 98 V 110 H 368 V 190 H 274" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={1.1} fill="none" />
           <g transform="translate(324, 190)">
             <rect x="-5" y="-2.5" width="10" height="5" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
@@ -518,7 +510,7 @@ export default function Die({ onColorChange }: DieProps) {
             </text>
           </g>
 
-          {/* Piste de retour OR vers Pin 5 du processeur (y=205) avec résistance R3 */}
+          {/* Piste de retour OR vers Pin 5 du CPU (y=205) avec résistance R3 */}
           <path d="M 346 146 H 368 V 205 H 274" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={1.1} fill="none" />
           <g transform="translate(324, 205)">
             <rect x="-5" y="-2.5" width="10" height="5" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
@@ -530,7 +522,7 @@ export default function Die({ onColorChange }: DieProps) {
           {/* =================================================================
               5. BAS DU CHIP & BAS-DROITE TOTALEMENT CONNECTÉ
               Toutes les pistes descendent au CENTRE EXACT (cx, cy) des cercles !
-              Connecteur SWD / JTAG entièrement câblé avec pistes visibles entrant dans les pastilles.
+              Connecteur SWD / JTAG entièrement câblé SANS AUCUN CROISEMENT.
               ================================================================= */}
           {/* 1. Interface UART (TX / RX) : pistes descendant jusqu'au centre de la LED (y=336) */}
           <path d="M 145 274 V 336" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
@@ -613,65 +605,80 @@ export default function Die({ onColorChange }: DieProps) {
           </g>
           <text x="235" y="356" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">STATUS</text>
 
-          {/* 5. CONNECTEUR SWD / JTAG 6 BROCHES EN BAS À DROITE :
-              Le boîtier est dessiné en premier, et les pistes entrent VISIBLEMENT
-              dans le centre exact de chaque pastille circulaire ! */}
-          {/* Boîtier d'embase Shrouded Header 2x3 à (294, 288) */}
+          {/* =================================================================
+              5. CONNECTEUR SWD / JTAG 6 BROCHES EN BAS À DROITE (294, 288)
+              AUCUN CROISEMENT : RST ne traverse plus JAMAIS le GND !
+              GND fermement connecté au plan de masse avec symbole GND officiel !
+              ================================================================= */}
+          {/* Boîtier embase Shrouded Header 2x3 à (294, 288) */}
           <g transform="translate(294, 288)">
-            <rect x="0" y="0" width="64" height="50" rx="2" fill="#0B132B" stroke="#475569" strokeWidth="0.9" />
-            <text x="32" y="-4" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill="#71717A">
+            <rect x="0" y="0" width="60" height="52" rx="3" fill="#0B132B" stroke="#475569" strokeWidth="1" />
+            <text x="30" y="-4" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill="#71717A">
               SWD / JTAG (J1)
             </text>
           </g>
 
-          {/* Pistes de signaux entrant dans chaque broche du connecteur */}
-          {/* Pin 1 : 3V3 à (306, 302) */}
-          <path d="M 268 260 H 306 V 302" stroke="#D97706" strokeWidth="1.2" strokeDasharray="3 2" fill="none" />
-          {/* Pin 2 : SWDIO à (326, 302) */}
-          <path d="M 274 235 H 326 V 302" stroke="#10B981" strokeWidth="1.2" fill="none" />
-          {/* Pin 3 : SWCLK à (346, 302) */}
-          <path d="M 274 220 H 346 V 302" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
+          {/* Pistes de signaux entrant dans chaque broche sans AUCUN croisement :
+              - Pin 1 (3V3) : top-left (306, 302)
+              - Pin 2 (DIO) : top-center (324, 302)
+              - Pin 3 (CLK) : top-right (342, 302)
+              - Pin 4 (RST) : bottom-left (306, 326) -> ARRIVE EN DIRECT DE GAUCHE, ZÉRO PASSAGE DANS GND !
+              - Pins 5 & 6 (GND) : bottom-center (324, 326) & bottom-right (342, 326) -> reliés ensemble vers la masse */}
+          
+          {/* 1. 3V3 vers Pin 1 (306, 302) */}
+          <path d="M 274 260 H 306 V 302" stroke="#D97706" strokeWidth="1.2" fill="none" />
 
-          {/* Pin 4 : GND à (306, 324) */}
-          <path d="M 306 324 V 352" stroke="#71717A" strokeWidth="1.2" fill="none" />
-          {/* Pin 5 : NRST à (326, 324) */}
-          <path d="M 274 250 H 354 V 324 H 326" stroke="#EF4444" strokeWidth="1.2" fill="none" />
-          {/* Pin 6 : GND à (346, 324) */}
-          <path d="M 346 324 V 352" stroke="#71717A" strokeWidth="1.2" fill="none" />
+          {/* 2. SWDIO vers Pin 2 (324, 302) */}
+          <path d="M 274 235 H 324 V 302" stroke="#10B981" strokeWidth="1.2" fill="none" />
 
-          {/* Pastilles annulaires dessinées PAR-DESSUS les pistes aux centres exacts */}
-          {/* Rangée 1 (y=302) */}
+          {/* 3. SWCLK vers Pin 3 (342, 302) */}
+          <path d="M 274 220 H 342 V 302" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
+
+          {/* 4. NRST vers Pin 4 (306, 326) : LIGNE DIRECTE SANS TRAVERSER GND ! */}
+          <path d="M 274 250 H 306 V 326" stroke="#EF4444" strokeWidth="1.2" fill="none" />
+
+          {/* 5 & 6. GND vers Pins 5 & 6 (324 & 342, 326) reliés ensemble et mis à la masse */}
+          <path d="M 324 326 H 342" stroke="#71717A" strokeWidth="1.4" fill="none" />
+          <path d="M 333 326 V 350" stroke="#71717A" strokeWidth="1.4" fill="none" />
+          {/* Symbole de masse réel (Earth / Ground) */}
+          <line x1="327" y1="350" x2="339" y2="350" stroke="#71717A" strokeWidth="1.4" />
+          <line x1="329" y1="353" x2="337" y2="353" stroke="#71717A" strokeWidth="1.2" />
+          <line x1="331" y1="356" x2="335" y2="356" stroke="#71717A" strokeWidth="1" />
+          <text x="333" y="363" textAnchor="middle" fontSize="3.6" fontWeight="bold" fill="#71717A">GND</text>
+
+          {/* Pastilles métalliques soudées avec sérigraphies parfaitement dégagées */}
+          {/* Rangée 1 (Top, y=302) : labels placés au-dessus */}
           <g transform="translate(306, 302)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#D97706" />
-            <text x="0" y="-4" textAnchor="middle" fontSize="3.2" fontWeight="bold" fill="#D97706">3V3</text>
+            <text x="0" y="-5" textAnchor="middle" fontSize="3.4" fontWeight="bold" fill="#D97706">3V3</text>
           </g>
-          <g transform="translate(326, 302)">
+          <g transform="translate(324, 302)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#10B981" />
-            <text x="0" y="-4" textAnchor="middle" fontSize="3.2" fontWeight="bold" fill="#10B981">DIO</text>
+            <text x="0" y="-5" textAnchor="middle" fontSize="3.4" fontWeight="bold" fill="#10B981">DIO</text>
           </g>
-          <g transform="translate(346, 302)">
+          <g transform="translate(342, 302)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#06B6D4" />
-            <text x="0" y="-4" textAnchor="middle" fontSize="3.2" fontWeight="bold" fill="#06B6D4">CLK</text>
+            <text x="0" y="-5" textAnchor="middle" fontSize="3.4" fontWeight="bold" fill="#06B6D4">CLK</text>
           </g>
 
-          {/* Rangée 2 (y=324) */}
-          <g transform="translate(306, 324)">
-            <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="1.1" fill="#71717A" />
-            <text x="0" y="6" textAnchor="middle" fontSize="3.2" fill="#71717A">GND</text>
-          </g>
-          <g transform="translate(326, 324)">
+          {/* Rangée 2 (Bottom, y=326) : labels placés au-dessous */}
+          <g transform="translate(306, 326)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#EF4444" />
-            <text x="0" y="6" textAnchor="middle" fontSize="3.2" fontWeight="bold" fill="#EF4444">RST</text>
+            <text x="0" y="7" textAnchor="middle" fontSize="3.4" fontWeight="bold" fill="#EF4444">RST</text>
           </g>
-          <g transform="translate(346, 324)">
+          <g transform="translate(324, 326)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#71717A" />
-            <text x="0" y="6" textAnchor="middle" fontSize="3.2" fill="#71717A">GND</text>
+            <text x="0" y="7" textAnchor="middle" fontSize="3.4" fill="#71717A">GND</text>
+          </g>
+          <g transform="translate(342, 326)">
+            <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="1.1" fill="#71717A" />
+            <text x="0" y="7" textAnchor="middle" fontSize="3.4" fill="#71717A">GND</text>
           </g>
 
           {/* =================================================================
@@ -734,13 +741,13 @@ export default function Die({ onColorChange }: DieProps) {
           {/* --- MODULES INTERNES DYNAMIQUES DU SOC --- */}
 
           {/* Module 1 : SLUG THERMIQUE CUIVRE ORANGE (Top-Left) */}
-          <g transform="translate(138, 138)">
-            <rect x="0" y="0" width="36" height="36" rx="1.5" fill="#EA580C" stroke="#FF7A33" strokeWidth="0.8" />
-            <rect x="0" y="0" width="36" height="36" fill="url(#slug-cross)" opacity="0.45" />
-            <line x1="0" y1="0" x2="36" y2="36" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
-            <line x1="36" y1="0" x2="0" y2="36" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
-            <rect x="3" y="10" width="30" height="16" fill="#111216" stroke="#FF4D00" strokeWidth="0.6" />
-            <text x="18" y="20" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill="#FF4D00">THERMAL</text>
+          <g transform="translate(142, 140)">
+            <rect x="0" y="0" width="32" height="32" rx="1.5" fill="#EA580C" stroke="#FF7A33" strokeWidth="0.8" />
+            <rect x="0" y="0" width="32" height="32" fill="url(#slug-cross)" opacity="0.45" />
+            <line x1="0" y1="0" x2="32" y2="32" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
+            <line x1="32" y1="0" x2="0" y2="32" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
+            <rect x="2" y="9" width="28" height="14" fill="#111216" stroke="#FF4D00" strokeWidth="0.6" />
+            <text x="16" y="18" textAnchor="middle" fontSize="3.8" fontWeight="bold" fill="#FF4D00">THERMAL</text>
           </g>
 
           {/* Module 2 : BANC DE REGISTRES RV32I REGFILE 128B (Top-Right)
@@ -795,7 +802,7 @@ export default function Die({ onColorChange }: DieProps) {
               <text x="60" y="16" fontSize="4.5" fill="#A1A1AA">x13 (and): <tspan fill={outAND ? "#10B981" : "#71717A"} fontWeight="bold">0x0{outAND ? 1 : 0}</tspan></text>
 
               <text x="0" y="26" fontSize="4.5" fill="#A1A1AA">x14 (or): <tspan fill={outOR ? "#8B5CF6" : "#71717A"} fontWeight="bold">0x0{outOR ? 1 : 0}</tspan></text>
-              {/* x0 (zero) registre standard RISC-V câblé à 0, remplace le drapeau confus */}
+              {/* x0 (zero) registre standard RISC-V câblé à 0 */}
               <text x="60" y="26" fontSize="4.5" fill="#71717A">x0 (zero): <tspan fill="#71717A" fontWeight="bold">0x00</tspan></text>
             </g>
           </g>
