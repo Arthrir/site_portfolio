@@ -2,56 +2,46 @@ import { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useLang } from "../i18n";
 
-/* ---------------- Chip die (PCB interactif & processeur RV32I) ----------------
- * Conception électronique fidèle :
- * - Boîtier QFP central en silicium noir mat avec broches métalliques (pins & pads)
- *   attachées directement au pourtour du chip.
- * - Cœur RISC-V RV32I à l'intérieur du boîtier : slug thermique cuivre orange, marquage laser,
- *   bus internes et statut d'exécution temps réel.
- * - Banc logique multi-portes en haut à droite (zone parfaitement dégagée de la photo) :
- *   boutons poussoirs tactiles A & B alimentant simultanément 3 portes logiques ANSI
- *   distinctes (XOR, AND, OR) avec leurs voyants LED et points de test dédiés.
- * - Commutateur SPDT RUN/DEBUG et bouton CLK PULSE en bas à gauche.
- * - Condensateurs CMS 0603, résistances et points de test conformes aux normes CAO.
+/* ---------------- Die / Silicon Chip & PCB Lab ----------------
+ * Conception électronique & CAO :
+ * - Fond 100% transparent (s'intègre au papier crème du portfolio)
+ * - Boîtier QFP central en silicium noir avec broches métalliques (pins) et
+ *   pastilles de soudure CMS (pads) directement connectées au pourtour du chip.
+ * - Cœur RISC-V SoC avec modules internes : SRAM 32KB, ALU & Control, Slug thermique cuivre.
+ * - Câblage orthogonal parfait (zéro croisement incohérent) :
+ *   - Boutons tactiles A et B en haut à droite (dégagés de la photo polaroid).
+ *   - 3 portes logiques ANSI (XOR, AND, OR) alimentées en parallèle avec LEDs d'état.
+ *   - Sorties des portes acheminées proprement vers les broches GPIO du microprocesseur via des résistances CMS 0603.
+ * - En bas à gauche : commutateur SPDT RUN/DEBUG et bouton CLK PULSE avec LED cadencée.
  * -------------------------------------------------------------------------- */
-
-// Condensateurs de découplage CMS (0603)
-const SM_CAPS = [
-  { x: 200, y: 78, vertical: false, label: "C1" },  // VDD decoupling top
-  { x: 200, y: 322, vertical: false, label: "C2" }, // GND decoupling bottom
-  { x: 74, y: 220, vertical: true, label: "C3" },   // Filter CLK input
-  { x: 330, y: 220, vertical: false, label: "C4" }, // VREF analog filter
-];
 
 export default function Die() {
   const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const rx = useSpring(useTransform(my, [-1, 1], [8, -8]), { stiffness: 120, damping: 18 });
-  const ry = useSpring(useTransform(mx, [-1, 1], [-8, 8]), { stiffness: 120, damping: 18 });
+  const rx = useSpring(useTransform(my, [-1, 1], [7, -7]), { stiffness: 130, damping: 18 });
+  const ry = useSpring(useTransform(mx, [-1, 1], [-7, 7]), { stiffness: 130, damping: 18 });
   const { tr } = useLang();
 
-  // Entrées logiques A et B
+  // Entrées logiques A et B (1-bit)
   const [logicA, setLogicA] = useState(false);
   const [logicB, setLogicB] = useState(true);
 
-  // Sorties simultanées des portes logiques connectées aux mêmes boutons
+  // Sorties simultanées des 3 portes logiques reliées aux mêmes entrées
   const outXOR = logicA !== logicB;
   const outAND = logicA && logicB;
   const outOR = logicA || logicB;
 
   // Horloge & mode DEBUG
   const [clockSurge, setClockSurge] = useState(false);
-  const [pulseCount, setPulseCount] = useState(0);
   const [isDebug, setIsDebug] = useState(false);
 
   const triggerClockPulse = () => {
-    setPulseCount((c) => c + 1);
     setClockSurge(true);
-    setTimeout(() => setClockSurge(false), 850);
+    setTimeout(() => setClockSurge(false), 800);
   };
 
-  const animDuration = isDebug ? 999999 : clockSurge ? 0.35 : 1.4;
+  const animDuration = isDebug ? 999999 : clockSurge ? 0.35 : 1.5;
 
   return (
     <div className="relative w-full max-w-[420px] pb-6 [perspective:1200px]">
@@ -72,8 +62,8 @@ export default function Die() {
         <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible font-mono text-[10px]">
           <defs>
             {/* Lueur pour LEDs CMS */}
-            <filter id="glow-led" x="-60%" y="-60%" width="220%" height="220%">
-              <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <filter id="glow-led" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.2" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -81,139 +71,142 @@ export default function Die() {
             </filter>
 
             {/* Trame cuivre pour le thermal slug */}
-            <pattern id="slug-cross" width="6" height="6" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-              <line x1="0" y1="0" x2="0" y2="6" stroke="#9A3412" strokeWidth="1" />
+            <pattern id="slug-cross" width="5" height="5" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="0" y2="5" stroke="#9A3412" strokeWidth="0.9" />
             </pattern>
           </defs>
 
           {/* =================================================================
-              1. SUBSTRAT PCB NOIR & REPÈRES DE FABRICATION (FIDUCIALS)
+              1. SUBSTRAT PCB TRANSPARENT & LIGNE DE CADRE TECHNIQUE
               ================================================================= */}
-          <rect width="400" height="400" rx="3" fill="#0C0D10" stroke="#27272A" strokeWidth="1.5" />
+          {/* Cadre discret de sérigraphie de la carte */}
+          <rect
+            x="12"
+            y="12"
+            width="376"
+            height="376"
+            rx="6"
+            fill="none"
+            stroke="#27272A"
+            strokeWidth="1"
+            strokeDasharray="4 4"
+            opacity="0.4"
+          />
 
-          {/* Repères fiduciels de centrage CMS aux 4 coins */}
+          {/* Repères fiduciels de précision PCB */}
           {[
-            { cx: 20, cy: 20 },
-            { cx: 380, cy: 20 },
-            { cx: 20, cy: 380 },
-            { cx: 380, cy: 380 },
+            { cx: 24, cy: 24 },
+            { cx: 376, cy: 24 },
+            { cx: 24, cy: 376 },
+            { cx: 376, cy: 376 },
           ].map((f, i) => (
             <g key={`fid-${i}`}>
-              <circle cx={f.cx} cy={f.cy} r="4" fill="none" stroke="#52525B" strokeWidth="0.8" />
+              <circle cx={f.cx} cy={f.cy} r="4" fill="none" stroke="#71717A" strokeWidth="0.8" />
               <circle cx={f.cx} cy={f.cy} r="1.4" fill="#FF4D00" />
             </g>
           ))}
 
-          {/* =================================================================
-              2. PISTES PCB DE ROUTAGE
-              ================================================================= */}
-          {/* Rail VDD & GND principaux reliés aux broches du chip */}
-          <path d="M 200 120 V 50" stroke="#F59E0B" strokeWidth="1.25" fill="none" />
-          <path d="M 200 280 V 350" stroke="#71717A" strokeWidth="1.25" fill="none" />
-
-          {/* Pistes de bus de données (Cyan, Emerald, Violet) */}
-          <path d="M 120 170 H 46" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
-          <path d="M 120 190 H 46" stroke="#10B981" strokeWidth="1.2" fill="none" />
-          <path d="M 120 210 H 46" stroke="#8B5CF6" strokeWidth="1.2" fill="none" />
-          <path d="M 170 280 V 350" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
-          <path d="M 230 280 V 350" stroke="#F43F5E" strokeWidth="1.2" fill="none" />
-
-          {/* Paquets animés sur le bus de données */}
-          {!isDebug && (
-            <>
-              <motion.circle
-                cx={46}
-                cy={170}
-                r={2}
-                fill="#06B6D4"
-                animate={{ cx: [46, 120] }}
-                transition={{ duration: animDuration, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.circle
-                cx={120}
-                cy={190}
-                r={2}
-                fill="#10B981"
-                animate={{ cx: [120, 46] }}
-                transition={{ duration: animDuration, repeat: Infinity, ease: "linear", delay: 0.3 }}
-              />
-            </>
-          )}
+          {/* Sérigraphie carte de test */}
+          <text x="366" y="372" textAnchor="end" fontSize="5" fill="#71717A" opacity="0.6">
+            EVAL-RV32I :: PCB REV 2.4
+          </text>
 
           {/* =================================================================
-              3. BANC LOGIQUE MULTI-PORTES (HAUT-DROITE, TOTALEMENT DÉGAGÉ)
-              Boutons A & B reliés en parallèle à 3 portes : XOR, AND, OR
+              2. ALIMENTATION VDD & GND (TOP & BOTTOM)
               ================================================================= */}
-          {/* Lignes d'alimentation des boutons tactiles A et B */}
-          <path d="M 276 26 V 40 H 262 V 48" stroke="#3F3F46" strokeWidth="1.2" fill="none" />
-          <path d="M 296 26 V 34 H 262 V 80" stroke="#3F3F46" strokeWidth="1.2" fill="none" />
-
-          {/* Rail commun A (Orange vif quand A=1) */}
-          <path
-            d="M 278 58 H 296 V 144"
-            stroke={logicA ? "#FF4D00" : "#3F3F46"}
-            strokeWidth={logicA ? 1.6 : 1.2}
-            fill="none"
-          />
-          {/* Rail commun B (Orange vif quand B=1) */}
-          <path
-            d="M 278 90 H 304 V 156"
-            stroke={logicB ? "#FF4D00" : "#3F3F46"}
-            strokeWidth={logicB ? 1.6 : 1.2}
-            fill="none"
-          />
-
-          {/* Bouton tactile A */}
-          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)}>
-            <rect x="254" y="48" width="24" height="20" rx="2" fill="#1F2028" stroke="#475569" strokeWidth="1" />
-            <circle cx="266" cy="58" r="5.5" fill={logicA ? "#FF4D00" : "#475569"} stroke="#334155" strokeWidth="0.8" />
-            <text x="266" y="60.5" fontSize="5.5" textAnchor="middle" className="font-mono font-bold fill-white pointer-events-none">A</text>
-            <text x="248" y="60" fontSize="5.5" textAnchor="end" fill="#9CA3AF" className="font-mono">{logicA ? "1" : "0"}</text>
+          {/* Ligne VDD top reliée au condensateur C1 et au chip */}
+          <path d="M 200 40 V 126" stroke="#D97706" strokeWidth="1.2" fill="none" />
+          <g transform="translate(200, 76)">
+            {/* Condensateur C1 (0603) */}
+            <rect x="-7" y="-3.5" width="14" height="7" rx="0.5" fill="#52525B" />
+            <rect x="-6.5" y="-3" width="13" height="6" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
+            <rect x="-6.5" y="-3" width="3" height="6" fill="#E4E4E7" />
+            <rect x="3.5" y="-3" width="3" height="6" fill="#E4E4E7" />
+            <text x="0" y="-5" textAnchor="middle" fontSize="4.5" fill="#71717A">C1 (VDD)</text>
+          </g>
+          {/* Test point TP_VDD */}
+          <g transform="translate(200, 42)">
+            <circle cx="0" cy="0" r="2.8" fill="none" stroke="#D97706" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="1.1" fill="#D97706" />
+            <text x="5" y="2" fontSize="4.5" fill="#71717A">TP_VDD</text>
           </g>
 
-          {/* Bouton tactile B */}
-          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)}>
-            <rect x="254" y="80" width="24" height="20" rx="2" fill="#1F2028" stroke="#475569" strokeWidth="1" />
-            <circle cx="266" cy="90" r="5.5" fill={logicB ? "#FF4D00" : "#475569"} stroke="#334155" strokeWidth="0.8" />
-            <text x="266" y="92.5" fontSize="5.5" textAnchor="middle" className="font-mono font-bold fill-white pointer-events-none">B</text>
-            <text x="248" y="92" fontSize="5.5" textAnchor="end" fill="#9CA3AF" className="font-mono">{logicB ? "1" : "0"}</text>
+          {/* Ligne GND bottom reliée au condensateur C2 et au chip */}
+          <path d="M 200 274 V 360" stroke="#71717A" strokeWidth="1.2" fill="none" />
+          <g transform="translate(200, 318)">
+            {/* Condensateur C2 (0603) */}
+            <rect x="-7" y="-3.5" width="14" height="7" rx="0.5" fill="#52525B" />
+            <rect x="-6.5" y="-3" width="13" height="6" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
+            <rect x="-6.5" y="-3" width="3" height="6" fill="#E4E4E7" />
+            <rect x="3.5" y="-3" width="3" height="6" fill="#E4E4E7" />
+            <text x="0" y="-5" textAnchor="middle" fontSize="4.5" fill="#71717A">C2 (GND)</text>
+          </g>
+          {/* Test point TP_GND */}
+          <g transform="translate(200, 358)">
+            <circle cx="0" cy="0" r="2.8" fill="none" stroke="#71717A" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="1.1" fill="#71717A" />
+            <text x="5" y="2" fontSize="4.5" fill="#71717A">TP_GND</text>
           </g>
 
-          {/* Branchements des Rails A & B vers les 3 portes logiques */}
-          {/* Connexions vers Porte 1 : XOR */}
-          <path d="M 296 52 H 312" stroke={logicA ? "#FF4D00" : "#3F3F46"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <path d="M 304 64 H 312" stroke={logicB ? "#FF4D00" : "#3F3F46"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
-          <circle cx="296" cy="52" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="304" cy="64" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+          {/* =================================================================
+              3. BANC MULTI-PORTES (HAUT-DROITE - ENTIÈREMENT DÉGAGÉ ET PROPRE)
+              Boutons A et B alimentant simultanément XOR, AND, OR
+              ================================================================= */}
+          {/* Bouton Tactile A */}
+          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(254, 32)">
+            <rect x="0" y="0" width="32" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
+            <circle cx="16" cy="11" r="6" fill={logicA ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
+            <text x="16" y="13.5" fontSize="6" textAnchor="middle" className="font-mono font-bold fill-white pointer-events-none">A</text>
+            <text x="-4" y="13.5" fontSize="6" textAnchor="end" fill="#A1A1AA" className="font-mono font-semibold">
+              IN_A [{logicA ? "1" : "0"}]
+            </text>
+          </g>
 
-          {/* Connexions vers Porte 2 : AND */}
-          <path d="M 296 98 H 312" stroke={logicA ? "#FF4D00" : "#3F3F46"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <path d="M 304 110 H 312" stroke={logicB ? "#FF4D00" : "#3F3F46"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
-          <circle cx="296" cy="98" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="304" cy="110" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+          {/* Bouton Tactile B */}
+          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(254, 62)">
+            <rect x="0" y="0" width="32" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
+            <circle cx="16" cy="11" r="6" fill={logicB ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
+            <text x="16" y="13.5" fontSize="6" textAnchor="middle" className="font-mono font-bold fill-white pointer-events-none">B</text>
+            <text x="-4" y="13.5" fontSize="6" textAnchor="end" fill="#A1A1AA" className="font-mono font-semibold">
+              IN_B [{logicB ? "1" : "0"}]
+            </text>
+          </g>
 
-          {/* Connexions vers Porte 3 : OR */}
-          <path d="M 296 144 H 312" stroke={logicA ? "#FF4D00" : "#3F3F46"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <path d="M 304 156 H 312" stroke={logicB ? "#FF4D00" : "#3F3F46"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
-          <circle cx="296" cy="144" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="304" cy="156" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+          {/* RAILS DE DISTRIBUTION ORTHOGONAUX : Rail A (x=298) & Rail B (x=306) */}
+          <path
+            d="M 286 43 H 298 V 145"
+            stroke={logicA ? "#FF4D00" : "#52525B"}
+            strokeWidth={logicA ? 1.6 : 1}
+            fill="none"
+          />
+          <path
+            d="M 286 73 H 306 V 155"
+            stroke={logicB ? "#FF4D00" : "#52525B"}
+            strokeWidth={logicB ? 1.6 : 1}
+            fill="none"
+          />
 
-          {/* --- PORTE 1 : ANSI XOR (A ⊕ B) --- */}
+          {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=48 --- */}
+          {/* Dérivation vers XOR */}
+          <path d="M 298 43 H 314" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <path d="M 306 53 H 314" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <circle cx="298" cy="43" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="306" cy="53" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+
           <g>
-            <path d="M 310 48 Q 315 58 310 68" fill="none" stroke="#18181B" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M 312 39 Q 317 48 312 57" fill="none" stroke="#27272A" strokeWidth="1.3" strokeLinecap="round" />
             <path
-              d="M 314 48 Q 326 50 334 58 Q 326 66 314 68 Q 319 58 314 48 Z"
+              d="M 316 39 Q 328 41 336 48 Q 328 55 316 57 Q 320 48 316 39 Z"
               fill="#181A22"
               stroke="#FF4D00"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="323" y="44" fontSize="5" textAnchor="middle" fill="#FF4D00" fontWeight="bold">XOR</text>
+            <text x="325" y="35" fontSize="5" textAnchor="middle" fill="#FF4D00" fontWeight="bold">XOR</text>
 
-            {/* Piste de sortie XOR vers LED et broche chip */}
-            <path d="M 334 58 H 356" stroke={outXOR ? "#FF4D00" : "#3F3F46"} strokeWidth={outXOR ? 1.6 : 1} fill="none" />
-            {/* LED XOR */}
-            <g transform="translate(356, 58)">
+            {/* Sortie XOR vers LED probe */}
+            <path d="M 336 48 H 360" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth={outXOR ? 1.6 : 1} fill="none" />
+            <g transform="translate(360, 48)">
               <circle cx="0" cy="0" r="3.5" fill={outXOR ? "#FF4D00" : "#27272A"} filter={outXOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
               <text x="6" y="2.5" fontSize="5.5" fontWeight="bold" fill={outXOR ? "#FF4D00" : "#71717A"}>
                 ={outXOR ? "1" : "0"}
@@ -221,21 +214,26 @@ export default function Die() {
             </g>
           </g>
 
-          {/* --- PORTE 2 : ANSI AND (A · B) --- */}
+          {/* --- PORTE 2 : AND (Y = A · B) à y=96 --- */}
+          {/* Dérivation vers AND */}
+          <path d="M 298 91 H 314" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <path d="M 306 101 H 314" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <circle cx="298" cy="91" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="306" cy="101" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+
           <g>
             <path
-              d="M 312 94 H 322 A 10 10 0 0 1 322 114 H 312 Z"
+              d="M 314 87 H 324 A 9 9 0 0 1 324 105 H 314 Z"
               fill="#181A22"
               stroke="#10B981"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="322" y="90" fontSize="5" textAnchor="middle" fill="#10B981" fontWeight="bold">AND</text>
+            <text x="323" y="83" fontSize="5" textAnchor="middle" fill="#10B981" fontWeight="bold">AND</text>
 
-            {/* Piste de sortie AND vers LED */}
-            <path d="M 332 104 H 356" stroke={outAND ? "#10B981" : "#3F3F46"} strokeWidth={outAND ? 1.6 : 1} fill="none" />
-            {/* LED AND */}
-            <g transform="translate(356, 104)">
+            {/* Sortie AND vers LED probe */}
+            <path d="M 333 96 H 360" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={outAND ? 1.6 : 1} fill="none" />
+            <g transform="translate(360, 96)">
               <circle cx="0" cy="0" r="3.5" fill={outAND ? "#10B981" : "#27272A"} filter={outAND ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
               <text x="6" y="2.5" fontSize="5.5" fontWeight="bold" fill={outAND ? "#10B981" : "#71717A"}>
                 ={outAND ? "1" : "0"}
@@ -243,21 +241,26 @@ export default function Die() {
             </g>
           </g>
 
-          {/* --- PORTE 3 : ANSI OR (A + B) --- */}
+          {/* --- PORTE 3 : OR (Y = A + B) à y=144 --- */}
+          {/* Dérivation vers OR */}
+          <path d="M 298 139 H 314" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <path d="M 306 149 H 314" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <circle cx="298" cy="139" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="306" cy="149" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+
           <g>
             <path
-              d="M 312 140 Q 317 150 312 160 Q 324 160 334 150 Q 324 140 312 140 Z"
+              d="M 314 135 Q 319 144 314 153 Q 325 153 334 144 Q 325 135 314 135 Z"
               fill="#181A22"
               stroke="#8B5CF6"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="322" y="136" fontSize="5" textAnchor="middle" fill="#8B5CF6" fontWeight="bold">OR</text>
+            <text x="323" y="131" fontSize="5" textAnchor="middle" fill="#8B5CF6" fontWeight="bold">OR</text>
 
-            {/* Piste de sortie OR vers LED */}
-            <path d="M 334 150 H 356" stroke={outOR ? "#8B5CF6" : "#3F3F46"} strokeWidth={outOR ? 1.6 : 1} fill="none" />
-            {/* LED OR */}
-            <g transform="translate(356, 150)">
+            {/* Sortie OR vers LED probe */}
+            <path d="M 334 144 H 360" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={outOR ? 1.6 : 1} fill="none" />
+            <g transform="translate(360, 144)">
               <circle cx="0" cy="0" r="3.5" fill={outOR ? "#8B5CF6" : "#27272A"} filter={outOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
               <text x="6" y="2.5" fontSize="5.5" fontWeight="bold" fill={outOR ? "#8B5CF6" : "#71717A"}>
                 ={outOR ? "1" : "0"}
@@ -265,35 +268,116 @@ export default function Die() {
             </g>
           </g>
 
-          {/* Traces reliant les sorties des portes aux broches d'entrée du processeur */}
-          <path d="M 342 58 V 70 H 280 V 170 H 264" stroke={outXOR ? "#FF4D00" : "#3F3F46"} strokeWidth="1.2" fill="none" />
-          <path d="M 342 104 V 116 H 280 V 190 H 264" stroke={outAND ? "#10B981" : "#3F3F46"} strokeWidth="1.2" fill="none" />
-          <path d="M 342 150 V 162 H 280 V 210 H 264" stroke={outOR ? "#8B5CF6" : "#3F3F46"} strokeWidth="1.2" fill="none" />
-
           {/* =================================================================
-              4. COMMUTATEUR SPDT RUN / DEBUG ET CLK PULSE (BAS-GAUCHE)
-              Hors d'atteinte de la photo polaroid
+              4. ACHEMINEMENT PROPRE DES SORTIES VERS LES PINS DROITES DU CHIP
+              Avec résistances CMS de protection (R1, R2, R3) et points de test
               ================================================================= */}
-          {/* Piste d'horloge reliant le bouton CLK au chip */}
-          <path d="M 74 250 H 120" stroke={clockSurge ? "#FF4D00" : "#3F3F46"} strokeWidth="1.25" fill="none" />
-
-          {/* Bouton tactile CLOCK PULSE */}
-          <g className="cursor-pointer" onClick={triggerClockPulse} transform="translate(54, 240)">
-            <rect x="0" y="0" width="20" height="20" rx="2" fill="#1F2028" stroke="#475569" strokeWidth="1" />
-            <circle cx="10" cy="10" r="5.5" fill={clockSurge ? "#FF4D00" : "#64748B"} stroke="#334155" strokeWidth="0.8" />
-            <text x="10" y="12" fontSize="4.5" textAnchor="middle" className="font-mono font-bold fill-white pointer-events-none">CLK</text>
-            <text x="-4" y="12" fontSize="5" textAnchor="end" fill="#9CA3AF">PULSE</text>
+          {/* Ligne XOR vers Pin GPIO_0 (y=160) */}
+          <path d="M 348 48 V 64 H 376 V 160 H 265" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          {/* Résistance CMS R1 (0603) sur la ligne XOR */}
+          <g transform="translate(320, 160)">
+            <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
+            <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
+            <rect x="3.5" y="-3" width="2.5" height="6" fill="#E4E4E7" />
+            <text x="0" y="-4.5" textAnchor="middle" fontSize="4.2" fill="#71717A">R1 (1k)</text>
           </g>
 
-          {/* LED Horloge clignotante */}
-          <g transform="translate(86, 250)">
-            <circle cx="0" cy="0" r="3" fill={clockSurge ? "#FF4D00" : "#334155"} filter={clockSurge ? "url(#glow-led)" : undefined} />
-            <text x="6" y="2" fontSize="5" fill="#71717A">SYS_CLK</text>
+          {/* Ligne AND vers Pin GPIO_1 (y=175) */}
+          <path d="M 346 96 V 110 H 366 V 175 H 265" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth="1.2" fill="none" />
+          {/* Résistance CMS R2 (0603) sur la ligne AND */}
+          <g transform="translate(320, 175)">
+            <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
+            <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
+            <rect x="3.5" y="-3" width="2.5" height="6" fill="#E4E4E7" />
+            <text x="0" y="-4.5" textAnchor="middle" fontSize="4.2" fill="#71717A">R2 (1k)</text>
+          </g>
+
+          {/* Ligne OR vers Pin GPIO_2 (y=190) */}
+          <path d="M 346 144 V 190 H 265" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth="1.2" fill="none" />
+          {/* Résistance CMS R3 (0603) sur la ligne OR */}
+          <g transform="translate(320, 190)">
+            <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
+            <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
+            <rect x="3.5" y="-3" width="2.5" height="6" fill="#E4E4E7" />
+            <text x="0" y="-4.5" textAnchor="middle" fontSize="4.2" fill="#71717A">R3 (1k)</text>
+          </g>
+
+          {/* Test point TP_GPIO */}
+          <g transform="translate(350, 215)">
+            <circle cx="0" cy="0" r="2.8" fill="none" stroke="#FF4D00" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="1.1" fill={outXOR ? "#FF4D00" : "#52525B"} />
+            <text x="6" y="2" fontSize="4.5" fill="#71717A">TP_GPIO</text>
+          </g>
+
+          {/* =================================================================
+              5. BUS SPI & INTERFACE GAUCHE (Cyan, Emerald, Violet)
+              ================================================================= */}
+          <path d="M 135 160 H 30" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
+          <path d="M 135 175 H 30" stroke="#10B981" strokeWidth="1.2" fill="none" />
+          <path d="M 135 190 H 30" stroke="#8B5CF6" strokeWidth="1.2" fill="none" />
+
+          {/* Test points SPI */}
+          <g transform="translate(54, 160)">
+            <circle cx="0" cy="0" r="2.5" fill="none" stroke="#06B6D4" strokeWidth="0.7" />
+            <text x="0" y="-4" textAnchor="middle" fontSize="4" fill="#71717A">MOSI</text>
+          </g>
+          <g transform="translate(74, 175)">
+            <circle cx="0" cy="0" r="2.5" fill="none" stroke="#10B981" strokeWidth="0.7" />
+            <text x="0" y="-4" textAnchor="middle" fontSize="4" fill="#71717A">MISO</text>
+          </g>
+          <g transform="translate(94, 190)">
+            <circle cx="0" cy="0" r="2.5" fill="none" stroke="#8B5CF6" strokeWidth="0.7" />
+            <text x="0" y="-4" textAnchor="middle" fontSize="4" fill="#71717A">SCK</text>
+          </g>
+
+          {/* Paquets animés sur le bus de données */}
+          {!isDebug && (
+            <>
+              <motion.circle
+                cx={30}
+                cy={160}
+                r={2}
+                fill="#06B6D4"
+                animate={{ cx: [30, 135] }}
+                transition={{ duration: animDuration, repeat: Infinity, ease: "linear" }}
+              />
+              <motion.circle
+                cx={135}
+                cy={175}
+                r={2}
+                fill="#10B981"
+                animate={{ cx: [135, 30] }}
+                transition={{ duration: animDuration, repeat: Infinity, ease: "linear", delay: 0.2 }}
+              />
+            </>
+          )}
+
+          {/* =================================================================
+              6. HORLOGE CLK PULSE & COMMUTATEUR SPDT (BAS-GAUCHE)
+              Hors d'atteinte de la photo polaroid
+              ================================================================= */}
+          {/* Ligne d'horloge reliant le bouton CLK au chip pin à y=235 */}
+          <path d="M 74 246 H 135" stroke={clockSurge ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+
+          {/* Bouton tactile CLOCK PULSE */}
+          <g className="cursor-pointer" onClick={triggerClockPulse} transform="translate(38, 235)">
+            <rect x="0" y="0" width="22" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
+            <circle cx="11" cy="11" r="6" fill={clockSurge ? "#FF4D00" : "#475569"} stroke="#334155" strokeWidth="0.8" />
+            <text x="11" y="13.5" fontSize="4.8" textAnchor="middle" className="font-mono font-bold fill-white pointer-events-none">CLK</text>
+            <text x="26" y="8" fontSize="5" fill="#71717A">PULSE</text>
+          </g>
+
+          {/* LED Horloge pulsée */}
+          <g transform="translate(90, 246)">
+            <circle cx="0" cy="0" r="3.2" fill={clockSurge ? "#FF4D00" : "#334155"} filter={clockSurge ? "url(#glow-led)" : undefined} />
+            <text x="6" y="2" fontSize="4.8" fill="#71717A">SYS_CLK</text>
           </g>
 
           {/* Commutateur SPDT RUN / DEBUG */}
-          <g className="cursor-pointer" onClick={() => setIsDebug((d) => !d)} transform="translate(54, 290)">
-            {/* Boîtier métallique chromé du commutateur */}
+          {/* Piste reliant COM du switch au chip pin à y=250 */}
+          <path d="M 74 287 H 135" stroke={isDebug ? "#F59E0B" : "#10B981"} strokeWidth="1.2" fill="none" />
+
+          <g className="cursor-pointer" onClick={() => setIsDebug((d) => !d)} transform="translate(44, 280)">
             <rect x="0" y="0" width="30" height="15" rx="2" fill="#1E293B" stroke="#475569" strokeWidth="1" />
             {/* Curseur mobile */}
             <rect
@@ -306,148 +390,129 @@ export default function Die() {
               stroke="#0F172A"
               strokeWidth="0.8"
             />
-            {/* Voyants LED RUN & DBG */}
-            <circle cx="4" cy="-6" r="2.2" fill={!isDebug ? "#10B981" : "#334155"} filter={!isDebug ? "url(#glow-led)" : undefined} />
-            <text x="9" y="-4" fontSize="4.5" fill={!isDebug ? "#10B981" : "#64748B"} fontWeight="bold">RUN</text>
-            <circle cx="22" cy="-6" r="2.2" fill={isDebug ? "#F59E0B" : "#334155"} filter={isDebug ? "url(#glow-led)" : undefined} />
-            <text x="27" y="-4" fontSize="4.5" fill={isDebug ? "#F59E0B" : "#64748B"} fontWeight="bold">DBG</text>
+            {/* LEDs RUN et DBG */}
+            <circle cx="4" cy="-5" r="2" fill={!isDebug ? "#10B981" : "#334155"} filter={!isDebug ? "url(#glow-led)" : undefined} />
+            <text x="8" y="-3.5" fontSize="4.2" fill={!isDebug ? "#10B981" : "#71717A"} fontWeight="bold">RUN</text>
+            <circle cx="20" cy="-5" r="2" fill={isDebug ? "#F59E0B" : "#334155"} filter={isDebug ? "url(#glow-led)" : undefined} />
+            <text x="24" y="-3.5" fontSize="4.2" fill={isDebug ? "#F59E0B" : "#71717A"} fontWeight="bold">DBG</text>
           </g>
 
           {/* =================================================================
-              5. BOÎTIER CENTRAL IC QFP (CHIP SILICIUM AVEC PINS DIRECTES)
-              Pins métalliques émergeant directement des 4 côtés du boîtier !
+              7. BOÎTIER CENTRAL IC QFP (CHIP SILICIUM AVEC SES VRAIES BROCHES)
+              Broches métalliques gull-wing et pastilles CMS soudées au chip
               ================================================================= */}
-          {/* PINS & SOLDER PADS ATTACHÉS DIRECTEMENT AU CHIP (TOP, BOTTOM, LEFT, RIGHT) */}
-          {/* Top Pins (x: 140 à 260) */}
+          {/* BROCHES DE CONTACT MÉTALLIQUES (TOP, BOTTOM, LEFT, RIGHT) */}
+          {/* Top Pins (x: 145 à 255) */}
           {Array.from({ length: 8 }).map((_, i) => {
-            const px = 152 + i * 14;
+            const px = 150 + i * 14;
             return (
               <g key={`pin-t-${i}`}>
-                {/* Pastille de soudure PCB */}
-                <rect x={px - 2.5} y={118} width={5} height={10} rx={0.5} fill="#52525B" />
-                {/* Broche métallique gull-wing sortant du chip */}
-                <rect x={px - 1.5} y={122} width={3} height={14} fill="#D4D4D8" stroke="#3F3F46" strokeWidth="0.4" />
+                <rect x={px - 2.5} y={124} width={5} height={10} rx={0.5} fill="#52525B" />
+                <rect x={px - 1.5} y={126} width={3} height={10} fill="#D4D4D8" stroke="#3F3F46" strokeWidth="0.4" />
               </g>
             );
           })}
 
-          {/* Bottom Pins (x: 140 à 260) */}
+          {/* Bottom Pins (x: 145 à 255) */}
           {Array.from({ length: 8 }).map((_, i) => {
-            const px = 152 + i * 14;
+            const px = 150 + i * 14;
             return (
               <g key={`pin-b-${i}`}>
-                <rect x={px - 2.5} y={272} width={5} height={10} rx={0.5} fill="#52525B" />
-                <rect x={px - 1.5} y={264} width={3} height={14} fill="#D4D4D8" stroke="#3F3F46" strokeWidth="0.4" />
+                <rect x={px - 2.5} y={266} width={5} height={10} rx={0.5} fill="#52525B" />
+                <rect x={px - 1.5} y={264} width={3} height={10} fill="#D4D4D8" stroke="#3F3F46" strokeWidth="0.4" />
               </g>
             );
           })}
 
-          {/* Left Pins (y: 140 à 260) */}
+          {/* Left Pins (y: 145 à 255) */}
           {Array.from({ length: 8 }).map((_, i) => {
-            const py = 152 + i * 14;
+            const py = 150 + i * 14;
             return (
               <g key={`pin-l-${i}`}>
-                <rect x={118} y={py - 2.5} width={10} height={5} rx={0.5} fill="#52525B" />
-                <rect x={122} y={py - 1.5} width={14} height={3} fill="#D4D4D8" stroke="#3F3F46" strokeWidth="0.4" />
+                <rect x={124} y={py - 2.5} width={10} height={5} rx={0.5} fill="#52525B" />
+                <rect x={126} y={py - 1.5} width={10} height={3} fill="#D4D4D8" stroke="#3F3F46" strokeWidth="0.4" />
               </g>
             );
           })}
 
-          {/* Right Pins (y: 140 à 260) */}
+          {/* Right Pins (y: 145 à 255) */}
           {Array.from({ length: 8 }).map((_, i) => {
-            const py = 152 + i * 14;
+            const py = 150 + i * 14;
             return (
               <g key={`pin-r-${i}`}>
-                <rect x={272} y={py - 2.5} width={10} height={5} rx={0.5} fill="#52525B" />
-                <rect x={264} y={py - 1.5} width={14} height={3} fill="#D4D4D8" stroke="#3F3F46" strokeWidth="0.4" />
+                <rect x={266} y={py - 2.5} width={10} height={5} rx={0.5} fill="#52525B" />
+                <rect x={264} y={py - 1.5} width={10} height={3} fill="#D4D4D8" stroke="#3F3F46" strokeWidth="0.4" />
               </g>
             );
           })}
 
-          {/* CORPS DU BOÎTIER IC SILICIUM NOIR MAT (136x136 à 264x264) */}
+          {/* CORPS DU BOÎTIER IC SILICIUM NOIR MAT (135x135 à 265x265) */}
           <path
-            d="M 148 136 H 264 V 264 H 136 V 148 Z"
+            d="M 147 135 H 265 V 265 H 135 V 147 Z"
             fill="#111216"
             stroke="#27272A"
             strokeWidth="1.5"
           />
 
           {/* Repère Pin 1 (Index laser) */}
-          <circle cx="144" cy="144" r="3.5" fill="none" stroke="#FF4D00" strokeWidth="0.8" />
-          <circle cx="144" cy="144" r="1.5" fill="#FF4D00" />
+          <circle cx="143" cy="143" r="3.5" fill="none" stroke="#FF4D00" strokeWidth="0.8" />
+          <circle cx="143" cy="143" r="1.5" fill="#FF4D00" />
 
-          {/* THERMAL SLUG EN CUIVRE ORANGE AVEC CROSS-HATCH */}
-          <g transform="translate(148, 148)">
-            <rect x="0" y="0" width="46" height="46" rx="2" fill="#EA580C" stroke="#FF7A33" strokeWidth="1" />
-            <rect x="0" y="0" width="46" height="46" fill="url(#slug-cross)" opacity="0.4" />
-            <line x1="0" y1="0" x2="46" y2="46" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
-            <line x1="46" y1="0" x2="0" y2="46" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
+          {/* --- ARCHITECTURE SOC INTERNE (MODULES SILICIUM FLOORPLAN) --- */}
+          {/* Module 1 : SLUG THERMIQUE CUIVRE ORANGE (Top-Left) */}
+          <g transform="translate(144, 144)">
+            <rect x="0" y="0" width="38" height="38" rx="1.5" fill="#EA580C" stroke="#FF7A33" strokeWidth="0.8" />
+            <rect x="0" y="0" width="38" height="38" fill="url(#slug-cross)" opacity="0.45" />
+            <line x1="0" y1="0" x2="38" y2="38" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
+            <line x1="38" y1="0" x2="0" y2="38" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
+            <rect x="4" y="11" width="30" height="16" fill="#111216" stroke="#FF4D00" strokeWidth="0.6" />
+            <text x="19" y="21" textAnchor="middle" fontSize="4.5" fontWeight="bold" fill="#FF4D00">THERMAL</text>
           </g>
 
-          {/* BUS INTERNES MICROÉLECTRONIQUES EN HAUT À DROITE DU CHIP */}
-          <g stroke="rgba(255,255,255,0.18)" strokeWidth="0.75">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <line key={`sub-${i}`} x1={204 + i * 11} y1="148" x2={204 + i * 11} y2="194" />
-            ))}
+          {/* Module 2 : BLOC MÉMOIRE SRAM 32KB (Top-Right) */}
+          <g transform="translate(188, 144)">
+            <rect x="0" y="0" width="68" height="38" rx="1" fill="#181A22" stroke="#27272A" strokeWidth="0.8" />
+            <rect x="0" y="0" width="68" height="9" fill="#13141A" stroke="#27272A" strokeWidth="0.5" />
+            <text x="4" y="6.5" fontSize="4.5" fontWeight="bold" fill="#F4F4F5">SRAM :: 32 KB</text>
+            <text x="64" y="6.5" textAnchor="end" fontSize="4" fill="#10B981">CACHE</text>
+            {/* Lignes de matrice mémoire */}
+            <g stroke="#27272A" strokeWidth="0.5">
+              <line x1="0" y1="16" x2="68" y2="16" />
+              <line x1="0" y1="23" x2="68" y2="23" />
+              <line x1="0" y1="30" x2="68" y2="30" />
+              <line x1="22" y1="9" x2="22" y2="38" />
+              <line x1="45" y1="9" x2="45" y2="38" />
+            </g>
           </g>
 
-          {/* MARQUAGE LASER DU CŒUR RISC-V (EXCLUSIVEMENT TECHNIQUE, SANS ÉCOLE) */}
-          <g className="font-mono">
-            <text x="148" y="210" fontSize="7.5" fontWeight="bold" fill="#F4F4F5" letterSpacing="0.6">
-              RV32I CORE
+          {/* Module 3 : CŒUR RV32I ALU & REGFILE (Center) */}
+          <g transform="translate(144, 188)">
+            <rect x="0" y="0" width="112" height="30" rx="1" fill="#181A22" stroke="#27272A" strokeWidth="0.8" />
+            <rect x="0" y="0" width="112" height="8" fill="#13141A" stroke="#27272A" strokeWidth="0.5" />
+            <text x="4" y="6" fontSize="4.5" fontWeight="bold" fill="#F4F4F5">RV32I EXECUTION CORE</text>
+            <text x="108" y="6" textAnchor="end" fontSize="4" fill="#FF4D00">ALU x0..x31</text>
+            {/* Mini forme trapézoïdale ALU gravée au centre */}
+            <polygon
+              points="14,12 28,15 28,24 14,27 14,21 17,19.5 14,18"
+              fill="#111216"
+              stroke="#FF4D00"
+              strokeWidth="0.7"
+            />
+            <text x="32" y="21" fontSize="4.5" fill="#E4E4E7">PIPELINED STAGES (IF·ID·EX·MEM·WB)</text>
+          </g>
+
+          {/* Module 4 : MARQUAGE LASER SERIGRAPHIE (Bottom) */}
+          <g className="font-mono" transform="translate(144, 224)">
+            <text x="0" y="8" fontSize="6.5" fontWeight="bold" fill="#F4F4F5" letterSpacing="0.5">
+              RV32I SOC DIE
             </text>
-            <text x="148" y="222" fontSize="5.8" fill="#A1A1AA" letterSpacing="0.4">
-              32-BIT PIPELINED CPU
-            </text>
-            <text x="148" y="234" fontSize="5.5" fill="#FF4D00" fontWeight="bold" letterSpacing="0.4">
-              ALU · REGFILE x0..x31
-            </text>
-            <text x="148" y="246" fontSize="5" fill="#71717A" letterSpacing="0.4">
+            <text x="0" y="18" fontSize="5" fill="#A1A1AA" letterSpacing="0.3">
               FREQ: 120 MHz · LOT: AD-27
             </text>
-            <text x="148" y="257" fontSize="5" fill={isDebug ? "#F59E0B" : clockSurge ? "#FF4D00" : "#10B981"} fontWeight="bold">
-              STATUS: {isDebug ? "HALT (STEP)" : clockSurge ? "SURGE (120MHz)" : "ACTIVE PIPELINE"}
+            <text x="0" y="28" fontSize="5" fill={isDebug ? "#F59E0B" : clockSurge ? "#FF4D00" : "#10B981"} fontWeight="bold">
+              STATUS: {isDebug ? "HALT (STEP MODE)" : clockSurge ? "CLK: 120 MHz" : "ACTIVE PIPELINE"}
             </text>
           </g>
-
-          {/* =================================================================
-              6. COMPOSANTS CMS (0603) & POINTS DE TEST SOUDÉS SUR LE PCB
-              ================================================================= */}
-          {/* Condensateurs CMS */}
-          {SM_CAPS.map((cap) => (
-            <g key={cap.label} transform={`translate(${cap.x}, ${cap.y})`}>
-              {cap.vertical ? (
-                <>
-                  <rect x="-4" y="-7" width="8" height="14" rx="0.5" fill="#52525B" />
-                  <rect x="-3.5" y="-6.5" width="7" height="13" rx="0.5" fill="#1E293B" stroke="#09090B" strokeWidth="0.6" />
-                  <rect x="-3.5" y="-6.5" width="7" height="3" fill="#E4E4E7" />
-                  <rect x="-3.5" y="3.5" width="7" height="3" fill="#E4E4E7" />
-                  <text x="6" y="2" fontSize="4.5" fill="#71717A">{cap.label}</text>
-                </>
-              ) : (
-                <>
-                  <rect x="-7" y="-4" width="14" height="8" rx="0.5" fill="#52525B" />
-                  <rect x="-6.5" y="-3.5" width="13" height="7" rx="0.5" fill="#1E293B" stroke="#09090B" strokeWidth="0.6" />
-                  <rect x="-6.5" y="-3.5" width="3" height="7" fill="#E4E4E7" />
-                  <rect x="3.5" y="-3.5" width="3" height="7" fill="#E4E4E7" />
-                  <text x="-7" y="-6" fontSize="4.5" fill="#71717A">{cap.label}</text>
-                </>
-              )}
-            </g>
-          ))}
-
-          {/* Points de test avec anneaux de cuivre */}
-          {[
-            { x: 300, y: 190, l: "TP_GPIO", active: outXOR },
-            { x: 200, y: 350, l: "TP_GND", active: false },
-            { x: 100, y: 200, l: "TP_RX", active: true },
-          ].map((tp) => (
-            <g key={tp.l} transform={`translate(${tp.x}, ${tp.y})`}>
-              <circle cx="0" cy="0" r="2.8" fill="none" stroke="#FF4D00" strokeWidth="0.8" />
-              <circle cx="0" cy="0" r="1.1" fill={tp.active ? "#FF4D00" : "#52525B"} />
-              <text x="5" y="2" fontSize="4.5" fill="#71717A">{tp.l}</text>
-            </g>
-          ))}
         </svg>
       </motion.div>
 
