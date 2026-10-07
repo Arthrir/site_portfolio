@@ -20,7 +20,11 @@ import { useLang } from "../i18n";
  *   - Oscillateur quartz 120 MHz et bouton Reset fonctionnel à gauche.
  * -------------------------------------------------------------------------- */
 
-export default function Die() {
+interface DieProps {
+  onColorChange?: (color: string) => void;
+}
+
+export default function Die({ onColorChange }: DieProps) {
   const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -49,6 +53,31 @@ export default function Die() {
     return () => clearInterval(id);
   }, []);
 
+  // Palette de couleurs pour le bouton couleur en bas à droite
+  const COLOR_PALETTE = [
+    { name: "ORANGE", hex: "#FF4D00" },
+    { name: "GREEN", hex: "#10B981" },
+    { name: "PURPLE", hex: "#8B5CF6" },
+    { name: "CYAN", hex: "#06B6D4" },
+    { name: "AMBER", hex: "#F59E0B" },
+  ];
+  const [colorIndex, setColorIndex] = useState(0);
+
+  // Message temporaire sur l'écran OLED (pendant 2 secondes)
+  const [oledOverride, setOledOverride] = useState<string | null>(null);
+
+  const triggerColorChange = () => {
+    const nextIdx = (colorIndex + 1) % COLOR_PALETTE.length;
+    setColorIndex(nextIdx);
+    const chosen = COLOR_PALETTE[nextIdx];
+    if (onColorChange) onColorChange(chosen.hex);
+    // Notification 2s sur l'OLED
+    setOledOverride(`COLOR :: ${chosen.name}`);
+    setTimeout(() => {
+      setOledOverride(null);
+    }, 2000);
+  };
+
   // Message qui défile sur le mini écran OLED
   const fullText = "SYS:OK · ARTHUR DX · EMBEDDED & FPGA · RV32I CORE ACTIVE · ";
   const [scrollIdx, setScrollIdx] = useState(0);
@@ -58,7 +87,8 @@ export default function Die() {
     }, 280);
     return () => clearInterval(id);
   }, [fullText.length]);
-  const displayText = (fullText + fullText).slice(scrollIdx, scrollIdx + 15);
+  const defaultDisplayText = (fullText + fullText).slice(scrollIdx, scrollIdx + 15);
+  const displayText = oledOverride || defaultDisplayText;
 
   // Action Reset
   const handleReset = () => {
@@ -252,10 +282,22 @@ export default function Die() {
           {/* =================================================================
               4. BANC MULTI-PORTES FLUIDE ET CONNECTÉ (HAUT-DROITE)
               Boutons poussoirs tactiles réels (6x6mm SMD) alimentant les rails A et B
+              Pattes gauches au plan VDD 3.3V, pattes droites vers le bus logique
               ================================================================= */}
+          {/* Ligne d'alimentation VDD commune aux entrées gauches des boutons A et B (x=244) */}
+          <path d="M 205 28 H 244 V 86" stroke="#D97706" strokeWidth="1" strokeDasharray="3 2" fill="none" />
+          <circle cx="244" cy="30" r="1.3" fill="#D97706" />
+          <circle cx="244" cy="46" r="1.3" fill="#D97706" />
+          <circle cx="244" cy="70" r="1.3" fill="#D97706" />
+          <circle cx="244" cy="86" r="1.3" fill="#D97706" />
+          <path d="M 244 30 H 249" stroke="#D97706" strokeWidth="1" fill="none" />
+          <path d="M 244 46 H 249" stroke="#D97706" strokeWidth="1" fill="none" />
+          <path d="M 244 70 H 249" stroke="#D97706" strokeWidth="1" fill="none" />
+          <path d="M 244 86 H 249" stroke="#D97706" strokeWidth="1" fill="none" />
+
           {/* Bouton Poussoir Tactile SMD A à (252, 28) */}
           <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(252, 26)">
-            {/* 4 pattes de soudure métalliques aux 4 coins */}
+            {/* 4 pattes de soudure métalliques aux 4 coins (liées 2 par 2 en interne) */}
             <rect x="-3" y="2" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
             <rect x="-3" y="18" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
             <rect x="24" y="2" width="3" height="4" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
@@ -274,8 +316,8 @@ export default function Die() {
               strokeWidth="0.8"
               filter={logicA ? "url(#glow-led)" : undefined}
             />
-            {/* Étiquette sérigraphie au-dessus du bouton */}
-            <text x="12" y="-3.5" textAnchor="middle" fontSize="4.8" fontWeight="bold" fill={logicA ? "#FF4D00" : "#E2E8F0"}>
+            {/* Étiquette sérigraphie sombre et lisible au-dessus du bouton */}
+            <text x="12" y="-3.5" textAnchor="middle" fontSize="4.8" fontWeight="bold" fill={logicA ? "#FF4D00" : "#3F3F46"}>
               BTN A ({valA})
             </text>
           </g>
@@ -301,61 +343,48 @@ export default function Die() {
               strokeWidth="0.8"
               filter={logicB ? "url(#glow-led)" : undefined}
             />
-            {/* Étiquette sérigraphie au-dessus du bouton */}
-            <text x="12" y="-3.5" textAnchor="middle" fontSize="4.8" fontWeight="bold" fill={logicB ? "#FF4D00" : "#E2E8F0"}>
+            {/* Étiquette sérigraphie sombre et lisible au-dessus du bouton */}
+            <text x="12" y="-3.5" textAnchor="middle" fontSize="4.8" fontWeight="bold" fill={logicB ? "#FF4D00" : "#3F3F46"}>
               BTN B ({valB})
             </text>
           </g>
 
           {/* RAILS DE DISTRIBUTION PARALLÈLES :
-              Sortie A part du pad droit du bouton A (277, 38) -> Rail A à x=304
-              Sortie B part du pad droit du bouton B (277, 78) -> Rail B à x=316 */}
+              Sortie A part des 2 pads droits du bouton A (reliés en H) -> Rail A à x=304
+              Sortie B part des 2 pads droits du bouton B (reliés en H) -> Rail B à x=316 */}
+          {/* Pont de sortie pour bouton A (pad haut 28, pad bas 44 reliés vers rail x=304) */}
+          <path d="M 276 28 H 284 V 44 H 276" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1" fill="none" />
           <path
-            d="M 277 38 H 304 V 141"
+            d="M 284 36 H 304 V 141"
             stroke={logicA ? "#FF4D00" : "#52525B"}
             strokeWidth={logicA ? 1.6 : 1}
             fill="none"
           />
+
+          {/* Pont de sortie pour bouton B (pad haut 68, pad bas 84 reliés vers rail x=316) */}
+          <path d="M 276 68 H 284 V 84 H 276" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="1" fill="none" />
           <path
-            d="M 277 78 H 316 V 151"
+            d="M 284 76 H 316 V 151"
             stroke={logicB ? "#FF4D00" : "#52525B"}
             strokeWidth={logicB ? 1.6 : 1}
             fill="none"
           />
 
           {/* Entrées directes depuis A et B vers les broches 1 et 2 du processeur */}
-          <path d="M 290 38 V 145 H 274" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
-          <circle cx="290" cy="38" r="1.3" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <path d="M 296 36 V 145 H 274" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <circle cx="296" cy="36" r="1.3" fill={logicA ? "#FF4D00" : "#52525B"} />
 
-          <path d="M 285 78 V 160 H 274" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
-          <circle cx="285" cy="78" r="1.3" fill={logicB ? "#FF4D00" : "#52525B"} />
+          <path d="M 290 76 V 160 H 274" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <circle cx="290" cy="76" r="1.3" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 --- */}
-          {/* Entrée A du XOR : couche supérieure continue (x=304 -> x=348) */}
+          {/* Entrée A du XOR : ligne continue (x=304 -> x=348, y=44) */}
           <path d="M 304 44 H 348" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
           <circle cx="304" cy="44" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
 
-          {/* Entrée B du XOR : VIAS + PISTE EN POINTILLÉS (couche interne) */}
-          {/* Via d'entrée sur le rail B (316, 56) */}
-          <g transform="translate(316, 56)">
-            <circle cx="0" cy="0" r="2.2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="0.9" fill={logicB ? "#FF4D00" : "#27272A"} />
-          </g>
-          {/* Trajet couche interne en pointillés jusqu'au via de sortie (316 -> 336) */}
-          <path
-            d="M 316 56 H 336"
-            stroke={logicB ? "#FF4D00" : "#52525B"}
-            strokeWidth={logicB ? 1.5 : 1}
-            strokeDasharray="2.5 1.5"
-            fill="none"
-          />
-          {/* Via de remontée à la surface à bonne distance de la porte (336, 56) */}
-          <g transform="translate(336, 56)">
-            <circle cx="0" cy="0" r="2.2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="0.9" fill={logicB ? "#FF4D00" : "#27272A"} />
-          </g>
-          {/* Piste de surface parfaitement dégagée de tout arc (336 -> 348) */}
-          <path d="M 336 56 H 348" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          {/* Entrée B du XOR : ligne continue directe sans aucun via parasite (x=316 -> x=348, y=56) */}
+          <path d="M 316 56 H 348" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <circle cx="316" cy="56" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           {/* Corps de la porte XOR normalisé ANSI (porte positionnée de x=348 à x=368) */}
           <g>
@@ -382,7 +411,7 @@ export default function Die() {
           </g>
 
           {/* Ligne de sortie XOR vers Pin 3 (y=175) avec résistance R1 */}
-          <path d="M 372 50 V 62 H 392 V 175 H 274" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <path d="M 372 50 V 62 H 392 V 175 H 274" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth={1.2} fill="none" />
           <g transform="translate(330, 175)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
@@ -472,8 +501,7 @@ export default function Die() {
 
           {/* =================================================================
               5. BAS DU CHIP & BAS-DROITE TOTALEMENT CONNECTÉ
-              UART, I2C, STATUS LEDS, CONNECTEUR JTAG / SWD EN BAS À DROITE
-              Tous les composants orientés dans l'axe de leurs pistes !
+              UART, I2C, STATUS LEDS, CONNECTEUR JTAG + BOUTON COULEUR EN BAS À DROITE
               ================================================================= */}
           {/* 1. Interface UART (TX / RX) connectée aux pins 1 & 2 du bas (x=145, 160) */}
           <path d="M 145 274 V 330" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
@@ -491,14 +519,14 @@ export default function Die() {
           {/* 2. Bus I2C (SDA / SCL) avec résistances de pull-up R4 & R5 verticales alignées sur les pistes ! */}
           <path d="M 175 274 V 330" stroke="#8B5CF6" strokeWidth="1.2" fill="none" />
           <path d="M 190 274 V 330" stroke="#A855F7" strokeWidth="1.2" fill="none" />
-          {/* R4 Pullup sur SDA (verticale : largeur 6, hauteur 12, contacts en haut et en bas) */}
+          {/* R4 Pullup sur SDA */}
           <g transform="translate(175, 302)">
             <rect x="-3" y="-6" width="6" height="12" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-3" y="-6" width="6" height="2.5" fill="#E4E4E7" />
             <rect x="-3" y="3.5" width="6" height="2.5" fill="#E4E4E7" />
             <text x="-5" y="1" textAnchor="end" fontSize="3.8" fill="#71717A">R4</text>
           </g>
-          {/* R5 Pullup sur SCL (verticale : largeur 6, hauteur 12, contacts en haut et en bas) */}
+          {/* R5 Pullup sur SCL */}
           <g transform="translate(190, 302)">
             <rect x="-3" y="-6" width="6" height="12" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-3" y="-6" width="6" height="2.5" fill="#E4E4E7" />
@@ -547,41 +575,59 @@ export default function Die() {
             <circle cx="0" cy="0" r="2.8" fill={outXOR ? "#F59E0B" : "#27272A"} filter={outXOR ? "url(#glow-led)" : undefined} stroke="#3F3F46" strokeWidth="0.5" />
             <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">USR</text>
           </g>
-          {/* D3 PWR LED (rouge/orange, active constante) */}
+          {/* D3 PWR LED (active constante) */}
           <g transform="translate(250, 336)">
-            <circle cx="0" cy="0" r="2.8" fill="#FF4D00" filter="url(#glow-led)" stroke="#3F3F46" strokeWidth="0.5" />
+            <circle cx="0" cy="0" r="2.8" fill={COLOR_PALETTE[colorIndex].hex} filter="url(#glow-led)" stroke="#3F3F46" strokeWidth="0.5" />
             <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">PWR</text>
           </g>
           <text x="235" y="356" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">STATUS</text>
 
-          {/* 5. EN BAS À DROITE : PORT DE DÉBOGAGE / PROGRAMMATION JTAG / SWD (10-PIN CONNECTOR) */}
-          <g transform="translate(305, 305)">
-            {/* Boîtier connecteur header 2x5 */}
-            <rect x="0" y="0" width="56" height="34" rx="2" fill="#111216" stroke="#475569" strokeWidth="1" />
-            <rect x="3" y="3" width="50" height="28" fill="#181A22" stroke="#27272A" strokeWidth="0.6" />
-            <text x="28" y="-3.5" textAnchor="middle" fontSize="4.8" fontWeight="bold" fill="#FF4D00">JTAG / SWD</text>
-
-            {/* Rangée de 5 broches x 2 rangées */}
-            {Array.from({ length: 5 }).map((_, col) => (
-              <g key={`jtag-${col}`}>
-                {/* Pin rangée supérieure */}
-                <circle cx={10 + col * 9} cy={10} r="2.4" fill="#27272A" stroke="#D4D4D8" strokeWidth="0.6" />
-                <circle cx={10 + col * 9} cy={10} r="0.9" fill="#F59E0B" />
-                {/* Pin rangée inférieure */}
-                <circle cx={10 + col * 9} cy={24} r="2.4" fill="#27272A" stroke="#D4D4D8" strokeWidth="0.6" />
-                <circle cx={10 + col * 9} cy={24} r="0.9" fill="#F59E0B" />
+          {/* 5. EN BAS À DROITE : PORT JTAG / SWD + BOUTON POUSSOIR TACTILE DE CYCLE DE COULEUR */}
+          <g transform="translate(286, 305)">
+            {/* Header 2x3 compact pour JTAG/SWD */}
+            <rect x="0" y="0" width="38" height="34" rx="2" fill="#111216" stroke="#475569" strokeWidth="1" />
+            <text x="19" y="-3.5" textAnchor="middle" fontSize="4" fontWeight="bold" fill="#71717A">SWD/J1</text>
+            {Array.from({ length: 3 }).map((_, col) => (
+              <g key={`swd-${col}`}>
+                <circle cx={8 + col * 11} cy={10} r="2.2" fill="#27272A" stroke="#D4D4D8" strokeWidth="0.6" />
+                <circle cx={8 + col * 11} cy={10} r="0.8" fill="#F59E0B" />
+                <circle cx={8 + col * 11} cy={24} r="2.2" fill="#27272A" stroke="#D4D4D8" strokeWidth="0.6" />
+                <circle cx={8 + col * 11} cy={24} r="0.8" fill="#F59E0B" />
               </g>
             ))}
-
-            {/* Repère Pin 1 */}
-            <path d="M 6 6 L 6 12 L 12 6 Z" fill="#FF4D00" />
-            <text x="28" y="42" textAnchor="middle" fontSize="3.8" fill="#71717A">DEBUG PROBE J1</text>
           </g>
-          {/* Pistes de debug reliant le microcontrôleur au port JTAG */}
-          <path d="M 274 235 H 290 V 315 H 305" stroke="#71717A" strokeWidth="0.9" strokeDasharray="3 2" fill="none" />
-          <path d="M 274 250 H 295 V 325 H 305" stroke="#71717A" strokeWidth="0.9" strokeDasharray="3 2" fill="none" />
-          <text x="298" y="312" fontSize="3.5" fill="#71717A" textAnchor="end">SWDIO</text>
-          <text x="298" y="322" fontSize="3.5" fill="#71717A" textAnchor="end">SWCLK</text>
+
+          {/* BOUTON POUSSOIR TACTILE DE CHANGEMENT DE COULEUR (BTN COLOR THEME) */}
+          <g className="cursor-pointer" onClick={triggerColorChange} transform="translate(340, 308)">
+            {/* 4 pattes de soudure */}
+            <rect x="-2.5" y="2" width="2.5" height="3.5" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="-2.5" y="16.5" width="2.5" height="3.5" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="22" y="2" width="2.5" height="3.5" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="22" y="16.5" width="2.5" height="3.5" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+
+            {/* Corps du poussoir */}
+            <rect x="0" y="0" width="22" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="0.8" />
+            <circle cx="11" cy="11" r="8" fill="#111216" stroke="#334155" strokeWidth="0.6" />
+            {/* Plongeur illuminé à la couleur active */}
+            <circle
+              cx="11"
+              cy="11"
+              r="6"
+              fill={COLOR_PALETTE[colorIndex].hex}
+              stroke="#FFF"
+              strokeWidth="0.8"
+              filter="url(#glow-led)"
+            />
+            {/* Sérigraphie au-dessus et en-dessous */}
+            <text x="11" y="-4" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill={COLOR_PALETTE[colorIndex].hex}>
+              COLOR
+            </text>
+            <text x="11" y="29" textAnchor="middle" fontSize="3.8" fill="#71717A">
+              DOT THEME
+            </text>
+          </g>
+          {/* Piste reliant le bouton COLOR au microcontrôleur */}
+          <path d="M 274 250 H 351 V 308" stroke={COLOR_PALETTE[colorIndex].hex} strokeWidth="1" strokeDasharray="3 2" fill="none" />
 
           {/* =================================================================
               6. BOÎTIER CENTRAL IC QFP (CHIP SILICIUM AVEC BROCHES REELLES)

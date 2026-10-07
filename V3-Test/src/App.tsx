@@ -1589,6 +1589,8 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
+  const [dotColor, setDotColor] = useState("#FF4D00");
+
   return (
     <div className="relative min-h-screen overflow-x-clip">
       <AnimatePresence>{cv && <CvViewer onClose={() => setCv(false)} />}</AnimatePresence>
@@ -1621,7 +1623,7 @@ function Page() {
             {["Arthur", "Doradoux"].map((w, i) => (
               <span key={w} className="block overflow-hidden pb-[0.06em]">
                 <motion.span className="block" initial={{ y: "105%" }} animate={{ y: 0 }} transition={{ duration: 1.1, ease, delay: 0.15 + i * 0.1 }}>
-                  {w}{i === 1 && <span className="text-signal">.</span>}
+                  {w}{i === 1 && <span style={{ color: dotColor }} className="transition-colors duration-500">.</span>}
                 </motion.span>
               </span>
             ))}
@@ -1662,7 +1664,7 @@ function Page() {
           </Reveal>
         </motion.div>
         <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[360px] sm:max-w-[420px] md:mt-0 md:max-w-[460px]">
-          <Die />
+          <Die onColorChange={(c) => setDotColor(c)} />
           <motion.figure
             initial={{ opacity: 0, y: 30, rotate: 0 }}
             animate={{ opacity: 1, y: 0, rotate: -4 }}
@@ -1993,10 +1995,10 @@ function Page() {
       </section>
 
       {/* CONTACT */}
-      <section id="contact" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="relative overflow-hidden border-t border-ink pb-10 md:pb-14">
+      <section id="contact" style={{ "--color-signal": dotColor } as React.CSSProperties} className="relative overflow-hidden border-t border-ink pb-10 md:pb-14">
         <div className="mx-auto max-w-[1400px] px-6 pt-20 pb-8 md:px-10 md:pt-28 md:pb-12">
           <Label>§08 - Contact</Label>
-          <h2 className="mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-semibold tracking-[-0.05em]">{tr("Travaillons", "Let's work")}<br />{tr("ensemble", "together")}<span className="text-signal">.</span></h2>
+          <h2 className="mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-semibold tracking-[-0.05em]">{tr("Travaillons", "Let's work")}<br />{tr("ensemble", "together")}<span style={{ color: dotColor }} className="transition-colors duration-500">.</span></h2>
           <p className="mt-8 max-w-xl text-lg text-mute leading-relaxed">
             {tr(
               "À la recherche d'un stage de fin d'études de 5+ mois dès avril 2027 : Product Owner, Product Manager, Prototypage & Gestion de projet technique.",
