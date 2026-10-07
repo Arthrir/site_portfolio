@@ -113,7 +113,7 @@ const PROJECTS: Project[] = [
     tags: ["FPGA", "SystemVerilog", "Python", "Vivado", "Zynq-7020"],
     desc: "Acquisition temps réel et sécurisation matérielle de flux biomédicaux sensibles face aux attaques physiques et logiques.",
     points: [
-      "Acquisition temps réel et chiffrement matériel de signaux ECG sur carte FPGA Zynq-7020 sous Vivado (Mines Saint-Étienne).",
+      "Acquisition temps réel et chiffrement matériel de signaux ECG sur carte FPGA Zynq-7020 sous Vivado.",
       "Gestion précise des communications I2C et UART par machine d'états (FSM) cadencée à 50 MHz.",
       "Architecture matérielle articulée autour d'un cœur de chiffrement ASCON-128 interagissant avec une RAM double port pour sécuriser les trames ECG à la volée.",
       "Développement en aval d'une chaîne logicielle en Python comprenant un émulateur matériel pour les tests, le déchiffrement des données et une interface graphique de monitoring en direct capable d'analyser l'onde ECG, détecter le complexe PQRST et afficher le rythme cardiaque en temps réel.",
@@ -124,7 +124,7 @@ const PROJECTS: Project[] = [
       d: "Feb - Mar 2026",
       desc: "Real-time biomedical telemetry acquisition and hardware encryption against physical and side-channel threats.",
       points: [
-        "Real-time biomedical acquisition and hardware encryption on a Zynq-7020 FPGA board using Vivado (Mines Saint-Étienne).",
+        "Real-time biomedical acquisition and hardware encryption on a Zynq-7020 FPGA board using Vivado.",
         "Deterministic 50 MHz finite-state machine (FSM) orchestrating I2C and UART communications.",
         "Architecture built around an ASCON-128 cryptographic core interacting with dual-port RAM to secure ECG frames on the fly.",
         "Complete downstream Python suite featuring a hardware emulator for testbench validation, secure decryption, and a live GUI dashboard analyzing ECG waveforms, detecting PQRST complexes and tracking heart rate in real time.",
@@ -1122,7 +1122,7 @@ function Projects() {
           );
         })}
       </div>
-      <motion.div layout className="grid gap-px bg-ink/15 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div layout className="grid border-t border-ink/15 sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
           {list.map((p) => {
             const origTitle = PROJECTS[all.indexOf(p)].t;
@@ -1134,7 +1134,7 @@ function Projects() {
                 initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.45, ease }}
                 onClick={() => setOpen(all.indexOf(p))} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && setOpen(all.indexOf(p))}
-                className={`${hiddenOnMobile ? "hidden sm:flex" : "flex"} group relative min-h-[220px] cursor-pointer flex-col bg-paper p-7 transition-colors duration-500 hover:bg-ink hover:text-paper`}
+                className={`${hiddenOnMobile ? "hidden sm:flex" : "flex"} group relative min-h-[220px] cursor-pointer flex-col bg-paper p-7 transition-colors duration-500 hover:bg-ink hover:text-paper border-b border-ink/15 sm:border-r sm:border-ink/15 sm:[&:nth-child(2n)]:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(3n)]:border-r-0`}
               >
                 <div className="flex items-start justify-between">
                   <span className="font-mono text-[11px] text-mute group-hover:text-paper/50">{p.d}</span>
