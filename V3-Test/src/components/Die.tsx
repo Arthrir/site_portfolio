@@ -295,41 +295,45 @@ export default function Die() {
           <circle cx="302" cy="80" r="1.3" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 --- */}
-          {/* Entrée A du XOR : couche supérieure (ligne continue depuis x=316) */}
-          <path d="M 316 45 H 332" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <circle cx="316" cy="45" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          {/* Entrée A du XOR : couche supérieure continue (x=316 -> x=334) */}
+          <path d="M 316 44 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <circle cx="316" cy="44" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
 
-          {/* Entrée B du XOR : VIAS + PISTE EN POINTILLÉS (couche interne / sous-face du PCB) */}
-          {/* Via d'entrée sur le rail B (324, 55) */}
-          <g transform="translate(324, 55)">
-            <circle cx="0" cy="0" r="2.2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="0.9" fill={logicB ? "#FF4D00" : "#27272A"} />
+          {/* Entrée B du XOR : VIAS + PISTE EN POINTILLÉS (couche interne) */}
+          {/* Via d'entrée sur le rail B (324, 56) */}
+          <g transform="translate(324, 56)">
+            <circle cx="0" cy="0" r="2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="0.8" fill={logicB ? "#FF4D00" : "#27272A"} />
           </g>
           {/* Piste en pointillés représentant le routage en couche interne */}
           <path
-            d="M 324 55 H 330"
+            d="M 324 56 H 329"
             stroke={logicB ? "#FF4D00" : "#52525B"}
             strokeWidth={logicB ? 1.5 : 1}
-            strokeDasharray="2.5 1.5"
+            strokeDasharray="2 1.5"
             fill="none"
           />
-          {/* Via de remontée à la surface juste sur l'arc d'entrée de la XOR (330, 55) */}
-          <g transform="translate(330, 55)">
-            <circle cx="0" cy="0" r="2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.7" />
+          {/* Via de remontée à la surface en amont de la porte (329, 56) */}
+          <g transform="translate(329, 56)">
+            <circle cx="0" cy="0" r="2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.8" />
             <circle cx="0" cy="0" r="0.8" fill={logicB ? "#FF4D00" : "#27272A"} />
           </g>
-          <path d="M 330 55 H 332" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          {/* Segment de surface branché parfaitement à l'entrée de la porte (329 -> 334) */}
+          <path d="M 329 56 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
 
+          {/* Corps de la porte XOR normalisé ANSI (entrées en 334, 44 et 334, 56) */}
           <g>
-            <path d="M 328 42 Q 333 50 328 58" fill="none" stroke="#27272A" strokeWidth="1.3" strokeLinecap="round" />
+            {/* Arc d'entrée séparé (spécifique au symbole XOR) */}
+            <path d="M 330 40 Q 335 50 330 60" fill="none" stroke="#3F3F46" strokeWidth="1.3" strokeLinecap="round" />
+            {/* Corps principal XOR */}
             <path
-              d="M 332 42 Q 346 44 354 50 Q 346 56 332 58 Q 337 50 332 42 Z"
+              d="M 334 40 Q 346 43 354 50 Q 346 57 334 60 Q 339 50 334 40 Z"
               fill="#181A22"
               stroke="#FF4D00"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="343" y="38" fontSize="4.8" textAnchor="middle" fill="#FF4D00" fontWeight="bold">XOR</text>
+            <text x="344" y="36" fontSize="4.8" textAnchor="middle" fill="#FF4D00" fontWeight="bold">XOR</text>
 
             {/* Sortie XOR vers LED probe */}
             <path d="M 354 50 H 368" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth={outXOR ? 1.6 : 1} fill="none" />
