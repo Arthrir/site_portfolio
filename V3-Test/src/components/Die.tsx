@@ -5,17 +5,20 @@ import { useLang } from "../i18n";
 /* ---------------- Die / Silicon Chip & PCB Lab ----------------
  * Conception électronique & CAO :
  * - Fond 100% transparent (fond crème du portfolio préservé).
- * - Câblage orthogonal 100% connecté et sans aucun croisement :
- *   - VDD 3.3V routé simplement et directement vers les boutons A et B (aucune ligne en pointillés inutile, texte VDD bien visible en haut).
- *   - Points de test TP1, TP2, TP3 décalés vers la gauche (x=220, 228, 236) : AUCUN contact avec le Bouton B !
- *   - Bouton A (Orange) et Bouton B (Cyan) avec 2 pastilles CMS épurées, sorties parfaitement centrées sur l'axe (y=38 et y=78).
+ * - Câblage orthogonal 100% connecté et sans aucun chevauchement sauvage :
+ *   - VDD 3.3V routé simplement en cuivre plein vers les boutons A et B (texte VDD bien visible en haut).
+ *   - Points de test TP1, TP2, TP3 courts et verticaux (y=100) : AUCUN contact avec le Bouton B !
+ *   - Bouton A (Orange) et Bouton B (Cyan) avec connexions parfaitement nettes (traces partant de l'extrémité des pastilles).
+ *   - Pistes vers les portes logiques avec ponts de saut (bridge hops) explicites sur les croisements de bus.
+ *   - Pistes de retour vers les broches du CPU sur 3 canaux X distincts (364, 371, 378) : aucun chevauchement.
  *   - Porte XOR avec identité couleur unique (Magenta néon #EC4899) pour la distinguer totalement de l'entrée A (Orange).
  *   - Portes logiques (XOR Magenta, AND Vert, OR Violet) avec sondes strictement dans les limites du PCB.
  * - Connecteur SWD / JTAG 6 broches sans aucun court-circuit :
- *   - RST ne traverse plus JAMAIS le GND (connecté directement à sa broche sans croisement).
- *   - Broches GND reliées entre elles et solidement connectées au plan de masse avec symbole de terre GND (⏚).
- *   - Broche 3V3 alimentée proprement et sérigraphies 100% visibles.
- * - Bouton RESET matériel inédit : Micro-switch CMS horizontal rectangulaire 3x6mm avec actionneur capsule rouge et étiquette NRST.
+ *   - RST ne traverse plus le GND (arrive directement sur sa broche en bas à gauche).
+ *   - Broches GND reliées entre elles et solidement connectées à un symbole de terre officiel GND (⏚).
+ *   - Broche 3V3 et sérigraphies 100% dégagées et visibles.
+ * - Bouton RESET matériel épuré : micro-bouton tactile circulaire compact avec dôme rouge et UNE SEULE connexion vers NRST.
+ * - Légende basse épurée sans affichage orange redondant.
  * - Cœur RISC-V SoC avec architecture exacte :
  *   - REGFILE 128B (32x 32-bit = 1024 bits = 128 octets réels pour les registres x0..x31).
  *   - Registre matériel invariant x0 (zero) = 0x00.
@@ -198,7 +201,7 @@ export default function Die({ onColorChange }: DieProps) {
           </g>
 
           {/* Alimentation VDD simple, directe et propre vers les boutons A et B :
-              Part de (205, 22) -> va directement à (244, 22) -> descend vers Button A (244, 38) et Button B (244, 78) */}
+              Part de (205, 22) -> va directement à (244, 22) -> descend vers les pads gauches des boutons A (244, 38) et B (244, 78) */}
           <path d="M 205 22 H 244 V 78" stroke="#D97706" strokeWidth="1.2" fill="none" />
           <circle cx="244" cy="22" r="1.2" fill="#D97706" />
           <circle cx="244" cy="38" r="1.3" fill="#D97706" />
@@ -249,26 +252,26 @@ export default function Die({ onColorChange }: DieProps) {
             </g>
           </g>
 
-          {/* Points de test GPIO TP1, TP2, TP3 regroupés proprement à gauche de x=240 :
-              AUCUN contact ni superposition avec le Bouton B ou ses pistes ! */}
-          <path d="M 220 126 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
-          <circle cx="220" cy="76" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
-          <circle cx="220" cy="76" r="0.8" fill="#71717A" />
-          <text x="220" y="68" textAnchor="middle" fontSize="3.6" fill="#71717A">TP1</text>
+          {/* Points de test GPIO TP1, TP2, TP3 courts et droits (y=100) :
+              Parfaitement verticaux, situés SOUS le Bouton B (y=67..89), AUCUN chevauchement ! */}
+          <path d="M 220 126 V 100" stroke="#71717A" strokeWidth="1" fill="none" />
+          <circle cx="220" cy="100" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
+          <circle cx="220" cy="100" r="0.8" fill="#71717A" />
+          <text x="220" y="93" textAnchor="middle" fontSize="3.6" fill="#71717A">TP1</text>
 
-          <path d="M 235 126 V 110 H 228 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
-          <circle cx="228" cy="76" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
-          <circle cx="228" cy="76" r="0.8" fill="#71717A" />
-          <text x="228" y="68" textAnchor="middle" fontSize="3.6" fill="#71717A">TP2</text>
+          <path d="M 235 126 V 100" stroke="#71717A" strokeWidth="1" fill="none" />
+          <circle cx="235" cy="100" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
+          <circle cx="235" cy="100" r="0.8" fill="#71717A" />
+          <text x="235" y="93" textAnchor="middle" fontSize="3.6" fill="#71717A">TP2</text>
 
-          <path d="M 250 126 V 116 H 236 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
-          <circle cx="236" cy="76" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
-          <circle cx="236" cy="76" r="0.8" fill="#71717A" />
-          <text x="236" y="68" textAnchor="middle" fontSize="3.6" fill="#71717A">TP3</text>
+          <path d="M 250 126 V 100" stroke="#71717A" strokeWidth="1" fill="none" />
+          <circle cx="250" cy="100" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
+          <circle cx="250" cy="100" r="0.8" fill="#71717A" />
+          <text x="250" y="93" textAnchor="middle" fontSize="3.6" fill="#71717A">TP3</text>
 
           {/* =================================================================
-              3. HORLOGE OSCILLATEUR QUARTZ 120 MHz & BOUTON TACTILE RESET CMS (GAUCHE)
-              Micro-switch tactile CMS horizontal 3x6mm avec actionneur capsule rouge
+              3. HORLOGE OSCILLATEUR QUARTZ 120 MHz & BOUTON TACTILE RESET ÉPURÉ
+              Bouton poussoir tactile circulaire épuré, compact et élégant avec 1 SEULE connexion
               ================================================================= */}
           {/* Oscillateur Quartz 120 MHz Y1 relié au pin CLK_IN (y=175) */}
           <g transform="translate(44, 162)">
@@ -287,111 +290,102 @@ export default function Die({ onColorChange }: DieProps) {
           />
           <text x="110" y="169" textAnchor="middle" fontSize="4" fill="#71717A">CLK_IN</text>
 
-          {/* NOUVEAU BOUTON RESET : MICRO-SWITCH CMS HORIZONTAL 3x6mm (FORME TOTALEMENT DISTINCTE DE A & B) */}
+          {/* BOUTON RESET ÉPURÉ & COMPACT (1 seule broche de sortie vers NRST) */}
           <g
             className="cursor-pointer group"
             onClick={handleReset}
-            transform="translate(48, 212)"
+            transform="translate(68, 220)"
           >
-            {/* Ailettes de fixation métalliques latérales CMS */}
-            <rect x="-4" y="3" width="4" height="10" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="34" y="3" width="4" height="10" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            {/* Embase métallique circulaire chromée */}
+            <circle cx="0" cy="0" r="8" fill="#181A22" stroke="#64748B" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="5.5" fill="#0F172A" stroke="#334155" strokeWidth="0.5" />
 
-            {/* Boîtier rectangulaire en acier brossé / CMS 3x6mm */}
-            <rect x="0" y="0" width="34" height="16" rx="2" fill="#181A22" stroke="#64748B" strokeWidth="0.8" />
-            
-            {/* Rivets de sertissage métalliques aux deux extrémités */}
-            <circle cx="5" cy="8" r="1.2" fill="#0F172A" stroke="#475569" strokeWidth="0.4" />
-            <circle cx="29" cy="8" r="1.2" fill="#0F172A" stroke="#475569" strokeWidth="0.4" />
-
-            {/* Actionneur tactile central oblong / capsule rouge vif */}
-            <rect
-              x="9"
-              y="3.5"
-              width="16"
-              height="9"
-              rx="4.5"
+            {/* Plongeur tactile central rouge */}
+            <circle
+              cx="0"
+              cy="0"
+              r={isResetting ? "3.6" : "4.4"}
               fill={isResetting ? "#B91C1C" : "#EF4444"}
               stroke="#FCA5A5"
               strokeWidth="0.7"
               filter={isResetting ? "url(#glow-led)" : undefined}
             />
-            <circle cx="17" cy="8" r="2.2" fill={isResetting ? "#EF4444" : "#F87171"} />
 
-            {/* Sérigraphie industrielle nette au-dessus et au-dessous */}
-            <text x="17" y="-4" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill="#EF4444">
+            {/* Pastille de soudure de sortie unique à droite */}
+            <rect x="7.5" y="-3" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+
+            {/* Sérigraphie industrielle épurée */}
+            <text x="0" y="-11" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill="#EF4444">
               RESET
             </text>
-            <text x="17" y="24" textAnchor="middle" fontSize="3.6" fill="#71717A">
-              NRST · SW1
+            <text x="0" y="14" textAnchor="middle" fontSize="3.6" fill="#71717A">
+              NRST
             </text>
           </g>
 
-          {/* Piste NRST reliant la patte droite du switch Reset au Pin 6 gauche du CPU (y=220) */}
-          <path d="M 86 220 H 126" stroke="#EF4444" strokeWidth="1.2" fill="none" />
-          <circle cx="106" cy="220" r="1.4" fill="#EF4444" />
-          <text x="106" y="215" textAnchor="middle" fontSize="4" fill="#71717A">NRST</text>
+          {/* Piste NRST propre et unique reliant la sortie droite du bouton au Pin 6 du CPU (y=220) */}
+          <path d="M 78.5 220 H 126" stroke="#EF4444" strokeWidth="1.2" fill="none" />
+          <circle cx="102" cy="220" r="1.4" fill="#EF4444" />
+          <text x="102" y="215" textAnchor="middle" fontSize="4" fill="#71717A">NRST</text>
 
           {/* =================================================================
               4. BANC MULTI-PORTES FLUIDE ET CONNECTÉ (HAUT-DROITE)
-              Bouton A (ORANGE) & Bouton B (CYAN) avec sorties 100% centrées sur l'axe (y=38 & y=78)
-              Porte XOR : COULEUR UNIQUE (MAGENTA NÉON #EC4899) pour ne pas confondre avec l'entrée A !
-              Rails orthogonaux sans coupure : Rail B relie fermement le XOR pin B jusqu'au bas !
+              Bouton A (ORANGE) & Bouton B (CYAN) avec pastilles nettes sans fil qui bave sur le composant !
+              Liaisons aux portes avec ponts de saut (bridge hops) explicites.
+              Retours vers le CPU sur 3 canaux distincts (364, 371, 378).
               ================================================================= */}
-          {/* Bouton Poussoir Tactile SMD A à (246, 27) - ACCENT ORANGE (#FF4D00)
-              Centre exact du bouton : (257, 38) */}
-          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(246, 27)">
-            {/* 2 pattes de soudure CMS nettes (Gauche = VDD in, Droite = OUT) */}
-            <rect x="-3" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="22" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+          {/* SORTIES DES BOUTONS : Partent de l'extrémité droite de la pastille (x=269) */}
+          <path d="M 269 38 H 286" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.6 : 1} fill="none" />
+          <path d="M 269 78 H 300" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.6 : 1} fill="none" />
 
-            {/* Boîtier 22x22mm */}
-            <rect x="0" y="0" width="22" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="0.8" />
-            <circle cx="11" cy="11" r="8.5" fill="#111216" stroke="#334155" strokeWidth="0.6" />
+          {/* Bouton Poussoir Tactile SMD A à (246, 27) - ACCENT ORANGE (#FF4D00) */}
+          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(246, 27)">
+            {/* 2 pastilles de soudure CMS nettes (Gauche = VDD in, Droite = OUT) */}
+            <rect x="-3" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="20" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+
+            {/* Boîtier 20x22mm */}
+            <rect x="0" y="0" width="20" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="0.8" />
+            <circle cx="10" cy="11" r="8" fill="#111216" stroke="#334155" strokeWidth="0.6" />
             {/* Plongeur central orange */}
             <circle
-              cx="11"
+              cx="10"
               cy="11"
-              r="6"
+              r="5.5"
               fill={logicA ? "#FF4D00" : "#334155"}
               stroke={logicA ? "#FF7A33" : "#475569"}
               strokeWidth="0.8"
               filter={logicA ? "url(#glow-led)" : undefined}
             />
             {/* Sérigraphie au-dessus du bouton, aucun fil qui traverse le texte */}
-            <text x="11" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicA ? "#FF4D00" : "#71717A"}>
+            <text x="10" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicA ? "#FF4D00" : "#71717A"}>
               BTN A ({valA})
             </text>
           </g>
 
-          {/* Bouton Poussoir Tactile SMD B à (246, 67) - ACCENT CYAN (#06B6D4)
-              Centre exact du bouton : (257, 78) */}
+          {/* Bouton Poussoir Tactile SMD B à (246, 67) - ACCENT CYAN (#06B6D4) */}
           <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(246, 67)">
-            {/* 2 pattes de soudure CMS nettes */}
+            {/* 2 pastilles de soudure CMS nettes */}
             <rect x="-3" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
-            <rect x="22" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
+            <rect x="20" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
 
-            {/* Boîtier 22x22mm */}
-            <rect x="0" y="0" width="22" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="0.8" />
-            <circle cx="11" cy="11" r="8.5" fill="#111216" stroke="#334155" strokeWidth="0.6" />
+            {/* Boîtier 20x22mm */}
+            <rect x="0" y="0" width="20" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="0.8" />
+            <circle cx="10" cy="11" r="8" fill="#111216" stroke="#334155" strokeWidth="0.6" />
             {/* Plongeur central cyan */}
             <circle
-              cx="11"
+              cx="10"
               cy="11"
-              r="6"
+              r="5.5"
               fill={logicB ? "#06B6D4" : "#334155"}
               stroke={logicB ? "#22D3EE" : "#475569"}
               strokeWidth="0.8"
               filter={logicB ? "url(#glow-led)" : undefined}
             />
-            <text x="11" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicB ? "#06B6D4" : "#71717A"}>
+            <text x="10" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicB ? "#06B6D4" : "#71717A"}>
               BTN B ({valB})
             </text>
           </g>
-
-          {/* SORTIES DES BOUTONS PARFAITEMENT CENTRÉES SUR L'AXE (y=38 pour A, y=78 pour B) */}
-          <path d="M 268 38 H 286" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.6 : 1} fill="none" />
-          <path d="M 268 78 H 300" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.6 : 1} fill="none" />
 
           {/* RAIL A VERTICAL (Orange) : va de y=38 à y=145 (Pin 1 du CPU) */}
           <path
@@ -403,8 +397,7 @@ export default function Die({ onColorChange }: DieProps) {
           <circle cx="286" cy="38" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
           <circle cx="286" cy="145" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
 
-          {/* RAIL B VERTICAL (Cyan) : PART DU HAUT (y=56, XOR pin B) JUSQU'À y=160 (Pin 2 du CPU)
-              100% continu, solide, physiquement relié à BTN B à y=78 et au XOR B à y=56 ! */}
+          {/* RAIL B VERTICAL (Cyan) : va de y=56 (XOR B) à y=160 (Pin 2 du CPU) */}
           <path
             d="M 300 56 V 160 H 274"
             stroke={logicB ? "#06B6D4" : "#52525B"}
@@ -415,13 +408,12 @@ export default function Die({ onColorChange }: DieProps) {
           <circle cx="300" cy="78" r="1.4" fill={logicB ? "#06B6D4" : "#52525B"} />
           <circle cx="300" cy="160" r="1.4" fill={logicB ? "#06B6D4" : "#52525B"} />
 
-          {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 ---
-              COULEUR EXCLUSIVE : MAGENTA NÉON (#EC4899) */}
-          {/* Entrée A du XOR (Orange, x=286 -> x=322, y=44) */}
+          {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 --- (Magenta #EC4899) */}
+          {/* Entrée A du XOR (Orange, x=286 -> x=322, y=44) : passe au-dessus de y=56 sans croiser Rail B */}
           <path d="M 286 44 H 322" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.4 : 1} fill="none" />
           <circle cx="286" cy="44" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
 
-          {/* Entrée B du XOR (Cyan, x=300 -> x=322, y=56) */}
+          {/* Entrée B du XOR (Cyan, x=300 -> x=322, y=56) : direct depuis Rail B */}
           <path d="M 300 56 H 322" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.4 : 1} fill="none" />
 
           {/* Corps de la porte XOR (Magenta #EC4899) */}
@@ -444,8 +436,8 @@ export default function Die({ onColorChange }: DieProps) {
             </text>
           </g>
 
-          {/* Piste de retour XOR vers Pin 3 du CPU (y=175) avec résistance R1 (Magenta) */}
-          <path d="M 346 50 V 62 H 368 V 175 H 274" stroke={outXOR ? "#EC4899" : "#52525B"} strokeWidth={1.1} fill="none" />
+          {/* Piste de retour XOR vers Pin 3 du CPU (y=175) sur canal x=364 distinct avec résistance R1 */}
+          <path d="M 346 50 V 62 H 364 V 175 H 274" stroke={outXOR ? "#EC4899" : "#52525B"} strokeWidth={1.1} fill="none" />
           <g transform="translate(324, 175)">
             <rect x="-5" y="-2.5" width="10" height="5" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
             <rect x="-5" y="-2.5" width="2" height="5" fill="#E4E4E7" />
@@ -454,9 +446,16 @@ export default function Die({ onColorChange }: DieProps) {
           </g>
 
           {/* --- PORTE 2 : AND (Y = A · B) à y=98 --- (Vert #10B981) */}
-          <path d="M 286 93 H 322" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.4 : 1} fill="none" />
+          {/* Entrée A du AND (Orange, x=286 -> x=322, y=93) : avec pont de saut au-dessus de Rail B (x=300) */}
+          <path
+            d="M 286 93 H 297 Q 300 89 303 93 H 322"
+            stroke={logicA ? "#FF4D00" : "#52525B"}
+            strokeWidth={logicA ? 1.4 : 1}
+            fill="none"
+          />
           <circle cx="286" cy="93" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
 
+          {/* Entrée B du AND (Cyan, direct depuis Rail B à x=300) */}
           <path d="M 300 103 H 322" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.4 : 1} fill="none" />
           <circle cx="300" cy="103" r="1.4" fill={logicB ? "#06B6D4" : "#52525B"} />
 
@@ -477,8 +476,8 @@ export default function Die({ onColorChange }: DieProps) {
             </text>
           </g>
 
-          {/* Piste de retour AND vers Pin 4 du CPU (y=190) avec résistance R2 */}
-          <path d="M 345 98 V 110 H 368 V 190 H 274" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={1.1} fill="none" />
+          {/* Piste de retour AND vers Pin 4 du CPU (y=190) sur canal x=371 distinct avec résistance R2 */}
+          <path d="M 345 98 V 110 H 371 V 190 H 274" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={1.1} fill="none" />
           <g transform="translate(324, 190)">
             <rect x="-5" y="-2.5" width="10" height="5" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
             <rect x="-5" y="-2.5" width="2" height="5" fill="#E4E4E7" />
@@ -487,9 +486,16 @@ export default function Die({ onColorChange }: DieProps) {
           </g>
 
           {/* --- PORTE 3 : OR (Y = A + B) à y=146 --- (Violet #8B5CF6) */}
-          <path d="M 286 141 H 322" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.4 : 1} fill="none" />
+          {/* Entrée A du OR (Orange, x=286 -> x=322, y=141) : avec pont de saut au-dessus de Rail B (x=300) */}
+          <path
+            d="M 286 141 H 297 Q 300 137 303 141 H 322"
+            stroke={logicA ? "#FF4D00" : "#52525B"}
+            strokeWidth={logicA ? 1.4 : 1}
+            fill="none"
+          />
           <circle cx="286" cy="141" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
 
+          {/* Entrée B du OR (Cyan, direct depuis Rail B à x=300) */}
           <path d="M 300 151 H 322" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.4 : 1} fill="none" />
           <circle cx="300" cy="151" r="1.4" fill={logicB ? "#06B6D4" : "#52525B"} />
 
@@ -510,8 +516,8 @@ export default function Die({ onColorChange }: DieProps) {
             </text>
           </g>
 
-          {/* Piste de retour OR vers Pin 5 du CPU (y=205) avec résistance R3 */}
-          <path d="M 346 146 H 368 V 205 H 274" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={1.1} fill="none" />
+          {/* Piste de retour OR vers Pin 5 du CPU (y=205) sur canal x=378 distinct avec résistance R3 */}
+          <path d="M 346 146 H 378 V 205 H 274" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={1.1} fill="none" />
           <g transform="translate(324, 205)">
             <rect x="-5" y="-2.5" width="10" height="5" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
             <rect x="-5" y="-2.5" width="2" height="5" fill="#E4E4E7" />
@@ -607,7 +613,7 @@ export default function Die({ onColorChange }: DieProps) {
 
           {/* =================================================================
               5. CONNECTEUR SWD / JTAG 6 BROCHES EN BAS À DROITE (294, 288)
-              AUCUN CROISEMENT : RST ne traverse plus JAMAIS le GND !
+              AUCUN CROISEMENT : RST ne traverse plus le GND !
               GND fermement connecté au plan de masse avec symbole GND officiel !
               ================================================================= */}
           {/* Boîtier embase Shrouded Header 2x3 à (294, 288) */}
@@ -822,12 +828,9 @@ export default function Die({ onColorChange }: DieProps) {
         </svg>
       </motion.div>
 
-      {/* Légende bas discrète et technique */}
+      {/* Légende bas discrète et technique (sans mention orange redondante) */}
       <div className="mt-2 flex items-center justify-between px-1 font-mono text-[10px] text-mute uppercase">
         <span>fig. 01 — processeur rv32i & banc logique multi-portes</span>
-        <span className="font-semibold" style={{ color: currentTheme.hex }}>
-          XOR:{outXOR ? 1 : 0} · AND:{outAND ? 1 : 0} · OR:{outOR ? 1 : 0}
-        </span>
       </div>
     </div>
   );

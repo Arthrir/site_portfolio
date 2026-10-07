@@ -315,36 +315,8 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
   };
 
   return (
-    <div>
-      {/* Sur mobile : sélecteur compact rapide en cartes horizontales au lieu du grand SVG de 1000px */}
-      <div className="sm:hidden mb-6">
-        <p className="font-mono text-[11px] uppercase tracking-wider text-mute mb-3">
-          {tr("Jalons du parcours · sélectionner", "Journey milestones · select")}
-        </p>
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {items.map((it) => {
-            const active = it.id === sel;
-            return (
-              <button
-                key={it.id}
-                onClick={() => setSel(it.id)}
-                className={`shrink-0 rounded-lg border px-3 py-2 text-left transition-colors ${
-                  active ? "border-ink bg-ink text-paper" : "border-line bg-paper text-ink"
-                }`}
-              >
-                <span className="block font-mono text-[9px] uppercase tracking-wider opacity-70">
-                  {ROWS.find((r) => r.key === it.row)?.name}
-                </span>
-                <span className="block text-xs font-semibold">{it.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Sur Desktop (sm:) : grand chronogramme interactif */}
-      <div className="hidden sm:block">
-        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2 font-mono text-[11px] tracking-[0.12em] text-mute uppercase">
+    <div className="hidden sm:block">
+      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2 font-mono text-[11px] tracking-[0.12em] text-mute uppercase">
           <span>{tr("Chronogramme · clic pour afficher, double-clic pour ouvrir", "Timing diagram · click to view, double-click to open")}</span>
           <span>
             {hover !== null ? <>Curseur B = <span className="text-ink">{fmt(hover)}</span> · Δ(A,B) = <span className="text-ink">{Math.round(hover - tToday) >= 0 ? "+" : ""}{Math.round(hover - tToday)} {mo}</span></> : tr("Survoler pour mesurer", "Hover to measure")}
@@ -496,6 +468,5 @@ export default function Circuit({ onMinitel }: { onMinitel?: () => void }) {
           </div>
         </div>
       </div>
-    </div>
   );
 }
