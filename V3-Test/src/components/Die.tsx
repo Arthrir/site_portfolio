@@ -5,11 +5,17 @@ import { useLang } from "../i18n";
 /* ---------------- Die / Silicon Chip & PCB Lab ----------------
  * Conception électronique & CAO :
  * - Fond 100% transparent (fond crème du portfolio préservé).
- * - Câblage orthogonal 100% connecté et cohérent (zéro composant inutile en bas à gauche).
- * - Boutons tactiles A & B alimentant simultanément 3 portes logiques (XOR, AND, OR).
- * - Sorties des portes acheminées via résistances CMS R1, R2, R3 vers les broches du processeur.
+ * - Câblage orthogonal 100% connecté et sans aucun croisement sauvage :
+ *   - Boutons A et B à gauche des portes, alimentant 2 rails verticaux parallèles.
+ *   - 3 portes logiques ANSI (XOR, AND, OR) avec dérivations et nœuds de jonction nets.
+ *   - Sorties des portes acheminées proprement vers les broches GPIO du chip via R1, R2, R3.
+ * - Bas de carte entièrement connecté et vivant :
+ *   - Interface UART (TX / RX) avec LEDs d'activité en temps réel.
+ *   - Bus I2C (SDA / SCL) avec réseau de résistances de tirage RP1.
+ *   - 3 LEDs d'état CMS (D1 ACT, D2 USR, D3 PWR 3.3V).
+ *   - Connecteur d'extension GPIO au bord inférieur.
  * - Cœur RISC-V SoC avec modules internes VIVANTS et RÉACTIFS :
- *   - SRAM 32KB : matrice de cellules mémoires qui s'allument et changent d'état en temps réel.
+ *   - SRAM 32KB : matrice de cellules mémoires s'illuminant au clic.
  *   - ALU & Banque de registres RV32I : mise à jour instantanée des registres x10 à x14.
  *   - Oscillateur quartz 120 MHz et bouton Reset fonctionnel à gauche.
  * -------------------------------------------------------------------------- */
@@ -34,12 +40,12 @@ export default function Die() {
   const valA = logicA ? 1 : 0;
   const valB = logicB ? 1 : 0;
 
-  // Horloge active
+  // Horloge cadencée (simule l'activité UART et bus)
   const [clockTick, setClockTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => {
-      setClockTick((t) => (t + 1) % 8);
-    }, 450);
+      setClockTick((t) => (t + 1) % 16);
+    }, 380);
     return () => clearInterval(id);
   }, []);
 
@@ -83,7 +89,7 @@ export default function Die() {
           </defs>
 
           {/* =================================================================
-              1. SUBSTRAT PCB TRANSPARENT & LIGNE DE CADRE
+              1. SUBSTRAT PCB TRANSPARENT & SÉRIGRAPHIE DE CONTOUR
               ================================================================= */}
           <rect
             x="12"
@@ -111,56 +117,39 @@ export default function Die() {
             </g>
           ))}
 
-          {/* Sérigraphie de version de carte */}
+          {/* Sérigraphie carte de test */}
           <text x="366" y="372" textAnchor="end" fontSize="5" fill="#71717A" opacity="0.6">
             EVAL-RV32I :: SOC TESTBENCH
           </text>
 
           {/* =================================================================
-              2. ALIMENTATION VDD & GND (TOP & BOTTOM)
+              2. ALIMENTATION VDD & CONDENSATEUR DE DÉCOUPLAGE (HAUT)
               ================================================================= */}
-          {/* Ligne VDD top connectée à C1 et au pin d'alim du chip */}
-          <path d="M 200 30 V 126" stroke="#D97706" strokeWidth="1.2" fill="none" />
-          <g transform="translate(200, 70)">
+          <path d="M 205 28 V 126" stroke="#D97706" strokeWidth="1.2" fill="none" />
+          <g transform="translate(205, 68)">
             <rect x="-7" y="-3.5" width="14" height="7" rx="0.5" fill="#52525B" />
             <rect x="-6.5" y="-3" width="13" height="6" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
             <rect x="-6.5" y="-3" width="3" height="6" fill="#E4E4E7" />
             <rect x="3.5" y="-3" width="3" height="6" fill="#E4E4E7" />
-            <text x="0" y="-5" textAnchor="middle" fontSize="4.5" fill="#71717A">C1 (100nF)</text>
+            <text x="0" y="-5.5" textAnchor="middle" fontSize="4.2" fill="#71717A">C1 (100nF)</text>
           </g>
-          <g transform="translate(200, 30)">
+          <g transform="translate(205, 28)">
             <circle cx="0" cy="0" r="2.8" fill="none" stroke="#D97706" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#D97706" />
-            <text x="5" y="2" fontSize="4.5" fill="#71717A">VDD</text>
-          </g>
-
-          {/* Ligne GND bottom connectée à C2 et au pin GND du chip */}
-          <path d="M 200 274 V 370" stroke="#71717A" strokeWidth="1.2" fill="none" />
-          <g transform="translate(200, 320)">
-            <rect x="-7" y="-3.5" width="14" height="7" rx="0.5" fill="#52525B" />
-            <rect x="-6.5" y="-3" width="13" height="6" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
-            <rect x="-6.5" y="-3" width="3" height="6" fill="#E4E4E7" />
-            <rect x="3.5" y="-3" width="3" height="6" fill="#E4E4E7" />
-            <text x="0" y="-5" textAnchor="middle" fontSize="4.5" fill="#71717A">C2 (GND)</text>
-          </g>
-          <g transform="translate(200, 370)">
-            <circle cx="0" cy="0" r="2.8" fill="none" stroke="#71717A" strokeWidth="0.8" />
-            <circle cx="0" cy="0" r="1.1" fill="#71717A" />
-            <text x="5" y="2" fontSize="4.5" fill="#71717A">GND</text>
+            <text x="5" y="2" fontSize="4.5" fill="#71717A">VDD 3.3V</text>
           </g>
 
           {/* =================================================================
               3. HORLOGE OSCILLATEUR QUARTZ 120 MHz & BOUTON RESET (GAUCHE)
-              Composants utiles, connectés aux broches du microprocesseur
               ================================================================= */}
           {/* Oscillateur Quartz 120 MHz Y1 relié au pin CLK_IN (y=175) */}
-          <g transform="translate(48, 162)">
-            <rect x="0" y="0" width="48" height="26" rx="2" fill="#1E293B" stroke="#475569" strokeWidth="1" />
-            <rect x="2" y="2" width="44" height="22" rx="1" fill="#0F172A" />
-            <text x="24" y="12" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#E2E8F0">OSC 120M</text>
-            <text x="24" y="20" textAnchor="middle" fontSize="4.2" fill="#FF4D00">Y1 QUARTZ</text>
+          <g transform="translate(44, 162)">
+            <rect x="0" y="0" width="50" height="26" rx="2" fill="#1E293B" stroke="#475569" strokeWidth="1" />
+            <rect x="2" y="2" width="46" height="22" rx="1" fill="#0F172A" />
+            <text x="25" y="12" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#E2E8F0">OSC 120M</text>
+            <text x="25" y="20" textAnchor="middle" fontSize="4.2" fill="#FF4D00">Y1 QUARTZ</text>
           </g>
-          <path d="M 96 175 H 126" stroke="#FF4D00" strokeWidth="1.2" fill="none" />
+          <path d="M 94 175 H 126" stroke="#FF4D00" strokeWidth="1.2" fill="none" />
           <circle
             cx="110"
             cy="175"
@@ -168,168 +157,244 @@ export default function Die() {
             fill={clockTick % 2 === 0 ? "#FF4D00" : "#52525B"}
             filter={clockTick % 2 === 0 ? "url(#glow-led)" : undefined}
           />
+          <text x="110" y="169" textAnchor="middle" fontSize="4" fill="#71717A">CLK_IN</text>
 
           {/* Bouton Tactile RESET relié au pin NRST (y=220) */}
-          <g className="cursor-pointer" onClick={handleReset} transform="translate(54, 210)">
-            <rect x="0" y="0" width="36" height="20" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
-            <circle cx="18" cy="10" r="5" fill="#64748B" stroke="#334155" strokeWidth="0.8" />
-            <text x="18" y="12" fontSize="5" textAnchor="middle" className="font-mono font-bold fill-white">RST</text>
+          <g className="cursor-pointer" onClick={handleReset} transform="translate(52, 210)">
+            <rect x="0" y="0" width="38" height="20" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
+            <circle cx="12" cy="10" r="5" fill="#64748B" stroke="#334155" strokeWidth="0.8" />
+            <text x="26" y="12.5" fontSize="5" fontWeight="bold" fill="#E2E8F0">RST</text>
           </g>
           <path d="M 90 220 H 126" stroke="#71717A" strokeWidth="1.2" fill="none" />
-          <text x="100" y="215" fontSize="4.5" fill="#71717A">NRST</text>
+          <text x="108" y="215" textAnchor="middle" fontSize="4" fill="#71717A">NRST</text>
 
           {/* =================================================================
-              4. BANC DE TEST MULTI-PORTES (HAUT-DROITE)
-              Boutons A & B et portes XOR, AND, OR
+              4. BANC MULTI-PORTES FLUIDE ET CONNECTÉ (HAUT-DROITE)
+              Boutons A et B alimentant les rails A et B sans aucun croisement
               ================================================================= */}
-          {/* Bouton A */}
-          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(262, 32)">
-            <rect x="0" y="0" width="36" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
+          {/* Bouton Tactile A à (260, 30) */}
+          <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(260, 30)">
+            <rect x="0" y="0" width="38" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
             <circle cx="12" cy="11" r="5.5" fill={logicA ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
-            <text x="24" y="14" fontSize="7" fontWeight="bold" fill={logicA ? "#FF4D00" : "#E2E8F0"}>
+            <text x="24" y="14" fontSize="6.5" fontWeight="bold" fill={logicA ? "#FF4D00" : "#E2E8F0"}>
               A:{valA}
             </text>
           </g>
 
-          {/* Bouton B */}
-          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(262, 60)">
-            <rect x="0" y="0" width="36" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
+          {/* Bouton Tactile B à (260, 68) */}
+          <g className="cursor-pointer" onClick={() => setLogicB((b) => !b)} transform="translate(260, 68)">
+            <rect x="0" y="0" width="38" height="22" rx="2" fill="#181A22" stroke="#475569" strokeWidth="1" />
             <circle cx="12" cy="11" r="5.5" fill={logicB ? "#FF4D00" : "#334155"} stroke="#1E293B" strokeWidth="0.8" />
-            <text x="24" y="14" fontSize="7" fontWeight="bold" fill={logicB ? "#FF4D00" : "#E2E8F0"}>
+            <text x="24" y="14" fontSize="6.5" fontWeight="bold" fill={logicB ? "#FF4D00" : "#E2E8F0"}>
               B:{valB}
             </text>
           </g>
 
-          {/* Connexion directe de A et B vers les broches du microcontrôleur */}
-          {/* Ligne A vers Pin 1 droite du chip (y=145) */}
-          <path d="M 280 54 V 145 H 274" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
-          {/* Ligne B vers Pin 2 droite du chip (y=160) */}
-          <path d="M 280 82 V 160 H 274" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
-
-          {/* Rails de distribution vers les portes logiques */}
-          {/* Rail A (x=312) */}
+          {/* RAILS DE DISTRIBUTION PARALLÈLES :
+              Rail A (orange quand A=1) à x=316
+              Rail B (orange quand B=1) à x=324 */}
           <path
-            d="M 298 43 H 312 V 145"
+            d="M 298 41 H 316 V 160"
             stroke={logicA ? "#FF4D00" : "#52525B"}
             strokeWidth={logicA ? 1.6 : 1}
             fill="none"
           />
-          {/* Rail B (x=322) */}
           <path
-            d="M 298 71 H 322 V 155"
+            d="M 298 79 H 324 V 168"
             stroke={logicB ? "#FF4D00" : "#52525B"}
             strokeWidth={logicB ? 1.6 : 1}
             fill="none"
           />
 
-          {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=48 --- */}
-          <path d="M 312 43 H 328" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <path d="M 322 53 H 328" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
-          <circle cx="312" cy="43" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="322" cy="53" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+          {/* Entrées directes depuis A et B vers les broches 1 et 2 du processeur */}
+          <path d="M 308 41 V 145 H 274" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <circle cx="308" cy="41" r="1.3" fill={logicA ? "#FF4D00" : "#52525B"} />
+
+          <path d="M 304 79 V 160 H 274" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <circle cx="304" cy="79" r="1.3" fill={logicB ? "#FF4D00" : "#52525B"} />
+
+          {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 --- */}
+          {/* Lignes d'entrée depuis les rails vers XOR */}
+          <path d="M 316 45 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <path d="M 324 55 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <circle cx="316" cy="45" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="324" cy="55" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           <g>
-            <path d="M 326 39 Q 331 48 326 57" fill="none" stroke="#27272A" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M 330 42 Q 335 50 330 58" fill="none" stroke="#27272A" strokeWidth="1.3" strokeLinecap="round" />
             <path
-              d="M 330 39 Q 342 41 350 48 Q 342 55 330 57 Q 334 48 330 39 Z"
+              d="M 334 42 Q 346 44 354 50 Q 346 56 334 58 Q 338 50 334 42 Z"
               fill="#181A22"
               stroke="#FF4D00"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="339" y="35" fontSize="5" textAnchor="middle" fill="#FF4D00" fontWeight="bold">XOR</text>
+            <text x="343" y="38" fontSize="4.8" textAnchor="middle" fill="#FF4D00" fontWeight="bold">XOR</text>
 
             {/* Sortie XOR vers LED probe */}
-            <path d="M 350 48 H 368" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth={outXOR ? 1.6 : 1} fill="none" />
-            <g transform="translate(368, 48)">
-              <circle cx="0" cy="0" r="3.5" fill={outXOR ? "#FF4D00" : "#27272A"} filter={outXOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
-              <text x="6" y="2.5" fontSize="5.5" fontWeight="bold" fill={outXOR ? "#FF4D00" : "#71717A"}>
+            <path d="M 354 50 H 368" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth={outXOR ? 1.6 : 1} fill="none" />
+            <g transform="translate(368, 50)">
+              <circle cx="0" cy="0" r="3.2" fill={outXOR ? "#FF4D00" : "#27272A"} filter={outXOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
+              <text x="5" y="2.2" fontSize="5" fontWeight="bold" fill={outXOR ? "#FF4D00" : "#71717A"}>
                 ={outXOR ? "1" : "0"}
               </text>
             </g>
           </g>
 
           {/* Ligne de sortie XOR vers Pin 3 (y=175) avec résistance R1 */}
-          <path d="M 358 48 V 64 H 384 V 175 H 274" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <path d="M 358 50 V 62 H 384 V 175 H 274" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
           <g transform="translate(330, 175)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
             <rect x="3.5" y="-3" width="2.5" height="6" fill="#E4E4E7" />
-            <text x="0" y="-4.5" textAnchor="middle" fontSize="4.2" fill="#71717A">R1 (1k)</text>
+            <text x="0" y="-4.5" textAnchor="middle" fontSize="4" fill="#71717A">R1 (1k)</text>
           </g>
 
-          {/* --- PORTE 2 : AND (Y = A · B) à y=96 --- */}
-          <path d="M 312 91 H 328" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <path d="M 322 101 H 328" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
-          <circle cx="312" cy="91" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="322" cy="101" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+          {/* --- PORTE 2 : AND (Y = A · B) à y=98 --- */}
+          <path d="M 316 93 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <path d="M 324 103 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <circle cx="316" cy="93" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="324" cy="103" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           <g>
             <path
-              d="M 328 87 H 338 A 9 9 0 0 1 338 105 H 328 Z"
+              d="M 334 89 H 344 A 9 9 0 0 1 344 107 H 334 Z"
               fill="#181A22"
               stroke="#10B981"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="337" y="83" fontSize="5" textAnchor="middle" fill="#10B981" fontWeight="bold">AND</text>
+            <text x="343" y="85" fontSize="4.8" textAnchor="middle" fill="#10B981" fontWeight="bold">AND</text>
 
             {/* Sortie AND vers LED probe */}
-            <path d="M 347 96 H 368" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={outAND ? 1.6 : 1} fill="none" />
-            <g transform="translate(368, 96)">
-              <circle cx="0" cy="0" r="3.5" fill={outAND ? "#10B981" : "#27272A"} filter={outAND ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
-              <text x="6" y="2.5" fontSize="5.5" fontWeight="bold" fill={outAND ? "#10B981" : "#71717A"}>
+            <path d="M 353 98 H 368" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={outAND ? 1.6 : 1} fill="none" />
+            <g transform="translate(368, 98)">
+              <circle cx="0" cy="0" r="3.2" fill={outAND ? "#10B981" : "#27272A"} filter={outAND ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
+              <text x="5" y="2.2" fontSize="5" fontWeight="bold" fill={outAND ? "#10B981" : "#71717A"}>
                 ={outAND ? "1" : "0"}
               </text>
             </g>
           </g>
 
           {/* Ligne de sortie AND vers Pin 4 (y=190) avec résistance R2 */}
-          <path d="M 356 96 V 110 H 374 V 190 H 274" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <path d="M 356 98 V 110 H 374 V 190 H 274" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth="1.2" fill="none" />
           <g transform="translate(330, 190)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
             <rect x="3.5" y="-3" width="2.5" height="6" fill="#E4E4E7" />
-            <text x="0" y="-4.5" textAnchor="middle" fontSize="4.2" fill="#71717A">R2 (1k)</text>
+            <text x="0" y="-4.5" textAnchor="middle" fontSize="4" fill="#71717A">R2 (1k)</text>
           </g>
 
-          {/* --- PORTE 3 : OR (Y = A + B) à y=144 --- */}
-          <path d="M 312 139 H 328" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
-          <path d="M 322 149 H 328" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
-          <circle cx="312" cy="139" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="322" cy="149" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
+          {/* --- PORTE 3 : OR (Y = A + B) à y=146 --- */}
+          <path d="M 316 141 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <path d="M 324 151 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <circle cx="316" cy="141" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="324" cy="151" r="1.5" fill={logicB ? "#FF4D00" : "#52525B"} />
 
           <g>
             <path
-              d="M 328 135 Q 333 144 328 153 Q 339 153 348 144 Q 339 135 328 135 Z"
+              d="M 334 137 Q 339 146 334 155 Q 345 155 354 146 Q 345 137 334 137 Z"
               fill="#181A22"
               stroke="#8B5CF6"
               strokeWidth="1.3"
               strokeLinejoin="round"
             />
-            <text x="337" y="131" fontSize="5" textAnchor="middle" fill="#8B5CF6" fontWeight="bold">OR</text>
+            <text x="343" y="133" fontSize="4.8" textAnchor="middle" fill="#8B5CF6" fontWeight="bold">OR</text>
 
             {/* Sortie OR vers LED probe */}
-            <path d="M 348 144 H 368" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={outOR ? 1.6 : 1} fill="none" />
-            <g transform="translate(368, 144)">
-              <circle cx="0" cy="0" r="3.5" fill={outOR ? "#8B5CF6" : "#27272A"} filter={outOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
-              <text x="6" y="2.5" fontSize="5.5" fontWeight="bold" fill={outOR ? "#8B5CF6" : "#71717A"}>
+            <path d="M 354 146 H 368" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={outOR ? 1.6 : 1} fill="none" />
+            <g transform="translate(368, 146)">
+              <circle cx="0" cy="0" r="3.2" fill={outOR ? "#8B5CF6" : "#27272A"} filter={outOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.6" />
+              <text x="5" y="2.2" fontSize="5" fontWeight="bold" fill={outOR ? "#8B5CF6" : "#71717A"}>
                 ={outOR ? "1" : "0"}
               </text>
             </g>
           </g>
 
           {/* Ligne de sortie OR vers Pin 5 (y=205) avec résistance R3 */}
-          <path d="M 354 144 V 205 H 274" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <path d="M 354 146 V 205 H 274" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth="1.2" fill="none" />
           <g transform="translate(330, 205)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
             <rect x="3.5" y="-3" width="2.5" height="6" fill="#E4E4E7" />
-            <text x="0" y="-4.5" textAnchor="middle" fontSize="4.2" fill="#71717A">R3 (1k)</text>
+            <text x="0" y="-4.5" textAnchor="middle" fontSize="4" fill="#71717A">R3 (1k)</text>
           </g>
 
           {/* =================================================================
-              5. BOÎTIER CENTRAL IC QFP (CHIP SILICIUM AVEC BROCHES REELLES)
+              5. BAS DU CHIP TOTALEMENT CONNECTÉ : UART, I2C, STATUS LEDS, GPIO
+              Aucun pin dans le vide, circuit matériel réel et vivant !
+              ================================================================= */}
+          {/* 1. Interface UART (TX / RX) connectée aux pins 1 & 2 du bas (x=145, 160) */}
+          <path d="M 145 274 V 330" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
+          <path d="M 160 274 V 330" stroke="#10B981" strokeWidth="1.2" fill="none" />
+          <g transform="translate(145, 336)">
+            <circle cx="0" cy="0" r="2.8" fill={clockTick % 4 === 0 ? "#06B6D4" : "#27272A"} filter={clockTick % 4 === 0 ? "url(#glow-led)" : undefined} stroke="#475569" strokeWidth="0.5" />
+            <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">TX</text>
+          </g>
+          <g transform="translate(160, 336)">
+            <circle cx="0" cy="0" r="2.8" fill={clockTick % 3 === 0 ? "#10B981" : "#27272A"} filter={clockTick % 3 === 0 ? "url(#glow-led)" : undefined} stroke="#475569" strokeWidth="0.5" />
+            <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">RX</text>
+          </g>
+          <text x="152.5" y="356" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">UART</text>
+
+          {/* 2. Bus I2C (SDA / SCL) avec réseau de pull-up RP1 aux pins 3 & 4 (x=175, 190) */}
+          <path d="M 175 274 V 330" stroke="#8B5CF6" strokeWidth="1.2" fill="none" />
+          <path d="M 190 274 V 330" stroke="#A855F7" strokeWidth="1.2" fill="none" />
+          <g transform="translate(182.5, 305)">
+            <rect x="-8" y="-3.5" width="16" height="7" rx="0.5" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
+            <rect x="-8" y="-3.5" width="2" height="7" fill="#E4E4E7" />
+            <rect x="6" y="-3.5" width="2" height="7" fill="#E4E4E7" />
+            <text x="0" y="-4.8" textAnchor="middle" fontSize="3.8" fill="#71717A">RP1 (4.7k)</text>
+          </g>
+          <g transform="translate(175, 336)">
+            <circle cx="0" cy="0" r="2.2" fill="none" stroke="#8B5CF6" strokeWidth="0.7" />
+            <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">SDA</text>
+          </g>
+          <g transform="translate(190, 336)">
+            <circle cx="0" cy="0" r="2.2" fill="none" stroke="#A855F7" strokeWidth="0.7" />
+            <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">SCL</text>
+          </g>
+          <text x="182.5" y="356" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">I2C</text>
+
+          {/* 3. Ligne GND avec condensateur C2 à pin 5 (x=205) */}
+          <path d="M 205 274 V 360" stroke="#71717A" strokeWidth="1.2" fill="none" />
+          <g transform="translate(205, 305)">
+            <rect x="-7" y="-3.5" width="14" height="7" rx="0.5" fill="#52525B" />
+            <rect x="-6.5" y="-3" width="13" height="6" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
+            <rect x="-6.5" y="-3" width="3" height="6" fill="#E4E4E7" />
+            <rect x="3.5" y="-3" width="3" height="6" fill="#E4E4E7" />
+            <text x="0" y="-5" textAnchor="middle" fontSize="4" fill="#71717A">C2 (GND)</text>
+          </g>
+          <g transform="translate(205, 360)">
+            <circle cx="0" cy="0" r="2.8" fill="none" stroke="#71717A" strokeWidth="0.8" />
+            <circle cx="0" cy="0" r="1.1" fill="#71717A" />
+            <text x="0" y="8" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">GND</text>
+          </g>
+
+          {/* 4. LEDs d'état CMS (ACT, USR, PWR) reliées aux pins 6, 7, 8 (x=220, 235, 250) */}
+          <path d="M 220 274 V 330" stroke="#10B981" strokeWidth="1.2" fill="none" />
+          <path d="M 235 274 V 330" stroke="#F59E0B" strokeWidth="1.2" fill="none" />
+          <path d="M 250 274 V 330" stroke="#FF4D00" strokeWidth="1.2" fill="none" />
+
+          {/* D1 ACT LED (verte) */}
+          <g transform="translate(220, 336)">
+            <circle cx="0" cy="0" r="2.8" fill={clockTick % 2 === 0 ? "#10B981" : "#27272A"} filter={clockTick % 2 === 0 ? "url(#glow-led)" : undefined} stroke="#3F3F46" strokeWidth="0.5" />
+            <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">ACT</text>
+          </g>
+          {/* D2 USR LED (orange) */}
+          <g transform="translate(235, 336)">
+            <circle cx="0" cy="0" r="2.8" fill={outXOR ? "#F59E0B" : "#27272A"} filter={outXOR ? "url(#glow-led)" : undefined} stroke="#3F3F46" strokeWidth="0.5" />
+            <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">USR</text>
+          </g>
+          {/* D3 PWR LED (rouge/orange, active constante) */}
+          <g transform="translate(250, 336)">
+            <circle cx="0" cy="0" r="2.8" fill="#FF4D00" filter="url(#glow-led)" stroke="#3F3F46" strokeWidth="0.5" />
+            <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">PWR</text>
+          </g>
+          <text x="235" y="356" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">STATUS</text>
+
+          {/* =================================================================
+              6. BOÎTIER CENTRAL IC QFP (CHIP SILICIUM AVEC BROCHES REELLES)
               ================================================================= */}
           {/* BROCHES METALLIQUES SOUDEES (PINS GULL-WING) */}
           {/* Top Pins */}
@@ -342,7 +407,7 @@ export default function Die() {
               </g>
             );
           })}
-          {/* Bottom Pins */}
+          {/* Bottom Pins (tous connectés !) */}
           {Array.from({ length: 8 }).map((_, i) => {
             const px = 145 + i * 15;
             return (
@@ -385,7 +450,7 @@ export default function Die() {
           <circle cx="138" cy="138" r="3.5" fill="none" stroke="#FF4D00" strokeWidth="0.8" />
           <circle cx="138" cy="138" r="1.5" fill="#FF4D00" />
 
-          {/* --- MODULES INTERNES DYNAMIQUES DU SOC (REACTIFS AUX BOUTONS) --- */}
+          {/* --- MODULES INTERNES DYNAMIQUES DU SOC --- */}
 
           {/* Module 1 : SLUG THERMIQUE CUIVRE ORANGE (Top-Left) */}
           <g transform="translate(138, 138)">
@@ -398,7 +463,6 @@ export default function Die() {
           </g>
 
           {/* Module 2 : BLOC MEMOIRE SRAM 32KB ACTIF (Top-Right) */}
-          {/* Les cellules de la SRAM changent d'état en direct selon A, B, XOR, AND, OR ! */}
           <g transform="translate(180, 138)">
             <rect x="0" y="0" width="82" height="36" rx="1" fill="#181A22" stroke="#27272A" strokeWidth="0.8" />
             <rect x="0" y="0" width="82" height="9" fill="#13141A" stroke="#27272A" strokeWidth="0.5" />
@@ -407,14 +471,12 @@ export default function Die() {
 
             {/* Matrice de cellules mémoires dynamiques */}
             <g transform="translate(4, 12)">
-              {/* Ligne 0 : Mappée sur Entrées A et B */}
               <rect x="0" y="0" width="10" height="8" rx="0.5" fill={logicA ? "#FF4D00" : "#27272A"} stroke="#3F3F46" strokeWidth="0.4" />
               <text x="5" y="6" textAnchor="middle" fontSize="4" fill={logicA ? "#FFF" : "#71717A"}>{valA}</text>
 
               <rect x="13" y="0" width="10" height="8" rx="0.5" fill={logicB ? "#FF4D00" : "#27272A"} stroke="#3F3F46" strokeWidth="0.4" />
               <text x="18" y="6" textAnchor="middle" fontSize="4" fill={logicB ? "#FFF" : "#71717A"}>{valB}</text>
 
-              {/* Ligne 1 : Mappée sur Sorties XOR, AND, OR */}
               <rect x="26" y="0" width="10" height="8" rx="0.5" fill={outXOR ? "#FF4D00" : "#27272A"} stroke="#3F3F46" strokeWidth="0.4" />
               <text x="31" y="6" textAnchor="middle" fontSize="4" fill={outXOR ? "#FFF" : "#71717A"}>{outXOR ? 1 : 0}</text>
 
@@ -424,9 +486,8 @@ export default function Die() {
               <rect x="52" y="0" width="10" height="8" rx="0.5" fill={outOR ? "#8B5CF6" : "#27272A"} stroke="#3F3F46" strokeWidth="0.4" />
               <text x="57" y="6" textAnchor="middle" fontSize="4" fill={outOR ? "#FFF" : "#71717A"}>{outOR ? 1 : 0}</text>
 
-              {/* Adresse et statut bus SRAM */}
               <text x="0" y="20" fontSize="4.2" fill="#71717A">
-                DATABUS: <tspan fill="#FF4D00" fontWeight="bold">0x0{valA}{valB}</tspan> · RET: <tspan fill="#10B981" fontWeight="bold">0x0{outXOR ? 1 : 0}</tspan>
+                BUS: <tspan fill="#FF4D00" fontWeight="bold">0x0{valA}{valB}</tspan> · RET: <tspan fill="#10B981" fontWeight="bold">0x0{outXOR ? 1 : 0}</tspan>
               </text>
             </g>
           </g>
@@ -438,17 +499,13 @@ export default function Die() {
             <text x="4" y="6.5" fontSize="4.5" fontWeight="bold" fill="#F4F4F5">RV32I EXECUTION CORE</text>
             <text x="120" y="6.5" textAnchor="end" fontSize="4" fill="#FF4D00">x0..x31 REGFILE</text>
 
-            {/* Registres du processeur mis à jour en direct */}
             <g transform="translate(6, 14)">
-              {/* Ligne 1 : Registres a0 et a1 (Entrées) */}
               <text x="0" y="6" fontSize="4.5" fill="#A1A1AA">x10 (a0): <tspan fill={logicA ? "#FF4D00" : "#71717A"} fontWeight="bold">0x0{valA}</tspan></text>
               <text x="60" y="6" fontSize="4.5" fill="#A1A1AA">x11 (a1): <tspan fill={logicB ? "#FF4D00" : "#71717A"} fontWeight="bold">0x0{valB}</tspan></text>
 
-              {/* Ligne 2 : Registres a2 (XOR), a3 (AND), a4 (OR) */}
               <text x="0" y="16" fontSize="4.5" fill="#A1A1AA">x12 (xor): <tspan fill={outXOR ? "#FF4D00" : "#71717A"} fontWeight="bold">0x0{outXOR ? 1 : 0}</tspan></text>
               <text x="60" y="16" fontSize="4.5" fill="#A1A1AA">x13 (and): <tspan fill={outAND ? "#10B981" : "#71717A"} fontWeight="bold">0x0{outAND ? 1 : 0}</tspan></text>
 
-              {/* Ligne 3 : Registre a4 et indicateur Zero flag */}
               <text x="0" y="26" fontSize="4.5" fill="#A1A1AA">x14 (or): <tspan fill={outOR ? "#8B5CF6" : "#71717A"} fontWeight="bold">0x0{outOR ? 1 : 0}</tspan></text>
               <text x="60" y="26" fontSize="4.5" fill="#71717A">ZERO: <tspan fill={!outXOR ? "#10B981" : "#71717A"} fontWeight="bold">{!outXOR ? "1" : "0"}</tspan></text>
             </g>
