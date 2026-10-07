@@ -6,11 +6,11 @@ type Ctx = { lang: Lang; setLang: (l: Lang) => void; tr: <T>(fr: T, en: T) => T 
 
 const META: Record<Lang, { title: string; desc: string }> = {
   fr: {
-    title: "Arthur Doradoux — Ingénieur microélectronique · Product Manager",
+    title: "Arthur Doradoux",
     desc: "Portfolio d'Arthur Doradoux, ingénieur Mines Saint-Étienne (ISMIN) × Politecnico di Milano, à la recherche d'un stage de fin d'études Product Owner / Product Manager à partir d'avril 2027.",
   },
   en: {
-    title: "Arthur Doradoux — Microelectronics Engineer · Product Manager",
+    title: "Arthur Doradoux",
     desc: "Portfolio of Arthur Doradoux, engineering student at Mines Saint-Étienne (ISMIN) × Politecnico di Milano, seeking a 5+ month Product Owner / Product Manager internship starting April 2027.",
   },
 };
