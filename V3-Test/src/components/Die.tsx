@@ -49,6 +49,17 @@ export default function Die() {
     return () => clearInterval(id);
   }, []);
 
+  // Message qui défile sur le mini écran OLED
+  const fullText = "SYS:OK · ARTHUR DX · EMBEDDED & FPGA · RV32I CORE ACTIVE · ";
+  const [scrollIdx, setScrollIdx] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setScrollIdx((s) => (s + 1) % fullText.length);
+    }, 280);
+    return () => clearInterval(id);
+  }, [fullText.length]);
+  const displayText = (fullText + fullText).slice(scrollIdx, scrollIdx + 15);
+
   // Action Reset
   const handleReset = () => {
     setLogicA(false);
@@ -124,20 +135,90 @@ export default function Die() {
 
           {/* =================================================================
               2. ALIMENTATION VDD & CONDENSATEUR DE DÉCOUPLAGE (HAUT)
+              + MODULE MINI ÉCRAN OLED I2C QUI DÉFILE (HAUT-DROITE PINS)
               ================================================================= */}
+          {/* Ligne VDD 3.3V vers Pin 5 du haut (x=205) */}
           <path d="M 205 28 V 126" stroke="#D97706" strokeWidth="1.2" fill="none" />
-          <g transform="translate(205, 68)">
-            <rect x="-7" y="-3.5" width="14" height="7" rx="0.5" fill="#52525B" />
-            <rect x="-6.5" y="-3" width="13" height="6" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
-            <rect x="-6.5" y="-3" width="3" height="6" fill="#E4E4E7" />
-            <rect x="3.5" y="-3" width="3" height="6" fill="#E4E4E7" />
-            <text x="0" y="-5.5" textAnchor="middle" fontSize="4.2" fill="#71717A">C1 (100nF)</text>
+          <g transform="translate(205, 58)">
+            <rect x="-3" y="-6" width="6" height="12" fill="#52525B" />
+            <rect x="-3" y="-5.5" width="6" height="11" fill="#1E293B" stroke="#09090B" strokeWidth="0.5" />
+            <rect x="-3" y="-5.5" width="6" height="2.5" fill="#E4E4E7" />
+            <rect x="-3" y="3" width="6" height="2.5" fill="#E4E4E7" />
+            <text x="-5" y="1" textAnchor="end" fontSize="3.8" fill="#71717A">C1</text>
           </g>
           <g transform="translate(205, 28)">
             <circle cx="0" cy="0" r="2.8" fill="none" stroke="#D97706" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#D97706" />
-            <text x="5" y="2" fontSize="4.5" fill="#71717A">VDD 3.3V</text>
+            <text x="5" y="2" fontSize="4.2" fill="#71717A">VDD 3.3V</text>
           </g>
+
+          {/* MINI ÉCRAN OLED SSD1306 (0.91" 128x32) BRANCHÉ SUR LE BUS I2C / GPIO EN HAUT */}
+          {/* Câblage depuis les pins du haut : Pin 1 (GND x=145), Pin 2 (VCC x=160), Pin 3 (SCL x=175), Pin 4 (SDA x=190) */}
+          <path d="M 145 126 V 76" stroke="#71717A" strokeWidth="1" fill="none" />
+          <path d="M 160 126 V 76" stroke="#D97706" strokeWidth="1" fill="none" />
+          <path d="M 175 126 V 76" stroke="#A855F7" strokeWidth="1" fill="none" />
+          <path d="M 190 126 V 76" stroke="#8B5CF6" strokeWidth="1" fill="none" />
+
+          {/* Module OLED à (120, 24) */}
+          <g transform="translate(120, 24)">
+            {/* PCB de support bleu foncé/noir */}
+            <rect x="0" y="0" width="76" height="52" rx="2" fill="#0B132B" stroke="#334155" strokeWidth="1" />
+            {/* Écran en verre noir */}
+            <rect x="4" y="6" width="68" height="26" rx="1" fill="#020617" stroke="#1E293B" strokeWidth="0.8" />
+
+            {/* Matrice OLED avec texte qui défile en direct */}
+            <g clipPath="url(#oled-clip)">
+              <defs>
+                <clipPath id="oled-clip">
+                  <rect x="5" y="7" width="66" height="24" rx="1" />
+                </clipPath>
+              </defs>
+              {/* Ligne 1 : Titre fixe */}
+              <text x="8" y="14" fontSize="4.2" fill="#38BDF8" fontFamily="monospace" fontWeight="bold">
+                OLED :: I2C 0x3C
+              </text>
+              {/* Ligne 2 : Message défilant basé sur l'état */}
+              <text x="8" y="22" fontSize="4.6" fill="#00FFCC" fontFamily="monospace" fontWeight="bold">
+                {displayText}
+              </text>
+              {/* Ligne 3 : Télémétrie en temps réel */}
+              <text x="8" y="28" fontSize="3.8" fill="#94A3B8" fontFamily="monospace">
+                CLK:{120 + (clockTick % 3)}MHz · PWR:OK
+              </text>
+            </g>
+
+            {/* Broches d'en-tête soudées (GND, VCC, SCL, SDA) alignées avec les pistes */}
+            <g transform="translate(25, 46)">
+              {/* Pin 1 (145 absolu = 120 + 25) */}
+              <circle cx="0" cy="0" r="2.2" fill="#181A22" stroke="#D4D4D8" strokeWidth="0.6" />
+              <text x="0" y="-3.5" textAnchor="middle" fontSize="3.2" fill="#71717A">GND</text>
+
+              {/* Pin 2 (160 absolu = 120 + 40) */}
+              <circle cx="15" cy="0" r="2.2" fill="#181A22" stroke="#D4D4D8" strokeWidth="0.6" />
+              <text x="15" y="-3.5" textAnchor="middle" fontSize="3.2" fill="#D97706">VCC</text>
+
+              {/* Pin 3 (175 absolu = 120 + 55) */}
+              <circle cx="30" cy="0" r="2.2" fill="#181A22" stroke="#D4D4D8" strokeWidth="0.6" />
+              <text x="30" y="-3.5" textAnchor="middle" fontSize="3.2" fill="#A855F7">SCL</text>
+
+              {/* Pin 4 (190 absolu = 120 + 70) */}
+              <circle cx="45" cy="0" r="2.2" fill="#181A22" stroke="#D4D4D8" strokeWidth="0.6" />
+              <text x="45" y="-3.5" textAnchor="middle" fontSize="3.2" fill="#8B5CF6">SDA</text>
+            </g>
+          </g>
+
+          {/* Broches 6, 7, 8 du haut (x=220, 235, 250) reliées à des points de test GPIO TP1, TP2, TP3 */}
+          <path d="M 220 126 V 82" stroke="#71717A" strokeWidth="1" fill="none" />
+          <circle cx="220" cy="80" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
+          <text x="220" y="74" textAnchor="middle" fontSize="3.5" fill="#71717A">TP1</text>
+
+          <path d="M 235 126 V 82" stroke="#71717A" strokeWidth="1" fill="none" />
+          <circle cx="235" cy="80" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
+          <text x="235" y="74" textAnchor="middle" fontSize="3.5" fill="#71717A">TP2</text>
+
+          <path d="M 250 126 V 82" stroke="#71717A" strokeWidth="1" fill="none" />
+          <circle cx="250" cy="80" r="2" fill="none" stroke="#71717A" strokeWidth="0.8" />
+          <text x="250" y="74" textAnchor="middle" fontSize="3.5" fill="#71717A">TP3</text>
 
           {/* =================================================================
               3. HORLOGE OSCILLATEUR QUARTZ 120 MHz & BOUTON RESET (GAUCHE)
@@ -194,13 +275,13 @@ export default function Die() {
               Sortie A part de (296, 40) -> Rail A (orange quand A=1) à x=316
               Sortie B part de (296, 80) -> Rail B (orange quand B=1) à x=324 */}
           <path
-            d="M 296 40 H 316 V 160"
+            d="M 296 40 H 316 V 141"
             stroke={logicA ? "#FF4D00" : "#52525B"}
             strokeWidth={logicA ? 1.6 : 1}
             fill="none"
           />
           <path
-            d="M 296 80 H 324 V 168"
+            d="M 296 80 H 324 V 151"
             stroke={logicB ? "#FF4D00" : "#52525B"}
             strokeWidth={logicB ? 1.6 : 1}
             fill="none"
@@ -215,7 +296,7 @@ export default function Die() {
 
           {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 --- */}
           {/* Entrée A du XOR : couche supérieure (ligne continue depuis x=316) */}
-          <path d="M 316 45 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
+          <path d="M 316 45 H 332" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
           <circle cx="316" cy="45" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
 
           {/* Entrée B du XOR : VIAS + PISTE EN POINTILLÉS (couche interne / sous-face du PCB) */}
@@ -226,24 +307,23 @@ export default function Die() {
           </g>
           {/* Piste en pointillés représentant le routage en couche interne */}
           <path
-            d="M 324 55 H 331"
+            d="M 324 55 H 330"
             stroke={logicB ? "#FF4D00" : "#52525B"}
             strokeWidth={logicB ? 1.5 : 1}
             strokeDasharray="2.5 1.5"
             fill="none"
           />
-          {/* Via de remontée à la surface juste avant le pin de la XOR (331, 55) */}
-          <g transform="translate(331, 55)">
+          {/* Via de remontée à la surface juste sur l'arc d'entrée de la XOR (330, 55) */}
+          <g transform="translate(330, 55)">
             <circle cx="0" cy="0" r="2" fill="none" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth="0.7" />
             <circle cx="0" cy="0" r="0.8" fill={logicB ? "#FF4D00" : "#27272A"} />
           </g>
-          {/* Court segment de surface vers la porte (331 à 334) */}
-          <path d="M 331 55 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
+          <path d="M 330 55 H 332" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
 
           <g>
-            <path d="M 330 42 Q 335 50 330 58" fill="none" stroke="#27272A" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M 328 42 Q 333 50 328 58" fill="none" stroke="#27272A" strokeWidth="1.3" strokeLinecap="round" />
             <path
-              d="M 334 42 Q 346 44 354 50 Q 346 56 334 58 Q 338 50 334 42 Z"
+              d="M 332 42 Q 346 44 354 50 Q 346 56 332 58 Q 337 50 332 42 Z"
               fill="#181A22"
               stroke="#FF4D00"
               strokeWidth="1.3"
@@ -262,7 +342,7 @@ export default function Die() {
           </g>
 
           {/* Ligne de sortie XOR vers Pin 3 (y=175) avec résistance R1 */}
-          <path d="M 358 50 V 62 H 384 V 175 H 274" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <path d="M 358 50 V 62 H 384 V 175 H 274" stroke={outXOR ? "#FF4D00" : "#52525B"} strokeWidth={1.2} fill="none" />
           <g transform="translate(330, 175)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
@@ -297,7 +377,7 @@ export default function Die() {
           </g>
 
           {/* Ligne de sortie AND vers Pin 4 (y=190) avec résistance R2 */}
-          <path d="M 356 98 V 110 H 374 V 190 H 274" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <path d="M 356 98 V 110 H 374 V 190 H 274" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={1.2} fill="none" />
           <g transform="translate(330, 190)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
@@ -306,6 +386,7 @@ export default function Die() {
           </g>
 
           {/* --- PORTE 3 : OR (Y = A + B) à y=146 --- */}
+          {/* Lignes d'entrée depuis les rails verticaux x=316 et x=324 se terminant exactement sur l'arc arrière à x=334 */}
           <path d="M 316 141 H 334" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.5 : 1} fill="none" />
           <path d="M 324 151 H 334" stroke={logicB ? "#FF4D00" : "#52525B"} strokeWidth={logicB ? 1.5 : 1} fill="none" />
           <circle cx="316" cy="141" r="1.5" fill={logicA ? "#FF4D00" : "#52525B"} />
@@ -332,7 +413,7 @@ export default function Die() {
           </g>
 
           {/* Ligne de sortie OR vers Pin 5 (y=205) avec résistance R3 */}
-          <path d="M 354 146 V 205 H 274" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth="1.2" fill="none" />
+          <path d="M 354 146 H 366 V 205 H 274" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth="1.2" fill="none" />
           <g transform="translate(330, 205)">
             <rect x="-6" y="-3" width="12" height="6" fill="#181A22" stroke="#3F3F46" strokeWidth="0.6" />
             <rect x="-6" y="-3" width="2.5" height="6" fill="#E4E4E7" />
