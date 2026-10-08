@@ -28,6 +28,12 @@ try {
     fs.rmSync(publicV3Dir, { recursive: true, force: true });
   }
   fs.cpSync(path.join(v3Dir, 'dist'), publicV3Dir, { recursive: true });
+  // Also sync media to root public/media if present in V3 dist
+  const distMedia = path.join(v3Dir, 'dist', 'media');
+  const rootMedia = path.join(rootDir, 'public', 'media');
+  if (fs.existsSync(distMedia)) {
+    fs.cpSync(distMedia, rootMedia, { recursive: true });
+  }
 } catch (err) {
   console.error('❌ Failed to copy V3 dist to public/v3:', err);
   process.exit(1);

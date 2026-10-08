@@ -797,6 +797,14 @@ function Stacked({ ghost, children, n, dark = false }: { ghost: string; children
   );
 }
 
+const asset = (p?: string): string => {
+  if (!p) return "";
+  if (p.startsWith("http://") || p.startsWith("https://") || p.startsWith("data:")) return p;
+  const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+  const clean = p.replace(/^\//, "");
+  return `${base}/${clean}`;
+};
+
 /* ---------------- Detail sheet ---------------- */
 type Detail = { kicker: string; title: string; meta?: string; logo?: string; lead?: string; points: string[]; tags?: string[]; img?: string[]; links?: { l: string; h: string }[]; with?: string };
 function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
@@ -884,13 +892,21 @@ function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
               </button>
             </div>
             <div className="px-8 py-12">
-              {d.logo && <img src={d.logo} alt="" className="mb-8 size-14 rounded-lg bg-white object-contain p-2 ring-1 ring-line" />}
+              {d.logo && <img src={asset(d.logo)} alt="" className="mb-8 size-14 rounded-lg bg-white object-contain p-2 ring-1 ring-line" />}
               <motion.h2 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6, ease }} className="text-4xl leading-[1] font-semibold tracking-[-0.035em] md:text-5xl">{d.title}</motion.h2>
               {d.meta && <p className="mt-4 font-mono text-[11px] tracking-wider text-mute uppercase">{d.meta}</p>}
               {d.lead && <p className="mt-8 text-xl leading-snug">{d.lead}</p>}
               {d.img && d.img.length > 0 && (
-                <div className="mt-10 grid gap-2">
-                  {d.img.map((src) => <img key={src} src={src} alt="" className="w-full border border-line object-cover" />)}
+                <div className="mt-10 grid gap-3">
+                  {d.img.map((src) => (
+                    <img
+                      key={src}
+                      src={asset(src)}
+                      alt=""
+                      onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
+                      className="w-full border border-line object-cover rounded-lg"
+                    />
+                  ))}
                 </div>
               )}
               <div className="mt-10 border-t border-ink pt-6">
@@ -1725,11 +1741,11 @@ function Page() {
                 <h3 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">{tr("Formation & Écoles.", "Education & Schools.")}</h3>
               </div>
             </div>
-            <div className="max-w-md mt-4 md:mt-0 text-left">
-              <p className="text-sm text-mute">
+            <div className="max-w-2xl mt-4 md:mt-0 text-left">
+              <p className="text-sm md:text-[15px] leading-relaxed text-mute">
                 {tr("Une triple culture : la rigueur scientifique des prépas, la profondeur microélectronique & logicielle des Mines, et le design / ergonomie du Polimi.", "A triple foundation: scientific rigor from preparatory classes, microelectronics & software depth from Mines, and design / ergonomics from Polimi.")}
               </p>
-              <p className="hidden sm:block mt-1 font-mono text-[11px] text-signal/90">
+              <p className="hidden sm:block mt-1.5 font-mono text-[11px] text-signal/90">
                 {tr("Cliquez pour déplier · Double-cliquez pour situer sur le chronogramme ↑", "Click to expand · Double-click to highlight on timeline ↑")}
               </p>
             </div>
