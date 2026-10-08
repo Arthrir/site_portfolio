@@ -16,21 +16,12 @@ const PASSIONS: Loc<{ k: string; t: string; d: string }>[] = [
     }
   },
   {
-    k: "Esport",
-    t: "Scène compétitive & Vitality",
-    d: "Plus qu'un loisir : une culture de la performance mentale sous tension, de la communication d'équipe et du clutch. Grand supporter de Team Vitality, j'ai aussi organisé des tournois LAN pour MINITEL pour faire vivre la dimension événementielle et technique de l'intérieur.",
+    k: "Compétition",
+    t: "Sport & Esport",
+    d: "De l'effort physique brut (cyclisme, running, sports de combat, judo) à l'arène compétitive sur écran (supporter passionné de Team Vitality, organisation des tournois MINITEL). Qu'il s'agisse d'encaisser la fatigue sur un col ou de garder son sang-froid dans un clutch sous haute pression, je recherche la même intensité : la discipline, la clarté stratégique et le dépassement de soi.",
     en: {
-      t: "Competitive Esport & Vitality",
-      d: "More than gaming: high-pressure mental resilience, team communication and clutch decision-making. A dedicated Team Vitality fan, I also organized grassroots LAN tournaments for MINITEL to experience esports event operations firsthand."
-    }
-  },
-  {
-    k: "Sport",
-    t: "Discipline & dépassement",
-    d: "Cyclisme, running, sports de combat, judo. L'effort physique exigeant est mon équilibre indispensable : il forge la persévérance, la lucidité face à la fatigue et la volonté constante de repousser mes propres limites.",
-    en: {
-      t: "Discipline & Grit",
-      d: "Cycling, running, combat sports, judo. Demanding physical exertion is my daily anchor: it builds resilience, mental clarity under fatigue, and an ongoing drive to push personal boundaries."
+      t: "Sport & Esport",
+      d: "From raw physical exertion (cycling, running, combat sports, judo) to the digital competitive arena (passionate Team Vitality fan, organizer of MINITEL LAN tournaments). Whether enduring fatigue on long climbs or keeping absolute composure in high-stakes clutch moments, I seek the same drive: rigorous discipline, strategic clarity, and pushing personal limits."
     }
   },
   {
@@ -39,7 +30,7 @@ const PASSIONS: Loc<{ k: string; t: string; d: string }>[] = [
     d: "Passionné par l'actualité technologique, les semi-conducteurs, l'IA et les marchés financiers. Je scrute en continu comment l'innovation matérielle et logicielle bouleverse les dynamiques industrielles, les valorisations et les modèles économiques mondiaux.",
     en: {
       t: "Tech, Markets & Finance",
-      d: "Deeply interested in tech news, semiconductors, AI breakthroughs and financial markets. Constantly tracking how hardware and software disruption reshapes industrial value chains, company valuations and global economics."
+      d: "Deeply interested in tech news, semiconductors, AI breakthroughs, and financial markets. Constantly tracking how hardware and software disruption reshapes industrial value chains, company valuations, and global economics."
     }
   },
 ];
@@ -139,7 +130,7 @@ export default function Passions({ Label }: { Label: (p: { children: React.React
   const dest = dests.find((d) => d.key === destKey)!;
   return (
     <>
-      <div className="grid gap-px bg-ink/15 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-px bg-ink/15 md:grid-cols-3">
         {PASSIONS.map((raw) => loc(raw, lang)).map((p, i) => (
           <motion.article key={p.k} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease, delay: i * 0.08 }} className="group bg-paper p-8 flex flex-col justify-between">
             <div>
@@ -151,22 +142,37 @@ export default function Passions({ Label }: { Label: (p: { children: React.React
         ))}
       </div>
 
-      {/* Séparation éditoriale et introduction aux voyages */}
+      {/* Séparation éditoriale et introduction aux voyages (format grille 2 colonnes équilibrée) */}
       <div className="mt-20 border-t border-ink/15 pt-14">
-        <div className="max-w-3xl">
-          <div className="flex items-center gap-2">
-            <span className="size-2 rounded-full bg-signal" />
-            <Label className="text-signal">{tr("06.B · Mobilités & Cultures", "06.B · Mobility & Cultures")}</Label>
+        <div className="grid gap-8 lg:grid-cols-[1fr_1.3fr] lg:items-start">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="size-2 rounded-full bg-signal" />
+              <Label className="text-signal">{tr("06.B · Mobilités & Cultures", "06.B · Mobility & Cultures")}</Label>
+            </div>
+            <h3 className="mt-4 font-serif text-3xl italic tracking-tight sm:text-4xl text-ink">
+              {tr("Voyager, s'ouvrir aux cultures & observer le monde.", "Traveling, exploring cultures & observing the world.")}
+            </h3>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <span className="rounded border border-ink/15 bg-ink/5 px-2.5 py-1 font-mono text-[11px] text-mute uppercase tracking-wider">
+                {tr("6 pays cartographiés", "6 countries mapped")}
+              </span>
+              <span className="rounded border border-ink/15 bg-ink/5 px-2.5 py-1 font-mono text-[11px] text-mute uppercase tracking-wider">
+                {tr("3 continents", "3 continents")}
+              </span>
+              <span className="rounded border border-signal/30 bg-signal/5 px-2.5 py-1 font-mono text-[11px] text-signal uppercase tracking-wider">
+                {tr("Études, stages & famille", "Studies, internships & family")}
+              </span>
+            </div>
           </div>
-          <h3 className="mt-4 font-serif text-3xl italic tracking-tight sm:text-4xl text-ink">
-            {tr("Voyager, s'ouvrir aux cultures & observer le monde.", "Traveling, exploring cultures & observing the world.")}
-          </h3>
-          <p className="mt-4 text-[15px] leading-relaxed text-mute sm:text-base">
-            {tr(
-              "J'ai eu l'opportunité de voyager dès le plus jeune âge, que ce soit en famille ou en autonomie pour mes études, stages et mobilités internationales (comme mon semestre académique à Milan). Découvrir d'autres cultures, comprendre comment d'autres sociétés pensent leurs villes, leurs objets du quotidien et leur technologie est une source d'inspiration permanente. La carte interactive ci-dessous retrace ces escales marquantes et permettra bientôt de découvrir mes photos personnelles et résumés de terrain.",
-              "I have been fortunate to travel from an early age—both with family and independently for academic exchanges (such as my semester at Politecnico di Milano) and internships. Exploring new cultures, understanding how different societies design their cities, everyday products and technologies is a constant source of inspiration. The interactive map below retraces these key journeys and will soon feature personal photography and field notes."
-            )}
-          </p>
+          <div className="border-l border-ink/15 pl-6 lg:pl-10">
+            <p className="text-[15px] leading-relaxed text-mute sm:text-base">
+              {tr(
+                "J'ai eu l'opportunité de voyager dès le plus jeune âge, que ce soit en famille ou en autonomie pour mes études, stages et mobilités internationales (comme mon semestre académique à Milan). Découvrir d'autres cultures, comprendre comment d'autres sociétés pensent leurs villes, leurs objets du quotidien et leur technologie est une source d'inspiration permanente. La carte interactive ci-dessous retrace ces escales marquantes et permettra bientôt de découvrir mes photos personnelles et résumés de terrain.",
+                "I have been fortunate to travel from an early age—both with family and independently for academic exchanges (such as my semester at Politecnico di Milano) and internships. Exploring new cultures, understanding how different societies design their cities, everyday products and technologies is a constant source of inspiration. The interactive map below retraces these key journeys and will soon feature personal photography and field notes."
+              )}
+            </p>
+          </div>
         </div>
       </div>
 
