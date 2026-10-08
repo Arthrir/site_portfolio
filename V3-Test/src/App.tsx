@@ -137,24 +137,25 @@ const PROJECTS: Project[] = [
     date: "2026",
     d: "Fév - Mar 2026",
     cat: ["IA", "Hardware"],
-    tags: ["STM32", "C", "Python"],
-    desc: "Maintenance prédictive industrielle exécutée localement sur microcontrôleur basse consommation.",
+    tags: ["STM32", "C", "Python", "X-CUBE-AI", "Keras"],
+    desc: "Maintenance prédictive industrielle : détection et classification de pannes machine sur microcontrôleur STM32.",
     points: [
-      "Entraînement et quantification d'un modèle de classification sous Python à partir de signaux vibratoires.",
-      "Portage et optimisation de l'inférence en langage C sur microcontrôleur STM32.",
-      "Validation des temps de calcul et de l'empreinte mémoire RAM/Flash sur cible réelle.",
+      "Exploitation du dataset industriel AI4I 2020 (10 000 échantillons capteurs) et entraînement d'un réseau de neurones sous Google Colab (Keras/TensorFlow) pour classifier 5 types de défaillances.",
+      "Déploiement embarqué sur cible STM32 via l'extension STM32Cube.AI (X-CUBE-AI) et génération du code d'inférence optimisé en langage C sous STM32CubeIDE.",
+      "Mise en place d'une liaison série UART pilotée par script Python pour transmettre les jeux de test et vérifier les prédictions d'inférence en direct sur la carte.",
     ],
     link: "https://github.com/Arthrir/ISMIN-IA_Embarquee_Projet",
     with: "Yasmin Hadj-Said",
     en: {
       t: "Embedded AI - fault detection",
       d: "Feb - Mar 2026",
-      desc: "Industrial predictive maintenance running locally on low-power microcontrollers.",
+      desc: "Industrial predictive maintenance: machine failure detection and classification on STM32 microcontrollers.",
       points: [
-        "Trained and quantized a Python classification model from vibration sensor datasets.",
-        "Ported and optimized C inference routines directly onto an STM32 microcontroller.",
-        "Benchmarked execution latency and RAM/Flash memory footprint on real hardware.",
+        "Preprocessed the AI4I 2020 industrial dataset (10,000 sensor samples) and trained a neural network on Google Colab (Keras/TensorFlow) classifying 5 failure modes.",
+        "Embedded deployment on STM32 using the STM32Cube.AI (X-CUBE-AI) extension and optimized C inference code generation in STM32CubeIDE.",
+        "Implemented a UART serial interface via a Python test script to stream test vectors and validate real-time inference predictions on hardware.",
       ],
+      tags: ["STM32", "C", "Python", "X-CUBE-AI", "Keras"],
     },
   },
   {
@@ -191,7 +192,7 @@ const PROJECTS: Project[] = [
     points: [
       "Sélection et interfaçage d'un réseau de capteurs (température, humidité, CO2, COV) sur STM32.",
       "Routage électronique et programmation du microcontrôleur pour transmission sans fil périodique.",
-      "Modélisation CAO sous Autodesk Inventor et fabrication d'un boîtier étanche par impression 3D.",
+      "Modélisation CAO sous Autodesk Inventor et fabrication du boîtier par impression 3D pour intégrer et protéger l'électronique.",
     ],
     with: "Jade Diouri",
     en: {
@@ -201,7 +202,7 @@ const PROJECTS: Project[] = [
       points: [
         "Selected and interfaced environmental sensor suite (temperature, humidity, CO2, VOC) with STM32.",
         "Hardware schematic, routing and firmware development for scheduled wireless transmission.",
-        "Parametric CAD design in Autodesk Inventor and rapid prototyping via 3D printing.",
+        "Parametric CAD design in Autodesk Inventor and rapid prototyping via 3D printing to house the electronics.",
       ],
       tags: ["STM32", "Sensors", "3D Printing", "Inventor"],
     },
@@ -290,9 +291,9 @@ const PROJECTS: Project[] = [
     tags: ["STM32", "PCB", "KiCad", "PWM", "Électronique de puissance"],
     desc: "Contrôle progressif de la vitesse par slider capacitif, hacheur de puissance et modulation PWM.",
     points: [
-      "Conception et routage sous KiCad d'une carte électronique intégrant un capteur capacitif à 2 électrodes pour détecter l'approche et le glissement du doigt.",
+      "Conception et routage sous KiCad d'une carte électronique reliant le capteur capacitif à la STM32 et aux étages de commande.",
       "Développement de l'algorithme d'acquisition capacitive et de filtrage numérique sur microcontrôleur STM32.",
-      "Dimensionnement d'un hacheur de puissance (transistor MOSFET de commutation) et génération d'un signal PWM calibré pour faire varier la vitesse du ventilateur de manière parfaitement fluide.",
+      "Intégration d'un hacheur de puissance pour hacher le signal PWM à la tension de 12V requise pour piloter le ventilateur de manière fluide.",
     ],
     with: "Inès Lixi",
     en: {
@@ -300,9 +301,9 @@ const PROJECTS: Project[] = [
       d: "Feb - Jun 2025",
       desc: "Stepless fan speed regulation via capacitive touch slider, power chopper, and PWM modulation.",
       points: [
-        "Designed and routed a custom PCB in KiCad integrating a 2-electrode capacitive slider sensor.",
+        "Designed and routed a custom PCB in KiCad connecting the capacitive slider sensor to the STM32 and driver stages.",
         "Engineered capacitive signal acquisition and digital filtering routines on an STM32 microcontroller.",
-        "Dimensioned a dedicated power chopper (MOSFET driver stage) with dynamic PWM modulation for smooth, stepless fan speed regulation.",
+        "Integrated a power chopper stage to chop the PWM signal to the 12V voltage required to smoothly drive the cooling fan.",
       ],
       tags: ["STM32", "PCB", "KiCad", "PWM", "Power Electronics"],
     },
@@ -342,9 +343,6 @@ const PROJECTS: Project[] = [
     desc: "Compétition de robotique par équipe organisée par l'AREM avec STMicroelectronics à Gardanne - 1er Prix.",
     points: [
       "Lauréat du 1er Prix au Hackathon de robotique organisé par l'association AREM en partenariat avec STMicroelectronics.",
-      "Sprint d'ingénierie et d'innovation en équipe sur 48h : architecture électronique, intégration de microcontrôleurs STM32 et programmation temps réel.",
-      "Pitch exécutif et démonstration en direct du système robotique autonome devant les ingénieurs et experts de STMicroelectronics.",
-      "Projet mené en équipe avec Yasmin Hadj-Said, Inès Lixi, Jade Diouri, Typhaine Lavaud et Elouan Marron.",
     ],
     with: "Yasmin Hadj-Said, Inès Lixi, Jade Diouri, Typhaine Lavaud, Elouan Marron",
     en: {
@@ -353,9 +351,6 @@ const PROJECTS: Project[] = [
       desc: "Robotics team competition organized by AREM with STMicroelectronics in Gardanne - 1st Place.",
       points: [
         "Awarded 1st Place at the robotics hackathon organized by AREM in partnership with STMicroelectronics.",
-        "Intensive 48h sprint: electronic architecture, STM32 microcontroller integration and real-time control algorithms.",
-        "Executive technical pitch and live demo of the operational robotic platform in front of STMicroelectronics engineers.",
-        "Accomplished as a multidisciplinary team with Yasmin Hadj-Said, Inès Lixi, Jade Diouri, Typhaine Lavaud, and Elouan Marron.",
       ],
       tags: ["Hackathon", "STMicroelectronics", "Robotics", "AREM"],
     },
@@ -419,23 +414,19 @@ const PROJECTS: Project[] = [
     date: "2025",
     d: "Fév - Juin 2025",
     cat: ["Produit"],
-    tags: ["Événementiel", "Communication"],
+    tags: ["Événementiel", "Sensibilisation"],
     desc: "Action d'inclusion étudiante et découverte des pratiques sportives adaptées.",
     points: [
-      "Gestion logistique et coordination des intervenants associatifs sur le campus de l'école.",
-      "Animation d'ateliers immersifs de cécifoot et showdown pour sensibiliser au handicap visuel.",
-      "Campagne de communication interne mobilisant étudiants et personnels des Mines.",
+      "Animation d'ateliers immersifs de cécifoot et showdown pour sensibiliser les étudiants et le personnel au handicap visuel.",
     ],
     en: {
       t: "Handi'Mines - awareness",
       d: "Feb - Jun 2025",
       desc: "Campus student inclusion initiative exploring adapted sports practices.",
       points: [
-        "Logistical management and partnership coordination with adaptive sports organizations.",
-        "Facilitated immersive blind football and showdown workshops to raise visual impairment awareness.",
-        "Campus-wide communication campaign engaging students and faculty staff.",
+        "Facilitated immersive blind football and showdown workshops to raise visual impairment awareness across campus.",
       ],
-      tags: ["Events", "Communication"],
+      tags: ["Events", "Awareness"],
     },
   },
   {
@@ -468,22 +459,23 @@ const PROJECTS: Project[] = [
     date: "2024",
     d: "2024 - aujourd'hui",
     cat: ["Software", "Produit"],
-    tags: ["Astro", "React", "Motion", "Figma"],
-    desc: "Vitrine interactive personnelle pensée comme une pièce d'ingénierie logicielle.",
+    tags: ["TypeScript", "React", "Vite", "Tailwind", "Motion"],
+    desc: "Conception et développement complet de mon portfolio interactif en TypeScript et React.",
     current: true,
     points: [
-      "Direction artistique sous Figma et architecture front-end moderne sous Astro & React.",
-      "Animations fluides avec Framer Motion, typographie éditoriale suisse et soin du détail d'ingénieur.",
-      "Module rétro Minitel interactif, mini-jeux embarqués et optimisation des Core Web Vitals.",
+      "Architecture front-end modulaire développée sous React, TypeScript et Tailwind CSS avec Vite.",
+      "Modélisations interactives sur-mesure : die silicium interactif avec simulation de portes logiques, chronogramme temporel matériel et animations fluides.",
+      "Module rétro Minitel interactif avec mini-jeux embarqués (F1, Aim Lab, Blackjack) et design épuré inspiré des instruments de précision.",
     ],
     en: {
       d: "2024 - present",
-      desc: "Interactive personal showcase engineered with high-precision software craft.",
+      desc: "Full design and development of an interactive personal portfolio in TypeScript and React.",
       points: [
-        "Art direction in Figma and modern frontend architecture using Astro and React.",
-        "Fluid Framer Motion physics, Swiss editorial typography, and engineered micro-interactions.",
-        "Interactive Minitel retro module, embedded mini-games, and Core Web Vitals tuning.",
+        "Modular frontend architecture in TypeScript, React, and Tailwind CSS powered by Vite.",
+        "Custom interactive engineering models: interactive silicon die with logic gate simulation, hardware timing diagram, and reactive micro-interactions.",
+        "Interactive retro Minitel console with playable mini-games (F1, Aim Lab, Blackjack) and clean precision-instrument styling.",
       ],
+      tags: ["TypeScript", "React", "Vite", "Tailwind", "Motion"],
     },
   },
   {
@@ -492,22 +484,22 @@ const PROJECTS: Project[] = [
     d: "Jan 2023 - Juil 2024",
     cat: ["Software"],
     tags: ["Python", "Simulation", "Matplotlib"],
-    desc: "Modélisation stochastique et analyse comportementale de la théorie des jeux en CPGE.",
+    desc: "Modélisation et implémentation algorithmique du jeu de Blackjack en Python.",
     points: [
-      "Développement sous Python d'un moteur de jeu Monte-Carlo simulant des millions de parties.",
-      "Modélisation mathématique du ressenti psychologique (fonction d'utilité et aversion au risque).",
-      "Optimisation algorithmique de la politique de gains pour maximiser la rétention des joueurs.",
-      "Tracés statistiques Matplotlib et soutenance officielle de concours aux grandes écoles.",
+      "Implémentation sous Python de l'algorithme complet du jeu de Blackjack (distribution, calcul des mains, règles du croupier et du joueur).",
+      "Simulation de stratégies de jeu et étude probabiliste des tirages de cartes.",
+      "Visualisations de données et tracés statistiques sous Matplotlib.",
+      "Présentation et soutenance orale dans le cadre de l'épreuve de TIPE aux concours des grandes écoles d'ingénieurs.",
     ],
     en: {
       t: "TIPE - Blackjack simulation",
       d: "Jan 2023 - Jul 2024",
-      desc: "Stochastic modeling and behavioral game theory research in preparatory classes.",
+      desc: "Algorithmic modeling and implementation of the Blackjack card game in Python.",
       points: [
-        "Developed a Monte-Carlo simulation engine in Python processing millions of rounds.",
-        "Mathematical formulation of psychological player utility and risk-aversion curves.",
-        "Algorithmic optimization of casino payoff balance to maximize player retention.",
-        "Matplotlib statistical graphics and competitive defense for engineering school entrance.",
+        "Engineered the complete Blackjack game engine in Python (card dealing, hand values, dealer and player logic).",
+        "Simulated player strategies and analyzed card draw probability distributions.",
+        "Data visualization and statistical distribution plots in Matplotlib.",
+        "Oral defense and presentation for the competitive entrance exams to French Grandes Écoles.",
       ],
       tags: ["Python", "Simulation", "Matplotlib"],
     },
@@ -1122,7 +1114,7 @@ function Projects() {
           );
         })}
       </div>
-      <motion.div layout className="grid border-t border-ink/15 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
           {list.map((p) => {
             const origTitle = PROJECTS[all.indexOf(p)].t;
