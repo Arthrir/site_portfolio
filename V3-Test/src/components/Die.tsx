@@ -623,35 +623,41 @@ export default function Die({ onColorChange }: DieProps) {
 
           {/* =================================================================
               5. CONNECTEUR SWD / JTAG 6 BROCHES EN BAS À DROITE (294, 288)
-              AUCUN CROISEMENT : NRST contourne le 3V3 par la gauche !
-              GND fermement connecté au plan de masse avec symbole GND officiel !
+              - Pin 1 (3V3) : relié à la broche VDD de l'IC (274, 250) avec découplage C2
+              - Pin 2 (DIO) : relié à SWDIO (274, 235)
+              - Pin 3 (CLK) : relié à SWCLK (274, 220)
+              - Pin 4 (RST) : relié à la broche NRST basse de l'IC (250, 274)
+              - Pins 5 & 6 (GND) : reliés directement au plan de masse (Earth/GND)
+              Sérigraphie J1 centrée DANS le boîtier entre les rangées : ZÉRO chevauchement !
               ================================================================= */}
           {/* Boîtier embase Shrouded Header 2x3 à (294, 288) */}
           <g transform="translate(294, 288)">
             <rect x="0" y="0" width="60" height="52" rx="3" fill="#0B132B" stroke="#475569" strokeWidth="1" />
-            <text x="30" y="-4" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill="#71717A">
+            {/* Sérigraphie placée AU CENTRE entre les deux rangées de broches (y=302 et y=326) : AUCUN fil ne passe ici */}
+            <text x="30" y="26" textAnchor="middle" fontSize="3.8" fontWeight="bold" fill="#64748B" letterSpacing="0.06em">
               SWD / JTAG (J1)
             </text>
           </g>
 
-          {/* Pistes de signaux entrant dans chaque broche sans AUCUN croisement :
-              - Pin 1 (3V3) : top-left (306, 302)
-              - Pin 2 (DIO) : top-center (324, 302)
-              - Pin 3 (CLK) : top-right (342, 302)
-              - Pin 4 (RST) : bottom-left (306, 326) -> contourne par la gauche (x=290), ZÉRO PASSAGE DANS 3V3 !
-              - Pins 5 & 6 (GND) : bottom-center (324, 326) & bottom-right (342, 326) -> reliés ensemble vers la masse */}
-          
-          {/* 1. 3V3 vers Pin 1 (306, 302) */}
-          <path d="M 274 260 H 306 V 302" stroke="#D97706" strokeWidth="1.2" fill="none" />
+          {/* 1. VDD 3.3V vers Pin 1 (306, 302) : provient de la broche VDD de l'IC (274, 250) */}
+          <path d="M 274 250 H 306 V 302" stroke="#D97706" strokeWidth="1.2" fill="none" />
+          {/* Condensateur CMS de découplage C2 100nF sur l'alimentation 3.3V */}
+          <g transform="translate(288, 250)">
+            <rect x="-2" y="-4.5" width="4" height="9" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
+            <rect x="-2" y="-4.5" width="4" height="2" fill="#E4E4E7" />
+            <rect x="-2" y="2.5" width="4" height="2" fill="#E4E4E7" />
+            <text x="0" y="-6" textAnchor="middle" fontSize="3.2" fill="#71717A">C2</text>
+          </g>
 
-          {/* 2. SWDIO vers Pin 2 (324, 302) */}
+          {/* 2. SWDIO vers Pin 2 (324, 302) : provient de la broche GPIO/SWDIO (274, 235) */}
           <path d="M 274 235 H 324 V 302" stroke="#10B981" strokeWidth="1.2" fill="none" />
 
-          {/* 3. SWCLK vers Pin 3 (342, 302) */}
+          {/* 3. SWCLK vers Pin 3 (342, 302) : provient de la broche GPIO/SWCLK (274, 220) */}
           <path d="M 274 220 H 342 V 302" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
 
-          {/* 4. NRST vers Pin 4 (306, 326) : DÉTOUR PAR LA GAUCHE (x=290), ZÉRO PASSAGE SUR 3V3 (306, 302) ! */}
-          <path d="M 274 250 H 290 V 326 H 306" stroke={isResetting ? "#EF4444" : "#52525B"} strokeWidth={isResetting ? 1.5 : 1} fill="none" />
+          {/* 4. NRST vers Pin 4 (306, 326) : provient de la broche NRST inférieure de l'IC (250, 274) */}
+          <path d="M 250 274 V 326 H 306" stroke={isResetting ? "#EF4444" : "#52525B"} strokeWidth={isResetting ? 1.6 : 1.1} fill="none" />
+          <circle cx="250" cy="274" r="1.3" fill={isResetting ? "#EF4444" : "#52525B"} />
 
           {/* 5 & 6. GND vers Pins 5 & 6 (324 & 342, 326) reliés ensemble et mis à la masse */}
           <path d="M 324 326 H 342" stroke="#71717A" strokeWidth="1.4" fill="none" />
