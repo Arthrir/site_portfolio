@@ -18,10 +18,10 @@ const PASSIONS: Loc<{ k: string; t: string; d: string }>[] = [
   {
     k: "Compétition",
     t: "Sport & Esport",
-    d: "De l'effort physique brut (cyclisme, running, sports de combat, judo) à l'arène compétitive sur écran (supporter passionné de Team Vitality, organisation des tournois MINITEL). Qu'il s'agisse d'encaisser la fatigue sur un col ou de garder son sang-froid dans un clutch sous haute pression, je recherche la même intensité : la discipline, la clarté stratégique et le dépassement de soi.",
+    d: "Grand passionné de sport et d'esport. Pratiquant de cyclisme, running, judo et sports de combat, je suis fasciné par les innovations technologiques qui repoussent les limites de la performance athlétique (matériaux composites, capteurs biométriques, analyse de données). Côté esport, je suis avec intérêt la professionnalisation accélérée de l'écosystème : rigueur d'entraînement, préparation mentale, profondeur stratégique et maîtrise de l'exécution sous haute pression.",
     en: {
       t: "Sport & Esport",
-      d: "From raw physical exertion (cycling, running, combat sports, judo) to the digital competitive arena (passionate Team Vitality fan, organizer of MINITEL LAN tournaments). Whether enduring fatigue on long climbs or keeping absolute composure in high-stakes clutch moments, I seek the same drive: rigorous discipline, strategic clarity, and pushing personal limits."
+      d: "A dedicated enthusiast of both sports and esports. Practicing cycling, running, judo, and combat sports, I am fascinated by technological innovations driving athletic performance (advanced materials, telemetry, biomechanical data). In esports, I closely follow the growing professionalization of the ecosystem: structured training regimes, mental conditioning, strategic depth, and high-stakes execution under pressure."
     }
   },
   {
@@ -153,17 +153,6 @@ export default function Passions({ Label }: { Label: (p: { children: React.React
             <h3 className="mt-4 font-serif text-3xl italic tracking-tight sm:text-4xl text-ink">
               {tr("Voyager, s'ouvrir aux cultures & observer le monde.", "Traveling, exploring cultures & observing the world.")}
             </h3>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <span className="rounded border border-ink/15 bg-ink/5 px-2.5 py-1 font-mono text-[11px] text-mute uppercase tracking-wider">
-                {tr("6 pays cartographiés", "6 countries mapped")}
-              </span>
-              <span className="rounded border border-ink/15 bg-ink/5 px-2.5 py-1 font-mono text-[11px] text-mute uppercase tracking-wider">
-                {tr("3 continents", "3 continents")}
-              </span>
-              <span className="rounded border border-signal/30 bg-signal/5 px-2.5 py-1 font-mono text-[11px] text-signal uppercase tracking-wider">
-                {tr("Études, stages & famille", "Studies, internships & family")}
-              </span>
-            </div>
           </div>
           <div className="border-l border-ink/15 pl-6 lg:pl-10">
             <p className="text-[15px] leading-relaxed text-mute sm:text-base">
