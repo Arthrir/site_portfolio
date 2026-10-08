@@ -601,6 +601,8 @@ export default function Die({ onColorChange }: DieProps) {
           <path d="M 220 274 V 336" stroke="#10B981" strokeWidth={clockTick % 2 === 0 ? 1.5 : 1} strokeDasharray="4 8" strokeDashoffset={-clockTick * 4} fill="none" />
           <path d="M 235 274 V 336" stroke="#27272A" strokeWidth="1.2" fill="none" />
           {outXOR && <path d="M 235 274 V 336" stroke="#F59E0B" strokeWidth="1.5" strokeDasharray="5 10" strokeDashoffset={-clockTick * 4} fill="none" />}
+          
+          {/* Ligne PWR LED (x=250) alimentée depuis le rail VDD / CPU Core avec indicateur de thème actif */}
           <path d="M 250 274 V 336" stroke="#27272A" strokeWidth="1.2" fill="none" />
           <path d="M 250 274 V 336" stroke={currentTheme.hex} strokeWidth="1.5" strokeDasharray="5 10" strokeDashoffset={-clockTick * 4} fill="none" />
 
@@ -623,10 +625,10 @@ export default function Die({ onColorChange }: DieProps) {
 
           {/* =================================================================
               5. CONNECTEUR SWD / JTAG 6 BROCHES EN BAS À DROITE (294, 288)
-              - Pin 1 (3V3) : relié à la broche VDD de l'IC (274, 250) avec découplage C2
+              - Pin 1 (3V3) : relié à la broche VDD de l'IC (274, 250) avec découplage C4 horizontal
               - Pin 2 (DIO) : relié à SWDIO (274, 235)
               - Pin 3 (CLK) : relié à SWCLK (274, 220)
-              - Pin 4 (RST) : relié à la broche NRST basse de l'IC (250, 274)
+              - Pin 4 (RST) : relié à la broche NRST droite de l'IC (274, 265) -> canal bas distinct (306, 326)
               - Pins 5 & 6 (GND) : reliés directement au plan de masse (Earth/GND)
               Sérigraphie J1 centrée DANS le boîtier entre les rangées : ZÉRO chevauchement !
               ================================================================= */}
@@ -641,12 +643,12 @@ export default function Die({ onColorChange }: DieProps) {
 
           {/* 1. VDD 3.3V vers Pin 1 (306, 302) : provient de la broche VDD de l'IC (274, 250) */}
           <path d="M 274 250 H 306 V 302" stroke="#D97706" strokeWidth="1.2" fill="none" />
-          {/* Condensateur CMS de découplage C2 100nF sur l'alimentation 3.3V */}
+          {/* Condensateur CMS de découplage C4 100nF HORIZONTAL sur l'alimentation 3.3V (parfaitement aligné sur le tracé) */}
           <g transform="translate(288, 250)">
-            <rect x="-2" y="-4.5" width="4" height="9" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
-            <rect x="-2" y="-4.5" width="4" height="2" fill="#E4E4E7" />
-            <rect x="-2" y="2.5" width="4" height="2" fill="#E4E4E7" />
-            <text x="0" y="-6" textAnchor="middle" fontSize="3.2" fill="#71717A">C2</text>
+            <rect x="-4.5" y="-2" width="9" height="4" rx="0.4" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
+            <rect x="-4.5" y="-2" width="2.2" height="4" fill="#E4E4E7" />
+            <rect x="2.3" y="-2" width="2.2" height="4" fill="#E4E4E7" />
+            <text x="0" y="-4.5" textAnchor="middle" fontSize="3.4" fill="#A1A1AA" fontWeight="bold">C4</text>
           </g>
 
           {/* 2. SWDIO vers Pin 2 (324, 302) : provient de la broche GPIO/SWDIO (274, 235) */}
@@ -655,9 +657,9 @@ export default function Die({ onColorChange }: DieProps) {
           {/* 3. SWCLK vers Pin 3 (342, 302) : provient de la broche GPIO/SWCLK (274, 220) */}
           <path d="M 274 220 H 342 V 302" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
 
-          {/* 4. NRST vers Pin 4 (306, 326) : provient de la broche NRST inférieure de l'IC (250, 274) */}
-          <path d="M 250 274 V 326 H 306" stroke={isResetting ? "#EF4444" : "#52525B"} strokeWidth={isResetting ? 1.6 : 1.1} fill="none" />
-          <circle cx="250" cy="274" r="1.3" fill={isResetting ? "#EF4444" : "#52525B"} />
+          {/* 4. NRST vers Pin 4 (306, 326) : provient de la broche NRST du bus de commande de l'IC (274, 265), SÉPARÉ TOTALEMENT de la trace PWR */}
+          <path d="M 274 265 H 284 V 326 H 306" stroke={isResetting ? "#EF4444" : "#52525B"} strokeWidth={isResetting ? 1.6 : 1.1} fill="none" />
+          <circle cx="274" cy="265" r="1.3" fill={isResetting ? "#EF4444" : "#52525B"} />
 
           {/* 5 & 6. GND vers Pins 5 & 6 (324 & 342, 326) reliés ensemble et mis à la masse */}
           <path d="M 324 326 H 342" stroke="#71717A" strokeWidth="1.4" fill="none" />
@@ -668,39 +670,39 @@ export default function Die({ onColorChange }: DieProps) {
           <line x1="331" y1="356" x2="335" y2="356" stroke="#71717A" strokeWidth="1" />
           <text x="333" y="363" textAnchor="middle" fontSize="3.6" fontWeight="bold" fill="#71717A">GND</text>
 
-          {/* Pastilles métalliques soudées avec sérigraphies parfaitement dégagées */}
+          {/* Pastilles métalliques soudées avec sérigraphies en blanc pur contrasté, lisibles sans confusion */}
           {/* Rangée 1 (Top, y=302) : labels placés au-dessus */}
           <g transform="translate(306, 302)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#D97706" />
-            <text x="0" y="-5" textAnchor="middle" fontSize="3.4" fontWeight="bold" fill="#D97706">3V3</text>
+            <text x="0" y="-5" textAnchor="middle" fontSize="3.5" fontWeight="bold" fill="#FFFFFF">3V3</text>
           </g>
           <g transform="translate(324, 302)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#10B981" />
-            <text x="0" y="-5" textAnchor="middle" fontSize="3.4" fontWeight="bold" fill="#10B981">DIO</text>
+            <text x="0" y="-5" textAnchor="middle" fontSize="3.5" fontWeight="bold" fill="#FFFFFF">DIO</text>
           </g>
           <g transform="translate(342, 302)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#06B6D4" />
-            <text x="0" y="-5" textAnchor="middle" fontSize="3.4" fontWeight="bold" fill="#06B6D4">CLK</text>
+            <text x="0" y="-5" textAnchor="middle" fontSize="3.5" fontWeight="bold" fill="#FFFFFF">CLK</text>
           </g>
 
           {/* Rangée 2 (Bottom, y=326) : labels placés au-dessous */}
           <g transform="translate(306, 326)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#EF4444" />
-            <text x="0" y="7" textAnchor="middle" fontSize="3.4" fontWeight="bold" fill="#EF4444">RST</text>
+            <text x="0" y="7.5" textAnchor="middle" fontSize="3.5" fontWeight="bold" fill="#FFFFFF">RST</text>
           </g>
           <g transform="translate(324, 326)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#71717A" />
-            <text x="0" y="7" textAnchor="middle" fontSize="3.4" fill="#71717A">GND</text>
+            <text x="0" y="7.5" textAnchor="middle" fontSize="3.5" fontWeight="bold" fill="#E4E4E7">GND</text>
           </g>
           <g transform="translate(342, 326)">
             <circle cx="0" cy="0" r="3" fill="#181A22" stroke="#E4E4E7" strokeWidth="0.8" />
             <circle cx="0" cy="0" r="1.1" fill="#71717A" />
-            <text x="0" y="7" textAnchor="middle" fontSize="3.4" fill="#71717A">GND</text>
+            <text x="0" y="7.5" textAnchor="middle" fontSize="3.5" fontWeight="bold" fill="#E4E4E7">GND</text>
           </g>
 
           {/* =================================================================
