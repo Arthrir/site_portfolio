@@ -200,21 +200,21 @@ const ITEMS: Loc<Item>[] = [
   {
     id: "target",
     row: "TARGET",
-    label: "Stage PO / PM",
+    label: "Stage de fin d'études",
     place: "5+ mois, à partir d'avril 2027",
     from: "2027-04",
     to: "2027-09",
     details: [
       "À la recherche d'un stage de fin d'études (5+ mois) dès avril 2027.",
-      "Rôles cibles : Product Owner, Product Manager, Prototypage & Innovation Produit.",
-      "Passerelle naturelle entre excellence hardware/système et vision produit orientée utilisateur.",
+      "Rôles cibles : Ingénieur Système Hardware, Product Owner / PM Hardware, Prototypage & Innovation Produit.",
+      "Passerelle naturelle entre excellence technique matérielle/système et vision produit orientée utilisateur.",
     ],
     en: {
-      label: "PO / PM Internship",
+      label: "End-of-studies Internship",
       place: "5+ months, starting April 2027",
       details: [
         "Seeking an end-of-studies internship (5+ months) starting April 2027.",
-        "Target roles: Product Owner, Product Manager, Prototyping & Product Innovation.",
+        "Target roles: Hardware Systems Engineer, Hardware Product Owner / PM, Prototyping & Product Innovation.",
         "Natural bridge connecting hardware engineering, prototyping and user-centric product vision.",
       ],
     },

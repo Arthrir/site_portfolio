@@ -1700,24 +1700,32 @@ function Page() {
 
       {/* ROADMAP */}
       <section id="roadmap" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 pb-32 md:px-10">
-        <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
-          <Stacked ghost={tr("Parcours", "Journey")} n="02">{tr("Ma roadmap.", "My roadmap.")}</Stacked>
-          <p className="max-w-sm text-mute">{tr("Un PM pense en jalons. Voici les miens - survolez un composant pour l'ouvrir.", "A PM thinks in milestones. Here are mine - hover over a component to open it.")}</p>
+        <div className="hidden sm:block">
+          <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
+            <Stacked ghost={tr("Parcours", "Journey")} n="02">{tr("Ma roadmap.", "My roadmap.")}</Stacked>
+          </div>
+          <Circuit onMinitel={() => setGame("minitel")} />
         </div>
-        <Circuit onMinitel={() => setGame("minitel")} />
 
         {/* ÉCOLES & FORMATION */}
-        <div id="ecoles-formation" className="mt-24 border-t border-ink pt-14">
+        <div id="ecoles-formation" className="sm:mt-24 sm:border-t sm:border-ink sm:pt-14">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <Label>{tr("§02.b - Académique", "§02.b - Academics")}</Label>
-              <h3 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">{tr("Formation & Écoles.", "Education & Schools.")}</h3>
+              {/* Sur mobile : En-tête de section §02 unifié pour les écoles */}
+              <div className="sm:hidden mb-2">
+                <Stacked ghost={tr("Parcours", "Journey")} n="02">{tr("Formation & Écoles.", "Education & Schools.")}</Stacked>
+              </div>
+              {/* Sur desktop : Sous-titre académique §02.b faisant suite au chronogramme */}
+              <div className="hidden sm:block">
+                <Label>{tr("§02.b - Académique", "§02.b - Academics")}</Label>
+                <h3 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">{tr("Formation & Écoles.", "Education & Schools.")}</h3>
+              </div>
             </div>
             <div className="max-w-md mt-4 md:mt-0 text-left">
               <p className="text-sm text-mute">
                 {tr("Une triple culture : la rigueur scientifique des prépas, la profondeur microélectronique & logicielle des Mines, et le design / ergonomie du Polimi.", "A triple foundation: scientific rigor from preparatory classes, microelectronics & software depth from Mines, and design / ergonomics from Polimi.")}
               </p>
-              <p className="mt-1 font-mono text-[11px] text-signal/90">
+              <p className="hidden sm:block mt-1 font-mono text-[11px] text-signal/90">
                 {tr("Cliquez pour déplier · Double-cliquez pour situer sur le chronogramme ↑", "Click to expand · Double-click to highlight on timeline ↑")}
               </p>
             </div>
