@@ -140,13 +140,30 @@ export default function Minitel({
     });
   };
 
+  const quit = (sourceText: string = "4") => {
+    if (busy.current) return;
+    busy.current = true;
+    setReady(false);
+    setInput("");
+    inputRef.current?.blur();
+    setLines((l) => [
+      ...l,
+      { id: idRef.current++, text: "> " + sourceText, dim: true },
+      { id: idRef.current++, text: tr("FERMETURE DE LA SESSION...", "CLOSING SESSION...") },
+      { id: idRef.current++, text: tr("DECONNEXION DU 3615 MINITEL. A BIENTOT.", "DISCONNECTING 3615 MINITEL. GOODBYE."), dim: true },
+    ]);
+    later(() => {
+      busy.current = false;
+      onClose();
+    }, 650);
+  };
+
   const run = (raw: string) => {
     const cmd = raw.trim().toUpperCase();
     setInput("");
     if (!cmd) return;
     if (cmd === "4" || cmd === "QUITTER" || cmd === "QUIT" || cmd === "EXIT") {
-      busy.current = false;
-      onClose();
+      quit(cmd);
       return;
     }
     if (busy.current) return;
@@ -158,15 +175,15 @@ export default function Minitel({
     else script([{ text: tr("COMMANDE NON RECONNUE. TAPEZ 1, 2, 3, 4 OU AIDE.", "UNKNOWN COMMAND. TYPE 1, 2, 3, 4 OR HELP.") }], 100);
   };
 
-  // Global keys: ESC closes; key 4 closes immediately; 1-3 launches
+  // Global keys: ESC closes; key 4 prints 4 and quits gracefully; 1-3 launches
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
         onClose();
-      } else if (e.key === "4" && (input === "" || input === "4")) {
+      } else if (ready && (e.key === "4" && (input === "" || input === "4"))) {
         e.preventDefault();
-        onClose();
+        quit("4");
       } else if (ready && input === "" && /^[1-3]$/.test(e.key)) {
         e.preventDefault();
         run(e.key);
@@ -242,8 +259,7 @@ export default function Minitel({
                   onClick={(e) => {
                     e.stopPropagation();
                     if (l.choice === "QUITTER") {
-                      busy.current = false;
-                      onClose();
+                      quit("4");
                     } else {
                       run(l.choice!);
                     }
