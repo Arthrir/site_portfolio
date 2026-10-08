@@ -323,10 +323,10 @@ export default function Die({ onColorChange }: DieProps) {
             </text>
           </g>
 
-          {/* Piste NRST propre et unique reliant la sortie droite du bouton au Pin 6 du CPU (y=220) */}
-          <path d="M 78.5 220 H 126" stroke="#EF4444" strokeWidth="1.2" fill="none" />
-          <circle cx="102" cy="220" r="1.4" fill="#EF4444" />
-          <text x="102" y="215" textAnchor="middle" fontSize="4" fill="#71717A">NRST</text>
+          {/* Piste NRST propre et unique reliant la sortie droite du bouton au Pin 6 du CPU (y=220) - Colorée UNIQUEMENT à l'appui */}
+          <path d="M 78.5 220 H 126" stroke={isResetting ? "#EF4444" : "#52525B"} strokeWidth={isResetting ? 1.6 : 1} fill="none" />
+          <circle cx="102" cy="220" r="1.4" fill={isResetting ? "#EF4444" : "#52525B"} filter={isResetting ? "url(#glow-led)" : undefined} />
+          <text x="102" y="215" textAnchor="middle" fontSize="4" fill={isResetting ? "#EF4444" : "#71717A"}>NRST</text>
 
           {/* =================================================================
               4. BANC MULTI-PORTES FLUIDE ET CONNECTÉ (HAUT-DROITE)
@@ -357,8 +357,8 @@ export default function Die({ onColorChange }: DieProps) {
               strokeWidth="0.8"
               filter={logicA ? "url(#glow-led)" : undefined}
             />
-            {/* Sérigraphie au-dessus du bouton, aucun fil qui traverse le texte */}
-            <text x="10" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicA ? "#FF4D00" : "#71717A"}>
+            {/* Sérigraphie au-dessus du bouton, décalée vers la droite pour éviter l'alimentation VDD */}
+            <text x="16" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicA ? "#FF4D00" : "#71717A"}>
               BTN A ({valA})
             </text>
           </g>
@@ -382,7 +382,8 @@ export default function Die({ onColorChange }: DieProps) {
               strokeWidth="0.8"
               filter={logicB ? "url(#glow-led)" : undefined}
             />
-            <text x="10" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicB ? "#06B6D4" : "#71717A"}>
+            {/* Sérigraphie décalée vers la droite pour ne pas chevaucher l'arrivée 3.3V */}
+            <text x="16" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicB ? "#06B6D4" : "#71717A"}>
               BTN B ({valB})
             </text>
           </g>
@@ -428,10 +429,10 @@ export default function Die({ onColorChange }: DieProps) {
             />
             <text x="332" y="36" fontSize="4.6" textAnchor="middle" fill="#EC4899" fontWeight="bold">XOR</text>
 
-            {/* Sortie XOR vers LED probe (Magenta) */}
+            {/* Sortie XOR vers LED probe (Magenta) - Étiquette de valeur placée AU-DESSUS pour ne pas être cachée */}
             <path d="M 342 50 H 354" stroke={outXOR ? "#EC4899" : "#52525B"} strokeWidth={outXOR ? 1.5 : 1} fill="none" />
             <circle cx="354" cy="50" r="2.6" fill={outXOR ? "#EC4899" : "#27272A"} filter={outXOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.5" />
-            <text x="359" y="52" fontSize="4.4" fontWeight="bold" fill={outXOR ? "#EC4899" : "#71717A"}>
+            <text x="354" y="44" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill={outXOR ? "#EC4899" : "#71717A"}>
               ={outXOR ? "1" : "0"}
             </text>
           </g>
@@ -469,9 +470,10 @@ export default function Die({ onColorChange }: DieProps) {
             />
             <text x="330" y="85" fontSize="4.6" textAnchor="middle" fill="#10B981" fontWeight="bold">AND</text>
 
+            {/* Sortie AND vers LED probe (Vert) - Étiquette au-dessus de la pastille */}
             <path d="M 341 98 H 354" stroke={outAND ? "#10B981" : "#52525B"} strokeWidth={outAND ? 1.5 : 1} fill="none" />
             <circle cx="354" cy="98" r="2.6" fill={outAND ? "#10B981" : "#27272A"} filter={outAND ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.5" />
-            <text x="359" y="100" fontSize="4.4" fontWeight="bold" fill={outAND ? "#10B981" : "#71717A"}>
+            <text x="354" y="92" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill={outAND ? "#10B981" : "#71717A"}>
               ={outAND ? "1" : "0"}
             </text>
           </g>
@@ -509,9 +511,10 @@ export default function Die({ onColorChange }: DieProps) {
             />
             <text x="330" y="133" fontSize="4.6" textAnchor="middle" fill="#8B5CF6" fontWeight="bold">OR</text>
 
+            {/* Sortie OR vers LED probe (Violet) - Étiquette au-dessus de la pastille */}
             <path d="M 342 146 H 354" stroke={outOR ? "#8B5CF6" : "#52525B"} strokeWidth={outOR ? 1.5 : 1} fill="none" />
             <circle cx="354" cy="146" r="2.6" fill={outOR ? "#8B5CF6" : "#27272A"} filter={outOR ? "url(#glow-led)" : undefined} stroke="#52525B" strokeWidth="0.5" />
-            <text x="359" y="148" fontSize="4.4" fontWeight="bold" fill={outOR ? "#8B5CF6" : "#71717A"}>
+            <text x="354" y="140" textAnchor="middle" fontSize="4.2" fontWeight="bold" fill={outOR ? "#8B5CF6" : "#71717A"}>
               ={outOR ? "1" : "0"}
             </text>
           </g>
@@ -527,12 +530,14 @@ export default function Die({ onColorChange }: DieProps) {
 
           {/* =================================================================
               5. BAS DU CHIP & BAS-DROITE TOTALEMENT CONNECTÉ
-              Toutes les pistes descendent au CENTRE EXACT (cx, cy) des cercles !
+              Pistes avec paquets de signaux animés cadencés par le SoC.
               Connecteur SWD / JTAG entièrement câblé SANS AUCUN CROISEMENT.
               ================================================================= */}
-          {/* 1. Interface UART (TX / RX) : pistes descendant jusqu'au centre de la LED (y=336) */}
-          <path d="M 145 274 V 336" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
-          <path d="M 160 274 V 336" stroke="#10B981" strokeWidth="1.2" fill="none" />
+          {/* 1. Interface UART (TX / RX) : pistes cuivre + paquets de signaux animés */}
+          <path d="M 145 274 V 336" stroke="#27272A" strokeWidth="1.2" fill="none" />
+          <path d="M 145 274 V 336" stroke="#06B6D4" strokeWidth="1.4" strokeDasharray="6 14" strokeDashoffset={-clockTick * 5} fill="none" />
+          <path d="M 160 274 V 336" stroke="#27272A" strokeWidth="1.2" fill="none" />
+          <path d="M 160 274 V 336" stroke="#10B981" strokeWidth="1.4" strokeDasharray="6 14" strokeDashoffset={-clockTick * 5} fill="none" />
           <g transform="translate(145, 336)">
             <circle cx="0" cy="0" r="2.8" fill={clockTick % 4 === 0 ? "#06B6D4" : "#27272A"} filter={clockTick % 4 === 0 ? "url(#glow-led)" : undefined} stroke="#475569" strokeWidth="0.5" />
             <text x="0" y="8" textAnchor="middle" fontSize="4.2" fill="#71717A">TX</text>
@@ -543,9 +548,11 @@ export default function Die({ onColorChange }: DieProps) {
           </g>
           <text x="152.5" y="356" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">UART</text>
 
-          {/* 2. Bus I2C (SDA / SCL) : pistes descendant jusqu'au centre du point de test (y=336) */}
-          <path d="M 175 274 V 336" stroke="#8B5CF6" strokeWidth="1.2" fill="none" />
-          <path d="M 190 274 V 336" stroke="#A855F7" strokeWidth="1.2" fill="none" />
+          {/* 2. Bus I2C (SDA / SCL) : pistes cuivre + paquets de données animés */}
+          <path d="M 175 274 V 336" stroke="#27272A" strokeWidth="1.2" fill="none" />
+          <path d="M 175 274 V 336" stroke="#8B5CF6" strokeWidth="1.4" strokeDasharray="6 14" strokeDashoffset={-clockTick * 4} fill="none" />
+          <path d="M 190 274 V 336" stroke="#27272A" strokeWidth="1.2" fill="none" />
+          <path d="M 190 274 V 336" stroke="#A855F7" strokeWidth="1.4" strokeDasharray="6 14" strokeDashoffset={-clockTick * 4} fill="none" />
           {/* R4 Pullup sur SDA */}
           <g transform="translate(175, 302)">
             <rect x="-2.5" y="-5.5" width="5" height="11" fill="#181A22" stroke="#3F3F46" strokeWidth="0.5" />
@@ -589,10 +596,13 @@ export default function Die({ onColorChange }: DieProps) {
             <text x="0" y="8" textAnchor="middle" fontSize="4.5" fill="#71717A" fontWeight="bold">GND</text>
           </g>
 
-          {/* 4. LEDs d'état CMS (ACT, USR, PWR) : pistes descendant jusqu'au centre de chaque LED (y=336) */}
-          <path d="M 220 274 V 336" stroke="#10B981" strokeWidth="1.2" fill="none" />
-          <path d="M 235 274 V 336" stroke="#F59E0B" strokeWidth="1.2" fill="none" />
-          <path d="M 250 274 V 336" stroke={currentTheme.hex} strokeWidth="1.2" fill="none" />
+          {/* 4. LEDs d'état CMS (ACT, USR, PWR) : signaux de statut */}
+          <path d="M 220 274 V 336" stroke="#27272A" strokeWidth="1.2" fill="none" />
+          <path d="M 220 274 V 336" stroke="#10B981" strokeWidth={clockTick % 2 === 0 ? 1.5 : 1} strokeDasharray="4 8" strokeDashoffset={-clockTick * 4} fill="none" />
+          <path d="M 235 274 V 336" stroke="#27272A" strokeWidth="1.2" fill="none" />
+          {outXOR && <path d="M 235 274 V 336" stroke="#F59E0B" strokeWidth="1.5" strokeDasharray="5 10" strokeDashoffset={-clockTick * 4} fill="none" />}
+          <path d="M 250 274 V 336" stroke="#27272A" strokeWidth="1.2" fill="none" />
+          <path d="M 250 274 V 336" stroke={currentTheme.hex} strokeWidth="1.5" strokeDasharray="5 10" strokeDashoffset={-clockTick * 4} fill="none" />
 
           {/* D1 ACT LED (verte) */}
           <g transform="translate(220, 336)">
@@ -613,7 +623,7 @@ export default function Die({ onColorChange }: DieProps) {
 
           {/* =================================================================
               5. CONNECTEUR SWD / JTAG 6 BROCHES EN BAS À DROITE (294, 288)
-              AUCUN CROISEMENT : RST ne traverse plus le GND !
+              AUCUN CROISEMENT : NRST contourne le 3V3 par la gauche !
               GND fermement connecté au plan de masse avec symbole GND officiel !
               ================================================================= */}
           {/* Boîtier embase Shrouded Header 2x3 à (294, 288) */}
@@ -628,7 +638,7 @@ export default function Die({ onColorChange }: DieProps) {
               - Pin 1 (3V3) : top-left (306, 302)
               - Pin 2 (DIO) : top-center (324, 302)
               - Pin 3 (CLK) : top-right (342, 302)
-              - Pin 4 (RST) : bottom-left (306, 326) -> ARRIVE EN DIRECT DE GAUCHE, ZÉRO PASSAGE DANS GND !
+              - Pin 4 (RST) : bottom-left (306, 326) -> contourne par la gauche (x=290), ZÉRO PASSAGE DANS 3V3 !
               - Pins 5 & 6 (GND) : bottom-center (324, 326) & bottom-right (342, 326) -> reliés ensemble vers la masse */}
           
           {/* 1. 3V3 vers Pin 1 (306, 302) */}
@@ -640,8 +650,8 @@ export default function Die({ onColorChange }: DieProps) {
           {/* 3. SWCLK vers Pin 3 (342, 302) */}
           <path d="M 274 220 H 342 V 302" stroke="#06B6D4" strokeWidth="1.2" fill="none" />
 
-          {/* 4. NRST vers Pin 4 (306, 326) : LIGNE DIRECTE SANS TRAVERSER GND ! */}
-          <path d="M 274 250 H 306 V 326" stroke="#EF4444" strokeWidth="1.2" fill="none" />
+          {/* 4. NRST vers Pin 4 (306, 326) : DÉTOUR PAR LA GAUCHE (x=290), ZÉRO PASSAGE SUR 3V3 (306, 302) ! */}
+          <path d="M 274 250 H 290 V 326 H 306" stroke={isResetting ? "#EF4444" : "#52525B"} strokeWidth={isResetting ? 1.5 : 1} fill="none" />
 
           {/* 5 & 6. GND vers Pins 5 & 6 (324 & 342, 326) reliés ensemble et mis à la masse */}
           <path d="M 324 326 H 342" stroke="#71717A" strokeWidth="1.4" fill="none" />
