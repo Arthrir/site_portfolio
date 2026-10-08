@@ -18,10 +18,10 @@ const PASSIONS: Loc<{ k: string; t: string; d: string }>[] = [
   {
     k: "Compétition",
     t: "Sport & Esport",
-    d: "Grand passionné de sport et d'esport. Pratiquant de cyclisme, running, judo et sports de combat, je suis fasciné par les innovations technologiques qui repoussent les limites de la performance athlétique (matériaux composites, capteurs biométriques, analyse de données). Côté esport, je suis avec intérêt la professionnalisation accélérée de l'écosystème : rigueur d'entraînement, préparation mentale, profondeur stratégique et maîtrise de l'exécution sous haute pression.",
+    d: "Grand passionné de sport et d'esport. Après avoir pratiqué le judo, la boxe, l'athlétisme, le badminton et le tennis de table, je suis aujourd'hui un observateur attentif de nombreuses disciplines (cyclisme, sports de combat, athlétisme). Je suis fasciné par les innovations technologiques qui repoussent les limites de la performance (matériaux composites, capteurs biométriques, analyse de données). Côté esport, je suis avec intérêt la professionnalisation accélérée de l'écosystème : rigueur d'entraînement, préparation mentale, profondeur stratégique et maîtrise de l'exécution sous haute pression.",
     en: {
       t: "Sport & Esport",
-      d: "A dedicated enthusiast of both sports and esports. Practicing cycling, running, judo, and combat sports, I am fascinated by technological innovations driving athletic performance (advanced materials, telemetry, biomechanical data). In esports, I closely follow the growing professionalization of the ecosystem: structured training regimes, mental conditioning, strategic depth, and high-stakes execution under pressure."
+      d: "A dedicated enthusiast of both sports and esports. Having practiced judo, boxing, athletics, badminton, and table tennis, I closely follow a wide spectrum of sports today (cycling, combat sports, track & field). I am fascinated by technological innovations driving human performance (advanced materials, biometric sensors, telemetry). In esports, I track the rapid professionalization of the industry: structured coaching, mental performance, strategic depth, and high-stakes execution under pressure."
     }
   },
   {
