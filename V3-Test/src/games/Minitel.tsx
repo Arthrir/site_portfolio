@@ -105,37 +105,46 @@ export default function Minitel({ onClose, onLaunch }: { onClose: () => void; on
 
   const launch = (label: string, g: Game) => {
     busy.current = true;
-    script([{ text: `${tr("LANCEMENT", "LAUNCHING")} ${label}...` }], 160, () => later(() => onLaunch(g), 350));
+    script([{ text: `${tr("LANCEMENT", "LAUNCHING")} ${label}...` }], 120, () => {
+      busy.current = false;
+      onLaunch(g);
+    });
   };
 
   const run = (raw: string) => {
-    if (busy.current) return;
     const cmd = raw.trim().toUpperCase();
+    if (!cmd) return;
+    if (cmd === "4" || cmd === "QUITTER" || cmd === "QUIT" || cmd === "EXIT") {
+      busy.current = false;
+      onClose();
+      return;
+    }
+    if (busy.current) return;
     setLines((l) => [...l, { id: idRef.current++, text: "> " + cmd, dim: true }]);
     if (cmd === "1" || cmd === "F1") launch("GRAND PRIX F1", "f1");
     else if (cmd === "2" || cmd === "AIM" || cmd === "VITALITY") launch("AIM LAB", "aim");
     else if (cmd === "3" || cmd === "BLACKJACK" || cmd === "BJ") launch("BLACKJACK", "blackjack");
-    else if (["4", "QUITTER", "QUIT", "EXIT"].includes(cmd)) {
-      busy.current = true;
-      script([{ text: tr("DECONNEXION DU SERVEUR...", "DISCONNECTING FROM SERVER...") }], 150, () => later(onClose, 300));
-    } else if (["AIDE", "HELP", "?"].includes(cmd)) script([{ text: tr("SOMMAIRE :", "MENU:") }, ...menuLines()], 60);
-    else if (cmd) script([{ text: tr("COMMANDE NON RECONNUE. TAPEZ 1, 2, 3, 4 OU AIDE.", "UNKNOWN COMMAND. TYPE 1, 2, 3, 4 OR HELP.") }], 120);
+    else if (["AIDE", "HELP", "?"].includes(cmd)) script([{ text: tr("SOMMAIRE :", "MENU:") }, ...menuLines()], 60);
+    else script([{ text: tr("COMMANDE NON RECONNUE. TAPEZ 1, 2, 3, 4 OU AIDE.", "UNKNOWN COMMAND. TYPE 1, 2, 3, 4 OR HELP.") }], 100);
   };
 
-  // Global keys: ESC closes; single digit 1-4 launches when input empty
+  // Global keys: ESC closes; key 4 closes immediately; 1-3 launches
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
         onClose();
-      } else if (ready && input === "" && /^[1-4]$/.test(e.key)) {
+      } else if (e.key === "4" && (input === "" || input === "4")) {
+        e.preventDefault();
+        onClose();
+      } else if (ready && input === "" && /^[1-3]$/.test(e.key)) {
         e.preventDefault();
         run(e.key);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  });
+  }, [ready, input, onClose]);
 
   return (
     <motion.div

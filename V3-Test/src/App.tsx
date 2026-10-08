@@ -1518,6 +1518,7 @@ function Page() {
   }, []);
   useEffect(() => { document.body.style.overflow = legal ? "hidden" : ""; }, [legal]);
   const [game, setGame] = useState<Game | null>(null);
+  const [minitelKey, setMinitelKey] = useState(0);
   const [contactModal, setContactModal] = useState(false);
   const [viaMinitel, setViaMinitel] = useState(false);
   const [cv, setCv] = useState(false);
@@ -1532,7 +1533,15 @@ function Page() {
     return () => window.removeEventListener("school-open", handleOpenSchool);
   }, []);
   // un jeu lancé depuis le 3615 ramène au Minitel quand on le quitte
-  const closeGame = () => { if (viaMinitel && game !== "minitel") setGame("minitel"); else { setGame(null); setViaMinitel(false); } };
+  const closeGame = () => {
+    if (viaMinitel && game !== "minitel") {
+      setMinitelKey((k) => k + 1);
+      setGame("minitel");
+    } else {
+      setGame(null);
+      setViaMinitel(false);
+    }
+  };
   const taps = useRef({ n: 0, t: 0 as ReturnType<typeof setTimeout> | 0 });
 
 
@@ -2103,7 +2112,7 @@ function Page() {
       </AnimatePresence>
       <Suspense fallback={null}>
         <AnimatePresence>
-          {game === "minitel" && <Minitel key="m" onClose={() => { setGame(null); setViaMinitel(false); }} onLaunch={(g) => { setViaMinitel(true); setGame(g); }} />}
+          {game === "minitel" && <Minitel key={`m-${minitelKey}`} onClose={() => { setGame(null); setViaMinitel(false); }} onLaunch={(g) => { setViaMinitel(true); setGame(g); }} />}
           {game === "f1" && <F1 key="f" onClose={closeGame} />}
           {game === "aim" && <AimLab key="a" onClose={closeGame} />}
           {game === "blackjack" && <Blackjack key="b" onClose={closeGame} />}
