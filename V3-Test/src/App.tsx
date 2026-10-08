@@ -717,7 +717,10 @@ function Manifesto() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "end 0.45"] });
   const { tr } = useLang();
-  const text = tr("J'ai commencé par le *silicium : PCB, FPGA, ECU, bancs de test. Puis j'ai présidé une association, et compris que le plus dur n'est pas de construire la chose, mais de construire la *bonne chose. Aujourd'hui je relie l'ingénierie, le design et la stratégie pour concevoir des produits qui *comptent.", "I started with *silicon: PCBs, FPGAs, ECUs, test benches. Then I led a student association, and learned that the hardest part isn't building the thing, it's building the *right thing. Today I bridge engineering, design and strategy to build products that *matter.");
+  const text = tr(
+    "J'ai toujours été passionné par la création de *projets : concevoir des systèmes, prototyper, bâtir. Présider une association et mes stages en entreprise ont été un véritable *déclic : orchestrer des équipes, donner une vision et concevoir des produits concrets et innovants est ce que je veux faire de ma vie. Aujourd'hui, je relie l'ingénierie matérielle, le design et l'expérience utilisateur pour imaginer les produits technologiques de *demain.",
+    "I have always been driven by building *projects: designing systems, prototyping, bringing ideas to life. Leading a major student association and my industry internships were a defining *revelation: aligning teams, driving product vision, and creating tangible, breakthrough technologies is what I want to dedicate my life to. Today, I bridge hardware engineering, design, and user experience to shape meaningful, next-generation *products."
+  );
   const words = text.split(" ");
   return (
     <div ref={ref} className="text-[clamp(1.8rem,4.2vw,3.6rem)] font-medium leading-[1.08] tracking-[-0.025em]">
@@ -2001,8 +2004,8 @@ function Page() {
           <h2 className="mt-6 text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-semibold tracking-[-0.05em]">{tr("Travaillons", "Let's work")}<br />{tr("ensemble", "together")}<span style={{ color: dotColor }} className="transition-colors duration-500">.</span></h2>
           <p className="mt-8 max-w-xl text-lg text-mute leading-relaxed">
             {tr(
-              "À la recherche d'un stage de fin d'études de 5+ mois dès avril 2027 : Product Owner, Product Manager, Prototypage & Gestion de projet technique.",
-              "Seeking a 5+ month end-of-studies internship starting April 2027: Product Owner, Product Manager, Prototyping & Technical Project Management."
+              "À la recherche d'un stage de fin d'études de 5+ mois dès avril 2027 : Ingénieur Système Hardware, Product Owner / PM Hardware, Prototypage & Innovation Produit.",
+              "Seeking a 5+ month end-of-studies internship starting April 2027: Hardware Systems Engineer, Hardware Product Owner / PM, Prototyping & Product Innovation."
             )}
           </p>
           <div className="mt-12 flex flex-wrap items-center gap-6">
@@ -2022,16 +2025,16 @@ function Page() {
           </div>
           <div className="mt-12 grid grid-cols-2 gap-px border border-ink bg-ink lg:grid-cols-4">
             {SOCIALS.map(({ I, l, h }) => (
-              <a key={l} href={h} target="_blank" rel="noreferrer" className="group flex items-center justify-between bg-paper p-6 transition-colors hover:bg-ink hover:text-paper">
-                <span className="flex items-center gap-4"><I className="size-7" /><span className="text-xl font-medium">{l}</span></span>
+              <a key={l} href={h} target="_blank" rel="noreferrer" className="group flex min-h-[86px] items-center justify-between bg-paper p-5 transition-colors hover:bg-ink hover:text-paper sm:p-6">
+                <span className="flex items-center gap-3 sm:gap-4"><I className="size-6 sm:size-7" /><span className="text-lg font-medium sm:text-xl">{l}</span></span>
                 <ArrowUpRight className="size-5 transition-transform group-hover:rotate-45" />
               </a>
             ))}
-            <button onClick={() => setCv(true)} className="group flex items-center justify-between bg-paper p-6 text-left transition-colors hover:bg-ink hover:text-paper">
-              <span className="flex items-center gap-4">
-                <Download className="size-7" />
+            <button onClick={() => setCv(true)} className="group flex min-h-[86px] items-center justify-between bg-paper p-5 text-left transition-colors hover:bg-ink hover:text-paper sm:p-6">
+              <span className="flex items-center gap-3 sm:gap-4">
+                <Download className="size-6 sm:size-7" />
                 <span className="flex flex-col gap-0.5">
-                  <span className="text-xl font-medium">{tr("CV", "Resume")}</span>
+                  <span className="text-lg font-medium sm:text-xl">{tr("CV", "Resume")}</span>
                   <span className="font-mono text-[10px] tracking-[0.14em] text-mute uppercase group-hover:text-paper/60">FR · EN</span>
                 </span>
               </span>
