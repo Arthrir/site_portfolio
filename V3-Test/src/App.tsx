@@ -1550,8 +1550,7 @@ function Page() {
   }, []);
   // un jeu lancé depuis le 3615 ramène au Minitel quand on le quitte
   const closeGame = () => {
-    if (viaMinitel && game !== "minitel") {
-      setMinitelKey((k) => k + 1);
+    if (viaMinitel) {
       setGame("minitel");
     } else {
       setGame(null);
@@ -1567,6 +1566,7 @@ function Page() {
     let keys: string[] = [], buf = "";
     const words: Record<string, Game> = { minitel: "minitel", "3615": "minitel", monza: "f1", vitality: "aim", blackjack: "blackjack" };
     const k = (e: KeyboardEvent) => {
+      if (game !== null) return;
       if ((e.target as HTMLElement).closest("input, textarea")) return;
       keys = [...keys, e.key].slice(-konami.length);
       if (keys.join() === konami.join()) setGame("aim");
@@ -1578,7 +1578,7 @@ function Page() {
     };
     window.addEventListener("keydown", k);
     return () => window.removeEventListener("keydown", k);
-  }, []);
+  }, [game]);
 
   // Mobile : taps rapides sur le logo - 3 = F1, 5 = Aim Lab, 7 = Blackjack
   const tapLogo = (e: React.MouseEvent) => {
@@ -2128,7 +2128,19 @@ function Page() {
       </AnimatePresence>
       <Suspense fallback={null}>
         <AnimatePresence>
-          {game === "minitel" && <Minitel key={`m-${minitelKey}`} onClose={() => { setGame(null); setViaMinitel(false); }} onLaunch={(g) => { setViaMinitel(true); setGame(g); }} />}
+          {game === "minitel" && (
+            <Minitel
+              fastBoot={viaMinitel}
+              onClose={() => {
+                setGame(null);
+                setViaMinitel(false);
+              }}
+              onLaunch={(g) => {
+                setViaMinitel(true);
+                setGame(g);
+              }}
+            />
+          )}
           {game === "f1" && <F1 key="f" onClose={closeGame} />}
           {game === "aim" && <AimLab key="a" onClose={closeGame} />}
           {game === "blackjack" && <Blackjack key="b" onClose={closeGame} />}

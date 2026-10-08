@@ -54,6 +54,7 @@ type Keys = Record<string, boolean>;
 
 export default function F1({ onClose }: { onClose: () => void }) {
   const { tr } = useLang();
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [trackId, setTrackId] = useState<TrackId>("monza");
   const [p2, setP2] = useState(false);
@@ -72,6 +73,10 @@ export default function F1({ onClose }: { onClose: () => void }) {
   phaseRef.current = phase;
   const reactionPending = useRef(true);
 
+  useEffect(() => {
+    containerRef.current?.focus();
+  }, []);
+
   const gasPressed = () => {
     if (phaseRef.current === "race" && goAt.current && reactionPending.current) {
       reactionPending.current = false;
@@ -87,9 +92,16 @@ export default function F1({ onClose }: { onClose: () => void }) {
   // Keyboard
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "Escape") return onClose();
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) e.preventDefault();
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        return onClose();
+      }
       const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " ", "z", "q", "s", "d", "w", "a", "r"].includes(k)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       keys.current[k] = true;
       if (["z", "q", "s", "d", "w", "a"].includes(k) && !p2Ref.current) {
         p2Ref.current = true;
@@ -397,7 +409,9 @@ export default function F1({ onClose }: { onClose: () => void }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[60] flex flex-col bg-ink text-paper"
+      ref={containerRef}
+      tabIndex={-1}
+      className="fixed inset-0 z-[60] flex flex-col bg-ink text-paper outline-none"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

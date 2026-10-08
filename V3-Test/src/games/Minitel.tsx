@@ -49,12 +49,40 @@ const MENU: { key: string; choice: string; label: string; en?: string }[] = [
   { key: "4", choice: "QUITTER", label: "QUITTER LE TERMINAL", en: "EXIT TERMINAL" },
 ];
 
-export default function Minitel({ onClose, onLaunch }: { onClose: () => void; onLaunch: (game: Game) => void }) {
+export default function Minitel({
+  onClose,
+  onLaunch,
+  fastBoot = false,
+}: {
+  onClose: () => void;
+  onLaunch: (game: Game) => void;
+  fastBoot?: boolean;
+}) {
   const { lang, tr } = useLang();
-  const [lines, setLines] = useState<Line[]>([]);
-  const [ready, setReady] = useState(false);
+  const menuLines = (): Omit<Line, "id">[] =>
+    MENU.map((m) => ({
+      text: `${m.key}  ${lang === "en" ? (m.en ?? m.label) : m.label}`,
+      choice: m.choice,
+    }));
+
+  const [lines, setLines] = useState<Line[]>(() => {
+    if (fastBoot) {
+      return [
+        { id: 1, text: tr("3615 MINITEL EST EN LIGNE.", "3615 MINITEL IS ONLINE.") },
+        { id: 2, text: tr("BIENVENUE SUR LE RESEAU ARTHUR DORADOUX.", "WELCOME TO THE ARTHUR DORADOUX NETWORK.") },
+        { id: 3, text: tr("TAPEZ UN NUMERO OU CLIQUEZ :", "TYPE A NUMBER OR CLICK:"), dim: true },
+        ...MENU.map((m, i) => ({
+          id: 4 + i,
+          text: `${m.key}  ${lang === "en" ? (m.en ?? m.label) : m.label}`,
+          choice: m.choice,
+        })),
+      ];
+    }
+    return [];
+  });
+  const [ready, setReady] = useState(fastBoot);
   const [input, setInput] = useState("");
-  const idRef = useRef(0);
+  const idRef = useRef(12);
   const busy = useRef(false);
   const timers = useRef<number[]>([]);
   const screenRef = useRef<HTMLDivElement>(null);
@@ -73,9 +101,8 @@ export default function Minitel({ onClose, onLaunch }: { onClose: () => void; on
     }, step * (items.length + 1));
   };
 
-  const menuLines = (): Omit<Line, "id">[] => MENU.map((m) => ({ text: `${m.key}  ${lang === "en" ? (m.en ?? m.label) : m.label}`, choice: m.choice }));
-
   useEffect(() => {
+    if (fastBoot) return;
     script(
       [
         { text: tr("CONNEXION...", "CONNECTING...") },
@@ -84,7 +111,7 @@ export default function Minitel({ onClose, onLaunch }: { onClose: () => void; on
         { text: tr("TAPEZ UN NUMERO OU CLIQUEZ :", "TYPE A NUMBER OR CLICK:"), dim: true },
         ...menuLines(),
       ],
-      220,
+      180,
     );
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -93,7 +120,7 @@ export default function Minitel({ onClose, onLaunch }: { onClose: () => void; on
       document.body.style.overflow = prev;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fastBoot]);
 
   useEffect(() => {
     screenRef.current?.scrollTo({ top: screenRef.current.scrollHeight });
@@ -105,7 +132,9 @@ export default function Minitel({ onClose, onLaunch }: { onClose: () => void; on
 
   const launch = (label: string, g: Game) => {
     busy.current = true;
-    script([{ text: `${tr("LANCEMENT", "LAUNCHING")} ${label}...` }], 120, () => {
+    setInput("");
+    inputRef.current?.blur();
+    script([{ text: `${tr("LANCEMENT", "LAUNCHING")} ${label}...` }], 90, () => {
       busy.current = false;
       onLaunch(g);
     });
@@ -113,6 +142,7 @@ export default function Minitel({ onClose, onLaunch }: { onClose: () => void; on
 
   const run = (raw: string) => {
     const cmd = raw.trim().toUpperCase();
+    setInput("");
     if (!cmd) return;
     if (cmd === "4" || cmd === "QUITTER" || cmd === "QUIT" || cmd === "EXIT") {
       busy.current = false;
@@ -211,7 +241,12 @@ export default function Minitel({ onClose, onLaunch }: { onClose: () => void; on
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    run(l.choice!);
+                    if (l.choice === "QUITTER") {
+                      busy.current = false;
+                      onClose();
+                    } else {
+                      run(l.choice!);
+                    }
                   }}
                   className="block w-full px-2 py-0.5 text-left tracking-wide transition-colors hover:bg-[#FFB547] hover:text-[#0d0b08] hover:[text-shadow:none]"
                 >
