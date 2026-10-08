@@ -6,9 +6,42 @@ import { loc, useLang, type Loc } from "../i18n";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const PASSIONS: Loc<{ k: string; t: string; d: string }>[] = [
-  { k: "Motorsport", t: "Formule 1", d: "La F1 combine tout ce que j'aime : innovation technique, aérodynamique, ingénierie extrême. Mais aussi la stratégie, la dimension médiatique et la politique entre écuries. Un écosystème ultra-compétitif où chaque détail compte.", en: { t: "Formula 1", d: "F1 combines everything I love: technical innovation, aerodynamics, extreme engineering. But also strategy, the media side and the politics between teams. An ultra-competitive ecosystem where every detail matters." } },
-  { k: "Esport", t: "Gaming & Team Vitality", d: "J'observe la scène esport grandir, côté communauté comme côté hardware et infrastructures. Grand supporter de la Team Vitality, j'ai organisé des tournois pour MINITEL : ma façon d'entrer dans cet univers par la logistique événementielle.", en: { d: "I've watched the esports scene grow, on the community side as well as hardware and infrastructure. A big Team Vitality supporter, I organized tournaments for MINITEL: my way into this world through event logistics." } },
-  { k: "Sports", t: "Pratiquer & observer", d: "Cyclisme, judo, ping-pong, football, MMA… Au-delà de l'effort, je regarde toujours les innovations qui s'y introduisent : data analysis, nouveaux matériaux, arbitrage vidéo.", en: { t: "Play & watch", d: "Cycling, judo, table tennis, football, MMA… Beyond the effort, I always look at the innovations making their way in: data analysis, new materials, video refereeing." } },
+  {
+    k: "Motorsport",
+    t: "Formule 1",
+    d: "La F1 combine tout ce que j'aime : innovation technique, aérodynamique, ingénierie extrême. Mais aussi la stratégie, la dimension médiatique et la politique entre écuries. Un écosystème ultra-compétitif où chaque détail compte.",
+    en: {
+      t: "Formula 1",
+      d: "F1 combines everything I love: technical innovation, aerodynamics, extreme engineering. But also strategy, the media side and the politics between teams. An ultra-competitive ecosystem where every detail matters."
+    }
+  },
+  {
+    k: "Esport",
+    t: "Scène compétitive & Vitality",
+    d: "Plus qu'un loisir : une culture de la performance mentale sous tension, de la communication d'équipe et du clutch. Grand supporter de Team Vitality, j'ai aussi organisé des tournois LAN pour MINITEL pour faire vivre la dimension événementielle et technique de l'intérieur.",
+    en: {
+      t: "Competitive Esport & Vitality",
+      d: "More than gaming: high-pressure mental resilience, team communication and clutch decision-making. A dedicated Team Vitality fan, I also organized grassroots LAN tournaments for MINITEL to experience esports event operations firsthand."
+    }
+  },
+  {
+    k: "Sport",
+    t: "Discipline & dépassement",
+    d: "Cyclisme, running, sports de combat, judo. L'effort physique exigeant est mon équilibre indispensable : il forge la persévérance, la lucidité face à la fatigue et la volonté constante de repousser mes propres limites.",
+    en: {
+      t: "Discipline & Grit",
+      d: "Cycling, running, combat sports, judo. Demanding physical exertion is my daily anchor: it builds resilience, mental clarity under fatigue, and an ongoing drive to push personal boundaries."
+    }
+  },
+  {
+    k: "Innovation",
+    t: "Tech, marchés & finance",
+    d: "Passionné par l'actualité technologique, les semi-conducteurs, l'IA et les marchés financiers. Je scrute en continu comment l'innovation matérielle et logicielle bouleverse les dynamiques industrielles, les valorisations et les modèles économiques mondiaux.",
+    en: {
+      t: "Tech, Markets & Finance",
+      d: "Deeply interested in tech news, semiconductors, AI breakthroughs and financial markets. Constantly tracking how hardware and software disruption reshapes industrial value chains, company valuations and global economics."
+    }
+  },
 ];
 
 type Dest = { key: string; name: string; cities: string; theme: string; title: string; text: string; pts: [number, number][] };
@@ -106,17 +139,38 @@ export default function Passions({ Label }: { Label: (p: { children: React.React
   const dest = dests.find((d) => d.key === destKey)!;
   return (
     <>
-      <div className="grid gap-px bg-ink/15 md:grid-cols-3">
+      <div className="grid gap-px bg-ink/15 sm:grid-cols-2 lg:grid-cols-4">
         {PASSIONS.map((raw) => loc(raw, lang)).map((p, i) => (
-          <motion.article key={p.k} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease, delay: i * 0.08 }} className="group bg-paper p-8">
-            <Label className="text-signal">0{i + 1} · {p.k}</Label>
-            <h3 className="mt-6 font-serif text-4xl italic">{p.t}</h3>
-            <p className="mt-4 leading-relaxed text-mute">{p.d}</p>
+          <motion.article key={p.k} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease, delay: i * 0.08 }} className="group bg-paper p-8 flex flex-col justify-between">
+            <div>
+              <Label className="text-signal">0{i + 1} · {p.k}</Label>
+              <h3 className="mt-6 font-serif text-3xl italic">{p.t}</h3>
+              <p className="mt-4 leading-relaxed text-mute text-sm">{p.d}</p>
+            </div>
           </motion.article>
         ))}
       </div>
 
-      <div className="mt-px grid items-center gap-10 bg-paper pt-16 lg:grid-cols-[1fr_1.1fr]">
+      {/* Séparation éditoriale et introduction aux voyages */}
+      <div className="mt-20 border-t border-ink/15 pt-14">
+        <div className="max-w-3xl">
+          <div className="flex items-center gap-2">
+            <span className="size-2 rounded-full bg-signal" />
+            <Label className="text-signal">{tr("06.B · Mobilités & Cultures", "06.B · Mobility & Cultures")}</Label>
+          </div>
+          <h3 className="mt-4 font-serif text-3xl italic tracking-tight sm:text-4xl text-ink">
+            {tr("Voyager, s'ouvrir aux cultures & observer le monde.", "Traveling, exploring cultures & observing the world.")}
+          </h3>
+          <p className="mt-4 text-[15px] leading-relaxed text-mute sm:text-base">
+            {tr(
+              "J'ai eu l'opportunité de voyager dès le plus jeune âge, que ce soit en famille ou en autonomie pour mes études, stages et mobilités internationales (comme mon semestre académique à Milan). Découvrir d'autres cultures, comprendre comment d'autres sociétés pensent leurs villes, leurs objets du quotidien et leur technologie est une source d'inspiration permanente. La carte interactive ci-dessous retrace ces escales marquantes et permettra bientôt de découvrir mes photos personnelles et résumés de terrain.",
+              "I have been fortunate to travel from an early age—both with family and independently for academic exchanges (such as my semester at Politecnico di Milano) and internships. Exploring new cultures, understanding how different societies design their cities, everyday products and technologies is a constant source of inspiration. The interactive map below retraces these key journeys and will soon feature personal photography and field notes."
+            )}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-10 grid items-center gap-10 bg-paper pt-4 lg:grid-cols-[1fr_1.1fr]">
         <div className="relative mx-auto w-full max-w-[520px]">
           <Globe activeKey={dest.key} />
           <div className="glass absolute top-4 left-4 flex items-center gap-2 rounded-full px-3 py-1.5 font-mono text-[10px] uppercase">
