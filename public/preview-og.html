@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Open Graph Image</title>
+  <title>Arthur Doradoux | Open Graph Card</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap');
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
@@ -12,32 +12,34 @@
       width: 1200px;
       height: 630px;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      /* Soft Apple-like mesh background */
-      background: radial-gradient(circle at 15% 50%, rgba(228, 233, 242, 1), transparent 50%),
-                  radial-gradient(circle at 85% 30%, rgba(230, 235, 245, 1), transparent 50%),
-                  radial-gradient(circle at 50% 80%, rgba(240, 240, 245, 1), transparent 50%),
-                  #f5f5f7;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #0E1015;
+      background-image: 
+        radial-gradient(ellipse 60% 50% at 20% 20%, rgba(255, 77, 0, 0.12), transparent 70%),
+        radial-gradient(ellipse 50% 50% at 80% 80%, rgba(56, 189, 248, 0.08), transparent 70%),
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 40px;
     }
 
-    /* Glassmorphism Business Card (More like a real card ratio) */
-    .glass-card {
-      width: 1000px;
-      height: 540px;
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(40px) saturate(180%);
-      -webkit-backdrop-filter: blur(40px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      border-radius: 32px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 1);
+    /* Precision Instrument Tech Card */
+    .card {
+      width: 1120px;
+      height: 550px;
+      background: rgba(18, 20, 26, 0.88);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       align-items: stretch;
-      padding: 56px 64px;
+      padding: 48px 56px;
       position: relative;
     }
 
@@ -47,115 +49,179 @@
       flex-direction: column;
       justify-content: space-between;
       flex: 1;
-      padding-right: 40px;
+      padding-right: 48px;
     }
 
-    .header-section {
+    .top-bar {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      background: #FF4D00;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(255, 77, 0, 0.4);
+    }
+
+    .brand-logo svg {
+      width: 22px;
+      height: 22px;
+      fill: #ffffff;
+    }
+
+    .school-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #A1A1AA;
+    }
+
+    .school-tag.polimi {
+      color: #38BDF8;
+      border-color: rgba(56, 189, 248, 0.25);
+      background: rgba(56, 189, 248, 0.06);
+    }
+
+    .school-tag.emse {
+      color: #FBBF24;
+      border-color: rgba(251, 191, 36, 0.25);
+      background: rgba(251, 191, 36, 0.06);
+    }
+
+    .main-section {
+      margin-top: 14px;
     }
 
     .name {
-      font-size: 52px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: #111827;
-      line-height: 1.1;
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #FFFFFF;
+      line-height: 1;
     }
 
     .role {
       font-size: 24px;
-      font-weight: 500;
-      letter-spacing: -0.01em;
-      color: #4b5563;
-      margin-bottom: 24px;
-    }
-
-    .education-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .edu-item {
-      font-size: 18px;
-      line-height: 1.4;
-      color: #6b7280;
-      font-weight: 400;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #FF4D00;
+      margin-top: 12px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .edu-item b {
-      color: #374151;
+    .role-bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #71717A;
+    }
+
+    .role-sub {
+      color: #E4E4E7;
+      font-weight: 500;
+    }
+
+    .desc {
+      font-size: 16px;
+      line-height: 1.55;
+      color: #A1A1AA;
+      margin-top: 16px;
+      max-width: 580px;
+    }
+
+    .desc b {
+      color: #F4F4F5;
       font-weight: 600;
     }
-    
-    .school {
-      color: #9ca3af;
-    }
 
+    /* Badges footer */
     .footer-section {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      width: max-content;
+      gap: 12px;
+      margin-top: 24px;
     }
 
     .contact-row {
       display: flex;
-      gap: 14px;
-      width: 100%;
+      gap: 12px;
     }
 
     .badge {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 15px;
+      gap: 9px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
       font-weight: 500;
-      color: #374151;
-      background: rgba(255, 255, 255, 0.8);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      padding: 10px 16px;
+      color: #E4E4E7;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      padding: 10px 18px;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
       letter-spacing: -0.01em;
     }
 
-    .badge-top {
-      flex: 1 1 auto;
-    }
-
-    .badge-bottom {
-      width: 100%;
-    }
-
     .badge svg {
-      width: 18px;
-      height: 18px;
-      color: #6b7280;
+      width: 15px;
+      height: 15px;
+      color: #FF4D00;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: #10B981;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 9px 18px;
+      border-radius: 12px;
+      width: fit-content;
+    }
+
+    .status-pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px #10B981;
     }
 
     /* Right Column - Photo */
     .col-right {
-      width: 310px;
+      width: 360px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
 
     .photo-container {
-      width: 290px;
-      height: 370px;
-      border-radius: 28px;
+      width: 320px;
+      height: 420px;
+      border-radius: 22px;
       overflow: hidden;
-      border: 6px solid #ffffff;
-      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
-      background: #e5e7eb;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      background: #181A22;
+      position: relative;
     }
 
     .photo-container img {
@@ -164,42 +230,80 @@
       object-fit: cover;
       object-position: center 20%;
     }
+
+    .photo-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px;
+      background: linear-gradient(to top, rgba(10, 12, 16, 0.95), transparent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .photo-caption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #A1A1AA;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .photo-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: #FF4D00;
+      background: rgba(255, 77, 0, 0.15);
+      border: 1px solid rgba(255, 77, 0, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
-  <div class="glass-card">
+  <div class="card">
     <div class="col-left">
-      <div class="header-section">
-        <h1 class="name">Arthur Doradoux</h1>
-        <div class="role">Aspiring Product Owner in Consumer Tech</div>
-        
-        <div class="education-stack">
-          <div class="edu-item">
-            <span><b>Microelectronics & Computer Science</b> <span class="school">(Mines Saint-Étienne)</span></span>
-          </div>
-          <div class="edu-item">
-            <span><b>Product Design</b> <span class="school">(Politecnico di Milano)</span></span>
-          </div>
-          <!-- <div class="edu-item">
-            <!-- <span><b>Management, Business Strategy & Innovation</b> <span class="school">(emlyon)</span></span> -->
-          </div> -->
+      <div class="top-bar">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 2 22 22 22 12 2"/></svg>
         </div>
+        <span class="school-tag emse">Mines Saint-Étienne</span>
+        <span class="school-tag polimi">Politecnico di Milano</span>
+      </div>
+
+      <div class="main-section">
+        <h1 class="name">Arthur Doradoux</h1>
+        <div class="role">
+          <span>Ingénieur & Product Design</span>
+          <span class="role-bullet"></span>
+          <span class="role-sub">Consumer Tech</span>
+        </div>
+        
+        <p class="desc">
+          Systèmes embarqués, microélectronique et design industriel.  
+          Portfolio interactif avec <b>banc de test SoC silicium</b>, <b>terminal 3615 MINITEL</b> et projets techniques.
+        </p>
       </div>
 
       <div class="footer-section">
         <div class="contact-row">
-          <div class="badge badge-top">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          <div class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             arthurdx.com
           </div>
-          <div class="badge badge-top">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+          <div class="badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
             linkedin.com/in/arthur-doradoux
           </div>
         </div>
-        <div class="badge badge-bottom">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          Seeking 6-month Final Year Internship · From April 2027
+
+        <div class="badge-status">
+          <span class="status-pulse"></span>
+          Recherche stage de fin d'études (5-6 mois) · Dès Avril 2027
         </div>
       </div>
     </div>
@@ -207,6 +311,10 @@
     <div class="col-right">
       <div class="photo-container">
         <img src="./og-profile.jpg" alt="Arthur Doradoux" />
+        <div class="photo-overlay">
+          <span class="photo-caption">Arthur Doradoux</span>
+          <span class="photo-badge">Portfolio V3</span>
+        </div>
       </div>
     </div>
   </div>

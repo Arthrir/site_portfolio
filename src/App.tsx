@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence, MotionValue } from "motion/react";
-import { ArrowUpRight, Command, Copy, Check, Download, Mail, Search, CornerDownLeft, Send, ChevronDown } from "lucide-react";
+import { ArrowUpRight, Command, Copy, Check, Download, Mail, Search, CornerDownLeft, Send, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Logo from "./components/Logo";
 import Die from "./components/Die";
 import Legal from "./sections/Legal";
@@ -805,6 +805,109 @@ const asset = (p?: string): string => {
   return `${base}/${clean}`;
 };
 
+function SheetCarousel({ images, title }: { images: string[]; title: string }) {
+  const [index, setIndex] = useState(0);
+
+  const prev = () => setIndex((i) => (i === 0 ? images.length - 1 : i - 1));
+  const next = () => setIndex((i) => (i === images.length - 1 ? 0 : i + 1));
+
+  // Clavier gauche/droite pour naviguer si plusieurs images
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [images.length]);
+
+  if (images.length === 0) return null;
+
+  if (images.length === 1) {
+    return (
+      <div className="relative overflow-hidden rounded-xl border border-line bg-paper">
+        <img
+          src={asset(images[0])}
+          alt={title}
+          onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
+          className="w-full max-h-[460px] object-cover"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative select-none">
+      {/* Conteneur principal de l'image */}
+      <div className="relative overflow-hidden rounded-xl border border-line bg-[#0E1015]">
+        <div className="relative flex aspect-[16/10] sm:aspect-[16/9] w-full items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={images[index]}
+              src={asset(images[index])}
+              alt={`${title} - photo ${index + 1}`}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_e, info) => {
+                if (info.offset.x > 50) prev();
+                else if (info.offset.x < -50) next();
+              }}
+              onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
+              className="h-full w-full object-contain cursor-grab active:cursor-grabbing"
+            />
+          </AnimatePresence>
+        </div>
+
+        {/* Boutons de navigation Flèches */}
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); prev(); }}
+          aria-label="Image précédente"
+          className="absolute left-3 top-1/2 -translate-y-1/2 flex size-9 items-center justify-center rounded-full bg-ink/70 text-paper backdrop-blur-md transition-all hover:bg-ink hover:scale-105 active:scale-95"
+        >
+          <ChevronLeft className="size-5" />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); next(); }}
+          aria-label="Image suivante"
+          className="absolute right-3 top-1/2 -translate-y-1/2 flex size-9 items-center justify-center rounded-full bg-ink/70 text-paper backdrop-blur-md transition-all hover:bg-ink hover:scale-105 active:scale-95"
+        >
+          <ChevronRight className="size-5" />
+        </button>
+
+        {/* Indicateur compteur en haut à droite */}
+        <div className="absolute top-3 right-3 rounded-full bg-ink/70 px-2.5 py-1 font-mono text-[11px] text-paper backdrop-blur-md">
+          {index + 1} / {images.length}
+        </div>
+      </div>
+
+      {/* Points indicateurs & vignettes en bas */}
+      <div className="mt-3 flex items-center justify-center gap-2">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setIndex(i)}
+            aria-label={`Aller à la photo ${i + 1}`}
+            className={`transition-all ${
+              i === index
+                ? "h-2 w-6 rounded-full bg-signal"
+                : "size-2 rounded-full bg-ink/20 hover:bg-ink/50"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ---------------- Detail sheet ---------------- */
 type Detail = { kicker: string; title: string; meta?: string; logo?: string; lead?: string; points: string[]; tags?: string[]; img?: string[]; links?: { l: string; h: string }[]; with?: string };
 function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
@@ -896,19 +999,6 @@ function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
               <motion.h2 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6, ease }} className="text-4xl leading-[1] font-semibold tracking-[-0.035em] md:text-5xl">{d.title}</motion.h2>
               {d.meta && <p className="mt-4 font-mono text-[11px] tracking-wider text-mute uppercase">{d.meta}</p>}
               {d.lead && <p className="mt-8 text-xl leading-snug">{d.lead}</p>}
-              {d.img && d.img.length > 0 && (
-                <div className="mt-10 grid gap-3">
-                  {d.img.map((src) => (
-                    <img
-                      key={src}
-                      src={asset(src)}
-                      alt=""
-                      onError={(e) => { (e.currentTarget as HTMLElement).style.display = "none"; }}
-                      className="w-full border border-line object-cover rounded-lg"
-                    />
-                  ))}
-                </div>
-              )}
               <div className="mt-10 border-t border-ink pt-6">
                 <Label>{tr("Ce que j'ai fait", "What I did")}</Label>
                 <ul className="mt-5 space-y-4">
@@ -923,6 +1013,19 @@ function Sheet({ d, onClose }: { d: Detail | null; onClose: () => void }) {
                 <div className="mt-10 border-t border-line pt-6">
                   <Label>{tr("Stack & compétences", "Stack & skills")}</Label>
                   <div className="mt-4 flex flex-wrap gap-1.5">{d.tags.map((t) => <span key={t} className="border border-ink/20 px-2 py-1 font-mono text-[11px]">{t}</span>)}</div>
+                </div>
+              )}
+              {d.img && d.img.length > 0 && (
+                <div className="mt-10 border-t border-ink pt-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <Label>{tr("Galerie photos & visuels", "Photo & visual gallery")}</Label>
+                    {d.img.length > 1 && (
+                      <span className="font-mono text-[11px] text-mute tracking-wider">
+                        {d.img.length} {tr("photos", "photos")}
+                      </span>
+                    )}
+                  </div>
+                  <SheetCarousel images={d.img} title={d.title} />
                 </div>
               )}
               <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-line pt-6">
