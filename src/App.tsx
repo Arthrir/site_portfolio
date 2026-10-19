@@ -1713,7 +1713,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#E11D48");
+  const [dotColor, setDotColor] = useState("#2340F0");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2253,10 +2253,11 @@ function Page() {
       <Palette open={palette} onClose={() => setPalette(false)} onGame={setGame} />
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
-        optionName="Option B : Design Suisse"
-        tagline="Blanc cassé mat (#F4F4F0) · Rouge signal (#E11D48) · Typographie Geist"
-        palette={{ paper: "#F4F4F0", ink: "#18181B", signal: "#E11D48", mute: "#71717A", line: "#D4D4D8" }}
-        typography={{ sans: "Geist", serif: "Geist", concept: "Pureté néo-grotesque suisse" }}
+        currentOption="b"
+        optionName="Option B : Craie & Garamond"
+        tagline="Fond craie minérale doux (#F4F4EE) · Bleu électrique signature (#2340F0) · Schibsted Grotesk + Cormorant Garamond"
+        palette={{ paper: "#F4F4EE", ink: "#121211", signal: "#2340F0", mute: "#64625A", line: "#DDD9CE" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Cormorant Garamond (Renaissance)", concept: "Élégance éditoriale d'époque & rigueur d'ingénierie moderne" }}
       />
     </div>
   );
