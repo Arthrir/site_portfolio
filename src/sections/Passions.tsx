@@ -130,7 +130,7 @@ export default function Passions({ Label }: { Label: (p: { children: React.React
   const dest = dests.find((d) => d.key === destKey)!;
   return (
     <>
-      <div className="grid gap-px bg-ink/15 md:grid-cols-3">
+      <div className="grid divide-y divide-ink/15 md:grid-cols-3 md:divide-y-0 md:divide-x divide-ink/15">
         {PASSIONS.map((raw) => loc(raw, lang)).map((p, i) => (
           <motion.article key={p.k} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, ease, delay: i * 0.08 }} className="group bg-paper p-8 flex flex-col justify-between">
             <div>

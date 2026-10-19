@@ -59,11 +59,10 @@ body {
 .text-outline { color: transparent; -webkit-text-stroke: 1.2px var(--color-ink); }
 .text-outline-paper { color: transparent; -webkit-text-stroke: 1.2px var(--color-paper); }
 
-/* Animation reflet doré champagne glossy (Option B) */
+/* Animation reflet doré champagne glossy (Option B) : cycle unidirectionnel qui dépasse la fin */
 @keyframes gold-gloss {
-  0% { background-position: 100% 0%; }
-  50% { background-position: 0% 0%; }
-  100% { background-position: 100% 0%; }
+  0% { background-position: 240% 0; }
+  100% { background-position: -140% 0; }
 }
 .glossy-gold-text {
   background: linear-gradient(
@@ -80,7 +79,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-  animation: gold-gloss 4s ease-in-out infinite;
+  animation: gold-gloss 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.7));
 }
 .glossy-gold-badge {
