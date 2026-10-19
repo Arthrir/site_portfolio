@@ -1,22 +1,26 @@
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useLang } from "../i18n";
-import { Sparkles, Scan, Crosshair } from "lucide-react";
+import { Crosshair, Cpu } from "lucide-react";
 
 interface SiliconWaferProps {
   onColorChange?: (color: string) => void;
 }
 
+const GRID_SIZE = 25; // 25x25 = 625 slots -> ~440 micro-dies réels sur le disque
+const RADIUS = 11.6;
+const CENTER = 12;
+
 export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
   const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const rx = useSpring(useTransform(my, [-1, 1], [10, -10]), { stiffness: 150, damping: 22 });
-  const ry = useSpring(useTransform(mx, [-1, 1], [-10, 10]), { stiffness: 150, damping: 22 });
+  const rx = useSpring(useTransform(my, [-1, 1], [9, -9]), { stiffness: 180, damping: 24 });
+  const ry = useSpring(useTransform(mx, [-1, 1], [-9, 9]), { stiffness: 180, damping: 24 });
   const { tr } = useLang();
 
-  // Die sélectionné sur le wafer
-  const [selectedDie, setSelectedDie] = useState<{ x: number; y: number }>({ x: 6, y: 6 });
+  // Die sélectionné sur le wafer (par défaut au centre)
+  const [selectedDie, setSelectedDie] = useState<{ x: number; y: number }>({ x: 12, y: 12 });
   const [iridAngle, setIridAngle] = useState(135);
 
   const colors = ["#2340F0", "#E10600", "#10B981", "#D4AF37", "#8B5CF6"];
@@ -32,9 +36,10 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
       <motion.div
         ref={ref}
         style={{ rotateX: rx, rotateY: ry }}
-        className="group relative aspect-square w-full rounded-full p-4 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.45),0_10px_25px_-5px_rgba(0,0,0,0.2)] border border-black/10 [transform-style:preserve-3d] transition-shadow hover:shadow-[0_40px_90px_-20px_rgba(0,0,0,0.6)] cursor-crosshair"
+        className="group relative aspect-square w-full rounded-full [transform-style:preserve-3d] cursor-crosshair"
         onPointerMove={(e) => {
-          const r = ref.current!.getBoundingClientRect();
+          if (!ref.current) return;
+          const r = ref.current.getBoundingClientRect();
           const nx = ((e.clientX - r.left) / r.width) * 2 - 1;
           const ny = ((e.clientY - r.top) / r.height) * 2 - 1;
           mx.set(nx);
@@ -46,93 +51,94 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
           my.set(0);
         }}
       >
-        {/* DISQUE DE WAFER EN SILICIUM PUR (AVEC ENCOCHE NOTCH D'ALIGNEMENT EN BAS) */}
-        <div className="relative size-full rounded-full bg-gradient-to-tr from-[#0F172A] via-[#1E293B] to-[#0A0F1D] shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),inset_0_-4px_8px_rgba(0,0,0,0.8)] border border-white/20 overflow-hidden flex items-center justify-center">
+        {/* DISQUE DU WAFER : CERCLE PARFAIT (Aspect 1:1, biseau métallique, sans aucun élément asymétrique) */}
+        <div className="relative size-full rounded-full bg-gradient-to-tr from-[#080C14] via-[#151E2E] to-[#0A0D15] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.5),0_10px_30px_-10px_rgba(0,0,0,0.3),inset_0_2px_3px_rgba(255,255,255,0.45),inset_0_-4px_12px_rgba(0,0,0,0.95)] border border-white/25 overflow-hidden flex items-center justify-center">
 
-          {/* Encoche industrielle (Alignment Notch à 270° en bas) */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-2 bg-[#F1F3F5] rounded-t-full border-t border-black/20 z-20 pointer-events-none" />
+          {/* Anneau d'exclusion de bordure (Edge Bead Removal 3mm) - Gravure concentrique parfaite */}
+          <div className="pointer-events-none absolute inset-2 rounded-full border border-white/10" />
+          <div className="pointer-events-none absolute inset-3 rounded-full border border-dashed border-white/15" />
 
-          {/* Anneau d'exclusion de bordure (Edge Bead Removal 3mm) */}
-          <div className="absolute inset-2 rounded-full border border-white/10 pointer-events-none" />
-          <div className="absolute inset-3.5 rounded-full border border-dashed border-white/15 pointer-events-none" />
+          {/* Encoche industrielle SEMI Notch (micro-repère discret à 270° au bas du wafer) */}
+          <div className="pointer-events-none absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-1 bg-black/80 rounded-t-sm border-t border-white/30 z-20" />
 
-          {/* COUCHE D'INTERFÉRENCE OPTIQUE DIFFRACTANTE (RÉSEAU DE SILICIUM SOUS LITHOGRAPHIE) */}
+          {/* COUCHE D'INTERFÉRENCE OPTIQUE DIFFRACTANTE (Couleurs interférentielles réactives) */}
           <div
             style={{
-              background: `linear-gradient(${iridAngle}deg, rgba(236,72,153,0.18) 0%, rgba(59,130,246,0.25) 25%, rgba(16,185,129,0.22) 50%, rgba(245,158,11,0.25) 75%, rgba(139,92,246,0.18) 100%)`,
+              background: `linear-gradient(${iridAngle}deg, rgba(236,72,153,0.22) 0%, rgba(59,130,246,0.28) 25%, rgba(16,185,129,0.22) 50%, rgba(245,158,11,0.26) 75%, rgba(139,92,246,0.22) 100%)`,
             }}
             className="pointer-events-none absolute inset-0 mix-blend-screen transition-all duration-150"
           />
 
-          {/* Reflet miroir spéculaire blanc de salle blanche */}
+          {/* Reflet miroir spéculaire blanc de salle blanche qui suit le curseur */}
           <motion.div
             style={{
-              x: useTransform(mx, [-1, 1], [-80, 80]),
-              y: useTransform(my, [-1, 1], [-80, 80]),
+              x: useTransform(mx, [-1, 1], [-70, 70]),
+              y: useTransform(my, [-1, 1], [-70, 70]),
             }}
-            className="pointer-events-none absolute -inset-24 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.28)_0%,transparent_60%)]"
+            className="pointer-events-none absolute -inset-20 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.25)_0%,transparent_55%)]"
           />
 
-          {/* MATRICE DE DIES LITHOGRAPHIÉS (WAFER MAP) */}
-          <div className="relative z-10 grid grid-cols-11 grid-rows-11 gap-1 size-[84%] p-2">
-            {Array.from({ length: 11 }).map((_, gy) =>
-              Array.from({ length: 11 }).map((_, gx) => {
-                // Masquage circulaire des coins pour épouser le disque du wafer
-                const dx = gx - 5;
-                const dy = gy - 5;
+          {/* RÉTICULES & LIGNES DE SCRIBE DES AXES PRINCIPAUX */}
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="w-full h-px bg-white/10" />
+            <div className="absolute h-full w-px bg-white/10" />
+            <div className="absolute size-28 rounded-full border border-white/15" />
+          </div>
+
+          {/* MATRICE DENSE DE MICRO-DIES (25x25 = ~440 TOUT PETITS CARRÉS DE SILICIUM RÉALISTES) */}
+          <div className="relative z-10 grid grid-cols-25 grid-rows-25 gap-[1px] size-[82%] p-0.5">
+            {Array.from({ length: GRID_SIZE }).map((_, gy) =>
+              Array.from({ length: GRID_SIZE }).map((_, gx) => {
+                const dx = gx - CENTER;
+                const dy = gy - CENTER;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist > 5.1) return <div key={`${gx}-${gy}`} className="size-full opacity-0 pointer-events-none" />;
+                if (dist > RADIUS) {
+                  return <div key={`${gx}-${gy}`} className="size-full opacity-0 pointer-events-none" />;
+                }
 
                 const isSelected = selectedDie.x === gx && selectedDie.y === gy;
-                const isCenter = gx === 5 && gy === 5;
+                const isCenter = gx === CENTER && gy === CENTER;
 
                 return (
                   <button
                     key={`${gx}-${gy}`}
                     onClick={() => handleDieClick(gx, gy)}
-                    className={`relative size-full rounded-[2px] transition-all cursor-pointer ${
+                    title={`Die [${gx}, ${gy}]`}
+                    className={`relative size-full rounded-[0.5px] transition-all cursor-pointer ${
                       isSelected
-                        ? "bg-white shadow-[0_0_12px_rgba(255,255,255,0.9)] scale-110 z-20 border border-white"
+                        ? "bg-white shadow-[0_0_8px_rgba(255,255,255,1)] scale-150 z-30 border border-white"
                         : isCenter
-                        ? "bg-[#D4AF37]/50 border border-[#D4AF37]/80 hover:bg-[#D4AF37]/80"
-                        : "bg-white/[0.08] hover:bg-white/[0.25] border border-white/10"
+                        ? "bg-[#D4AF37]/70 border border-[#D4AF37] hover:bg-[#D4AF37]"
+                        : "bg-white/[0.08] hover:bg-white/[0.38] border border-white/10"
                     }`}
-                  >
-                    {/* Micro-lignes de bus internes */}
-                    <span className="absolute inset-0.5 border-t border-l border-white/20 opacity-50 block" />
-                  </button>
+                  />
                 );
               })
             )}
           </div>
 
-          {/* RÉTICULES & MIRES D'ALIGNEMENT STEPPER ASML AUX 4 AXES */}
-          <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-            {/* Lignes de scribe axes X et Y */}
-            <div className="w-full h-px bg-white/10" />
-            <div className="absolute h-full w-px bg-white/10" />
-            <div className="absolute size-32 rounded-full border border-white/15" />
-          </div>
-
-          {/* Sérigraphie industrielle fonderie */}
-          <div className="absolute top-8 left-1/2 -translate-x-1/2 font-mono text-[7px] tracking-[0.2em] text-white/50 uppercase pointer-events-none">
+          {/* Sérigraphie industrielle fonderie ASML / Mines */}
+          <div className="pointer-events-none absolute top-5 left-1/2 -translate-x-1/2 font-mono text-[7px] tracking-[0.22em] text-white/50 uppercase">
             WAFER 200mm · SILICON ⟨100⟩ · ASML DUV
           </div>
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-[7px] tracking-wider text-white/40 uppercase pointer-events-none">
+          <div className="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 font-mono text-[6.5px] tracking-wider text-white/40 uppercase">
             MINES ST-ÉTIENNE MICROELECTRONICS LAB
           </div>
         </div>
 
-        {/* Fiche de télémétrie du Die sélectionné */}
-        <div className="mt-4 flex items-center justify-between font-mono text-[10px] text-mute px-2">
+        {/* Fiche de télémétrie du Micro-Die sélectionné */}
+        <div className="mt-3.5 flex items-center justify-between font-mono text-[10.5px] text-mute px-2">
           <div className="flex items-center gap-1.5">
             <Crosshair className="size-3.5 text-signal" />
             <span className="font-semibold text-ink">
               DIE [{selectedDie.x}, {selectedDie.y}]
             </span>
-            <span className="text-mute/60">· YIELD 99.2%</span>
+            <span className="text-mute/60">· 440+ DIES · YIELD 99.4%</span>
           </div>
-          <span className="text-signal font-semibold">RV32I TAPE-OUT</span>
+          <div className="flex items-center gap-1 text-signal font-semibold">
+            <Cpu className="size-3" />
+            <span>RV32I TAPE-OUT</span>
+          </div>
         </div>
       </motion.div>
     </div>

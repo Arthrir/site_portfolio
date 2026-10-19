@@ -9,7 +9,7 @@ import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "./components/Brand";
 import Passions from "./sections/Passions";
 import Circuit from "./sections/Circuit";
 import ThemeBadge from "./components/ThemeBadge";
-import HeroDeck from "./components/HeroDeck";
+import SiliconWafer from "./components/SiliconWafer";
 import { LangProvider, LangToggle, loc, useLang, type Lang, type Loc } from "./i18n";
 
 const F1 = lazy(() => import("./games/F1"));
@@ -1775,8 +1775,18 @@ function Page() {
             <button onClick={() => setCv(true)} className="flex items-center gap-2 border border-ink px-5 py-3.5 text-sm font-medium transition-colors hover:bg-ink hover:text-paper"><Download className="size-4" />{tr("Mon CV", "My resume")}</button>
           </Reveal>
         </motion.div>
-        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[380px] sm:max-w-[430px] md:mt-0">
-          <HeroDeck onColorChange={(c) => setDotColor(c)} />
+        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[360px] sm:max-w-[420px] md:mt-0 md:max-w-[440px]">
+          <SiliconWafer onColorChange={(c) => setDotColor(c)} />
+          <motion.figure
+            initial={{ opacity: 0, y: 30, rotate: 0 }}
+            animate={{ opacity: 1, y: 0, rotate: -4 }}
+            transition={{ duration: 1.2, ease, delay: 0.9 }}
+            whileHover={{ rotate: 0, scale: 1.05, y: -4 }}
+            className="group absolute -top-12 -left-3 z-20 w-[105px] cursor-pointer select-none bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 transition-shadow hover:shadow-[0_25px_50px_-10px_rgba(18,18,17,.5)] sm:-top-10 sm:-left-6 sm:w-32 md:-top-12 md:-left-16 md:w-36"
+          >
+            <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
+            <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
+          </motion.figure>
         </motion.div>
       </header>
 
@@ -2238,10 +2248,10 @@ function Page() {
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
         currentOption="c"
-        optionName="Alternative : Éventail Interactif (Wafer Silicium × Product Spec × Design PoliMi)"
-        tagline="Jeu de cartes interactif en éventail · Carte 1 : Wafer 200mm parfaitement rond & micro-dies haute densité · Carte 2 : Board Product Owner & User Stories · Carte 3 : Spécification CMF PoliMi"
+        optionName="Alternative Hero : Wafer Silicium 200mm (Haute Densité 440+ Micro-Dies)"
+        tagline="Disque de silicium 200mm au biseau parfait avec 440+ micro-dies haute densité, diffraction optique interférentielle, réticules d'axes de scribe et sélection interactive"
         palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E5E7EB" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Jeu de cartes interactif unifiant ingénierie microélectronique, vision produit et design milanais" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Wafer silicium microélectronique réaliste avec matrice dense de micro-puces" }}
       />
     </div>
   );
