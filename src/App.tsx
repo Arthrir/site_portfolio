@@ -1255,7 +1255,7 @@ function Projects() {
                 <div className="flex items-start justify-between">
                   <span className="font-mono text-[11px] text-mute group-hover:text-paper/50">{p.d}</span>
                   <div className="flex items-center gap-2">
-                    {p.current && <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />Live</span>}
+                    {p.current && <span className="glossy-platinum-badge flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold text-ink uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />Live</span>}
                   </div>
                 </div>
                 <h3 className="mt-8 text-xl leading-tight font-semibold tracking-tight">{p.t}</h3>
@@ -1543,7 +1543,7 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
           initial={{ y: -30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.9, ease, delay: 0.2 }}
-          className="liquid relative flex items-center gap-1 rounded-full p-1.5"
+          className="apple-glass relative flex items-center gap-1 rounded-full p-1.5"
         >
           <a href="#top" onClick={onLogo} aria-label={tr("Accueil", "Home")} className="mr-1 ml-1.5 grid h-8 w-10 place-items-center rounded-full text-ink transition-colors hover:text-signal">
             <Logo className="h-[18px] w-auto" />
@@ -1552,27 +1552,16 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
             {nav.map((n) => {
               const lit = (pick ?? section) === n.id;
               return (
-                <a key={n.id} data-tab={n.id} href={`#${n.id}`} draggable={false} onClick={(e) => { if (dragging) e.preventDefault(); setPick(n.id); }} className="relative px-3.5 py-1.5 text-[13px] font-medium">
+                <a key={n.id} data-tab={n.id} href={`#${n.id}`} draggable={false} onClick={(e) => { if (dragging) e.preventDefault(); setPick(n.id); }} className="relative px-3.5 py-1.5 text-[13px]">
                   {lit && (
                     <motion.span
                       layoutId="lens"
-                      className="lens absolute inset-0 rounded-full"
-                      animate={{
-                        scale: dragging ? 1.34 : 1,
-                        scaleY: dragging ? 1.15 : 1,
-                      }}
-                      transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
-                    >
-                      <motion.span
-                        key={n.id}
-                        className="block size-full rounded-full"
-                        initial={{ scaleX: 1.25, scaleY: 0.75 }}
-                        animate={{ scaleX: 1, scaleY: 1 }}
-                        transition={{ type: "spring", stiffness: 350, damping: 14 }}
-                      />
-                    </motion.span>
+                      className="apple-pill absolute inset-0 rounded-full"
+                      animate={{ scale: dragging ? 1.04 : 1 }}
+                      transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.8 }}
+                    />
                   )}
-                  <span className={`relative inline-block transition-all duration-200 ${lit ? "text-ink font-semibold" : "text-ink/70"} ${lit && dragging ? "scale-115 drop-shadow-sm" : ""}`}>{n.label}</span>
+                  <span className={`relative z-10 inline-block transition-colors duration-150 ${lit ? "text-ink font-semibold" : "text-ink/65 hover:text-ink font-medium"}`}>{n.label}</span>
                 </a>
               );
             })}
@@ -1626,7 +1615,7 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
           initial={{ y: -30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.9, ease, delay: 0.25 }}
-          className="liquid rounded-full p-1.5"
+          className="apple-glass rounded-full p-1.5"
         >
           <LangToggle />
         </motion.div>
@@ -1735,22 +1724,6 @@ function Page() {
       <AnimatePresence>{legal && <Legal onClose={() => { history.replaceState(null, "", " "); setLegal(false); }} />}</AnimatePresence>
       <motion.div style={{ scaleX: bar }} className="fixed top-0 right-0 left-0 z-50 h-[2px] origin-left bg-signal md:hidden" />
       <Rail />
-
-      {/* Filtre de réfraction pour la lentille liquid glass */}
-      <svg className="absolute size-0" aria-hidden>
-        <filter id="lg-refract" x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.04" numOctaves="2" seed="7" result="n" />
-          <feGaussianBlur in="n" stdDeviation="2" result="nb" />
-          <feDisplacementMap in="SourceGraphic" in2="nb" scale="18" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-        {/* Bords réfractants façon Apple : carte de déplacement neutre au centre, qui tord les bords */}
-        <filter id="lg-nav" x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
-          <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20200%2050%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22r%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23f00%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000%22/%3E%3C/linearGradient%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%220%22%20y1%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%230f0%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000%22/%3E%3C/linearGradient%3E%3Cfilter%20id%3D%22b%22%3E%3CfeGaussianBlur%20stdDeviation%3D%225%22/%3E%3C/filter%3E%3C/defs%3E%3Crect%20width%3D%22200%22%20height%3D%2250%22%20fill%3D%22%23000%22/%3E%3Crect%20width%3D%22200%22%20height%3D%2250%22%20fill%3D%22url%28%23r%29%22/%3E%3Crect%20width%3D%22200%22%20height%3D%2250%22%20fill%3D%22url%28%23g%29%22%20style%3D%22mix-blend-mode%3Ascreen%22/%3E%3Crect%20x%3D%2214%22%20y%3D%2210%22%20width%3D%22172%22%20height%3D%2230%22%20rx%3D%2215%22%20fill%3D%22%23808000%22%20filter%3D%22url%28%23b%29%22/%3E%3C/svg%3E" preserveAspectRatio="none" x="0" y="0" width="100%" height="100%" result="map" />
-          <feDisplacementMap in="SourceGraphic" in2="map" scale="-46" xChannelSelector="R" yChannelSelector="G" result="d" />
-          <feGaussianBlur in="d" stdDeviation="0.4" />
-        </filter>
-      </svg>
-
       <Nav onLogo={tapLogo} onPalette={() => setPalette(true)} />
 
       {/* HERO */}
@@ -2061,7 +2034,11 @@ function Page() {
 
       {/* PROJECTS */}
       <section id="projets" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
-        <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
+        <div className="mb-14">
+          <Stacked ghost={tr("Réalisations", "Work")} n="04">
+            <span className="glossy-platinum-text font-bold inline-block">{tr("Projets.", "Projects.")}</span>
+          </Stacked>
+        </div>
         <Projects />
       </section>
 
@@ -2270,10 +2247,10 @@ function Page() {
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
         currentOption="c"
-        optionName="Option C : Full White & Platine Métallique"
-        tagline="Full Blanc pur (#FFFFFF) · Titres Instrument Serif originaux épurés (sans fausses lignes CAD) · Projets Platine métallique · Loupe Apple VisionOS"
+        optionName="Option C : Blanc Apple & Platine Glossy"
+        tagline="Full Blanc pur (#FFFFFF) · Verre dépoli officiel Apple (macOS/iOS) & capsule blanche · Grands titres Instrument Serif originaux épurés · Projets Platine Métallique Glossy"
         palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E5E7EB" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc pur immaculé, grands titres d'archive épurés et loupe liquid glass" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc pur Apple studio, verre dépoli natif macOS et titres d'archive épurés" }}
       />
     </div>
   );
