@@ -9,6 +9,7 @@ import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "./components/Brand";
 import Passions from "./sections/Passions";
 import Circuit from "./sections/Circuit";
 import ThemeBadge from "./components/ThemeBadge";
+import HeroPortrait from "./components/HeroPortrait";
 import { LangProvider, LangToggle, loc, useLang, type Lang, type Loc } from "./i18n";
 
 const F1 = lazy(() => import("./games/F1"));
@@ -1774,18 +1775,8 @@ function Page() {
             <button onClick={() => setCv(true)} className="flex items-center gap-2 border border-ink px-5 py-3.5 text-sm font-medium transition-colors hover:bg-ink hover:text-paper"><Download className="size-4" />{tr("Mon CV", "My resume")}</button>
           </Reveal>
         </motion.div>
-        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[360px] sm:max-w-[420px] md:mt-0 md:max-w-[460px]">
-          <Die onColorChange={(c) => setDotColor(c)} />
-          <motion.figure
-            initial={{ opacity: 0, y: 30, rotate: 0 }}
-            animate={{ opacity: 1, y: 0, rotate: -4 }}
-            transition={{ duration: 1.2, ease, delay: 0.9 }}
-            whileHover={{ rotate: 0, scale: 1.05, y: -4 }}
-            className="group absolute -top-12 -left-3 z-20 w-[105px] cursor-pointer select-none bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 transition-shadow hover:shadow-[0_25px_50px_-10px_rgba(18,18,17,.5)] sm:-top-10 sm:-left-6 sm:w-32 md:-top-12 md:-left-20 md:w-40"
-          >
-            <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
-            <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
-          </motion.figure>
+        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[380px] sm:max-w-[420px] md:mt-0">
+          <HeroPortrait onColorChange={(c) => setDotColor(c)} />
         </motion.div>
       </header>
 
@@ -2246,11 +2237,11 @@ function Page() {
       <Palette open={palette} onClose={() => setPalette(false)} onGame={setGame} />
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
-        currentOption="a"
-        optionName="Option A : Pure White & Chrome Glossy"
-        tagline="Full Blanc pur (#FFFFFF) · Verre dépoli officiel Apple (macOS/iOS) & capsule blanche · Titre Projets Chrome Métallique Glossy avec reflets spéculaires · Duo Bleu (#2340F0) + Point rouge vif (#E10600)"
+        currentOption="c"
+        optionName="Alternative 4 : Portrait Polaroid en Majesté"
+        tagline="Suppression totale du Die · Portrait photo baryté grand format avec texture argentique · Badges cursus Mines × PoliMi & dispo stage · 100% humain et épuré"
         palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E5E7EB" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc pur Apple studio, verre dépoli natif macOS et reflets chrome miroir" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Sobriété éditoriale pure, focus humain et valorisation de l'identité d'Arthur" }}
       />
     </div>
   );
