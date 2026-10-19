@@ -9,6 +9,7 @@ import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "./components/Brand";
 import Passions from "./sections/Passions";
 import Circuit from "./sections/Circuit";
 import ThemeBadge from "./components/ThemeBadge";
+import SiliconWafer from "./components/SiliconWafer";
 import { LangProvider, LangToggle, loc, useLang, type Lang, type Loc } from "./i18n";
 
 const F1 = lazy(() => import("./games/F1"));
@@ -1775,7 +1776,7 @@ function Page() {
           </Reveal>
         </motion.div>
         <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[360px] sm:max-w-[420px] md:mt-0 md:max-w-[460px]">
-          <Die onColorChange={(c) => setDotColor(c)} />
+          <SiliconWafer onColorChange={(c) => setDotColor(c)} />
           <motion.figure
             initial={{ opacity: 0, y: 30, rotate: 0 }}
             animate={{ opacity: 1, y: 0, rotate: -4 }}
@@ -2246,11 +2247,11 @@ function Page() {
       <Palette open={palette} onClose={() => setPalette(false)} onGame={setGame} />
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
-        currentOption="a"
-        optionName="Option A : Pure White & Chrome Glossy"
-        tagline="Full Blanc pur (#FFFFFF) · Verre dépoli officiel Apple (macOS/iOS) & capsule blanche · Titre Projets Chrome Métallique Glossy avec reflets spéculaires · Duo Bleu (#2340F0) + Point rouge vif (#E10600)"
+        currentOption="c"
+        optionName="Alternative 3 : Wafer de Silicium Lithographique"
+        tagline="Disque de wafer 200mm miroir · Réseau de diffraction optique irisé en temps réel · Mires stepper ASML & encoche industrielle · Sondage de die interactif"
         palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E5E7EB" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc pur Apple studio, verre dépoli natif macOS et reflets chrome miroir" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Physique réelle des semi-conducteurs (salle blanche & lithographie), pureté optique" }}
       />
     </div>
   );
