@@ -8,6 +8,7 @@ import CvViewer from "./sections/CvViewer";
 import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "./components/Brand";
 import Passions from "./sections/Passions";
 import Circuit from "./sections/Circuit";
+import ThemeBadge from "./components/ThemeBadge";
 import { LangProvider, LangToggle, loc, useLang, type Lang, type Loc } from "./i18n";
 
 const F1 = lazy(() => import("./games/F1"));
@@ -1712,7 +1713,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#FF4D00");
+  const [dotColor, setDotColor] = useState("#06B6D4");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2044,7 +2045,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": dotColor } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
@@ -2251,6 +2252,12 @@ function Page() {
       </Suspense>
       <Palette open={palette} onClose={() => setPalette(false)} onGame={setGame} />
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
+      <ThemeBadge
+        optionName="Option C : Labo Sombre"
+        tagline="Mode sombre ardoise (#0B0E14) · Cyan laser (#06B6D4) · Plus Jakarta Sans"
+        palette={{ paper: "#0B0E14", ink: "#F1F5F9", signal: "#06B6D4", mute: "#94A3B8", line: "#1E293B" }}
+        typography={{ sans: "Plus Jakarta Sans", serif: "Space Grotesk", concept: "Haute lisibilité nocturne & phosphorescence" }}
+      />
     </div>
   );
 }
