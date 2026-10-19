@@ -1440,8 +1440,6 @@ function Rail() {
   const top = useTransform(p, (v) => `${v * 100}%`);
   const { lang } = useLang();
   const [marks, setMarks] = useState<{ id: string; at: number }[]>([]);
-  const [activeMarkId, setActiveMarkId] = useState<string>("");
-
   useEffect(() => {
     const calc = () => {
       const h = document.documentElement.scrollHeight - innerHeight;
@@ -1452,22 +1450,6 @@ function Rail() {
     addEventListener("resize", calc);
     return () => { clearTimeout(t); removeEventListener("resize", calc); };
   }, []);
-
-  // Détection de la section active où passe la F1
-  useEffect(() => {
-    return p.on("change", (latest) => {
-      if (marks.length === 0) return;
-      const closest = marks.reduce((prev, curr) =>
-        Math.abs(curr.at - latest) < Math.abs(prev.at - latest) ? curr : prev
-      );
-      if (Math.abs(closest.at - latest) < 0.045) {
-        setActiveMarkId(closest.id);
-      } else {
-        setActiveMarkId("");
-      }
-    });
-  }, [p, marks]);
-
   // la piste remplace la barre de défilement : clic ou glisser la F1 pour se déplacer
   const track = useRef<HTMLDivElement>(null);
   const seek = (y: number) => {
@@ -1483,42 +1465,13 @@ function Rail() {
   return (
     <div className="fixed top-[calc(env(safe-area-inset-top)+28px)] right-0 bottom-7 z-40 hidden w-8 md:block">
       <div ref={track} onPointerDown={down} onPointerMove={move} className="group/rail relative mx-auto h-full w-6 cursor-grab touch-none active:cursor-grabbing">
-        {/* Piste et progression en mix-blend-mode: difference avec blanc pur */}
-        <div className="pointer-events-none absolute inset-0 mix-blend-difference">
-          {/* Ligne de piste (apparaît sombre sur fond clair, blanc pur sur le noir #experiences) */}
-          <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-white/40" />
-          {/* Ligne de progression scroll */}
-          <motion.div style={{ scaleY: p }} className="absolute inset-y-0 left-1/2 w-px origin-top -translate-x-1/2 bg-white/90" />
-        </div>
-
-        {marks.map((mk) => {
-          const m = { ...mk, label: loc(NAV.find((n) => n.id === mk.id)!, lang).label };
-          const isActive = activeMarkId === m.id;
-          return (
-            <button
-              key={m.id}
-              onPointerDown={(e) => e.stopPropagation()}
-              onClick={() => document.getElementById(m.id)?.scrollIntoView({ behavior: "smooth" })}
-              aria-label={m.label}
-              style={{ top: `${m.at * 100}%` }}
-              className="group absolute left-1/2 block size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-difference transition-transform hover:scale-150"
-            >
-              {/* Pastille circulaire en blanc pur (inversée mathématiquement par mix-blend-difference) */}
-              <span className={`block size-full rounded-full border border-white/70 bg-white transition-all ${isActive ? "scale-125 ring-2 ring-white/60" : ""}`} />
-
-              {/* Étiquette texte de section : s'affiche au passage de la F1 ou au survol du rail */}
-              <span
-                className={`pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 px-1 font-mono text-[10px] tracking-[0.14em] font-semibold whitespace-nowrap text-white uppercase transition-all duration-200 ${
-                  isActive
-                    ? "opacity-100 translate-x-0"
-                    : "opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover/rail:opacity-75 group-hover/rail:translate-x-0"
-                }`}
-              >
-                {m.label}
-              </span>
-            </button>
-          );
-        })}
+        <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-ink/15" />
+        <motion.div style={{ scaleY: p }} className="absolute inset-y-0 left-1/2 w-px origin-top -translate-x-1/2 bg-ink/40" />
+        {marks.map((mk) => { const m = { ...mk, label: loc(NAV.find((n) => n.id === mk.id)!, lang).label }; return (
+          <button key={m.id} onPointerDown={(e) => e.stopPropagation()} onClick={() => document.getElementById(m.id)?.scrollIntoView({ behavior: "smooth" })} aria-label={m.label} style={{ top: `${m.at * 100}%` }} className="group absolute left-1/2 block size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/40 bg-paper transition-colors hover:border-signal">
+            <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 bg-paper/90 px-1 font-mono text-[10px] tracking-[0.12em] whitespace-nowrap text-ink uppercase opacity-0 transition-opacity group-hover:opacity-100 group-hover/rail:opacity-60">{m.label}</span>
+          </button>
+        ); })}
         <motion.div style={{ top }} className="pointer-events-none absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform group-active/rail:scale-125">
           <svg width="12" height="26" viewBox="0 0 12 26" className="drop-shadow-sm">
             {/* Aileron arrière (en haut) avec contour fin pour lisibilité sur fond noir */}
