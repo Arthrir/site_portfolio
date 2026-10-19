@@ -1716,7 +1716,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#2340F0");
+  const [dotColor, setDotColor] = useState("#FF1801");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2049,7 +2049,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": dotColor } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
@@ -2259,10 +2259,10 @@ function Page() {
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
         currentOption="c"
-        optionName="Option C : Blanc Apple & Newsreader"
-        tagline="Blanc pur lumineux (#FFFFFF) · Bleu électrique signature (#2340F0) · Schibsted Grotesk + Newsreader"
-        palette={{ paper: "#FFFFFF", ink: "#111110", signal: "#2340F0", mute: "#667085", line: "#EAECF0" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Newsreader (Édition Classique)", concept: "Pureté monochrome Apple, contraste absolu avec le noir #121211 & empattements d'art" }}
+        optionName="Option C : Blueprint CAD (Traits Techniques)"
+        tagline="Blanc froid technique (#F9FAFB) · Bleu électrique (#2340F0) + Point rouge (#FF1801) · Space Mono filaire"
+        palette={{ paper: "#F9FAFB", ink: "#0F172A", signal: "#2340F0", mute: "#64748B", line: "#E2E8F0" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Space Mono (Traits CAD)", concept: "Titres fantômes au trait filaire technique façon schéma de puce/DAO" }}
       />
     </div>
   );
