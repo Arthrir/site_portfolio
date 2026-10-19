@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import 'tailwindcss';
 
 @theme {
   --font-sans: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --font-serif: 'Space Mono', ui-monospace, monospace;
+  --font-serif: 'Instrument Serif', Georgia, serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --color-paper: #F9FAFB;
-  --color-ink: #0F172A;
-  --color-mute: #64748B;
-  --color-line: #E2E8F0;
+  --color-paper: #FBFBFC;
+  --color-ink: #121211;
+  --color-mute: #5E6068;
+  --color-line: #E2E4E9;
   --color-signal: #2340F0;
 }
 

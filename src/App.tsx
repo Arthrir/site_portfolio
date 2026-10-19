@@ -777,19 +777,56 @@ function Hl({ children, className = "" }: { children: React.ReactNode; className
   );
 }
 
-/* ---------------- Stacked title: ta double écriture, qui glisse au scroll ---------------- */
+/* ---------------- Stacked title: double écriture architecturale avec épures et lignes de construction ---------------- */
 function Stacked({ ghost, children, n, dark = false }: { ghost: string; children: React.ReactNode; n: string; dark?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const x = useTransform(scrollYProgress, [0, 1], ["8%", "-16%"]);
+
   return (
     <div ref={ref} className="relative">
       <motion.div
         style={{ x }}
         aria-hidden
-        className={`pointer-events-none font-serif text-[clamp(4.5rem,15vw,13rem)] leading-[0.8] whitespace-nowrap italic select-none ${dark ? "text-outline-paper opacity-30" : "text-outline opacity-25"}`}
+        className="pointer-events-none select-none relative whitespace-nowrap"
       >
-        {ghost}
+        {/* Ligne de construction supérieure : guide de tête (cap-height) avec repères de projection CAD */}
+        <div className={`flex items-center gap-3 font-mono text-[9px] tracking-[0.25em] uppercase ${dark ? "text-paper/35" : "text-ink/30"} mb-1`}>
+          <span className="h-px flex-1 border-t border-dashed border-current opacity-60" />
+          <span>⌖ REF.§{n} · CAD-AXIS</span>
+          <span className="w-10 h-px border-t border-current opacity-60" />
+          <span className="hidden sm:inline">CAP.HT 96.0MM</span>
+          <span className="h-px flex-1 border-t border-dashed border-current opacity-60" />
+        </div>
+
+        {/* Grand texte fantôme au trait technique & repères d'épure aux angles */}
+        <div className="relative inline-block font-serif text-[clamp(4.5rem,15vw,13rem)] leading-[0.8] whitespace-nowrap italic select-none">
+          {/* Ligne de construction transversale d'architecte */}
+          <span
+            className={`pointer-events-none absolute -inset-x-8 top-1/2 h-[0.5px] -translate-y-1/2 -rotate-1 border-t border-dotted ${
+              dark ? "border-paper/20" : "border-ink/20"
+            }`}
+          />
+
+          <span className={dark ? "text-outline-paper opacity-35" : "text-outline opacity-30"}>
+            {ghost}
+          </span>
+
+          {/* Croisillons de dessin technique (+) aux 4 coins du gabarit */}
+          <span className={`absolute -top-3 -left-3 font-mono text-[10px] not-italic ${dark ? "text-paper/40" : "text-ink/35"}`}>+</span>
+          <span className={`absolute -top-3 -right-3 font-mono text-[10px] not-italic ${dark ? "text-paper/40" : "text-ink/35"}`}>+</span>
+          <span className={`absolute -bottom-3 -left-3 font-mono text-[10px] not-italic ${dark ? "text-paper/40" : "text-ink/35"}`}>+</span>
+          <span className={`absolute -bottom-3 -right-3 font-mono text-[10px] not-italic ${dark ? "text-paper/40" : "text-ink/35"}`}>+</span>
+        </div>
+
+        {/* Ligne de construction inférieure : ligne de base (baseline) avec cotes d'architecte */}
+        <div className={`flex items-center gap-3 font-mono text-[9px] tracking-[0.25em] uppercase ${dark ? "text-paper/35" : "text-ink/30"} mt-1`}>
+          <span className="h-px flex-1 border-t border-current opacity-60" />
+          <span>|← DIM.W AUTO →|</span>
+          <span className="w-12 h-px border-t border-dashed border-current opacity-60" />
+          <span className="hidden sm:inline">BASELINE ±0.00</span>
+          <span className="h-px flex-1 border-t border-current opacity-60" />
+        </div>
       </motion.div>
       <div className="relative -mt-[0.32em] flex items-baseline gap-5 text-[clamp(2.4rem,6vw,5.2rem)] md:pl-2">
         <span className="font-mono text-[11px] tracking-[0.14em] text-signal">§{n}</span>
@@ -1718,7 +1755,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#FF1801");
+  const [dotColor, setDotColor] = useState("#E10600");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2261,10 +2298,10 @@ function Page() {
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
         currentOption="c"
-        optionName="Option C : Blueprint CAD (Traits Techniques)"
-        tagline="Blanc froid technique (#F9FAFB) · Bleu électrique (#2340F0) + Point rouge (#FF1801) · Space Mono filaire"
-        palette={{ paper: "#F9FAFB", ink: "#0F172A", signal: "#2340F0", mute: "#64748B", line: "#E2E8F0" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Space Mono (Traits CAD)", concept: "Titres fantômes au trait filaire technique façon schéma de puce/DAO" }}
+        optionName="Option C : Traits d'Architecte & Épure CAD"
+        tagline="Blanc technique (#FBFBFC) · Bleu électrique (#2340F0) + Point rouge vif (#E10600) · Lignes de construction d'architecte, guides de tête et cotes CAD"
+        palette={{ paper: "#FBFBFC", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E2E4E9" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif (Épure CAD)", concept: "Lignes de construction d'architecte, cotes et croisillons de repère sur les titres fantômes" }}
       />
     </div>
   );
