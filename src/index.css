@@ -85,3 +85,70 @@ body {
   html { scrollbar-width: none; }
   body::-webkit-scrollbar { display: none; }
 }
+
+/* ============================================================== */
+/* FINITIONS MÉTALLIQUES GLOSSY (PROJETS) : CYCLE 7.5s SANS COUPURE */
+/* ============================================================== */
+
+/* 1. Doré Champagne Glossy (Hardware & Électronique) */
+@keyframes gold-gloss {
+  0% { background-position: 200% 0; }
+  100% { background-position: 0% 0; }
+}
+.glossy-gold-text {
+  background: linear-gradient(
+    115deg,
+    #78590C 0%,
+    #A17816 12%,
+    #E5C564 20%,
+    #FFFCE6 25%,
+    #E5C564 30%,
+    #A17816 38%,
+    #78590C 50%,
+    #A17816 62%,
+    #E5C564 70%,
+    #FFFCE6 75%,
+    #E5C564 80%,
+    #A17816 88%,
+    #78590C 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: repeat-x;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  animation: gold-gloss 7.5s linear infinite;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.6));
+}
+
+/* 2. Icy Blue / Platine Titane Glossy (Software, IA & Produit) */
+@keyframes platinum-gloss {
+  0% { background-position: 200% 0; }
+  100% { background-position: 0% 0; }
+}
+.glossy-platinum-text {
+  background: linear-gradient(
+    115deg,
+    #1E3A8A 0%,
+    #2563EB 12%,
+    #93C5FD 20%,
+    #FFFFFF 25%,
+    #93C5FD 30%,
+    #2563EB 38%,
+    #1E3A8A 50%,
+    #2563EB 62%,
+    #93C5FD 70%,
+    #FFFFFF 75%,
+    #93C5FD 80%,
+    #2563EB 88%,
+    #1E3A8A 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: repeat-x;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  animation: platinum-gloss 7.5s linear infinite;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.6));
+}
+

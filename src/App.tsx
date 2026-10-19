@@ -37,10 +37,25 @@ const NAV: Loc<{ id: string; label: string }>[] = [
   { id: "contact", label: "Contact" },
 ];
 
-const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; date: string; idx: string; points: string[]; tags: string[] }>[] = [
+const EXPERIENCES: Loc<{
+  co: string;
+  logo: string;
+  rolePrefix?: string;
+  roleHl: string;
+  roleSuffix?: string;
+  role: string;
+  place: string;
+  date: string;
+  idx: string;
+  points: string[];
+  tags: string[];
+}>[] = [
   {
     co: "Advantest",
     logo: "/logo/advantest.png",
+    rolePrefix: "Stage Ingénieur ",
+    roleHl: "R&D Test Cell Integration",
+    roleSuffix: "",
     role: "Stage Ingénieur R&D Test Cell Integration",
     place: "Böblingen, Allemagne",
     date: "Avr. 2026 - Juil. 2026",
@@ -52,6 +67,9 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
     ],
     tags: ["Hardware Testing", "PCB Calibration", "3D Printing", "VNA / TDR"],
     en: {
+      rolePrefix: "",
+      roleHl: "R&D Test Cell Integration",
+      roleSuffix: " Engineering Intern",
       role: "R&D Test Cell Integration Engineering Intern",
       place: "Böblingen, Germany",
       date: "Apr. 2026 - Jul. 2026",
@@ -65,6 +83,9 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
   {
     co: "PHINIA Delphi",
     logo: "/logo/phinia.png",
+    rolePrefix: "Stage Ingénieur ",
+    roleHl: "Systèmes Hardware",
+    roleSuffix: "",
     role: "Stage Ingénieur Systèmes Hardware",
     place: "Blois, France",
     date: "Janv. 2025",
@@ -77,6 +98,9 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
     ],
     tags: ["Embedded Systems", "CAN Communication", "Thermal Characterization", "Hardware Validation"],
     en: {
+      rolePrefix: "",
+      roleHl: "Hardware Systems",
+      roleSuffix: " Engineering Intern",
       role: "Hardware Systems Engineering Intern",
       place: "Blois, France",
       date: "Jan. 2025",
@@ -464,7 +488,6 @@ const PROJECTS: Project[] = [
     cat: ["Software", "Produit"],
     tags: ["TypeScript", "React", "Vite", "Tailwind", "Motion"],
     desc: "Conception et développement complet de mon portfolio interactif en TypeScript et React.",
-    current: true,
     points: [
       "Architecture front-end modulaire développée sous React, TypeScript et Tailwind CSS avec Vite.",
       "Modélisations interactives sur-mesure : die silicium interactif avec simulation de portes logiques, chronogramme temporel matériel et animations fluides.",
@@ -766,10 +789,10 @@ function Person({ name }: { name: string }) {
 }
 
 /* ---------------- Surligneur : un aplat de couleur balaie le texte quand il entre à l'écran ---------------- */
-function Hl({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function Hl({ children, className = "", dark = false }: { children: React.ReactNode; className?: string; dark?: boolean }) {
   return (
     <motion.span
-      initial={{ backgroundSize: "0% 100%", color: "var(--color-ink)" }}
+      initial={{ backgroundSize: "0% 100%", color: dark ? "var(--color-paper)" : "var(--color-ink)" }}
       whileInView={{ backgroundSize: "100% 100%", color: "var(--color-paper)" }}
       viewport={{ once: true, margin: "-15% 0px" }}
       transition={{ duration: 0.9, ease, delay: 0.15 }}
@@ -1217,27 +1240,81 @@ const FEATURED_PROJECT_TITLES = [
   "Victoire au Hackathon STMicroelectronics",
 ];
 
+type FinishMode = "gold" | "ice" | "split";
+
+const getProjectGleam = (cat: Cat[], mode: FinishMode) => {
+  if (mode === "gold") return "glossy-gold-text";
+  if (mode === "ice") return "glossy-platinum-text";
+  // "split" mode : Hardware est doré pur, Software/IA/Produit est icy blue pur (aucun mélange)
+  const hasHw = cat.includes("Hardware");
+  if (hasHw) return "glossy-gold-text";
+  return "glossy-platinum-text";
+};
+
 /* ---------------- Projects ---------------- */
 const FILTERS: ("Tous" | Cat)[] = ["Tous", "Hardware", "Software", "IA", "Produit"];
 function Projects() {
   const [f, setF] = useState<(typeof FILTERS)[number]>("Tous");
   const [open, setOpen] = useState<number | null>(null);
   const [expandedMobile, setExpandedMobile] = useState(false);
+  const [finish, setFinish] = useState<FinishMode>("gold");
   const { lang, tr } = useLang();
   const all = useMemo(() => PROJECTS.map((p) => loc(p, lang)), [lang]);
   const list = all.filter((p) => f === "Tous" || p.cat.includes(f));
   return (
     <>
-      <div className="mb-10 flex flex-wrap items-center gap-1 border-b border-ink pb-4">
-        {FILTERS.map((x) => {
-          const count = x === "Tous" ? PROJECTS.length : PROJECTS.filter((p) => p.cat.includes(x)).length;
-          return (
-            <button key={x} onClick={() => { setF(x); setExpandedMobile(true); }} className="relative px-4 py-2 text-sm font-medium">
-              {f === x && <motion.span layoutId="filter" className="absolute inset-0 bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
-              <span className={`relative transition-colors ${f === x ? "text-paper" : ""}`}>{catLabel(x, lang)} <sup className="font-mono text-[9px] opacity-60">{count}</sup></span>
-            </button>
-          );
-        })}
+      <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-b border-ink pb-4">
+        <div className="flex flex-wrap items-center gap-1">
+          {FILTERS.map((x) => {
+            const count = x === "Tous" ? PROJECTS.length : PROJECTS.filter((p) => p.cat.includes(x)).length;
+            return (
+              <button key={x} onClick={() => { setF(x); setExpandedMobile(true); }} className="relative px-4 py-2 text-sm font-medium">
+                {f === x && <motion.span layoutId="filter" className="absolute inset-0 bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
+                <span className={`relative transition-colors ${f === x ? "text-paper" : ""}`}>{catLabel(x, lang)} <sup className="font-mono text-[9px] opacity-60">{count}</sup></span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Sélecteur de finition du texte pour tester Doré vs Icy Blue */}
+        <div className="flex items-center gap-1">
+          <span className="font-mono text-[10.5px] uppercase tracking-wider text-mute mr-1 hidden sm:inline">
+            {tr("Finition texte :", "Text finish:")}
+          </span>
+          <button
+            onClick={() => setFinish("gold")}
+            title={tr("Finition Doré Champagne sur tous les projets", "Champagne Gold finish on all projects")}
+            className={`px-2.5 py-1 rounded text-xs font-mono transition-all ${
+              finish === "gold"
+                ? "bg-[#D4AF37]/20 text-[#854D0E] font-semibold border border-[#D4AF37]/60"
+                : "text-mute hover:text-ink border border-transparent"
+            }`}
+          >
+            ✨ {tr("Doré", "Gold")}
+          </button>
+          <button
+            onClick={() => setFinish("ice")}
+            title={tr("Finition Icy Blue / Titane sur tous les projets", "Icy Blue / Titanium finish on all projects")}
+            className={`px-2.5 py-1 rounded text-xs font-mono transition-all ${
+              finish === "ice"
+                ? "bg-[#2563EB]/20 text-[#1D4ED8] font-semibold border border-[#2563EB]/60"
+                : "text-mute hover:text-ink border border-transparent"
+            }`}
+          >
+            ❄️ {tr("Icy Blue", "Icy Blue")}
+          </button>
+          <button
+            onClick={() => setFinish("split")}
+            title={tr("Hardware en doré, Software/IA/Produit en Icy Blue", "Hardware in gold, Software/AI/Product in Icy Blue")}
+            className={`px-2.5 py-1 rounded text-xs font-mono transition-all ${
+              finish === "split"
+                ? "bg-ink text-paper font-semibold"
+                : "text-mute hover:text-ink border border-transparent"
+            }`}
+          >
+            {tr("Hw / Sw", "Hw / Sw")}
+          </button>
+        </div>
       </div>
       <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
@@ -1245,6 +1322,7 @@ function Projects() {
             const origTitle = PROJECTS[all.indexOf(p)].t;
             const isFeatured = FEATURED_PROJECT_TITLES.includes(origTitle);
             const hiddenOnMobile = f === "Tous" && !expandedMobile && !isFeatured;
+            const textClass = getProjectGleam(p.cat, finish);
             return (
               <motion.article
                 layout key={origTitle}
@@ -1255,9 +1333,6 @@ function Projects() {
               >
                 <div className="flex items-start justify-between">
                   <span className="font-mono text-[11px] text-mute group-hover:text-paper/50">{p.d}</span>
-                  <div className="flex items-center gap-2">
-                    {p.current && <span className="glossy-chrome-badge flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold text-ink uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />Live</span>}
-                  </div>
                 </div>
                 <h3 className="mt-8 text-xl leading-tight font-semibold tracking-tight">{p.t}</h3>
                 <p className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-mute group-hover:text-paper/70">{p.desc}</p>
@@ -1273,8 +1348,11 @@ function Projects() {
                           : `${tr("avec", "with")} ${p.with}`
                         : ""}
                     </span>
-                    <span className="flex shrink-0 items-center gap-1 font-medium text-signal">
-                      {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")} <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45" />
+                    <span className="flex shrink-0 items-center gap-1 font-semibold">
+                      <span className={`${textClass} font-semibold transition-transform duration-300 group-hover:translate-x-0.5`}>
+                        {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")}
+                      </span>
+                      <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45 text-signal" />
                     </span>
                   </div>
                 </div>
@@ -1740,7 +1818,7 @@ function Page() {
               </span>
             ))}
           </h1>
-          <Reveal delay={0.6} className="mt-8 max-w-2xl space-y-4">
+          <Reveal delay={0.6} className="mt-8 max-w-3xl space-y-4">
             <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
               {tr(
                 "Élève-ingénieur en microélectronique, informatique et conception produit aux Mines Saint-Étienne × Politecnico di Milano.",
@@ -1748,9 +1826,9 @@ function Page() {
               )}
             </p>
             <div className="pt-2">
-              <p className="text-xl sm:text-2xl font-bold tracking-tight text-ink">
-                {tr("Recherche de stage de fin d'études", "Seeking end-of-studies internship")}{" "}
-                <Hl className="font-semibold">{tr("(5+ mois dès avril 2027)", "(5+ months from April 2027)")}</Hl>
+              <p className="text-[clamp(15px,1.7vw,22px)] font-bold tracking-tight text-ink sm:whitespace-nowrap">
+                <span>{tr("Recherche de stage de fin d'études", "Seeking end-of-studies internship")}</span>{" "}
+                <Hl className="font-semibold whitespace-nowrap">{tr("(5+ mois dès avril 2027)", "(5+ months from April 2027)")}</Hl>
               </p>
               <p className="mt-1 text-[16px] sm:text-[17px] leading-relaxed text-ink/80">
                 {tr(
@@ -2008,9 +2086,17 @@ function Page() {
                   </div>
                   <div>
                     <h3 className="hidden text-4xl font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-2 md:block md:text-6xl">{x.co}</h3>
-                    <p className="mt-1 text-lg font-medium text-paper/90 md:mt-3">{x.role}</p>
+                    <p className="mt-1 text-lg font-medium text-paper/90 md:mt-3">
+                      {x.rolePrefix && <span>{x.rolePrefix}</span>}
+                      {x.roleHl ? (
+                        <Hl dark className="font-semibold px-1 py-0.5">{x.roleHl}</Hl>
+                      ) : (
+                        x.role
+                      )}
+                      {x.roleSuffix && <span>{x.roleSuffix}</span>}
+                    </p>
                     <p className="mt-2 text-base text-paper/60">
-                      {x.place} · <Hl className="font-semibold px-1 py-0.5 rounded-sm">{x.date}</Hl>
+                      {x.place} · {x.date}
                     </p>
                   </div>
                   <div>
@@ -2035,11 +2121,7 @@ function Page() {
 
       {/* PROJECTS */}
       <section id="projets" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
-        <div className="mb-14">
-          <Stacked ghost={tr("Réalisations", "Work")} n="04">
-            <span className="glossy-chrome-text font-bold inline-block">{tr("Projets.", "Projects.")}</span>
-          </Stacked>
-        </div>
+        <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
 
