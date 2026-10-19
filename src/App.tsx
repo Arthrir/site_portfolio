@@ -1716,7 +1716,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#2340F0");
+  const [dotColor, setDotColor] = useState("#FF1801");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2049,7 +2049,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": dotColor } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
@@ -2259,10 +2259,10 @@ function Page() {
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
         currentOption="a"
-        optionName="Option A : Titane & Bleu #2340F0"
-        tagline="Fond titane frais (#F8F9FA) · Bleu électrique signature (#2340F0) · Schibsted Grotesk + Instrument Serif"
+        optionName="Option A : Tricolore Studio"
+        tagline="Fond titane (#F8F9FA) · Bleu électrique (#2340F0) · Point rouge vif (#FF1801) côté France · Projets orange (#FF4D00)"
         palette={{ paper: "#F8F9FA", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E2E4E9" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif (Vintage)", concept: "Édition studio ultra-nette, fond clair lumineux sans jaunisse" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Harmonie Bleu/Blanc/Rouge tech & titres fantômes d'archive" }}
       />
     </div>
   );
