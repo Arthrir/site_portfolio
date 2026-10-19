@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..800&family=Space+Grotesk:wght@400;500;600;700&family=Geist:wght@400;500;600;700&display=swap');
+
+/* ==========================================================================
+   OPTION A : Précision Hardware & Tech
+   Fond blanc titane frais, noir ardoise profond, accent cobalt électrique #2563EB.
+   Typo : Plus Jakarta Sans (corps & titres) + Space Grotesk (ghost outline).
+   ========================================================================== */
+[data-theme="option-a"] {
+  --color-paper: #F8F9FA;
+  --color-ink: #0B0F19;
+  --color-mute: #526071;
+  --color-line: #E2E8F0;
+  --color-signal: #2563EB;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Space Grotesk', ui-sans-serif, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+[data-theme="option-a"] ::selection {
+  background: #2563EB;
+  color: #FFFFFF;
+}
+
+[data-theme="option-a"] .grid-bg {
+  background-image: linear-gradient(rgba(11, 15, 25, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(11, 15, 25, 0.05) 1px, transparent 1px);
+}
+
+[data-theme="option-a"] .text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.2px #0B0F19;
+}
+
+/* ==========================================================================
+   OPTION B : Design Industriel Suisse
+   Inspiré de Dieter Rams (Braun) & Teenage Engineering.
+   Blanc cassé mat minéral #F4F4F0, graphite #18181B, accent rouge signalétique #E11D48.
+   Typo : Geist (Néo-grotesque suisse intégrale).
+   ========================================================================== */
+[data-theme="option-b"] {
+  --color-paper: #F4F4F0;
+  --color-ink: #18181B;
+  --color-mute: #71717A;
+  --color-line: #D4D4D8;
+  --color-signal: #E11D48;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Geist', ui-sans-serif, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+[data-theme="option-b"] ::selection {
+  background: #E11D48;
+  color: #FFFFFF;
+}
+
+[data-theme="option-b"] .grid-bg {
+  background-image: linear-gradient(rgba(24, 24, 27, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(24, 24, 27, 0.06) 1px, transparent 1px);
+}
+
+[data-theme="option-b"] .text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.2px #18181B;
+}
+
+/* ==========================================================================
+   OPTION C : Labo Sombre Microélectronique
+   Mode sombre ardoise #0B0E14, blanc titane #F1F5F9, cyan laser néon #06B6D4.
+   Ambiance banc de mesure semi-conducteurs et oscilloscopes.
+   ========================================================================== */
+[data-theme="option-c"] {
+  --color-paper: #0B0E14;
+  --color-ink: #F1F5F9;
+  --color-mute: #94A3B8;
+  --color-line: #1E293B;
+  --color-signal: #06B6D4;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Space Grotesk', ui-sans-serif, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+[data-theme="option-c"] ::selection {
+  background: #06B6D4;
+  color: #0B0E14;
+}
+
+[data-theme="option-c"] .grid-bg {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+[data-theme="option-c"] .text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.2px #F1F5F9;
+}
+
+[data-theme="option-c"] .glass {
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.5), 0 10px 30px -12px rgba(0,0,0,0.7);
+}
+
+[data-theme="option-c"] .lens {
+  background: rgba(255,255,255,0.12);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 14px -6px rgba(0,0,0,0.6);
+}
+
+[data-theme="option-c"] .liquid {
+  background: rgba(15, 19, 28, 0.94);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 10px 32px -4px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+@media (min-width: 768px) {
+  [data-theme="option-c"] .liquid {
+    background: rgba(255,255,255,0.07);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.2), inset -1px -1px 0 rgba(255,255,255,0.08), 0 8px 24px -10px rgba(0,0,0,0.6);
+  }
+}
+
+/* En mode sombre, les blocs contrastés s'adaptent naturellement */
+[data-theme="option-c"] #experiences {
+  background-color: #111520 !important;
+  color: #F1F5F9 !important;
+  border-top: 1px solid #1E293B;
+  border-bottom: 1px solid #1E293B;
+}
+
+[data-theme="option-c"] footer {
+  background-color: #06080C !important;
+  color: #F1F5F9 !important;
+  border-top: 1px solid #1E293B;
+}
