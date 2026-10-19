@@ -1716,7 +1716,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#2340F0");
+  const [dotColor, setDotColor] = useState("#FF1801");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2049,7 +2049,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": dotColor } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
@@ -2259,10 +2259,10 @@ function Page() {
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
         currentOption="b"
-        optionName="Option B : Craie & Garamond"
-        tagline="Fond craie minérale doux (#F4F4EE) · Bleu électrique signature (#2340F0) · Schibsted Grotesk + Cormorant Garamond"
-        palette={{ paper: "#F4F4EE", ink: "#121211", signal: "#2340F0", mute: "#64625A", line: "#DDD9CE" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Cormorant Garamond (Renaissance)", concept: "Élégance éditoriale d'époque & rigueur d'ingénierie moderne" }}
+        optionName="Option B : Apple Glossy & Rouge F1"
+        tagline="Blanc Apple pur/froid (#FFFFFF) · Rouge pétant Scuderia (#FF1801) · Point rouge · Projets orange (#FF4D00)"
+        palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#FF1801", mute: "#64748B", line: "#E2E8F0" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc brillant Apple, contraste mécanique & rouge haute vélocité" }}
       />
     </div>
   );
