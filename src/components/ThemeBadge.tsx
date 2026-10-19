@@ -20,9 +20,9 @@ interface ThemeBadgeProps {
 }
 
 const PREVIEW_LINKS = [
-  { id: "a", label: "Option A", sub: "Titane & Instrument", url: "https://site-portfolio-git-preview-option-a-arthrir.vercel.app/" },
-  { id: "b", label: "Option B", sub: "Craie & Garamond", url: "https://site-portfolio-git-preview-option-b-arthrir.vercel.app/" },
-  { id: "c", label: "Option C", sub: "Apple Blanc & Newsreader", url: "https://site-portfolio-git-preview-option-c-arthrir.vercel.app/" },
+  { id: "a", label: "Option A", sub: "Titane & Tricolore", url: "https://site-portfolio-git-preview-option-a-arthrir.vercel.app/" },
+  { id: "b", label: "Option B", sub: "Apple Blanc & Rouge F1", url: "https://site-portfolio-git-preview-option-b-arthrir.vercel.app/" },
+  { id: "c", label: "Option C", sub: "Traits d'Architecte", url: "https://site-portfolio-git-preview-option-c-arthrir.vercel.app/" },
 ];
 
 export default function ThemeBadge({ currentOption, optionName, tagline, palette, typography }: ThemeBadgeProps) {

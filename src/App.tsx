@@ -1718,7 +1718,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#FF1801");
+  const [dotColor, setDotColor] = useState("#E10600");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2262,7 +2262,7 @@ function Page() {
       <ThemeBadge
         currentOption="a"
         optionName="Option A : Tricolore Studio"
-        tagline="Fond titane (#F8F9FA) · Bleu électrique (#2340F0) · Point rouge vif (#FF1801) côté France · Projets orange (#FF4D00)"
+        tagline="Fond titane (#F8F9FA) · Bleu électrique (#2340F0) · Point rouge vif (#E10600) côté France · Projets orange (#FF4D00)"
         palette={{ paper: "#F8F9FA", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E2E4E9" }}
         typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Harmonie Bleu/Blanc/Rouge tech & titres fantômes d'archive" }}
       />
