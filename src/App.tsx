@@ -816,7 +816,7 @@ function Stacked({ ghost, children, n, dark = false }: { ghost: string; children
         {ghost}
       </motion.div>
       <div className="relative -mt-[0.32em] flex items-baseline gap-5 text-[clamp(2.4rem,6vw,5.2rem)] md:pl-2">
-        <span className="font-mono text-[11px] tracking-[0.14em] text-signal">§{n}</span>
+        <span className={`font-mono text-[11px] tracking-[0.14em] ${n === "04" ? "text-[#D4AF37] font-semibold" : "text-signal"}`}>§{n}</span>
         <h2 className="leading-[0.95] font-semibold tracking-[-0.035em]">{children}</h2>
       </div>
     </div>
@@ -1240,81 +1240,27 @@ const FEATURED_PROJECT_TITLES = [
   "Victoire au Hackathon STMicroelectronics",
 ];
 
-type FinishMode = "gold" | "ice" | "split";
-
-const getProjectGleam = (cat: Cat[], mode: FinishMode) => {
-  if (mode === "gold") return "glossy-gold-text";
-  if (mode === "ice") return "glossy-platinum-text";
-  // "split" mode : Hardware est doré pur, Software/IA/Produit est icy blue pur (aucun mélange)
-  const hasHw = cat.includes("Hardware");
-  if (hasHw) return "glossy-gold-text";
-  return "glossy-platinum-text";
-};
-
 /* ---------------- Projects ---------------- */
 const FILTERS: ("Tous" | Cat)[] = ["Tous", "Hardware", "Software", "IA", "Produit"];
 function Projects() {
   const [f, setF] = useState<(typeof FILTERS)[number]>("Tous");
   const [open, setOpen] = useState<number | null>(null);
   const [expandedMobile, setExpandedMobile] = useState(false);
-  const [finish, setFinish] = useState<FinishMode>("gold");
   const { lang, tr } = useLang();
   const all = useMemo(() => PROJECTS.map((p) => loc(p, lang)), [lang]);
   const list = all.filter((p) => f === "Tous" || p.cat.includes(f));
   return (
     <>
-      <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-b border-ink pb-4">
-        <div className="flex flex-wrap items-center gap-1">
-          {FILTERS.map((x) => {
-            const count = x === "Tous" ? PROJECTS.length : PROJECTS.filter((p) => p.cat.includes(x)).length;
-            return (
-              <button key={x} onClick={() => { setF(x); setExpandedMobile(true); }} className="relative px-4 py-2 text-sm font-medium">
-                {f === x && <motion.span layoutId="filter" className="absolute inset-0 bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
-                <span className={`relative transition-colors ${f === x ? "text-paper" : ""}`}>{catLabel(x, lang)} <sup className="font-mono text-[9px] opacity-60">{count}</sup></span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Sélecteur de finition du texte pour tester Doré vs Icy Blue */}
-        <div className="flex items-center gap-1">
-          <span className="font-mono text-[10.5px] uppercase tracking-wider text-mute mr-1 hidden sm:inline">
-            {tr("Finition texte :", "Text finish:")}
-          </span>
-          <button
-            onClick={() => setFinish("gold")}
-            title={tr("Finition Doré Champagne sur tous les projets", "Champagne Gold finish on all projects")}
-            className={`px-2.5 py-1 rounded text-xs font-mono transition-all ${
-              finish === "gold"
-                ? "bg-[#D4AF37]/20 text-[#854D0E] font-semibold border border-[#D4AF37]/60"
-                : "text-mute hover:text-ink border border-transparent"
-            }`}
-          >
-            ✨ {tr("Doré", "Gold")}
-          </button>
-          <button
-            onClick={() => setFinish("ice")}
-            title={tr("Finition Icy Blue / Titane sur tous les projets", "Icy Blue / Titanium finish on all projects")}
-            className={`px-2.5 py-1 rounded text-xs font-mono transition-all ${
-              finish === "ice"
-                ? "bg-[#2563EB]/20 text-[#1D4ED8] font-semibold border border-[#2563EB]/60"
-                : "text-mute hover:text-ink border border-transparent"
-            }`}
-          >
-            ❄️ {tr("Icy Blue", "Icy Blue")}
-          </button>
-          <button
-            onClick={() => setFinish("split")}
-            title={tr("Hardware en doré, Software/IA/Produit en Icy Blue", "Hardware in gold, Software/AI/Product in Icy Blue")}
-            className={`px-2.5 py-1 rounded text-xs font-mono transition-all ${
-              finish === "split"
-                ? "bg-ink text-paper font-semibold"
-                : "text-mute hover:text-ink border border-transparent"
-            }`}
-          >
-            {tr("Hw / Sw", "Hw / Sw")}
-          </button>
-        </div>
+      <div className="mb-10 flex flex-wrap items-center gap-1 border-b border-ink pb-4">
+        {FILTERS.map((x) => {
+          const count = x === "Tous" ? PROJECTS.length : PROJECTS.filter((p) => p.cat.includes(x)).length;
+          return (
+            <button key={x} onClick={() => { setF(x); setExpandedMobile(true); }} className="relative px-4 py-2 text-sm font-medium">
+              {f === x && <motion.span layoutId="filter" className="absolute inset-0 bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
+              <span className={`relative transition-colors ${f === x ? "text-paper" : ""}`}>{catLabel(x, lang)} <sup className="font-mono text-[9px] opacity-60">{count}</sup></span>
+            </button>
+          );
+        })}
       </div>
       <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
@@ -1322,7 +1268,6 @@ function Projects() {
             const origTitle = PROJECTS[all.indexOf(p)].t;
             const isFeatured = FEATURED_PROJECT_TITLES.includes(origTitle);
             const hiddenOnMobile = f === "Tous" && !expandedMobile && !isFeatured;
-            const textClass = getProjectGleam(p.cat, finish);
             return (
               <motion.article
                 layout key={origTitle}
@@ -1349,10 +1294,10 @@ function Projects() {
                         : ""}
                     </span>
                     <span className="flex shrink-0 items-center gap-1 font-semibold">
-                      <span className={`${textClass} font-semibold transition-transform duration-300 group-hover:translate-x-0.5`}>
+                      <span className="glossy-gold-text font-semibold transition-transform duration-300 group-hover:translate-x-0.5">
                         {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")}
                       </span>
-                      <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45 text-signal" />
+                      <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45 text-[#D4AF37] group-hover:text-[#FDE047]" />
                     </span>
                   </div>
                 </div>
@@ -2120,7 +2065,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#D4AF37" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
