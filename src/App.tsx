@@ -35,10 +35,25 @@ const NAV: Loc<{ id: string; label: string }>[] = [
   { id: "contact", label: "Contact" },
 ];
 
-const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; date: string; idx: string; points: string[]; tags: string[] }>[] = [
+const EXPERIENCES: Loc<{
+  co: string;
+  logo: string;
+  rolePrefix?: string;
+  roleHl: string;
+  roleSuffix?: string;
+  role: string;
+  place: string;
+  date: string;
+  idx: string;
+  points: string[];
+  tags: string[];
+}>[] = [
   {
     co: "Advantest",
     logo: "/logo/advantest.png",
+    rolePrefix: "Stage Ingénieur ",
+    roleHl: "R&D Test Cell Integration",
+    roleSuffix: "",
     role: "Stage Ingénieur R&D Test Cell Integration",
     place: "Böblingen, Allemagne",
     date: "Avr. 2026 - Juil. 2026",
@@ -50,6 +65,9 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
     ],
     tags: ["Hardware Testing", "PCB Calibration", "3D Printing", "VNA / TDR"],
     en: {
+      rolePrefix: "",
+      roleHl: "R&D Test Cell Integration",
+      roleSuffix: " Engineering Intern",
       role: "R&D Test Cell Integration Engineering Intern",
       place: "Böblingen, Germany",
       date: "Apr. 2026 - Jul. 2026",
@@ -63,6 +81,9 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
   {
     co: "PHINIA Delphi",
     logo: "/logo/phinia.png",
+    rolePrefix: "Stage Ingénieur ",
+    roleHl: "Systèmes Hardware",
+    roleSuffix: "",
     role: "Stage Ingénieur Systèmes Hardware",
     place: "Blois, France",
     date: "Janv. 2025",
@@ -75,6 +96,9 @@ const EXPERIENCES: Loc<{ co: string; logo: string; role: string; place: string; 
     ],
     tags: ["Embedded Systems", "CAN Communication", "Thermal Characterization", "Hardware Validation"],
     en: {
+      rolePrefix: "",
+      roleHl: "Hardware Systems",
+      roleSuffix: " Engineering Intern",
       role: "Hardware Systems Engineering Intern",
       place: "Blois, France",
       date: "Jan. 2025",
@@ -462,7 +486,6 @@ const PROJECTS: Project[] = [
     cat: ["Software", "Produit"],
     tags: ["TypeScript", "React", "Vite", "Tailwind", "Motion"],
     desc: "Conception et développement complet de mon portfolio interactif en TypeScript et React.",
-    current: true,
     points: [
       "Architecture front-end modulaire développée sous React, TypeScript et Tailwind CSS avec Vite.",
       "Modélisations interactives sur-mesure : die silicium interactif avec simulation de portes logiques, chronogramme temporel matériel et animations fluides.",
@@ -764,10 +787,10 @@ function Person({ name }: { name: string }) {
 }
 
 /* ---------------- Surligneur : un aplat de couleur balaie le texte quand il entre à l'écran ---------------- */
-function Hl({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function Hl({ children, className = "", dark = false }: { children: React.ReactNode; className?: string; dark?: boolean }) {
   return (
     <motion.span
-      initial={{ backgroundSize: "0% 100%", color: "var(--color-ink)" }}
+      initial={{ backgroundSize: "0% 100%", color: dark ? "var(--color-paper)" : "var(--color-ink)" }}
       whileInView={{ backgroundSize: "100% 100%", color: "var(--color-paper)" }}
       viewport={{ once: true, margin: "-15% 0px" }}
       transition={{ duration: 0.9, ease, delay: 0.15 }}
@@ -1253,9 +1276,6 @@ function Projects() {
               >
                 <div className="flex items-start justify-between">
                   <span className="font-mono text-[11px] text-mute group-hover:text-paper/50">{p.d}</span>
-                  <div className="flex items-center gap-2">
-                    {p.current && <span className="flex items-center gap-1.5 font-mono text-[10px] text-signal uppercase"><span className="size-1.5 animate-pulse rounded-full bg-signal" />Live</span>}
-                  </div>
                 </div>
                 <h3 className="mt-8 text-xl leading-tight font-semibold tracking-tight">{p.t}</h3>
                 <p className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-mute group-hover:text-paper/70">{p.desc}</p>
@@ -2024,9 +2044,17 @@ function Page() {
                   </div>
                   <div>
                     <h3 className="hidden text-4xl font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-2 md:block md:text-6xl">{x.co}</h3>
-                    <p className="mt-1 text-lg font-medium text-paper/90 md:mt-3">{x.role}</p>
+                    <p className="mt-1 text-lg font-medium text-paper/90 md:mt-3">
+                      {x.rolePrefix && <span>{x.rolePrefix}</span>}
+                      {x.roleHl ? (
+                        <Hl dark className="font-semibold px-1 py-0.5">{x.roleHl}</Hl>
+                      ) : (
+                        x.role
+                      )}
+                      {x.roleSuffix && <span>{x.roleSuffix}</span>}
+                    </p>
                     <p className="mt-2 text-base text-paper/60">
-                      {x.place} · <Hl className="font-semibold px-1.5 py-0.5">{x.date}</Hl>
+                      {x.place} · {x.date}
                     </p>
                   </div>
                   <div>
