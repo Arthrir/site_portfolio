@@ -29,24 +29,27 @@ body {
 
 /* Navigation : verre dépoli officiel Apple (macOS / iOS / apple.com) */
 .apple-glass {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(190%) contrast(105%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%) contrast(105%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow: 
-    0 4px 20px -2px rgba(0, 0, 0, 0.05),
-    0 1px 3px 0 rgba(0, 0, 0, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
+    0 4px 24px -2px rgba(0, 0, 0, 0.08),
+    0 1px 3px 0 rgba(0, 0, 0, 0.04),
+    inset 0 1px 1px rgba(255, 255, 255, 1);
 }
 
-/* Capsule sélecteur actif façon Apple (Segmented Control / visionOS) */
-.apple-pill {
-  background: #FFFFFF;
-  border: 0.5px solid rgba(0, 0, 0, 0.04);
+/* Lentille optique liquid glass façon Apple (macOS Dock / visionOS loupe) */
+.apple-lens {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.58) 50%, rgba(255, 255, 255, 0.86) 100%);
+  backdrop-filter: blur(24px) saturate(200%) brightness(1.12);
+  -webkit-backdrop-filter: blur(24px) saturate(200%) brightness(1.12);
+  border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow: 
-    0 2px 8px -1px rgba(0, 0, 0, 0.12),
-    0 1px 2px 0 rgba(0, 0, 0, 0.06),
-    inset 0 1px 0.5px rgba(255, 255, 255, 1);
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.05),
+    0 8px 20px -3px rgba(18, 18, 17, 0.16),
+    0 2px 6px 0 rgba(18, 18, 17, 0.08);
 }
 
 .grid-bg {
@@ -58,17 +61,27 @@ body {
 
 /* Animation reflet brillant chrome métallique (Option A) */
 @keyframes chrome-gloss {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% { background-position: 100% 0%; }
+  50% { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
 }
 .glossy-chrome-text {
-  background: linear-gradient(120deg, #1E293B 0%, #475569 18%, #CBD5E1 35%, #FFFFFF 48%, #CBD5E1 58%, #475569 75%, #0F172A 88%, #64748B 100%);
-  background-size: 240% 100%;
+  background: linear-gradient(
+    110deg,
+    #0F172A 0%,
+    #334155 18%,
+    #94A3B8 35%,
+    #FFFFFF 50%,
+    #94A3B8 65%,
+    #334155 82%,
+    #0F172A 100%
+  );
+  background-size: 250% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: chrome-gloss 6s ease-in-out infinite;
-  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.9)) drop-shadow(0 2px 3px rgba(15, 23, 42, 0.15));
+  display: inline-block;
+  animation: chrome-gloss 4s ease-in-out infinite;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.7));
 }
 .glossy-chrome-badge {
   background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(226,232,240,0.85) 30%, rgba(255,255,255,1) 50%, rgba(203,213,225,0.85) 70%, rgba(255,255,255,0.95) 100%);
