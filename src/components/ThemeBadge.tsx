@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Sparkles, ChevronUp, ChevronDown, X } from "lucide-react";
+import { Sparkles, ChevronUp, X, ExternalLink } from "lucide-react";
 
 interface ThemeBadgeProps {
+  currentOption: "a" | "b" | "c";
   optionName: string;
   tagline: string;
   palette: {
@@ -18,7 +19,13 @@ interface ThemeBadgeProps {
   };
 }
 
-export default function ThemeBadge({ optionName, tagline, palette, typography }: ThemeBadgeProps) {
+const PREVIEW_LINKS = [
+  { id: "a", label: "Option A", sub: "Titane & Instrument", url: "https://site-portfolio-git-preview-option-a-arthrir.vercel.app/" },
+  { id: "b", label: "Option B", sub: "Craie & Garamond", url: "https://site-portfolio-git-preview-option-b-arthrir.vercel.app/" },
+  { id: "c", label: "Option C", sub: "Apple Blanc & Newsreader", url: "https://site-portfolio-git-preview-option-c-arthrir.vercel.app/" },
+];
+
+export default function ThemeBadge({ currentOption, optionName, tagline, palette, typography }: ThemeBadgeProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -26,8 +33,8 @@ export default function ThemeBadge({ optionName, tagline, palette, typography }:
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="flex items-center gap-2 rounded-full border border-ink/20 bg-paper/95 px-4 py-2 font-mono text-xs font-semibold text-ink shadow-2xl backdrop-blur-md transition-all hover:scale-105 hover:border-signal"
-          style={{ borderColor: `${palette.signal}66` }}
+          className="flex items-center gap-2 rounded-full border border-ink/20 bg-paper/95 px-4 py-2 font-mono text-xs font-semibold text-ink shadow-2xl backdrop-blur-md transition-all hover:scale-105"
+          style={{ borderColor: `${palette.signal}88` }}
         >
           <span className="size-2.5 rounded-full" style={{ backgroundColor: palette.signal }} />
           <span>{optionName}</span>
@@ -52,6 +59,30 @@ export default function ThemeBadge({ optionName, tagline, palette, typography }:
 
           <p className="mt-2 text-[11px] text-mute leading-relaxed">{tagline}</p>
 
+          {/* Quick switcher between options */}
+          <div className="mt-3">
+            <span className="font-mono text-[9px] uppercase tracking-wider text-mute block mb-1.5">Comparer les 3 options :</span>
+            <div className="grid grid-cols-3 gap-1.5">
+              {PREVIEW_LINKS.map((opt) => {
+                const isActive = opt.id === currentOption;
+                return (
+                  <a
+                    key={opt.id}
+                    href={opt.url}
+                    className={`rounded-lg border px-2 py-1.5 text-center transition-all ${
+                      isActive
+                        ? "border-signal bg-signal/10 font-semibold text-signal ring-1 ring-signal/30"
+                        : "border-ink/15 hover:border-ink/40 text-ink/80 hover:bg-ink/5"
+                    }`}
+                  >
+                    <span className="block text-[11px] leading-tight font-mono">{opt.label}</span>
+                    <span className="block text-[8px] text-mute mt-0.5 truncate">{opt.sub}</span>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="mt-3 grid grid-cols-2 gap-2 text-[10px]">
             <div className="rounded-lg border border-ink/10 p-2">
               <span className="font-mono text-[9px] text-mute uppercase block mb-1">Nuancier</span>
@@ -64,10 +95,18 @@ export default function ThemeBadge({ optionName, tagline, palette, typography }:
             </div>
 
             <div className="rounded-lg border border-ink/10 p-2">
-              <span className="font-mono text-[9px] text-mute uppercase block mb-0.5">Typo testée</span>
+              <span className="font-mono text-[9px] text-mute uppercase block mb-0.5">Typographie</span>
               <p className="font-semibold text-ink truncate">{typography.sans}</p>
               <p className="font-mono text-[9px] text-mute truncate">Ghost: {typography.serif}</p>
             </div>
+          </div>
+
+          <div className="mt-2.5 pt-2 border-t border-ink/10 flex items-center justify-between text-[10px] text-mute">
+            <span>Prod intacte :</span>
+            <a href="https://arthurdx.com/" target="_blank" rel="noreferrer" className="flex items-center gap-1 font-mono text-ink hover:underline">
+              <span>arthurdx.com</span>
+              <ExternalLink className="size-2.5 opacity-60" />
+            </a>
           </div>
         </div>
       )}

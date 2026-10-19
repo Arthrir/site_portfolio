@@ -1713,7 +1713,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#06B6D4");
+  const [dotColor, setDotColor] = useState("#2340F0");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2253,10 +2253,11 @@ function Page() {
       <Palette open={palette} onClose={() => setPalette(false)} onGame={setGame} />
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
-        optionName="Option C : Labo Sombre"
-        tagline="Mode sombre ardoise (#0B0E14) · Cyan laser (#06B6D4) · Plus Jakarta Sans"
-        palette={{ paper: "#0B0E14", ink: "#F1F5F9", signal: "#06B6D4", mute: "#94A3B8", line: "#1E293B" }}
-        typography={{ sans: "Plus Jakarta Sans", serif: "Space Grotesk", concept: "Haute lisibilité nocturne & phosphorescence" }}
+        currentOption="c"
+        optionName="Option C : Blanc Apple & Newsreader"
+        tagline="Blanc pur lumineux (#FFFFFF) · Bleu électrique signature (#2340F0) · Schibsted Grotesk + Newsreader"
+        palette={{ paper: "#FFFFFF", ink: "#111110", signal: "#2340F0", mute: "#667085", line: "#EAECF0" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Newsreader (Édition Classique)", concept: "Pureté monochrome Apple, contraste absolu avec le noir #121211 & empattements d'art" }}
       />
     </div>
   );
