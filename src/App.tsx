@@ -1311,10 +1311,11 @@ function Engagements({ onMinitel }: { onMinitel: () => void }) {
           <Reveal key={e.logo} delay={i * 0.1} className="bg-paper">
             <article onClick={() => setOpen(FEATURED[i])} className="group flex h-full cursor-pointer flex-col p-8 transition-colors hover:bg-white/50 md:p-10">
               <div className="flex items-center gap-4">
+                {/* Clic Minitel désactivé - décommenter les attributs ci-dessous pour réactiver :
+                    onClick={(ev) => { if (e.action === "minitel") { ev.stopPropagation(); onMinitel(); } }}
+                    title={e.action === "minitel" ? "3615…" : undefined} */}
                 <img
                   src={e.logo} alt={e.org}
-                  onClick={(ev) => { if (e.action === "minitel") { ev.stopPropagation(); onMinitel(); } }}
-                  title={e.action === "minitel" ? "3615…" : undefined}
                   className="size-12 rounded-lg bg-white object-contain p-1.5 ring-1 ring-line transition-transform hover:scale-110"
                 />
                 <div>
@@ -1436,7 +1437,8 @@ function Palette({ open, onClose, onGame }: { open: boolean; onClose: () => void
 function Rail() {
   const { scrollYProgress } = useScroll();
   const p = useSpring(scrollYProgress, { stiffness: 140, damping: 26 });
-  const top = useTransform(p, (v) => `${v * 100}%`);
+  // La F1 commence légèrement plus bas (24px du haut) et finit un peu plus haut (24px du bas)
+  const top = useTransform(p, (v) => `calc(24px + ${v} * (100% - 48px))`);
   const { lang } = useLang();
   const [marks, setMarks] = useState<{ id: string; at: number }[]>([]);
   useEffect(() => {
@@ -1453,37 +1455,38 @@ function Rail() {
   const track = useRef<HTMLDivElement>(null);
   const seek = (y: number) => {
     const b = track.current!.getBoundingClientRect();
-    const v = Math.max(0, Math.min(1, (y - b.top) / b.height));
+    const effectiveHeight = b.height - 48;
+    const v = Math.max(0, Math.min(1, (y - b.top - 24) / (effectiveHeight > 0 ? effectiveHeight : 1)));
     scrollTo({ top: v * (document.documentElement.scrollHeight - innerHeight) });
   };
   const down = (e: React.PointerEvent) => { e.preventDefault(); (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); seek(e.clientY); };
   const move = (e: React.PointerEvent) => { if ((e.currentTarget as HTMLElement).hasPointerCapture(e.pointerId)) seek(e.clientY); };
   return (
-    <div className="fixed top-[calc(env(safe-area-inset-top)+12px)] right-0 bottom-3 z-40 hidden w-8 md:block">
+    <div className="fixed top-[calc(env(safe-area-inset-top)+14px)] right-0 bottom-4 z-40 hidden w-8 md:block">
       <div ref={track} onPointerDown={down} onPointerMove={move} className="group/rail relative mx-auto h-full w-6 cursor-grab touch-none active:cursor-grabbing">
-        <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-ink/15" />
-        <motion.div style={{ scaleY: p }} className="absolute inset-y-0 left-1/2 w-px origin-top -translate-x-1/2 bg-ink/40" />
+        <div className="absolute top-6 bottom-6 left-1/2 w-px -translate-x-1/2 bg-ink/15" />
+        <motion.div style={{ scaleY: p }} className="absolute top-6 bottom-6 left-1/2 w-px origin-top -translate-x-1/2 bg-ink/40" />
         {marks.map((mk) => { const m = { ...mk, label: loc(NAV.find((n) => n.id === mk.id)!, lang).label }; return (
-          <button key={m.id} onPointerDown={(e) => e.stopPropagation()} onClick={() => document.getElementById(m.id)?.scrollIntoView({ behavior: "smooth" })} aria-label={m.label} style={{ top: `${m.at * 100}%` }} className="group absolute left-1/2 block size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/40 bg-paper transition-colors hover:border-signal">
+          <button key={m.id} onPointerDown={(e) => e.stopPropagation()} onClick={() => document.getElementById(m.id)?.scrollIntoView({ behavior: "smooth" })} aria-label={m.label} style={{ top: `calc(24px + ${m.at} * (100% - 48px))` }} className="group absolute left-1/2 block size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/40 bg-paper transition-colors hover:border-signal">
             <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 bg-paper/90 px-1 font-mono text-[10px] tracking-[0.12em] whitespace-nowrap text-ink uppercase opacity-0 transition-opacity group-hover:opacity-100 group-hover/rail:opacity-60">{m.label}</span>
           </button>
         ); })}
         <motion.div style={{ top }} className="pointer-events-none absolute left-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform group-active/rail:scale-125">
           <svg width="12" height="26" viewBox="0 0 12 26" className="drop-shadow-sm">
-            {/* Aileron arrière (en haut) */}
-            <rect x="0" y="1" width="12" height="3" rx="0.8" className="fill-ink" />
-            {/* Roues arrière */}
-            <rect x="0" y="5" width="2.5" height="5" rx="1" className="fill-ink" />
-            <rect x="9.5" y="5" width="2.5" height="5" rx="1" className="fill-ink" />
-            {/* Roues avant */}
-            <rect x="0" y="15" width="2.5" height="5" rx="1" className="fill-ink" />
-            <rect x="9.5" y="15" width="2.5" height="5" rx="1" className="fill-ink" />
+            {/* Aileron arrière (en haut) avec contour fin pour lisibilité sur fond noir */}
+            <rect x="0.25" y="1" width="11.5" height="3" rx="0.8" className="fill-ink" stroke="rgba(255,255,255,0.45)" strokeWidth="0.35" />
+            {/* Roues arrière avec contour blanc/gris fin (pour détacher nettement sur le noir) */}
+            <rect x="0.2" y="5" width="2.4" height="5" rx="1" className="fill-ink" stroke="rgba(255,255,255,0.7)" strokeWidth="0.4" />
+            <rect x="9.4" y="5" width="2.4" height="5" rx="1" className="fill-ink" stroke="rgba(255,255,255,0.7)" strokeWidth="0.4" />
+            {/* Roues avant avec contour blanc/gris fin */}
+            <rect x="0.2" y="15" width="2.4" height="5" rx="1" className="fill-ink" stroke="rgba(255,255,255,0.7)" strokeWidth="0.4" />
+            <rect x="9.4" y="15" width="2.4" height="5" rx="1" className="fill-ink" stroke="rgba(255,255,255,0.7)" strokeWidth="0.4" />
             {/* Châssis rouge course vif (Ferrari / Rosso Corsa #E10600) orienté vers le bas (nez à y=24) */}
             <path d="M6 3 L8.5 6 L8 19 L6 24 L4 19 L3.5 6 Z" fill="#E10600" />
             {/* Aileron avant (en bas) */}
-            <rect x="0" y="22" width="12" height="3" rx="0.8" className="fill-ink" />
+            <rect x="0.25" y="22" width="11.5" height="3" rx="0.8" className="fill-ink" stroke="rgba(255,255,255,0.45)" strokeWidth="0.35" />
             {/* Cockpit / Halo */}
-            <ellipse cx="6" cy="13" rx="1.6" ry="2.6" className="fill-ink" />
+            <ellipse cx="6" cy="13" rx="1.6" ry="2.6" className="fill-ink" stroke="rgba(255,255,255,0.3)" strokeWidth="0.3" />
             {/* Casque jaune du pilote */}
             <circle cx="6" cy="13" r="1.3" fill="#FACC15" />
             {/* Visière orientée vers l'avant (vers le bas) */}
@@ -1828,7 +1831,8 @@ function Page() {
           <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
             <Stacked ghost={tr("Parcours", "Journey")} n="02">{tr("Ma roadmap.", "My roadmap.")}</Stacked>
           </div>
-          <Circuit onMinitel={() => setGame("minitel")} />
+          {/* Clic Minitel désactivé - décommenter pour réactiver : onMinitel={() => setGame("minitel")} */}
+          <Circuit onMinitel={() => { /* setGame("minitel"); */ }} />
         </div>
 
         {/* ÉCOLES & FORMATION */}
@@ -2056,7 +2060,8 @@ function Page() {
           <Stacked ghost="Leadership" n="05">{tr("Engagements.", "Involvement.")}</Stacked>
           <p className="max-w-sm text-mute">{tr("Là où j'ai appris à aligner des gens, un budget et une deadline - le cœur du métier de PO.", "Where I learned to align people, a budget and a deadline - the core of a PO's job.")}</p>
         </div>
-        <Engagements onMinitel={() => setGame("minitel")} />
+        {/* Clic Minitel désactivé - décommenter pour réactiver : onMinitel={() => setGame("minitel")} */}
+        <Engagements onMinitel={() => { /* setGame("minitel"); */ }} />
       </section>
 
       {/* PASSIONS */}
