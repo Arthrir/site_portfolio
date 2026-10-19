@@ -71,12 +71,12 @@ export default function Die({ onColorChange }: DieProps) {
   const isFirstMount = useRef(true);
 
   useEffect(() => {
-    if (onColorChange) {
-      onColorChange(currentTheme.hex);
-    }
     if (isFirstMount.current) {
       isFirstMount.current = false;
       return;
+    }
+    if (onColorChange) {
+      onColorChange(currentTheme.hex);
     }
     setOledOverride(`COLOR :: ${currentTheme.name}`);
     const timer = setTimeout(() => {
