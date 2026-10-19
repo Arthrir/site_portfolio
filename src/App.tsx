@@ -1272,8 +1272,11 @@ function Projects() {
                           : `${tr("avec", "with")} ${p.with}`
                         : ""}
                     </span>
-                    <span className="flex shrink-0 items-center gap-1 font-medium text-signal">
-                      {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")} <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45" />
+                    <span className="flex shrink-0 items-center gap-1 font-semibold text-signal">
+                      <span className="glossy-gold-text font-semibold">
+                        {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")}
+                      </span>
+                      <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45" />
                     </span>
                   </div>
                 </div>
@@ -1505,36 +1508,61 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
   const [section, setSection] = useState("");
   const [pick, setPick] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [menu, setMenu] = useState(false);
   const tabs = useRef<HTMLDivElement>(null);
   const { lang, tr } = useLang();
   const nav = useMemo(() => NAV.map((n) => loc(n, lang)), [lang]);
   useEffect(() => { if (pick && pick === section) setPick(null); }, [section, pick]);
-  // Glisser le doigt / la souris sur la barre : la lentille suit et grossit, on relâche pour y aller
+
+  // Glisser le doigt / la souris sur la barre : la lentille suit et magnifie, on relâche pour y aller
   const tabAt = (x: number) => {
     const els = [...(tabs.current?.querySelectorAll<HTMLElement>("[data-tab]") ?? [])];
     return els.find((el) => { const b = el.getBoundingClientRect(); return x >= b.left && x <= b.right; })?.dataset.tab;
   };
   const dragStart = useRef<{ x: number; moved: boolean } | null>(null);
-  const onTabsDown = (e: React.PointerEvent) => { dragStart.current = { x: e.clientX, moved: false }; };
+  const onTabsDown = (e: React.PointerEvent) => {
+    dragStart.current = { x: e.clientX, moved: false };
+  };
   const onTabsMove = (e: React.PointerEvent) => {
     const d = dragStart.current;
-    if (!d) return;
-    if (!d.moved && Math.abs(e.clientX - d.x) > 6) { d.moved = true; setDragging(true); tabs.current?.setPointerCapture(e.pointerId); }
-    if (d.moved) { const id = tabAt(e.clientX); if (id) setPick(id); }
+    if (d) {
+      if (!d.moved && Math.abs(e.clientX - d.x) > 3) {
+        d.moved = true;
+        setDragging(true);
+        tabs.current?.setPointerCapture(e.pointerId);
+      }
+      if (d.moved) {
+        const id = tabAt(e.clientX);
+        if (id) {
+          setPick(id);
+          setHoveredId(id);
+        }
+      }
+    } else {
+      const id = tabAt(e.clientX);
+      setHoveredId(id ?? null);
+    }
   };
   const onTabsUp = (e: React.PointerEvent) => {
-    const d = dragStart.current; dragStart.current = null;
-    if (!d?.moved) return;
-    setDragging(false);
-    const id = tabAt(e.clientX);
-    if (id) document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const d = dragStart.current;
+    dragStart.current = null;
+    if (d?.moved) {
+      setDragging(false);
+      const id = tabAt(e.clientX) ?? pick;
+      if (id) document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    }
   };
   useEffect(() => {
     const io = new IntersectionObserver((es) => es.forEach((en) => en.isIntersecting && setSection(en.target.id)), { rootMargin: "-45% 0px -50% 0px" });
     NAV.forEach((n) => { const el = document.getElementById(n.id); if (el) io.observe(el); });
     return () => io.disconnect();
   }, []);
+
+  const activeId = pick ?? section;
+  const focusId = dragging ? activeId : (hoveredId ?? activeId);
+  const focusIndex = nav.findIndex((item) => item.id === focusId);
+
   return (
     <>
       {/* Navigation principale et bulle sélecteur de langue détachée */}
@@ -1548,20 +1576,73 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
           <a href="#top" onClick={onLogo} aria-label={tr("Accueil", "Home")} className="mr-1 ml-1.5 grid h-8 w-10 place-items-center rounded-full text-ink transition-colors hover:text-signal">
             <Logo className="h-[18px] w-auto" />
           </a>
-          <div ref={tabs} className="hidden touch-none items-center select-none md:flex" onPointerDown={onTabsDown} onPointerMove={onTabsMove} onPointerUp={onTabsUp} onPointerCancel={onTabsUp}>
-            {nav.map((n) => {
-              const lit = (pick ?? section) === n.id;
+          <div
+            ref={tabs}
+            className="hidden touch-none items-center select-none md:flex"
+            onPointerDown={onTabsDown}
+            onPointerMove={onTabsMove}
+            onPointerUp={onTabsUp}
+            onPointerCancel={onTabsUp}
+            onPointerLeave={() => { if (!dragging) setHoveredId(null); }}
+          >
+            {nav.map((n, i) => {
+              const lit = activeId === n.id;
+              const distance = focusIndex >= 0 ? Math.abs(i - focusIndex) : 99;
+
+              let textScale = 1;
+              if (dragging) {
+                if (distance === 0) textScale = 1.22;
+                else if (distance === 1) textScale = 1.08;
+                else textScale = 1;
+              } else if (hoveredId) {
+                if (distance === 0) textScale = 1.14;
+                else if (distance === 1) textScale = 1.05;
+                else textScale = 1;
+              } else if (lit) {
+                textScale = 1.05;
+              }
+
               return (
-                <a key={n.id} data-tab={n.id} href={`#${n.id}`} draggable={false} onClick={(e) => { if (dragging) e.preventDefault(); setPick(n.id); }} className="relative px-3.5 py-1.5 text-[13px]">
+                <a
+                  key={n.id}
+                  data-tab={n.id}
+                  href={`#${n.id}`}
+                  draggable={false}
+                  onClick={(e) => {
+                    if (dragging) e.preventDefault();
+                    setPick(n.id);
+                  }}
+                  className="relative px-3.5 py-1.5 text-[13px]"
+                >
                   {lit && (
-                    <motion.span
+                    <motion.div
                       layoutId="lens"
-                      className="apple-pill absolute inset-0 rounded-full"
-                      animate={{ scale: dragging ? 1.04 : 1 }}
-                      transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.8 }}
-                    />
+                      className="apple-lens absolute inset-0 z-0 rounded-full"
+                      animate={{
+                        scale: dragging ? 1.18 : hoveredId === n.id ? 1.06 : 1,
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 420,
+                        damping: 26,
+                        mass: 0.6,
+                      }}
+                    >
+                      {/* Reflet spéculaire supérieur façon lentille en verre liquide Apple */}
+                      <span className="pointer-events-none absolute inset-x-2 top-0.5 h-[42%] rounded-full bg-gradient-to-b from-white via-white/40 to-transparent opacity-90" />
+                      {/* Anneau interne de réfraction */}
+                      <span className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/60" />
+                    </motion.div>
                   )}
-                  <span className={`relative z-10 inline-block transition-colors duration-150 ${lit ? "text-ink font-semibold" : "text-ink/65 hover:text-ink font-medium"}`}>{n.label}</span>
+                  <motion.span
+                    className={`relative z-10 inline-block origin-center transition-colors duration-150 ${
+                      lit ? "text-ink font-semibold" : "text-ink/65 hover:text-ink font-medium"
+                    }`}
+                    animate={{ scale: textScale }}
+                    transition={{ type: "spring", stiffness: 420, damping: 24 }}
+                  >
+                    {n.label}
+                  </motion.span>
                 </a>
               );
             })}
@@ -2034,11 +2115,7 @@ function Page() {
 
       {/* PROJECTS */}
       <section id="projets" style={{ "--color-signal": "#D4AF37" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
-        <div className="mb-14">
-          <Stacked ghost={tr("Réalisations", "Work")} n="04">
-            <span className="glossy-gold-text font-bold inline-block">{tr("Projets.", "Projects.")}</span>
-          </Stacked>
-        </div>
+        <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
 
@@ -2248,9 +2325,9 @@ function Page() {
       <ThemeBadge
         currentOption="b"
         optionName="Option B : Blanc Apple & Doré Champagne Glossy"
-        tagline="Full Blanc pur (#FFFFFF) · Verre dépoli officiel Apple (macOS/iOS) & capsule blanche · Titre Projets Doré Champagne Glossy avec brillance liquide · Rouge Scuderia (#E10600)"
+        tagline="Full Blanc pur (#FFFFFF) · Verre liquide Apple avec lentille loupe grossissante (macOS Dock / visionOS) · Liens projets Doré Champagne Glossy · Rouge Scuderia (#E10600)"
         palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#D4AF37", mute: "#64748B", line: "#E2E8F0" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc pur Apple studio, verre dépoli natif macOS et or champagne étincelant" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc pur Apple studio, verre liquide natif avec effet loupe au glissement et or champagne étincelant" }}
       />
     </div>
   );
