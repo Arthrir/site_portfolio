@@ -9,6 +9,7 @@ import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "./components/Brand";
 import Passions from "./sections/Passions";
 import Circuit from "./sections/Circuit";
 import { LangProvider, LangToggle, loc, useLang, type Lang, type Loc } from "./i18n";
+import type { ThemeOptionId } from "./options/themeConfig";
 
 const F1 = lazy(() => import("./games/F1"));
 const AimLab = lazy(() => import("./games/AimLab"));
@@ -1621,11 +1622,11 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
 }
 
 /* ---------------- App ---------------- */
-export default function App() {
-  return <LangProvider><Page /></LangProvider>;
+export default function App({ theme = "original" }: { theme?: ThemeOptionId }) {
+  return <LangProvider><Page theme={theme} /></LangProvider>;
 }
 
-function Page() {
+function Page({ theme = "original" }: { theme?: ThemeOptionId }) {
   const { lang, tr } = useLang();
   const [palette, setPalette] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -1710,9 +1711,30 @@ function Page() {
     return () => window.removeEventListener("keydown", k);
   }, []);
 
-  const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
+  const getThemeSignal = (t: ThemeOptionId) => {
+    switch (t) {
+      case "option-a": return "#2563EB";
+      case "option-b": return "#E11D48";
+      case "option-c": return "#06B6D4";
+      default: return "#FF4D00";
+    }
+  };
 
-  const [dotColor, setDotColor] = useState("#FF4D00");
+  const [dotColor, setDotColor] = useState(() => getThemeSignal(theme));
+
+  useEffect(() => {
+    const newSignal = getThemeSignal(theme);
+    setDotColor(newSignal);
+
+    if (theme === "original") {
+      document.documentElement.removeAttribute("data-theme");
+    } else {
+      document.documentElement.setAttribute("data-theme", theme);
+    }
+    return () => {
+      document.documentElement.removeAttribute("data-theme");
+    };
+  }, [theme]);
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2044,7 +2066,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": theme === "original" ? "#FF4D00" : dotColor } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
