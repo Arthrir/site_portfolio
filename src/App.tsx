@@ -777,56 +777,19 @@ function Hl({ children, className = "" }: { children: React.ReactNode; className
   );
 }
 
-/* ---------------- Stacked title: double écriture architecturale avec épures et lignes de construction ---------------- */
+/* ---------------- Stacked title: double écriture épurée, qui glisse au scroll ---------------- */
 function Stacked({ ghost, children, n, dark = false }: { ghost: string; children: React.ReactNode; n: string; dark?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const x = useTransform(scrollYProgress, [0, 1], ["8%", "-16%"]);
-
   return (
     <div ref={ref} className="relative">
       <motion.div
         style={{ x }}
         aria-hidden
-        className="pointer-events-none select-none relative whitespace-nowrap"
+        className={`pointer-events-none font-serif text-[clamp(4.5rem,15vw,13rem)] leading-[0.8] whitespace-nowrap italic select-none ${dark ? "text-outline-paper opacity-30" : "text-outline opacity-25"}`}
       >
-        {/* Ligne de construction supérieure : guide de tête (cap-height) avec repères de projection CAD */}
-        <div className={`flex items-center gap-3 font-mono text-[9px] tracking-[0.25em] uppercase ${dark ? "text-paper/35" : "text-ink/30"} mb-1`}>
-          <span className="h-px flex-1 border-t border-dashed border-current opacity-60" />
-          <span>⌖ REF.§{n} · CAD-AXIS</span>
-          <span className="w-10 h-px border-t border-current opacity-60" />
-          <span className="hidden sm:inline">CAP.HT 96.0MM</span>
-          <span className="h-px flex-1 border-t border-dashed border-current opacity-60" />
-        </div>
-
-        {/* Grand texte fantôme au trait technique & repères d'épure aux angles */}
-        <div className="relative inline-block font-serif text-[clamp(4.5rem,15vw,13rem)] leading-[0.8] whitespace-nowrap italic select-none">
-          {/* Ligne de construction transversale d'architecte */}
-          <span
-            className={`pointer-events-none absolute -inset-x-8 top-1/2 h-[0.5px] -translate-y-1/2 -rotate-1 border-t border-dotted ${
-              dark ? "border-paper/20" : "border-ink/20"
-            }`}
-          />
-
-          <span className={dark ? "text-outline-paper opacity-35" : "text-outline opacity-30"}>
-            {ghost}
-          </span>
-
-          {/* Croisillons de dessin technique (+) aux 4 coins du gabarit */}
-          <span className={`absolute -top-3 -left-3 font-mono text-[10px] not-italic ${dark ? "text-paper/40" : "text-ink/35"}`}>+</span>
-          <span className={`absolute -top-3 -right-3 font-mono text-[10px] not-italic ${dark ? "text-paper/40" : "text-ink/35"}`}>+</span>
-          <span className={`absolute -bottom-3 -left-3 font-mono text-[10px] not-italic ${dark ? "text-paper/40" : "text-ink/35"}`}>+</span>
-          <span className={`absolute -bottom-3 -right-3 font-mono text-[10px] not-italic ${dark ? "text-paper/40" : "text-ink/35"}`}>+</span>
-        </div>
-
-        {/* Ligne de construction inférieure : ligne de base (baseline) avec cotes d'architecte */}
-        <div className={`flex items-center gap-3 font-mono text-[9px] tracking-[0.25em] uppercase ${dark ? "text-paper/35" : "text-ink/30"} mt-1`}>
-          <span className="h-px flex-1 border-t border-current opacity-60" />
-          <span>|← DIM.W AUTO →|</span>
-          <span className="w-12 h-px border-t border-dashed border-current opacity-60" />
-          <span className="hidden sm:inline">BASELINE ±0.00</span>
-          <span className="h-px flex-1 border-t border-current opacity-60" />
-        </div>
+        {ghost}
       </motion.div>
       <div className="relative -mt-[0.32em] flex items-baseline gap-5 text-[clamp(2.4rem,6vw,5.2rem)] md:pl-2">
         <span className="font-mono text-[11px] tracking-[0.14em] text-signal">§{n}</span>
@@ -1641,13 +1604,22 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
                     <motion.span
                       layoutId="lens"
                       className="lens absolute inset-0 rounded-full"
-                      animate={{ scale: dragging ? 1.28 : 1 }}
-                      transition={{ type: "spring", stiffness: 520, damping: 30, mass: 0.7 }}
+                      animate={{
+                        scale: dragging ? 1.34 : 1,
+                        scaleY: dragging ? 1.15 : 1,
+                      }}
+                      transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
                     >
-                      <motion.span key={n.id} className="block size-full rounded-full" initial={{ scaleX: 1.18, scaleY: 0.82 }} animate={{ scaleX: 1, scaleY: 1 }} transition={{ type: "spring", stiffness: 300, damping: 12 }} />
+                      <motion.span
+                        key={n.id}
+                        className="block size-full rounded-full"
+                        initial={{ scaleX: 1.25, scaleY: 0.75 }}
+                        animate={{ scaleX: 1, scaleY: 1 }}
+                        transition={{ type: "spring", stiffness: 350, damping: 14 }}
+                      />
                     </motion.span>
                   )}
-                  <span className={`relative inline-block transition-all duration-200 ${lit ? "text-ink" : "text-ink/70"} ${lit && dragging ? "scale-110" : ""}`}>{n.label}</span>
+                  <span className={`relative inline-block transition-all duration-200 ${lit ? "text-ink font-semibold" : "text-ink/70"} ${lit && dragging ? "scale-115 drop-shadow-sm" : ""}`}>{n.label}</span>
                 </a>
               );
             })}
@@ -2135,7 +2107,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
@@ -2345,10 +2317,10 @@ function Page() {
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
         currentOption="c"
-        optionName="Option C : Traits d'Architecte & Épure CAD"
-        tagline="Blanc technique (#FBFBFC) · Bleu électrique (#2340F0) + Point rouge vif (#E10600) · Lignes de construction d'architecte, guides de tête et cotes CAD"
-        palette={{ paper: "#FBFBFC", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E2E4E9" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif (Épure CAD)", concept: "Lignes de construction d'architecte, cotes et croisillons de repère sur les titres fantômes" }}
+        optionName="Option C : Full White & Platine Métallique"
+        tagline="Full Blanc pur (#FFFFFF) · Titres Instrument Serif originaux épurés (sans fausses lignes CAD) · Projets Platine métallique · Loupe Apple VisionOS"
+        palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E5E7EB" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc pur immaculé, grands titres d'archive épurés et loupe liquid glass" }}
       />
     </div>
   );
