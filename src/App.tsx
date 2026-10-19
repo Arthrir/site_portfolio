@@ -1718,7 +1718,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#FF1801");
+  const [dotColor, setDotColor] = useState("#E10600");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2261,10 +2261,10 @@ function Page() {
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
         currentOption="b"
-        optionName="Option B : Apple Glossy & Rouge F1"
-        tagline="Blanc Apple pur/froid (#FFFFFF) · Rouge pétant Scuderia (#FF1801) · Point rouge · Projets orange (#FF4D00)"
-        palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#FF1801", mute: "#64748B", line: "#E2E8F0" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc brillant Apple, contraste mécanique & rouge haute vélocité" }}
+        optionName="Option B : Apple Pure White"
+        tagline="Vrai Blanc Apple (#FFFFFF) · Rouge pétant Scuderia (#E10600) · Expériences Noir pur (#121211) · Titres Instrument Serif"
+        palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#E10600", mute: "#64748B", line: "#E2E8F0" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc pur Apple, contraste mécanique & rouge haute vélocité" }}
       />
     </div>
   );

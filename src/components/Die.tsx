@@ -59,7 +59,7 @@ export default function Die({ onColorChange }: DieProps) {
 
   // Palette dynamique liée aux combinaisons des portes logiques A & B
   const GATE_COLOR_MAP: Record<string, { hex: string; name: string }> = {
-    "00": { hex: "#FF4D00", name: "ORANGE" },
+    "00": { hex: "#E10600", name: "RED" },
     "10": { hex: "#06B6D4", name: "CYAN" },
     "01": { hex: "#10B981", name: "GREEN" },
     "11": { hex: "#8B5CF6", name: "PURPLE" },
@@ -71,12 +71,12 @@ export default function Die({ onColorChange }: DieProps) {
   const isFirstMount = useRef(true);
 
   useEffect(() => {
-    if (onColorChange) {
-      onColorChange(currentTheme.hex);
-    }
     if (isFirstMount.current) {
       isFirstMount.current = false;
       return;
+    }
+    if (onColorChange) {
+      onColorChange(currentTheme.hex);
     }
     setOledOverride(`COLOR :: ${currentTheme.name}`);
     const timer = setTimeout(() => {
