@@ -2026,7 +2026,7 @@ function Page() {
                     <h3 className="hidden text-4xl font-semibold tracking-tight transition-transform duration-500 group-hover:translate-x-2 md:block md:text-6xl">{x.co}</h3>
                     <p className="mt-1 text-lg font-medium text-paper/90 md:mt-3">{x.role}</p>
                     <p className="mt-2 text-base text-paper/60">
-                      {x.place} · <Hl className="font-semibold px-1 py-0.5 rounded-sm">{x.date}</Hl>
+                      {x.place} · <Hl className="font-semibold px-1.5 py-0.5">{x.date}</Hl>
                     </p>
                   </div>
                   <div>
