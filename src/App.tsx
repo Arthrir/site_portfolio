@@ -1713,7 +1713,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#2563EB");
+  const [dotColor, setDotColor] = useState("#2340F0");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2253,10 +2253,11 @@ function Page() {
       <Palette open={palette} onClose={() => setPalette(false)} onGame={setGame} />
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
-        optionName="Option A : Précision Hardware"
-        tagline="Blanc titane frais (#F8F9FA) · Bleu cobalt (#2563EB) · Plus Jakarta Sans + Space Grotesk"
-        palette={{ paper: "#F8F9FA", ink: "#0B0F19", signal: "#2563EB", mute: "#526071", line: "#E2E8F0" }}
-        typography={{ sans: "Plus Jakarta Sans", serif: "Space Grotesk", concept: "Néo-grotesque d'ingénieur" }}
+        currentOption="a"
+        optionName="Option A : Titane & Bleu #2340F0"
+        tagline="Fond titane frais (#F8F9FA) · Bleu électrique signature (#2340F0) · Schibsted Grotesk + Instrument Serif"
+        palette={{ paper: "#F8F9FA", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E2E4E9" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif (Vintage)", concept: "Édition studio ultra-nette, fond clair lumineux sans jaunisse" }}
       />
     </div>
   );
