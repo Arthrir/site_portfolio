@@ -1756,7 +1756,7 @@ function Page() {
               </span>
             ))}
           </h1>
-          <Reveal delay={0.6} className="mt-8 max-w-2xl space-y-4">
+          <Reveal delay={0.6} className="mt-8 max-w-3xl space-y-4">
             <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
               {tr(
                 "Élève-ingénieur en microélectronique, informatique et conception produit aux Mines Saint-Étienne × Politecnico di Milano.",
@@ -1764,9 +1764,9 @@ function Page() {
               )}
             </p>
             <div className="pt-2">
-              <p className="text-xl sm:text-2xl font-bold tracking-tight text-ink">
-                {tr("Recherche de stage de fin d'études", "Seeking end-of-studies internship")}{" "}
-                <Hl className="font-semibold">{tr("(5+ mois dès avril 2027)", "(5+ months from April 2027)")}</Hl>
+              <p className="text-[clamp(15px,1.7vw,22px)] font-bold tracking-tight text-ink sm:whitespace-nowrap">
+                <span>{tr("Recherche de stage de fin d'études", "Seeking end-of-studies internship")}</span>{" "}
+                <Hl className="font-semibold whitespace-nowrap">{tr("(5+ mois dès avril 2027)", "(5+ months from April 2027)")}</Hl>
               </p>
               <p className="mt-1 text-[16px] sm:text-[17px] leading-relaxed text-ink/80">
                 {tr(
