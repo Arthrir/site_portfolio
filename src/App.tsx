@@ -1604,13 +1604,22 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
                     <motion.span
                       layoutId="lens"
                       className="lens absolute inset-0 rounded-full"
-                      animate={{ scale: dragging ? 1.28 : 1 }}
-                      transition={{ type: "spring", stiffness: 520, damping: 30, mass: 0.7 }}
+                      animate={{
+                        scale: dragging ? 1.34 : 1,
+                        scaleY: dragging ? 1.15 : 1,
+                      }}
+                      transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
                     >
-                      <motion.span key={n.id} className="block size-full rounded-full" initial={{ scaleX: 1.18, scaleY: 0.82 }} animate={{ scaleX: 1, scaleY: 1 }} transition={{ type: "spring", stiffness: 300, damping: 12 }} />
+                      <motion.span
+                        key={n.id}
+                        className="block size-full rounded-full"
+                        initial={{ scaleX: 1.25, scaleY: 0.75 }}
+                        animate={{ scaleX: 1, scaleY: 1 }}
+                        transition={{ type: "spring", stiffness: 350, damping: 14 }}
+                      />
                     </motion.span>
                   )}
-                  <span className={`relative inline-block transition-all duration-200 ${lit ? "text-ink" : "text-ink/70"} ${lit && dragging ? "scale-110" : ""}`}>{n.label}</span>
+                  <span className={`relative inline-block transition-all duration-200 ${lit ? "text-ink font-semibold" : "text-ink/70"} ${lit && dragging ? "scale-115 drop-shadow-sm" : ""}`}>{n.label}</span>
                 </a>
               );
             })}
@@ -2098,7 +2107,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": "#2340F0" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
@@ -2308,10 +2317,10 @@ function Page() {
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
       <ThemeBadge
         currentOption="a"
-        optionName="Option A : Tricolore Studio"
-        tagline="Fond titane (#F8F9FA) · Bleu électrique (#2340F0) · Point rouge vif (#E10600) côté France · Projets orange (#FF4D00)"
-        palette={{ paper: "#F8F9FA", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E2E4E9" }}
-        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Harmonie Bleu/Blanc/Rouge tech & titres fantômes d'archive" }}
+        optionName="Option A : Pure White & Chrome Métallique"
+        tagline="Full Blanc pur (#FFFFFF) · Duo Bleu Cobalt (#2340F0) + Rouge vif (#E10600) · Projets Chrome argenté (fini orange) · Loupe Liquid Glass Apple"
+        palette={{ paper: "#FFFFFF", ink: "#121211", signal: "#2340F0", mute: "#5E6068", line: "#E5E7EB" }}
+        typography={{ sans: "Schibsted Grotesk", serif: "Instrument Serif", concept: "Blanc pur studio Apple, liquid glass avec loupe optique et reflets métalliques" }}
       />
     </div>
   );
