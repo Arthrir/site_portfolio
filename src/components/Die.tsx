@@ -59,7 +59,7 @@ export default function Die({ onColorChange }: DieProps) {
 
   // Palette dynamique liée aux combinaisons des portes logiques A & B
   const GATE_COLOR_MAP: Record<string, { hex: string; name: string }> = {
-    "00": { hex: "#FF4D00", name: "ORANGE" },
+    "00": { hex: "#E10600", name: "ROUGE" },
     "10": { hex: "#06B6D4", name: "CYAN" },
     "01": { hex: "#10B981", name: "GREEN" },
     "11": { hex: "#8B5CF6", name: "PURPLE" },
@@ -171,7 +171,7 @@ export default function Die({ onColorChange }: DieProps) {
           ].map((f, i) => (
             <g key={`fid-${i}`}>
               <circle cx={f.cx} cy={f.cy} r="4" fill="none" stroke="#71717A" strokeWidth="0.8" />
-              <circle cx={f.cx} cy={f.cy} r="1.4" fill="#FF4D00" />
+              <circle cx={f.cx} cy={f.cy} r="1.4" fill="#E10600" />
             </g>
           ))}
 
@@ -278,14 +278,14 @@ export default function Die({ onColorChange }: DieProps) {
             <rect x="0" y="0" width="50" height="26" rx="2" fill="#1E293B" stroke="#475569" strokeWidth="1" />
             <rect x="2" y="2" width="46" height="22" rx="1" fill="#0F172A" />
             <text x="25" y="12" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#E2E8F0">OSC 120M</text>
-            <text x="25" y="20" textAnchor="middle" fontSize="4.2" fill="#FF4D00">Y1 QUARTZ</text>
+            <text x="25" y="20" textAnchor="middle" fontSize="4.2" fill="#E10600">Y1 QUARTZ</text>
           </g>
-          <path d="M 94 175 H 126" stroke="#FF4D00" strokeWidth="1.2" fill="none" />
+          <path d="M 94 175 H 126" stroke="#E10600" strokeWidth="1.2" fill="none" />
           <circle
             cx="110"
             cy="175"
             r="2"
-            fill={clockTick % 2 === 0 ? "#FF4D00" : "#52525B"}
+            fill={clockTick % 2 === 0 ? "#E10600" : "#52525B"}
             filter={clockTick % 2 === 0 ? "url(#glow-led)" : undefined}
           />
           <text x="110" y="169" textAnchor="middle" fontSize="4" fill="#71717A">CLK_IN</text>
@@ -335,10 +335,10 @@ export default function Die({ onColorChange }: DieProps) {
               Retours vers le CPU sur 3 canaux distincts (364, 371, 378).
               ================================================================= */}
           {/* SORTIES DES BOUTONS : Partent de l'extrémité droite de la pastille (x=269) */}
-          <path d="M 269 38 H 286" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.6 : 1} fill="none" />
+          <path d="M 269 38 H 286" stroke={logicA ? "#E10600" : "#52525B"} strokeWidth={logicA ? 1.6 : 1} fill="none" />
           <path d="M 269 78 H 300" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.6 : 1} fill="none" />
 
-          {/* Bouton Poussoir Tactile SMD A à (246, 27) - ACCENT ORANGE (#FF4D00) */}
+          {/* Bouton Poussoir Tactile SMD A à (246, 27) - ACCENT ORANGE (#E10600) */}
           <g className="cursor-pointer" onClick={() => setLogicA((a) => !a)} transform="translate(246, 27)">
             {/* 2 pastilles de soudure CMS nettes (Gauche = VDD in, Droite = OUT) */}
             <rect x="-3" y="8" width="3" height="6" fill="#A1A1AA" stroke="#3F3F46" strokeWidth="0.4" />
@@ -352,13 +352,13 @@ export default function Die({ onColorChange }: DieProps) {
               cx="10"
               cy="11"
               r="5.5"
-              fill={logicA ? "#FF4D00" : "#334155"}
+              fill={logicA ? "#E10600" : "#334155"}
               stroke={logicA ? "#FF7A33" : "#475569"}
               strokeWidth="0.8"
               filter={logicA ? "url(#glow-led)" : undefined}
             />
             {/* Sérigraphie au-dessus du bouton, décalée vers la droite pour éviter l'alimentation VDD */}
-            <text x="16" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicA ? "#FF4D00" : "#71717A"}>
+            <text x="16" y="-5" textAnchor="middle" fontSize="4.6" fontWeight="bold" fill={logicA ? "#E10600" : "#71717A"}>
               BTN A ({valA})
             </text>
           </g>
@@ -391,12 +391,12 @@ export default function Die({ onColorChange }: DieProps) {
           {/* RAIL A VERTICAL (Orange) : va de y=38 à y=145 (Pin 1 du CPU) */}
           <path
             d="M 286 38 V 145 H 274"
-            stroke={logicA ? "#FF4D00" : "#52525B"}
+            stroke={logicA ? "#E10600" : "#52525B"}
             strokeWidth={logicA ? 1.5 : 1}
             fill="none"
           />
-          <circle cx="286" cy="38" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
-          <circle cx="286" cy="145" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="286" cy="38" r="1.4" fill={logicA ? "#E10600" : "#52525B"} />
+          <circle cx="286" cy="145" r="1.4" fill={logicA ? "#E10600" : "#52525B"} />
 
           {/* RAIL B VERTICAL (Cyan) : va de y=56 (XOR B) à y=160 (Pin 2 du CPU) */}
           <path
@@ -411,8 +411,8 @@ export default function Die({ onColorChange }: DieProps) {
 
           {/* --- PORTE 1 : XOR (Y = A ⊕ B) à y=50 --- (Magenta #EC4899) */}
           {/* Entrée A du XOR (Orange, x=286 -> x=322, y=44) : passe au-dessus de y=56 sans croiser Rail B */}
-          <path d="M 286 44 H 322" stroke={logicA ? "#FF4D00" : "#52525B"} strokeWidth={logicA ? 1.4 : 1} fill="none" />
-          <circle cx="286" cy="44" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <path d="M 286 44 H 322" stroke={logicA ? "#E10600" : "#52525B"} strokeWidth={logicA ? 1.4 : 1} fill="none" />
+          <circle cx="286" cy="44" r="1.4" fill={logicA ? "#E10600" : "#52525B"} />
 
           {/* Entrée B du XOR (Cyan, x=300 -> x=322, y=56) : direct depuis Rail B */}
           <path d="M 300 56 H 322" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.4 : 1} fill="none" />
@@ -450,11 +450,11 @@ export default function Die({ onColorChange }: DieProps) {
           {/* Entrée A du AND (Orange, x=286 -> x=322, y=93) : avec pont de saut au-dessus de Rail B (x=300) */}
           <path
             d="M 286 93 H 297 Q 300 89 303 93 H 322"
-            stroke={logicA ? "#FF4D00" : "#52525B"}
+            stroke={logicA ? "#E10600" : "#52525B"}
             strokeWidth={logicA ? 1.4 : 1}
             fill="none"
           />
-          <circle cx="286" cy="93" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="286" cy="93" r="1.4" fill={logicA ? "#E10600" : "#52525B"} />
 
           {/* Entrée B du AND (Cyan, direct depuis Rail B à x=300) */}
           <path d="M 300 103 H 322" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.4 : 1} fill="none" />
@@ -491,11 +491,11 @@ export default function Die({ onColorChange }: DieProps) {
           {/* Entrée A du OR (Orange, x=286 -> x=322, y=141) : avec pont de saut au-dessus de Rail B (x=300) */}
           <path
             d="M 286 141 H 297 Q 300 137 303 141 H 322"
-            stroke={logicA ? "#FF4D00" : "#52525B"}
+            stroke={logicA ? "#E10600" : "#52525B"}
             strokeWidth={logicA ? 1.4 : 1}
             fill="none"
           />
-          <circle cx="286" cy="141" r="1.4" fill={logicA ? "#FF4D00" : "#52525B"} />
+          <circle cx="286" cy="141" r="1.4" fill={logicA ? "#E10600" : "#52525B"} />
 
           {/* Entrée B du OR (Cyan, direct depuis Rail B à x=300) */}
           <path d="M 300 151 H 322" stroke={logicB ? "#06B6D4" : "#52525B"} strokeWidth={logicB ? 1.4 : 1} fill="none" />
@@ -759,8 +759,8 @@ export default function Die({ onColorChange }: DieProps) {
           />
 
           {/* Repère Pin 1 */}
-          <circle cx="138" cy="138" r="3.5" fill="none" stroke="#FF4D00" strokeWidth="0.8" />
-          <circle cx="138" cy="138" r="1.5" fill="#FF4D00" />
+          <circle cx="138" cy="138" r="3.5" fill="none" stroke="#E10600" strokeWidth="0.8" />
+          <circle cx="138" cy="138" r="1.5" fill="#E10600" />
 
           {/* --- MODULES INTERNES DYNAMIQUES DU SOC --- */}
 
@@ -770,8 +770,8 @@ export default function Die({ onColorChange }: DieProps) {
             <rect x="0" y="0" width="32" height="32" fill="url(#slug-cross)" opacity="0.45" />
             <line x1="0" y1="0" x2="32" y2="32" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
             <line x1="32" y1="0" x2="0" y2="32" stroke="#FFEDD5" strokeWidth="0.6" opacity="0.3" />
-            <rect x="2" y="9" width="28" height="14" fill="#111216" stroke="#FF4D00" strokeWidth="0.6" />
-            <text x="16" y="18" textAnchor="middle" fontSize="3.8" fontWeight="bold" fill="#FF4D00">THERMAL</text>
+            <rect x="2" y="9" width="28" height="14" fill="#111216" stroke="#E10600" strokeWidth="0.6" />
+            <text x="16" y="18" textAnchor="middle" fontSize="3.8" fontWeight="bold" fill="#E10600">THERMAL</text>
           </g>
 
           {/* Module 2 : BANC DE REGISTRES RV32I REGFILE 128B (Top-Right)
@@ -785,7 +785,7 @@ export default function Die({ onColorChange }: DieProps) {
             {/* Matrice des cellules mémoires dynamiques avec leurs vraies couleurs dédiées */}
             <g transform="translate(4, 12)">
               {/* a0 (Orange) */}
-              <rect x="0" y="0" width="10" height="8" rx="0.5" fill={logicA ? "#FF4D00" : "#27272A"} stroke="#3F3F46" strokeWidth="0.4" />
+              <rect x="0" y="0" width="10" height="8" rx="0.5" fill={logicA ? "#E10600" : "#27272A"} stroke="#3F3F46" strokeWidth="0.4" />
               <text x="5" y="6" textAnchor="middle" fontSize="4" fill={logicA ? "#FFF" : "#71717A"}>{valA}</text>
 
               {/* a1 (Cyan) */}
@@ -818,7 +818,7 @@ export default function Die({ onColorChange }: DieProps) {
             <text x="120" y="6.5" textAnchor="end" fontSize="4" fill={currentTheme.hex}>x0..x31 REGFILE</text>
 
             <g transform="translate(6, 14)">
-              <text x="0" y="6" fontSize="4.5" fill="#A1A1AA">x10 (a0): <tspan fill={logicA ? "#FF4D00" : "#71717A"} fontWeight="bold">0x0{valA}</tspan></text>
+              <text x="0" y="6" fontSize="4.5" fill="#A1A1AA">x10 (a0): <tspan fill={logicA ? "#E10600" : "#71717A"} fontWeight="bold">0x0{valA}</tspan></text>
               <text x="60" y="6" fontSize="4.5" fill="#A1A1AA">x11 (a1): <tspan fill={logicB ? "#06B6D4" : "#71717A"} fontWeight="bold">0x0{valB}</tspan></text>
 
               {/* x12 xor affiché en Magenta pour concorder avec la porte XOR ! */}
