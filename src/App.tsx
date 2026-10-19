@@ -8,6 +8,7 @@ import CvViewer from "./sections/CvViewer";
 import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "./components/Brand";
 import Passions from "./sections/Passions";
 import Circuit from "./sections/Circuit";
+import ThemeBadge from "./components/ThemeBadge";
 import { LangProvider, LangToggle, loc, useLang, type Lang, type Loc } from "./i18n";
 
 const F1 = lazy(() => import("./games/F1"));
@@ -1712,7 +1713,7 @@ function Page() {
 
   const copy = () => { navigator.clipboard.writeText("contact@arthurdx.com"); setCopied(true); setTimeout(() => setCopied(false), 1600); };
 
-  const [dotColor, setDotColor] = useState("#FF4D00");
+  const [dotColor, setDotColor] = useState("#E11D48");
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
@@ -2044,7 +2045,7 @@ function Page() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projets" style={{ "--color-signal": "#FF4D00" } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
+      <section id="projets" style={{ "--color-signal": dotColor } as React.CSSProperties} className="mx-auto max-w-[1400px] px-6 py-32 md:px-10">
         <div className="mb-14"><Stacked ghost={tr("Réalisations", "Work")} n="04">{tr("Projets.", "Projects.")}</Stacked></div>
         <Projects />
       </section>
@@ -2251,6 +2252,12 @@ function Page() {
       </Suspense>
       <Palette open={palette} onClose={() => setPalette(false)} onGame={setGame} />
       <ContactModal open={contactModal} onClose={() => setContactModal(false)} />
+      <ThemeBadge
+        optionName="Option B : Design Suisse"
+        tagline="Blanc cassé mat (#F4F4F0) · Rouge signal (#E11D48) · Typographie Geist"
+        palette={{ paper: "#F4F4F0", ink: "#18181B", signal: "#E11D48", mute: "#71717A", line: "#D4D4D8" }}
+        typography={{ sans: "Geist", serif: "Geist", concept: "Pureté néo-grotesque suisse" }}
+      />
     </div>
   );
 }
