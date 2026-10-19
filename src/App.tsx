@@ -27,6 +27,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 /* ---------------- Data ---------------- */
 const NAV: Loc<{ id: string; label: string }>[] = [
   { id: "roadmap", label: "Parcours", en: { label: "Journey" } },
+  { id: "experiences", label: "Expériences", en: { label: "Experience" } },
   { id: "projets", label: "Projets", en: { label: "Projects" } },
   { id: "engagements", label: "Engagements", en: { label: "Involvement" } },
   { id: "passions", label: "Passions" },
@@ -1436,14 +1437,13 @@ function Palette({ open, onClose, onGame }: { open: boolean; onClose: () => void
 function Rail() {
   const { scrollYProgress } = useScroll();
   const p = useSpring(scrollYProgress, { stiffness: 140, damping: 26 });
-  // La F1 commence légèrement plus bas (24px du haut) et finit un peu plus haut (24px du bas)
-  const top = useTransform(p, (v) => `calc(24px + ${v} * (100% - 48px))`);
+  const top = useTransform(p, (v) => `${v * 100}%`);
   const { lang } = useLang();
   const [marks, setMarks] = useState<{ id: string; at: number }[]>([]);
   useEffect(() => {
     const calc = () => {
       const h = document.documentElement.scrollHeight - innerHeight;
-      setMarks(NAV.flatMap((n) => { const el = document.getElementById(n.id); return el ? [{ id: n.id, at: Math.min(1, (el.offsetTop - innerHeight * 0.3) / h) }] : []; }));
+      setMarks(NAV.flatMap((n) => { const el = document.getElementById(n.id); return el ? [{ id: n.id, at: Math.min(1, Math.max(0, (el.offsetTop - innerHeight * 0.3) / h)) }] : []; }));
     };
     calc();
     const t = setTimeout(calc, 1500);
@@ -1453,20 +1453,22 @@ function Rail() {
   // la piste remplace la barre de défilement : clic ou glisser la F1 pour se déplacer
   const track = useRef<HTMLDivElement>(null);
   const seek = (y: number) => {
-    const b = track.current!.getBoundingClientRect();
-    const effectiveHeight = b.height - 48;
-    const v = Math.max(0, Math.min(1, (y - b.top - 24) / (effectiveHeight > 0 ? effectiveHeight : 1)));
-    scrollTo({ top: v * (document.documentElement.scrollHeight - innerHeight) });
+    const b = track.current?.getBoundingClientRect();
+    if (!b || b.height <= 0) return;
+    const v = Math.max(0, Math.min(1, (y - b.top) / b.height));
+    const maxScroll = document.documentElement.scrollHeight - innerHeight;
+    // Déplacement instantané ultra-fluide au drag souris (évite les micro-lags du smooth-scroll CSS)
+    document.documentElement.scrollTop = v * maxScroll;
   };
   const down = (e: React.PointerEvent) => { e.preventDefault(); (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); seek(e.clientY); };
   const move = (e: React.PointerEvent) => { if ((e.currentTarget as HTMLElement).hasPointerCapture(e.pointerId)) seek(e.clientY); };
   return (
-    <div className="fixed top-[calc(env(safe-area-inset-top)+14px)] right-0 bottom-4 z-40 hidden w-8 md:block">
+    <div className="fixed top-[calc(env(safe-area-inset-top)+28px)] right-0 bottom-7 z-40 hidden w-8 md:block">
       <div ref={track} onPointerDown={down} onPointerMove={move} className="group/rail relative mx-auto h-full w-6 cursor-grab touch-none active:cursor-grabbing">
-        <div className="absolute top-6 bottom-6 left-1/2 w-px -translate-x-1/2 bg-ink/15" />
-        <motion.div style={{ scaleY: p }} className="absolute top-6 bottom-6 left-1/2 w-px origin-top -translate-x-1/2 bg-ink/40" />
+        <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-ink/15" />
+        <motion.div style={{ scaleY: p }} className="absolute inset-y-0 left-1/2 w-px origin-top -translate-x-1/2 bg-ink/40" />
         {marks.map((mk) => { const m = { ...mk, label: loc(NAV.find((n) => n.id === mk.id)!, lang).label }; return (
-          <button key={m.id} onPointerDown={(e) => e.stopPropagation()} onClick={() => document.getElementById(m.id)?.scrollIntoView({ behavior: "smooth" })} aria-label={m.label} style={{ top: `calc(24px + ${m.at} * (100% - 48px))` }} className="group absolute left-1/2 block size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/40 bg-paper transition-colors hover:border-signal">
+          <button key={m.id} onPointerDown={(e) => e.stopPropagation()} onClick={() => document.getElementById(m.id)?.scrollIntoView({ behavior: "smooth" })} aria-label={m.label} style={{ top: `${m.at * 100}%` }} className="group absolute left-1/2 block size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/40 bg-paper transition-colors hover:border-signal">
             <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 bg-paper/90 px-1 font-mono text-[10px] tracking-[0.12em] whitespace-nowrap text-ink uppercase opacity-0 transition-opacity group-hover:opacity-100 group-hover/rail:opacity-60">{m.label}</span>
           </button>
         ); })}
