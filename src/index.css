@@ -132,33 +132,3 @@ body { background: var(--color-paper); color: var(--color-ink); font-family: var
   filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.6));
 }
 
-/* 3. Duo Bicolore Fusionné (Projets Hybrides Hardware × Software / IA) */
-@keyframes duo-gloss {
-  0% { background-position: 200% 0; }
-  100% { background-position: 0% 0; }
-}
-.glossy-duo-text {
-  background: linear-gradient(
-    115deg,
-    #78590C 0%,
-    #E5C564 12%,
-    #FFFCE6 20%,
-    #FFFFFF 25%,
-    #93C5FD 30%,
-    #1E3A8A 38%,
-    #78590C 50%,
-    #E5C564 62%,
-    #FFFCE6 70%,
-    #FFFFFF 75%,
-    #93C5FD 80%,
-    #1E3A8A 88%,
-    #78590C 100%
-  );
-  background-size: 200% 100%;
-  background-repeat: repeat-x;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-  animation: duo-gloss 7.5s linear infinite;
-  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.6));
-}
