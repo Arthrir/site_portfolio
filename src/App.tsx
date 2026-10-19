@@ -1238,6 +1238,27 @@ const FEATURED_PROJECT_TITLES = [
   "Victoire au Hackathon STMicroelectronics",
 ];
 
+const getProjectGleam = (cat: Cat[]) => {
+  const hasHw = cat.includes("Hardware");
+  const hasSwOrAi = cat.includes("Software") || cat.includes("IA") || cat.includes("Produit");
+  if (hasHw && hasSwOrAi) {
+    return {
+      textClass: "glossy-duo-text",
+      arrowClass: "text-[#D4AF37] group-hover:text-[#93C5FD]",
+    };
+  }
+  if (hasHw) {
+    return {
+      textClass: "glossy-gold-text",
+      arrowClass: "text-[#D4AF37]",
+    };
+  }
+  return {
+    textClass: "glossy-platinum-text",
+    arrowClass: "text-[#2563EB] group-hover:text-[#93C5FD]",
+  };
+};
+
 /* ---------------- Projects ---------------- */
 const FILTERS: ("Tous" | Cat)[] = ["Tous", "Hardware", "Software", "IA", "Produit"];
 function Projects() {
@@ -1252,10 +1273,20 @@ function Projects() {
       <div className="mb-10 flex flex-wrap items-center gap-1 border-b border-ink pb-4">
         {FILTERS.map((x) => {
           const count = x === "Tous" ? PROJECTS.length : PROJECTS.filter((p) => p.cat.includes(x)).length;
+          const dotClass =
+            x === "Tous"
+              ? "bg-gradient-to-r from-[#D4AF37] to-[#2563EB]"
+              : x === "Hardware"
+              ? "bg-[#D4AF37]"
+              : "bg-[#2563EB]";
           return (
             <button key={x} onClick={() => { setF(x); setExpandedMobile(true); }} className="relative px-4 py-2 text-sm font-medium">
               {f === x && <motion.span layoutId="filter" className="absolute inset-0 bg-ink" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
-              <span className={`relative transition-colors ${f === x ? "text-paper" : ""}`}>{catLabel(x, lang)} <sup className="font-mono text-[9px] opacity-60">{count}</sup></span>
+              <span className={`relative flex items-center gap-1.5 transition-colors ${f === x ? "text-paper" : ""}`}>
+                <span className={`size-1.5 rounded-full ${dotClass} inline-block shrink-0`} />
+                <span>{catLabel(x, lang)}</span>
+                <sup className="font-mono text-[9px] opacity-60">{count}</sup>
+              </span>
             </button>
           );
         })}
@@ -1266,6 +1297,7 @@ function Projects() {
             const origTitle = PROJECTS[all.indexOf(p)].t;
             const isFeatured = FEATURED_PROJECT_TITLES.includes(origTitle);
             const hiddenOnMobile = f === "Tous" && !expandedMobile && !isFeatured;
+            const { textClass, arrowClass } = getProjectGleam(p.cat);
             return (
               <motion.article
                 layout key={origTitle}
@@ -1274,8 +1306,25 @@ function Projects() {
                 onClick={() => setOpen(all.indexOf(p))} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && setOpen(all.indexOf(p))}
                 className={`${hiddenOnMobile ? "hidden sm:flex" : "flex"} group relative min-h-[220px] cursor-pointer flex-col bg-paper p-7 transition-colors duration-500 hover:bg-ink hover:text-paper border-b border-ink/15 sm:border-r sm:border-ink/15 sm:[&:nth-child(2n)]:border-r-0 lg:[&:nth-child(2n)]:border-r lg:[&:nth-child(3n)]:border-r-0`}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
                   <span className="font-mono text-[11px] text-mute group-hover:text-paper/50">{p.d}</span>
+                  <div className="flex items-center gap-1">
+                    {p.cat.map((c) => {
+                      const isHw = c === "Hardware";
+                      return (
+                        <span
+                          key={c}
+                          className={`px-1.5 py-0.5 rounded-[2px] font-mono text-[9.5px] uppercase tracking-wider font-semibold border ${
+                            isHw
+                              ? "border-[#D4AF37]/35 text-[#854D0E] group-hover:text-[#FDE047] group-hover:border-[#FDE047]/50"
+                              : "border-[#3B82F6]/35 text-[#1D4ED8] group-hover:text-[#93C5FD] group-hover:border-[#93C5FD]/50"
+                          }`}
+                        >
+                          {catLabel(c, lang)}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
                 <h3 className="mt-8 text-xl leading-tight font-semibold tracking-tight">{p.t}</h3>
                 <p className="mt-3 line-clamp-2 text-[15px] leading-relaxed text-mute group-hover:text-paper/70">{p.desc}</p>
@@ -1291,8 +1340,11 @@ function Projects() {
                           : `${tr("avec", "with")} ${p.with}`
                         : ""}
                     </span>
-                    <span className="flex shrink-0 items-center gap-1 font-medium text-signal">
-                      {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")} <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45" />
+                    <span className="flex shrink-0 items-center gap-1 font-semibold">
+                      <span className={`${textClass} font-semibold transition-transform duration-300 group-hover:translate-x-0.5`}>
+                        {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")}
+                      </span>
+                      <ArrowUpRight className={`size-3.5 transition-transform group-hover:rotate-45 ${arrowClass}`} />
                     </span>
                   </div>
                 </div>
