@@ -1565,7 +1565,7 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
           initial={{ y: -30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.9, ease, delay: 0.2 }}
-          className="apple-glass relative flex items-center gap-1 rounded-full p-1.5"
+          className="liquid relative flex items-center gap-1 rounded-full p-1.5"
         >
           <a href="#top" onClick={onLogo} aria-label={tr("Accueil", "Home")} className="mr-1 ml-1.5 grid h-8 w-10 place-items-center rounded-full text-ink transition-colors hover:text-signal">
             <Logo className="h-[18px] w-auto" />
@@ -1574,16 +1574,18 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
             {nav.map((n) => {
               const lit = (pick ?? section) === n.id;
               return (
-                <a key={n.id} data-tab={n.id} href={`#${n.id}`} draggable={false} onClick={(e) => { if (dragging) e.preventDefault(); setPick(n.id); }} className="relative px-3.5 py-1.5 text-[13px]">
+                <a key={n.id} data-tab={n.id} href={`#${n.id}`} draggable={false} onClick={(e) => { if (dragging) e.preventDefault(); setPick(n.id); }} className="relative px-3.5 py-1.5 text-[13px] font-medium">
                   {lit && (
                     <motion.span
                       layoutId="lens"
-                      className="apple-pill absolute inset-0 rounded-full"
-                      animate={{ scale: dragging ? 1.04 : 1 }}
-                      transition={{ type: "spring", stiffness: 420, damping: 30, mass: 0.8 }}
-                    />
+                      className="lens absolute inset-0 rounded-full"
+                      animate={{ scale: dragging ? 1.28 : 1 }}
+                      transition={{ type: "spring", stiffness: 520, damping: 30, mass: 0.7 }}
+                    >
+                      <motion.span key={n.id} className="block size-full rounded-full" initial={{ scaleX: 1.18, scaleY: 0.82 }} animate={{ scaleX: 1, scaleY: 1 }} transition={{ type: "spring", stiffness: 300, damping: 12 }} />
+                    </motion.span>
                   )}
-                  <span className={`relative z-10 inline-block transition-colors duration-150 ${lit ? "text-ink font-semibold" : "text-ink/65 hover:text-ink font-medium"}`}>{n.label}</span>
+                  <span className={`relative inline-block transition-all duration-200 ${lit ? "text-ink" : "text-ink/70"} ${lit && dragging ? "scale-110" : ""}`}>{n.label}</span>
                 </a>
               );
             })}
@@ -1637,7 +1639,7 @@ function Nav({ onLogo, onPalette }: { onLogo: (e: React.MouseEvent) => void; onP
           initial={{ y: -30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.9, ease, delay: 0.25 }}
-          className="apple-glass rounded-full p-1.5"
+          className="liquid rounded-full p-1.5"
         >
           <LangToggle />
         </motion.div>
@@ -1746,6 +1748,22 @@ function Page() {
       <AnimatePresence>{legal && <Legal onClose={() => { history.replaceState(null, "", " "); setLegal(false); }} />}</AnimatePresence>
       <motion.div style={{ scaleX: bar }} className="fixed top-0 right-0 left-0 z-50 h-[2px] origin-left bg-signal md:hidden" />
       <Rail />
+
+      {/* Filtre de réfraction pour la lentille liquid glass */}
+      <svg className="absolute size-0" aria-hidden>
+        <filter id="lg-refract" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.04" numOctaves="2" seed="7" result="n" />
+          <feGaussianBlur in="n" stdDeviation="2" result="nb" />
+          <feDisplacementMap in="SourceGraphic" in2="nb" scale="18" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        {/* Bords réfractants façon Apple : carte de déplacement neutre au centre, qui tord les bords */}
+        <filter id="lg-nav" x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
+          <feImage href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20200%2050%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22r%22%20x1%3D%220%22%20x2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23f00%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000%22/%3E%3C/linearGradient%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20x2%3D%220%22%20y1%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%230f0%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000%22/%3E%3C/linearGradient%3E%3Cfilter%20id%3D%22b%22%3E%3CfeGaussianBlur%20stdDeviation%3D%225%22/%3E%3C/filter%3E%3C/defs%3E%3Crect%20width%3D%22200%22%20height%3D%2250%22%20fill%3D%22%23000%22/%3E%3Crect%20width%3D%22200%22%20height%3D%2250%22%20fill%3D%22url%28%23r%29%22/%3E%3Crect%20width%3D%22200%22%20height%3D%2250%22%20fill%3D%22url%28%23g%29%22%20style%3D%22mix-blend-mode%3Ascreen%22/%3E%3Crect%20x%3D%2214%22%20y%3D%2210%22%20width%3D%22172%22%20height%3D%2230%22%20rx%3D%2215%22%20fill%3D%22%23808000%22%20filter%3D%22url%28%23b%29%22/%3E%3C/svg%3E" preserveAspectRatio="none" x="0" y="0" width="100%" height="100%" result="map" />
+          <feDisplacementMap in="SourceGraphic" in2="map" scale="-46" xChannelSelector="R" yChannelSelector="G" result="d" />
+          <feGaussianBlur in="d" stdDeviation="0.4" />
+        </filter>
+      </svg>
+
       <Nav onLogo={tapLogo} onPalette={() => setPalette(true)} />
 
       {/* HERO */}
