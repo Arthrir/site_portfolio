@@ -1223,7 +1223,14 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
 const CAT_EN: Record<Cat, string> = { Hardware: "Hardware", Software: "Software", IA: "AI", Produit: "Product" };
 const catLabel = (c: Cat | "Tous", lang: Lang) => (lang === "en" ? (c === "Tous" ? "All" : CAT_EN[c]) : c);
 const projectDetail = (p: ProjectBase, lang: Lang): Detail => ({
-  kicker: `${lang === "en" ? "Project" : "Projet"} · ${p.cat.map((c) => catLabel(c, lang)).join(" / ")}`, title: p.t, meta: p.d, lead: p.desc, points: p.points ?? [], tags: p.tags, img: p.img, with: p.with,
+  kicker: `${lang === "en" ? "Project" : "Projet"} · ${p.cat.map((c) => catLabel(c, lang)).join(" / ")}`,
+  title: p.t,
+  meta: p.d,
+  lead: p.desc,
+  points: p.points ?? [],
+  tags: p.tags,
+  // img: p.img, // Commenté : photos des projets désactivées car non associées aux bons projets
+  with: p.with,
   links: p.link ? [{ l: p.link.endsWith(".pdf") ? (lang === "en" ? "PDF presentation" : "Présentation PDF") : (lang === "en" ? "View code" : "Voir le code"), h: p.link }] : undefined,
 });
 const engDetail = (e: EngBase, lang: Lang): Detail => ({
@@ -1293,7 +1300,8 @@ function Projects() {
                     </span>
                     <span className="flex shrink-0 items-center gap-1 font-semibold">
                       <span className="glossy-gold-text font-semibold transition-transform duration-300 group-hover:translate-x-0.5">
-                        {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")}
+                        {/* {p.img ? tr("Cliquer · photos & détails", "Click · photos & details") : tr("Cliquer pour le détail", "Click for details")} */}
+                        {tr("Cliquer pour le détail", "Click for details")}
                       </span>
                       <ArrowUpRight className="size-3.5 transition-transform group-hover:rotate-45 text-[#D4AF37] group-hover:text-[#FDE047]" />
                     </span>
