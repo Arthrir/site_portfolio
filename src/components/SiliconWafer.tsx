@@ -1,80 +1,74 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { Crosshair, Cpu } from "lucide-react";
+import { Crosshair, Cpu, CheckCircle2 } from "lucide-react";
 
 interface SiliconWaferProps {
   onColorChange?: (color: string) => void;
 }
 
-// Paramètres géométriques calibrés d'après les vrais wafers de laboratoire
-const CANVAS_SIZE = 960; // Résolution haute définition Retina
+// Paramètres géométriques étalonnés pour un wafer 300mm haute définition
+const CANVAS_SIZE = 960; // Résolution Retina 2x
 const CX = CANVAS_SIZE / 2;
 const CY = CANVAS_SIZE / 2;
-const WAFER_RADIUS = 472; // Rayon du disque de silicium pur
-const STEPPED_RADIUS = WAFER_RADIUS - 16; // Frontière d'exclusion en escalier (stepped edge)
+const WAFER_RADIUS = 464; // Rayon du disque de silicium
+const DIE_GRID_RADIUS = WAFER_RADIUS - 18; // Zone active des dies
 
-// Grille de 44x44 dies : ~88 lignes orthogonales nettement visibles, comme sur les vrais wafers
-const GRID_COLS = 44;
-const DIE_PITCH = (STEPPED_RADIUS * 2) / GRID_COLS; // ~20.7px par die
-const DIE_INNER_SIZE = DIE_PITCH - 1.4; // Rue de découpe (scribe lane) de 1.4px
-const ORIGIN_X = CX - STEPPED_RADIUS;
-const ORIGIN_Y = CY - STEPPED_RADIUS;
+// Grille de 40 colonnes x 40 rangées : ~80 rues de découpe ultra nettes et lisibles
+const GRID_COLS = 40;
+const DIE_PITCH = (DIE_GRID_RADIUS * 2) / GRID_COLS; // ~22.3px par die
+const DIE_GAP = 1.0; // Rue de découpe (scribe lane) fine et nette de 1px
+const DIE_SIZE = DIE_PITCH - DIE_GAP;
+const ORIGIN_X = CX - DIE_GRID_RADIUS;
+const ORIGIN_Y = CY - DIE_GRID_RADIUS;
 
-interface DieInfo {
+interface DieCell {
   c: number;
   r: number;
   x: number;
   y: number;
   w: number;
   h: number;
-  tint: string;
+  isCore: boolean;
+  accent: "gold" | "cyan" | "indigo" | "steel";
 }
 
 interface SelectedDie {
   col: number;
   row: number;
-  screenX: number;
-  screenY: number;
+  x: number;
+  y: number;
 }
 
-interface ProbeRipple {
+interface ProbeWave {
   x: number;
   y: number;
   radius: number;
   maxRadius: number;
-  alpha: number;
-  color: string;
+  opacity: number;
 }
 
 export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const offscreenRef = useRef<HTMLCanvasElement | null>(null);
-  const diesMapRef = useRef<DieInfo[]>([]);
+  const bgCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const diesMapRef = useRef<DieCell[]>([]);
 
-  // Valeurs de mouvement 3D interactif
+  // 3D Tilt interactif doux et naturel
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const rx = useSpring(useTransform(my, [-1, 1], [7, -7]), { stiffness: 180, damping: 24 });
-  const ry = useSpring(useTransform(mx, [-1, 1], [-7, 7]), { stiffness: 180, damping: 24 });
+  const rx = useSpring(useTransform(my, [-1, 1], [6, -6]), { stiffness: 150, damping: 22 });
+  const ry = useSpring(useTransform(mx, [-1, 1], [-6, 6]), { stiffness: 150, damping: 22 });
 
-  // Télémétrie d'inspection
   const [hoveredDie, setHoveredDie] = useState<SelectedDie | null>(null);
-  const [selectedDie, setSelectedDie] = useState<SelectedDie>({
-    col: 22,
-    row: 22,
-    screenX: CX,
-    screenY: CY,
-  });
-  const [totalDiesCount, setTotalDiesCount] = useState(1528);
-  const [iridAngle, setIridAngle] = useState(135);
+  const [activeDie, setActiveDie] = useState<SelectedDie | null>(null);
+  const [totalDiesCount, setTotalDiesCount] = useState(0);
+  const [isInspecting, setIsInspecting] = useState(false);
 
-  const colors = ["#D4AF37", "#2340F0", "#10B981", "#E10600", "#8B5CF6", "#06B6D4"];
-  const ripplesRef = useRef<ProbeRipple[]>([]);
+  const mousePosRef = useRef({ x: CX, y: CY, active: false });
+  const probeWavesRef = useRef<ProbeWave[]>([]);
   const animFrameRef = useRef<number | null>(null);
-  const mousePosRef = useRef<{ x: number; y: number; active: boolean }>({ x: CX, y: CY, active: false });
 
-  // 1. GÉNÉRATION DU FOND DU WAFER : SUBSTRAT SILICIUM, LIGNES DE DÉCOUPE NETTES & DIES MULTI-SECTIONS
+  // 1. PRÉ-CALCUL HORS-ÉCRAN DE LA GÉOMÉTRIE DU WAFER (HAUTE PERFORMANCE)
   useEffect(() => {
     const offscreen = document.createElement("canvas");
     offscreen.width = CANVAS_SIZE;
@@ -82,50 +76,50 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     const ctx = offscreen.getContext("2d");
     if (!ctx) return;
 
-    // Découpe circulaire stricte du disque de silicium (aucun cadre ni contour artificiel)
+    // A. Disque de Silicium pur poli miroir
     ctx.save();
     ctx.beginPath();
     ctx.arc(CX, CY, WAFER_RADIUS, 0, Math.PI * 2);
     ctx.clip();
 
-    // A. Substrat miroir poli en silicium brut CZ P-type <100> (teinte obsidienne / bleu nuit profond)
-    const bgGrad = ctx.createRadialGradient(CX - 120, CY - 120, 40, CX, CY, WAFER_RADIUS);
-    bgGrad.addColorStop(0.0, "#131C30");
-    bgGrad.addColorStop(0.4, "#0A1122");
-    bgGrad.addColorStop(0.85, "#050914");
-    bgGrad.addColorStop(1.0, "#020409");
+    // Dégradé de fond : silicium monocristallin profond
+    const bgGrad = ctx.createRadialGradient(CX - 80, CY - 80, 20, CX, CY, WAFER_RADIUS);
+    bgGrad.addColorStop(0, "#0B111D");
+    bgGrad.addColorStop(0.5, "#060A12");
+    bgGrad.addColorStop(1, "#020408");
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-    // B. Détection et dessin des dies avec contour en escalier (stepped die layout)
-    const dies: DieInfo[] = [];
-    const r2 = STEPPED_RADIUS * STEPPED_RADIUS;
+    // B. Construction de la matrice de dies avec bordure en escalier
+    const dies: DieCell[] = [];
+    const accents: ("gold" | "cyan" | "indigo" | "steel")[] = ["gold", "cyan", "indigo", "steel"];
 
-    // Nuances d'interférence réalistes par die (comme sur les vrais wafers du labo)
-    const dieTints = [
-      "#131E35", "#16233E", "#111B30", "#182744", "#121C32",
-      "#15213B", "#10192D", "#1A2B4A", "#142038"
-    ];
+    for (let c = 0; c < GRID_COLS; c++) {
+      for (let r = 0; r < GRID_COLS; r++) {
+        const x = ORIGIN_X + c * DIE_PITCH;
+        const y = ORIGIN_Y + r * DIE_PITCH;
 
-    for (let r = 0; r < GRID_COLS; r++) {
-      const dy = CY - STEPPED_RADIUS + (r + 0.5) * DIE_PITCH - CY;
-      const dy2 = dy * dy;
+        // Vérification des 4 coins du die pour l'exclusion en escalier (stepped edge)
+        const corners = [
+          Math.hypot(x - CX, y - CY),
+          Math.hypot(x + DIE_SIZE - CX, y - CY),
+          Math.hypot(x - CX, y + DIE_SIZE - CY),
+          Math.hypot(x + DIE_SIZE - CX, y + DIE_SIZE - CY),
+        ];
 
-      for (let c = 0; c < GRID_COLS; c++) {
-        const dx = CX - STEPPED_RADIUS + (c + 0.5) * DIE_PITCH - CX;
-        if (dx * dx + dy2 <= r2) {
-          const x = ORIGIN_X + c * DIE_PITCH + 0.7;
-          const y = ORIGIN_Y + r * DIE_PITCH + 0.7;
-          const tintIdx = (c * 7 + r * 13 + ((c >> 2) ^ (r >> 2))) % dieTints.length;
+        if (corners.every((d) => d <= DIE_GRID_RADIUS)) {
+          const isCenter = Math.hypot(x + DIE_SIZE / 2 - CX, y + DIE_SIZE / 2 - CY) < 140;
+          const accent = accents[(c * 7 + r * 13) % accents.length];
 
           dies.push({
             c,
             r,
             x,
             y,
-            w: DIE_INNER_SIZE,
-            h: DIE_INNER_SIZE,
-            tint: dieTints[tintIdx],
+            w: DIE_SIZE,
+            h: DIE_SIZE,
+            isCore: isCenter,
+            accent,
           });
         }
       }
@@ -134,47 +128,53 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     diesMapRef.current = dies;
     setTotalDiesCount(dies.length);
 
-    // C. Rendu des micro-circuits à l'intérieur de chaque die
+    // C. Gravure des micro-circuits à l'intérieur de chaque die
     for (const die of dies) {
       // 1. Fond du die en silicium actif
-      ctx.fillStyle = die.tint;
+      ctx.fillStyle = die.isCore ? "#0E1726" : "#090E18";
       ctx.fillRect(die.x, die.y, die.w, die.h);
 
-      // 2. Anneau de plots de contact I/O périphériques (pad ring)
-      ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
-      ctx.fillRect(die.x, die.y, die.w, 1.2);
-      ctx.fillRect(die.x, die.y + die.h - 1.2, die.w, 1.2);
-      ctx.fillRect(die.x, die.y, 1.2, die.h);
-      ctx.fillRect(die.x + die.w - 1.2, die.y, 1.2, die.h);
+      // 2. Pad ring périphérique (plots de connexion or/argent)
+      ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+      ctx.fillRect(die.x, die.y, die.w, 0.8);
+      ctx.fillRect(die.x, die.y + die.h - 0.8, die.w, 0.8);
+      ctx.fillRect(die.x, die.y, 0.8, die.h);
+      ctx.fillRect(die.x + die.w - 0.8, die.y, 0.8, die.h);
 
-      // 3. Sous-blocs fonctionnels internes (cœur RISC-V, mémoire SRAM, matrice de bus)
-      const subW = (die.w - 3.6) / 2;
-      const subH = (die.h - 3.6) / 2;
+      // 3. Blocs fonctionnels internes (cœur RISC-V & mémoire cache)
+      const hw = (die.w - 3.2) / 2;
+      const hh = (die.h - 3.2) / 2;
 
-      // Cœur logique CPU (en haut à gauche)
-      ctx.fillStyle = "rgba(6, 182, 212, 0.15)";
-      ctx.fillRect(die.x + 1.8, die.y + 1.8, subW, subH);
+      // Cœur logique (coin haut-gauche)
+      if (die.accent === "gold") {
+        ctx.fillStyle = "rgba(212, 175, 55, 0.16)"; // Reflet or 18k
+      } else if (die.accent === "cyan") {
+        ctx.fillStyle = "rgba(56, 189, 248, 0.16)"; // Silicium dopé n-type
+      } else if (die.accent === "indigo") {
+        ctx.fillStyle = "rgba(129, 140, 248, 0.14)"; // Métallisation M2
+      } else {
+        ctx.fillStyle = "rgba(148, 163, 184, 0.10)"; // Titane passivé
+      }
+      ctx.fillRect(die.x + 1.6, die.y + 1.6, hw, hh);
 
-      // Banc de mémoire cache SRAM (en haut à droite, densité de métaux M1-M3)
-      ctx.fillStyle = "rgba(212, 175, 55, 0.14)";
-      ctx.fillRect(die.x + 2.4 + subW, die.y + 1.8, subW, subH);
+      // Bloc SRAM haute densité (coin haut-droit)
+      ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
+      ctx.fillRect(die.x + 2.2 + hw, die.y + 1.6, hw, hh);
 
-      // Micro-lignes de gravure internes (fines interconnexions)
-      ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
-      ctx.fillRect(die.x + 1.8, die.y + 2.4 + subH, die.w - 3.6, subH);
+      // Bus de données (partie inférieure)
+      ctx.fillStyle = "rgba(212, 175, 55, 0.08)";
+      ctx.fillRect(die.x + 1.6, die.y + 2.2 + hh, die.w - 3.2, hh);
     }
 
-    // D. RUES DE DÉCOUPE ORTHOGONALES TRÈS NETTES (LES LIGNES DU WAFER)
-    // Lignes verticales de découpe (dicing streets)
-    ctx.strokeStyle = "#04070F";
-    ctx.lineWidth = 1.4;
+    // D. Rues de découpe orthogonales très nettes (scribe lines de 1px)
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.14)";
+    ctx.lineWidth = 0.8;
     ctx.beginPath();
     for (let c = 0; c <= GRID_COLS; c++) {
       const x = ORIGIN_X + c * DIE_PITCH;
       ctx.moveTo(x, 0);
       ctx.lineTo(x, CANVAS_SIZE);
     }
-    // Lignes horizontales de découpe
     for (let r = 0; r <= GRID_COLS; r++) {
       const y = ORIGIN_Y + r * DIE_PITCH;
       ctx.moveTo(0, y);
@@ -182,48 +182,48 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     }
     ctx.stroke();
 
-    // Rues principales de réticules d'exposition ASML (toutes les 8 cases)
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
-    ctx.lineWidth = 0.8;
+    // Rues maîtresses d'alignement lithographique ASML (toutes les 5 cases)
+    ctx.strokeStyle = "rgba(212, 175, 55, 0.28)"; // Lignes de repère dorées
+    ctx.lineWidth = 1.0;
     ctx.beginPath();
-    for (let c = 0; c <= GRID_COLS; c += 8) {
+    for (let c = 0; c <= GRID_COLS; c += 5) {
       const x = ORIGIN_X + c * DIE_PITCH;
       ctx.moveTo(x, 0);
       ctx.lineTo(x, CANVAS_SIZE);
     }
-    for (let r = 0; r <= GRID_COLS; r += 8) {
+    for (let r = 0; r <= GRID_COLS; r += 5) {
       const y = ORIGIN_Y + r * DIE_PITCH;
       ctx.moveTo(0, y);
       ctx.lineTo(CANVAS_SIZE, y);
     }
     ctx.stroke();
 
-    // E. Fin biseau poli en périphérie du disque (EBR) & encoche SEMI à 270°
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
-    ctx.lineWidth = 1.2;
+    // E. Fin biseau poli en périphérie du disque (EBR)
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.40)";
+    ctx.lineWidth = 1.6;
     ctx.beginPath();
-    ctx.arc(CX, CY, WAFER_RADIUS - 1, 0, Math.PI * 2);
+    ctx.arc(CX, CY, WAFER_RADIUS - 1.2, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Encoche SEMI en V au bas du wafer (repère mécanique pour robot)
+    // Encoche SEMI en V au bas du wafer (repère mécanique officiel)
     ctx.save();
     ctx.fillStyle = "#000000";
     ctx.beginPath();
-    ctx.moveTo(CX - 6, CANVAS_SIZE);
-    ctx.lineTo(CX, CANVAS_SIZE - 9);
-    ctx.lineTo(CX + 6, CANVAS_SIZE);
+    ctx.moveTo(CX - 8, CANVAS_SIZE);
+    ctx.lineTo(CX, CANVAS_SIZE - 12);
+    ctx.lineTo(CX + 8, CANVAS_SIZE);
     ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+    ctx.lineWidth = 1.2;
     ctx.stroke();
     ctx.restore();
 
     ctx.restore();
-    offscreenRef.current = offscreen;
+    bgCanvasRef.current = offscreen;
   }, []);
 
-  // 2. BOUCLE DE RENDU DYNAMIQUE : CROIX DE DIFFRACTION LUMINEUSE (COMME SUR LA PHOTO) & PROBE
+  // 2. RENDU EN TEMPS RÉEL : LUMIÈRE D'INTERFÉRENCE PHYSIQUE & SONDE PROBE
   const render = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -232,267 +232,206 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
 
     ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-    // Dessin du fond pré-calculé contenant la grille géométrique du wafer
-    if (offscreenRef.current) {
-      ctx.drawImage(offscreenRef.current, 0, 0);
+    // Dessin de la matrice de dies pré-calculée
+    if (bgCanvasRef.current) {
+      ctx.drawImage(bgCanvasRef.current, 0, 0);
     }
 
-    // Masque circulaire du wafer
+    // Masque circulaire
     ctx.save();
     ctx.beginPath();
     ctx.arc(CX, CY, WAFER_RADIUS, 0, Math.PI * 2);
     ctx.clip();
 
-    // COUCHE 1 : SPECTRE HOLOGRAPHIQUE DE DIFFRACTION DE BRAGG DANS LES DIES
-    const radAngle = (iridAngle * Math.PI) / 180;
-    const cosA = Math.cos(radAngle);
-    const sinA = Math.sin(radAngle);
-
-    const iridGrad = ctx.createLinearGradient(
-      CX - cosA * WAFER_RADIUS,
-      CY - sinA * WAFER_RADIUS,
-      CX + cosA * WAFER_RADIUS,
-      CY + sinA * WAFER_RADIUS
-    );
-    iridGrad.addColorStop(0.0, "rgba(147, 51, 234, 0.35)"); // Violet néon
-    iridGrad.addColorStop(0.2, "rgba(59, 130, 246, 0.42)");  // Bleu électrique
-    iridGrad.addColorStop(0.4, "rgba(6, 182, 212, 0.45)");   // Cyan laser
-    iridGrad.addColorStop(0.6, "rgba(16, 185, 129, 0.40)");  // Vert émeraude
-    iridGrad.addColorStop(0.78, "rgba(245, 158, 11, 0.44)"); // Or chaud
-    iridGrad.addColorStop(0.9, "rgba(239, 68, 68, 0.35)");   // Rouge rubis
-    iridGrad.addColorStop(1.0, "rgba(236, 72, 153, 0.35)");  // Magenta
-
-    ctx.globalCompositeOperation = "screen";
-    ctx.fillStyle = iridGrad;
-    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-    // COUCHE 2 : L'ÉCLAT DE LUMIÈRE EN CROIX CRUCIFORME (IDENTIQUE À LA PHOTO DU WAFER)
-    // Les micro-sillons orthogonaux diffractent la lumière blanche en une immense croix brillante
     const lx = mousePosRef.current.x;
     const ly = mousePosRef.current.y;
 
-    // Faisceau horizontal de lumière laser le long de la ligne
-    const hFlare = ctx.createLinearGradient(0, ly - 14, 0, ly + 14);
-    hFlare.addColorStop(0, "rgba(255, 255, 255, 0)");
-    hFlare.addColorStop(0.5, "rgba(255, 255, 255, 0.65)");
-    hFlare.addColorStop(1, "rgba(255, 255, 255, 0)");
-    ctx.fillStyle = hFlare;
-    ctx.fillRect(0, ly - 14, CANVAS_SIZE, 28);
+    // REFLET 1 : Décomposition spectrale douce (brillance optique fine)
+    const specGrad = ctx.createRadialGradient(lx, ly, 20, lx, ly, 380);
+    specGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.45)"); // Point spéculaire central doux
+    specGrad.addColorStop(0.2, "rgba(212, 175, 55, 0.20)");  // Doré 18k
+    specGrad.addColorStop(0.45, "rgba(56, 189, 248, 0.15)"); // Cyan doux
+    specGrad.addColorStop(0.7, "rgba(139, 92, 246, 0.10)");  // Améthyste
+    specGrad.addColorStop(1.0, "rgba(0, 0, 0, 0)");
 
-    // Faisceau vertical de lumière laser le long de la colonne
-    const vFlare = ctx.createLinearGradient(lx - 14, 0, lx + 14, 0);
-    vFlare.addColorStop(0, "rgba(255, 255, 255, 0)");
-    vFlare.addColorStop(0.5, "rgba(255, 255, 255, 0.65)");
-    vFlare.addColorStop(1, "rgba(255, 255, 255, 0)");
-    ctx.fillStyle = vFlare;
-    ctx.fillRect(lx - 14, 0, 28, CANVAS_SIZE);
-
-    // Point spéculaire central brillant de la lampe de salle blanche
-    const spotGrad = ctx.createRadialGradient(lx, ly, 0, lx, ly, 180);
-    spotGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.85)");
-    spotGrad.addColorStop(0.2, "rgba(255, 255, 255, 0.40)");
-    spotGrad.addColorStop(0.6, "rgba(6, 182, 212, 0.12)");
-    spotGrad.addColorStop(1.0, "rgba(255, 255, 255, 0)");
-    ctx.fillStyle = spotGrad;
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = specGrad;
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-    // COUCHE 3 : ONDES ÉLECTRIQUES DE TEST PROBE (RIPPLES AU CLIC)
+    // REFLET 2 : Éclat anamorphique fin le long des lignes de sciage
+    if (mousePosRef.current.active) {
+      // Faisceau horizontal très fin (4px de halo)
+      const hBeam = ctx.createLinearGradient(0, ly - 3, 0, ly + 3);
+      hBeam.addColorStop(0, "rgba(255, 255, 255, 0)");
+      hBeam.addColorStop(0.5, "rgba(255, 255, 255, 0.35)");
+      hBeam.addColorStop(1, "rgba(255, 255, 255, 0)");
+      ctx.fillStyle = hBeam;
+      ctx.fillRect(0, ly - 3, CANVAS_SIZE, 6);
+
+      // Faisceau vertical très fin
+      const vBeam = ctx.createLinearGradient(lx - 3, 0, lx + 3, 0);
+      vBeam.addColorStop(0, "rgba(255, 255, 255, 0)");
+      vBeam.addColorStop(0.5, "rgba(255, 255, 255, 0.35)");
+      vBeam.addColorStop(1, "rgba(255, 255, 255, 0)");
+      ctx.fillStyle = vBeam;
+      ctx.fillRect(lx - 3, 0, 6, CANVAS_SIZE);
+    }
+
+    // REFLET 3 : Ondes de sonde de test électrique au clic
     ctx.globalCompositeOperation = "source-over";
-    ripplesRef.current = ripplesRef.current.filter((rp) => {
-      rp.radius += 6;
-      rp.alpha *= 0.94;
-      if (rp.alpha < 0.02 || rp.radius > rp.maxRadius) return false;
+    probeWavesRef.current = probeWavesRef.current.filter((wave) => {
+      wave.radius += 5;
+      wave.opacity *= 0.93;
+      if (wave.opacity < 0.02 || wave.radius > wave.maxRadius) return false;
 
       ctx.save();
-      ctx.strokeStyle = rp.color;
-      ctx.globalAlpha = rp.alpha;
-      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = "#38BDF8";
+      ctx.globalAlpha = wave.opacity;
+      ctx.lineWidth = 2.0;
       ctx.beginPath();
-      ctx.arc(rp.x, rp.y, rp.radius, 0, Math.PI * 2);
+      ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
       ctx.stroke();
 
-      if (rp.radius > 20) {
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(rp.x, rp.y, rp.radius * 0.65, 0, Math.PI * 2);
-        ctx.stroke();
-      }
+      ctx.strokeStyle = "#D4AF37";
+      ctx.lineWidth = 1.0;
+      ctx.beginPath();
+      ctx.arc(wave.x, wave.y, wave.radius * 0.65, 0, Math.PI * 2);
+      ctx.stroke();
       ctx.restore();
       return true;
     });
 
-    // COUCHE 4 : RÉTICULE D'INSPECTION LORS DU SURVOL
-    if (mousePosRef.current.active && hoveredDie) {
-      const dieX = ORIGIN_X + hoveredDie.col * DIE_PITCH;
-      const dieY = ORIGIN_Y + hoveredDie.row * DIE_PITCH;
-
-      ctx.save();
-      // Reticule laser autour du die sélectionné
-      ctx.strokeStyle = "#06B6D4";
-      ctx.lineWidth = 1.8;
-      ctx.shadowColor = "#06B6D4";
-      ctx.shadowBlur = 10;
-      ctx.strokeRect(dieX - 1, dieY - 1, DIE_PITCH + 2, DIE_PITCH + 2);
-
-      // Remplissage laser éclatant
-      ctx.fillStyle = "rgba(6, 182, 212, 0.35)";
-      ctx.fillRect(dieX, dieY, DIE_PITCH, DIE_PITCH);
-
-      ctx.restore();
-    }
-
-    // COUCHE 5 : DIE SÉLECTIONNÉ PERMANENT (POINT D'ALIMENTATION PROBE ACTIF)
-    if (selectedDie) {
-      const sX = ORIGIN_X + selectedDie.col * DIE_PITCH;
-      const sY = ORIGIN_Y + selectedDie.row * DIE_PITCH;
-
+    // REFLET 4 : Réticule laser sur le die survolé
+    if (hoveredDie) {
       ctx.save();
       ctx.strokeStyle = "#D4AF37";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1.8;
       ctx.shadowColor = "#D4AF37";
-      ctx.shadowBlur = 12;
-      ctx.strokeRect(sX - 1.5, sY - 1.5, DIE_PITCH + 3, DIE_PITCH + 3);
+      ctx.shadowBlur = 8;
+      ctx.strokeRect(hoveredDie.x, hoveredDie.y, DIE_SIZE, DIE_SIZE);
 
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(sX + 1, sY + 1, DIE_PITCH - 2, DIE_PITCH - 2);
+      ctx.fillStyle = "rgba(212, 175, 55, 0.28)";
+      ctx.fillRect(hoveredDie.x, hoveredDie.y, DIE_SIZE, DIE_SIZE);
       ctx.restore();
     }
 
     ctx.restore();
 
-    if (ripplesRef.current.length > 0) {
-      animFrameRef.current = requestAnimationFrame(render);
-    }
-  }, [iridAngle, selectedDie, hoveredDie]);
+    animFrameRef.current = requestAnimationFrame(render);
+  }, [hoveredDie]);
 
   useEffect(() => {
-    render();
+    animFrameRef.current = requestAnimationFrame(render);
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
   }, [render]);
 
-  // INTERACTIONS SOURIS
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!containerRef.current || !canvasRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    mx.set(nx);
-    my.set(ny);
+  // GESTION DES INTERACTIONS SOURIS
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
 
-    const angle = Math.round(Math.atan2(ny, nx) * (180 / Math.PI) + 180);
-    setIridAngle(angle);
+    const normX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const normY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    mx.set(normX);
+    my.set(normY);
 
-    const scaleX = CANVAS_SIZE / rect.width;
-    const scaleY = CANVAS_SIZE / rect.height;
-    const canvasX = (e.clientX - rect.left) * scaleX;
-    const canvasY = (e.clientY - rect.top) * scaleY;
+    const canvasX = ((e.clientX - rect.left) / rect.width) * CANVAS_SIZE;
+    const canvasY = ((e.clientY - rect.top) / rect.height) * CANVAS_SIZE;
+    mousePosRef.current = { x: canvasX, y: canvasY, active: true };
 
-    const dx = canvasX - CX;
-    const dy = canvasY - CY;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-
-    if (dist <= STEPPED_RADIUS) {
-      mousePosRef.current = { x: canvasX, y: canvasY, active: true };
-      const col = Math.floor((canvasX - ORIGIN_X) / DIE_PITCH);
-      const row = Math.floor((canvasY - ORIGIN_Y) / DIE_PITCH);
-
-      if (col >= 0 && col < GRID_COLS && row >= 0 && row < GRID_COLS) {
-        setHoveredDie({ col, row, screenX: canvasX, screenY: canvasY });
-      }
-    } else {
-      mousePosRef.current = { x: canvasX, y: canvasY, active: false };
-      setHoveredDie(null);
-    }
-
-    render();
-  };
-
-  const handlePointerLeave = () => {
-    mx.set(0);
-    my.set(0);
-    mousePosRef.current = { x: CX, y: CY, active: false };
-    setHoveredDie(null);
-    render();
-  };
-
-  const handleWaferClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const scaleX = CANVAS_SIZE / rect.width;
-    const scaleY = CANVAS_SIZE / rect.height;
-    const canvasX = (e.clientX - rect.left) * scaleX;
-    const canvasY = (e.clientY - rect.top) * scaleY;
-
-    const dx = canvasX - CX;
-    const dy = canvasY - CY;
-    if (Math.sqrt(dx * dx + dy * dy) > STEPPED_RADIUS) return;
-
+    // Détection du die sous le curseur
     const col = Math.floor((canvasX - ORIGIN_X) / DIE_PITCH);
     const row = Math.floor((canvasY - ORIGIN_Y) / DIE_PITCH);
 
-    if (col >= 0 && col < GRID_COLS && row >= 0 && row < GRID_COLS) {
-      setSelectedDie({ col, row, screenX: canvasX, screenY: canvasY });
-
-      const chosenColor = colors[(col + row) % colors.length];
-      ripplesRef.current.push({
-        x: canvasX,
-        y: canvasY,
-        radius: 2,
-        maxRadius: 400,
-        alpha: 1.0,
-        color: chosenColor,
-      });
-
-      if (onColorChange) {
-        onColorChange(chosenColor);
-      }
-
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-      animFrameRef.current = requestAnimationFrame(render);
+    const hit = diesMapRef.current.find((d) => d.c === col && d.r === row);
+    if (hit) {
+      setHoveredDie({ col, row, x: hit.x, y: hit.y });
+    } else {
+      setHoveredDie(null);
     }
   };
 
-  const currentDie = hoveredDie || selectedDie;
+  const handleMouseLeave = () => {
+    mx.set(0);
+    my.set(0);
+    mousePosRef.current.active = false;
+    setHoveredDie(null);
+    setIsInspecting(false);
+  };
+
+  const handleWaferClick = () => {
+    if (!hoveredDie) return;
+    setActiveDie(hoveredDie);
+    setIsInspecting(true);
+
+    // Déclencher une impulsion électrique probe
+    probeWavesRef.current.push({
+      x: hoveredDie.x + DIE_SIZE / 2,
+      y: hoveredDie.y + DIE_SIZE / 2,
+      radius: 4,
+      maxRadius: 180,
+      opacity: 0.9,
+    });
+
+    if (onColorChange) {
+      onColorChange("#D4AF37");
+    }
+  };
 
   return (
-    <div className="relative w-full max-w-[440px] select-none [perspective:1200px]">
+    <div className="relative flex flex-col items-center">
+      {/* HUD Microscope de Salle Blanche au-dessus */}
+      <div className="mb-3 flex items-center justify-between w-full max-w-[420px] px-2 font-mono text-[10px] text-mute uppercase tracking-wider">
+        <span className="flex items-center gap-1.5 text-ink">
+          <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>SEMI 300mm · SILICON WAFER</span>
+        </span>
+        <span className="text-right">
+          {hoveredDie ? (
+            <span className="text-amber-500 font-semibold">DIE [{hoveredDie.col}, {hoveredDie.row}] · PROBE READY</span>
+          ) : (
+            <span>{totalDiesCount || 1080} DIES · 100% YIELD</span>
+          )}
+        </span>
+      </div>
+
+      {/* Disque de Silicium 3D Flottant */}
       <motion.div
         ref={containerRef}
-        style={{ rotateX: rx, rotateY: ry }}
-        className="group relative aspect-square w-full rounded-full [transform-style:preserve-3d] cursor-crosshair drop-shadow-[0_25px_45px_rgba(0,0,0,0.35)]"
-        onPointerMove={handlePointerMove}
-        onPointerLeave={handlePointerLeave}
+        style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
         onClick={handleWaferClick}
+        className="relative aspect-square w-full max-w-[420px] cursor-crosshair select-none transition-shadow duration-500 rounded-full"
       >
-        {/* LE VRAI DISQUE DE SILICIUM BRUT : AUCUN CADRE, AUCUNE BORDURE ARTIFICIELLE */}
-        <div className="relative size-full rounded-full overflow-hidden flex items-center justify-center bg-[#02050B]">
-          <canvas
-            ref={canvasRef}
-            width={CANVAS_SIZE}
-            height={CANVAS_SIZE}
-            className="size-full rounded-full object-cover pointer-events-none"
-          />
-        </div>
+        <canvas
+          ref={canvasRef}
+          width={CANVAS_SIZE}
+          height={CANVAS_SIZE}
+          className="h-full w-full rounded-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:scale-[1.01]"
+        />
+
+        {/* Détail télémétrie die sélectionné en overlay flottant */}
+        {isInspecting && activeDie && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 rounded-full border border-amber-500/40 bg-ink/90 backdrop-blur-md px-4 py-2 text-paper shadow-2xl"
+          >
+            <CheckCircle2 className="size-4 text-emerald-400" />
+            <span className="font-mono text-[11px] tracking-tight">
+              DIE #{activeDie.col * 40 + activeDie.row} : <span className="text-amber-400 font-semibold">PASS (3.2 GHz)</span>
+            </span>
+          </motion.div>
+        )}
       </motion.div>
 
-      {/* Télémétrie d'inspection sous le wafer */}
-      <div className="mt-4 flex items-center justify-between font-mono text-[10.5px] text-mute px-2">
-        <div className="flex items-center gap-1.5">
-          <Crosshair className="size-3.5 text-signal" />
-          <span className="font-semibold text-ink">
-            DIE [{currentDie.col}, {currentDie.row}]
-          </span>
-          <span className="text-mute/60 hidden sm:inline">
-            · {totalDiesCount.toLocaleString()} DIES · YIELD 99.85%
-          </span>
-          <span className="text-mute/60 sm:hidden">
-            · {totalDiesCount} DIES
-          </span>
-        </div>
-        <div className="flex items-center gap-1 text-signal font-semibold">
-          <Cpu className="size-3" />
-          <span>RV32I 200mm</span>
-        </div>
-      </div>
+      {/* Légende minimaliste en bas */}
+      <p className="mt-3 font-mono text-[10px] text-mute text-center">
+        Survolez pour inspecter les coordonnées · Cliquez pour tester la sonde
+      </p>
     </div>
   );
 }
