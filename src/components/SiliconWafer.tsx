@@ -63,12 +63,13 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
   const [activeDie, setActiveDie] = useState<SelectedDie | null>(null);
   const [totalDiesCount, setTotalDiesCount] = useState(0);
   const [isInspecting, setIsInspecting] = useState(false);
+  const [iridAngle, setIridAngle] = useState(135);
 
   const mousePosRef = useRef({ x: CX, y: CY, active: false });
   const probeWavesRef = useRef<ProbeWave[]>([]);
   const animFrameRef = useRef<number | null>(null);
 
-  // 1. PRÉ-CALCUL HORS-ÉCRAN DE LA GÉOMÉTRIE DU WAFER (HAUTE PERFORMANCE)
+  // 1. PRÉ-CALCUL HORS-ÉCRAN DU FOND SILICIUM MÉTALLIQUE ARDOISE & DIES EN ESCALIER
   useEffect(() => {
     const offscreen = document.createElement("canvas");
     offscreen.width = CANVAS_SIZE;
@@ -76,21 +77,37 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     const ctx = offscreen.getContext("2d");
     if (!ctx) return;
 
-    // A. Disque de Silicium pur poli miroir
+    // A. Disque de Silicium pur
     ctx.save();
     ctx.beginPath();
     ctx.arc(CX, CY, WAFER_RADIUS, 0, Math.PI * 2);
     ctx.clip();
 
-    // Dégradé de fond : silicium monocristallin profond
-    const bgGrad = ctx.createRadialGradient(CX - 80, CY - 80, 20, CX, CY, WAFER_RADIUS);
-    bgGrad.addColorStop(0, "#0B111D");
-    bgGrad.addColorStop(0.5, "#060A12");
-    bgGrad.addColorStop(1, "#020408");
+    // Dégradé miroir du substrat silicium brut CZ P-type <100> (couleur originale ardoise/bleu nuit appréciée)
+    const bgGrad = ctx.createRadialGradient(CX - 100, CY - 100, 30, CX, CY, WAFER_RADIUS + 20);
+    bgGrad.addColorStop(0.0, "#1E293B");  // Ardoise / Slate 800 métallique
+    bgGrad.addColorStop(0.35, "#131C2E"); // Bleu minuit profond CZ silicon
+    bgGrad.addColorStop(0.70, "#0A0F1D"); // Fond sombre bleuté
+    bgGrad.addColorStop(1.0, "#03060C");  // Périphérie sombre
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-    // B. Construction de la matrice de dies avec bordure en escalier
+    // B. Anneau de biseau et d'exclusion (Edge Bead Removal 3mm)
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.16)";
+    ctx.lineWidth = 1.0;
+    ctx.beginPath();
+    ctx.arc(CX, CY, WAFER_RADIUS - 8, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.10)";
+    ctx.lineWidth = 0.8;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.arc(CX, CY, WAFER_RADIUS - 14, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // C. Construction de la matrice de dies avec découpe en escalier (stepped edge)
     const dies: DieCell[] = [];
     const accents: ("gold" | "cyan" | "indigo" | "steel")[] = ["gold", "cyan", "indigo", "steel"];
 
@@ -99,7 +116,7 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
         const x = ORIGIN_X + c * DIE_PITCH;
         const y = ORIGIN_Y + r * DIE_PITCH;
 
-        // Vérification des 4 coins du die pour l'exclusion en escalier (stepped edge)
+        // Vérification des 4 coins du die pour l'exclusion en escalier
         const corners = [
           Math.hypot(x - CX, y - CY),
           Math.hypot(x + DIE_SIZE - CX, y - CY),
@@ -108,7 +125,7 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
         ];
 
         if (corners.every((d) => d <= DIE_GRID_RADIUS)) {
-          const isCenter = Math.hypot(x + DIE_SIZE / 2 - CX, y + DIE_SIZE / 2 - CY) < 140;
+          const isCenter = Math.hypot(x + DIE_SIZE / 2 - CX, y + DIE_SIZE / 2 - CY) < 130;
           const accent = accents[(c * 7 + r * 13) % accents.length];
 
           dies.push({
@@ -128,47 +145,47 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     diesMapRef.current = dies;
     setTotalDiesCount(dies.length);
 
-    // C. Gravure des micro-circuits à l'intérieur de chaque die
+    // D. Gravure des micro-circuits à l'intérieur de chaque die
     for (const die of dies) {
-      // 1. Fond du die en silicium actif
-      ctx.fillStyle = die.isCore ? "#0E1726" : "#090E18";
+      // 1. Fond du die en silicium actif bleuté
+      ctx.fillStyle = die.isCore ? "rgba(30, 41, 59, 0.88)" : "rgba(15, 23, 42, 0.82)";
       ctx.fillRect(die.x, die.y, die.w, die.h);
 
-      // 2. Pad ring périphérique (plots de connexion or/argent)
-      ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+      // 2. Pad ring périphérique (cadre fin de plots)
+      ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
       ctx.fillRect(die.x, die.y, die.w, 0.8);
       ctx.fillRect(die.x, die.y + die.h - 0.8, die.w, 0.8);
       ctx.fillRect(die.x, die.y, 0.8, die.h);
       ctx.fillRect(die.x + die.w - 0.8, die.y, 0.8, die.h);
 
-      // 3. Blocs fonctionnels internes (cœur RISC-V & mémoire cache)
+      // 3. Blocs fonctionnels internes (cœur RISC-V, SRAM, bus)
       const hw = (die.w - 3.2) / 2;
       const hh = (die.h - 3.2) / 2;
 
       // Cœur logique (coin haut-gauche)
       if (die.accent === "gold") {
-        ctx.fillStyle = "rgba(212, 175, 55, 0.16)"; // Reflet or 18k
+        ctx.fillStyle = "rgba(212, 175, 55, 0.22)"; // Reflet or 18k
       } else if (die.accent === "cyan") {
-        ctx.fillStyle = "rgba(56, 189, 248, 0.16)"; // Silicium dopé n-type
+        ctx.fillStyle = "rgba(56, 189, 248, 0.20)"; // Silicium n-type
       } else if (die.accent === "indigo") {
-        ctx.fillStyle = "rgba(129, 140, 248, 0.14)"; // Métallisation M2
+        ctx.fillStyle = "rgba(129, 140, 248, 0.18)"; // Métallisation M2
       } else {
-        ctx.fillStyle = "rgba(148, 163, 184, 0.10)"; // Titane passivé
+        ctx.fillStyle = "rgba(255, 255, 255, 0.12)"; // Titane passivé
       }
       ctx.fillRect(die.x + 1.6, die.y + 1.6, hw, hh);
 
       // Bloc SRAM haute densité (coin haut-droit)
-      ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
       ctx.fillRect(die.x + 2.2 + hw, die.y + 1.6, hw, hh);
 
       // Bus de données (partie inférieure)
-      ctx.fillStyle = "rgba(212, 175, 55, 0.08)";
+      ctx.fillStyle = "rgba(212, 175, 55, 0.10)";
       ctx.fillRect(die.x + 1.6, die.y + 2.2 + hh, die.w - 3.2, hh);
     }
 
-    // D. Rues de découpe orthogonales très nettes (scribe lines de 1px)
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.14)";
-    ctx.lineWidth = 0.8;
+    // E. Rues de découpe orthogonales très nettes (scribe lines)
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.16)";
+    ctx.lineWidth = 0.9;
     ctx.beginPath();
     for (let c = 0; c <= GRID_COLS; c++) {
       const x = ORIGIN_X + c * DIE_PITCH;
@@ -183,8 +200,8 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     ctx.stroke();
 
     // Rues maîtresses d'alignement lithographique ASML (toutes les 5 cases)
-    ctx.strokeStyle = "rgba(212, 175, 55, 0.28)"; // Lignes de repère dorées
-    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = "rgba(212, 175, 55, 0.32)";
+    ctx.lineWidth = 1.1;
     ctx.beginPath();
     for (let c = 0; c <= GRID_COLS; c += 5) {
       const x = ORIGIN_X + c * DIE_PITCH;
@@ -198,14 +215,14 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     }
     ctx.stroke();
 
-    // E. Fin biseau poli en périphérie du disque (EBR)
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.40)";
+    // F. Biseau poli périphérique & encoche SEMI à 270°
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
     ctx.lineWidth = 1.6;
     ctx.beginPath();
     ctx.arc(CX, CY, WAFER_RADIUS - 1.2, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Encoche SEMI en V au bas du wafer (repère mécanique officiel)
+    // Encoche SEMI en V au bas du wafer
     ctx.save();
     ctx.fillStyle = "#000000";
     ctx.beginPath();
@@ -214,7 +231,7 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     ctx.lineTo(CX + 8, CANVAS_SIZE);
     ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
     ctx.lineWidth = 1.2;
     ctx.stroke();
     ctx.restore();
@@ -223,7 +240,7 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     bgCanvasRef.current = offscreen;
   }, []);
 
-  // 2. RENDU EN TEMPS RÉEL : LUMIÈRE D'INTERFÉRENCE PHYSIQUE & SONDE PROBE
+  // 2. RENDU EN TEMPS RÉEL : INTERFÉRENCE OPTIQUE IRIDESCENTE & REFLET SPÉCULAIRE
   const render = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -243,41 +260,57 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     ctx.arc(CX, CY, WAFER_RADIUS, 0, Math.PI * 2);
     ctx.clip();
 
+    // COUCHE 1 : INTERFÉRENCE CHROMATIQUE OPTIQUE (L'EFFET IRISÉ DE LA PREMIÈRE VERSION)
+    const radAngle = (iridAngle * Math.PI) / 180;
+    const cosA = Math.cos(radAngle);
+    const sinA = Math.sin(radAngle);
+
+    const iridGrad = ctx.createLinearGradient(
+      CX - cosA * WAFER_RADIUS,
+      CY - sinA * WAFER_RADIUS,
+      CX + cosA * WAFER_RADIUS,
+      CY + sinA * WAFER_RADIUS
+    );
+    iridGrad.addColorStop(0.00, "rgba(236, 72, 153, 0.20)"); // Rose / Magenta
+    iridGrad.addColorStop(0.25, "rgba(59, 130, 246, 0.25)"); // Bleu saphir
+    iridGrad.addColorStop(0.50, "rgba(16, 185, 129, 0.20)"); // Vert émeraude
+    iridGrad.addColorStop(0.75, "rgba(245, 158, 11, 0.24)"); // Or chaud
+    iridGrad.addColorStop(1.00, "rgba(139, 92, 246, 0.20)"); // Violet améthyste
+
+    ctx.globalCompositeOperation = "screen";
+    ctx.fillStyle = iridGrad;
+    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+    // COUCHE 2 : REFLET SPÉCULAIRE BLANC DE SALLE BLANCHE QUI SUIT LE CURSEUR
     const lx = mousePosRef.current.x;
     const ly = mousePosRef.current.y;
 
-    // REFLET 1 : Décomposition spectrale douce (brillance optique fine)
-    const specGrad = ctx.createRadialGradient(lx, ly, 20, lx, ly, 380);
-    specGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.45)"); // Point spéculaire central doux
-    specGrad.addColorStop(0.2, "rgba(212, 175, 55, 0.20)");  // Doré 18k
-    specGrad.addColorStop(0.45, "rgba(56, 189, 248, 0.15)"); // Cyan doux
-    specGrad.addColorStop(0.7, "rgba(139, 92, 246, 0.10)");  // Améthyste
+    const specGrad = ctx.createRadialGradient(lx, ly, 20, lx, ly, 320);
+    specGrad.addColorStop(0.0, "rgba(255, 255, 255, 0.40)");
+    specGrad.addColorStop(0.25, "rgba(255, 255, 255, 0.15)");
+    specGrad.addColorStop(0.65, "rgba(59, 130, 246, 0.08)");
     specGrad.addColorStop(1.0, "rgba(0, 0, 0, 0)");
-
-    ctx.globalCompositeOperation = "screen";
     ctx.fillStyle = specGrad;
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-    // REFLET 2 : Éclat anamorphique fin le long des lignes de sciage
+    // COUCHE 3 : ÉCLAT ANAMORPHIQUE SUBTIL LE LONG DES LIGNES
     if (mousePosRef.current.active) {
-      // Faisceau horizontal très fin (4px de halo)
       const hBeam = ctx.createLinearGradient(0, ly - 3, 0, ly + 3);
       hBeam.addColorStop(0, "rgba(255, 255, 255, 0)");
-      hBeam.addColorStop(0.5, "rgba(255, 255, 255, 0.35)");
+      hBeam.addColorStop(0.5, "rgba(255, 255, 255, 0.32)");
       hBeam.addColorStop(1, "rgba(255, 255, 255, 0)");
       ctx.fillStyle = hBeam;
       ctx.fillRect(0, ly - 3, CANVAS_SIZE, 6);
 
-      // Faisceau vertical très fin
       const vBeam = ctx.createLinearGradient(lx - 3, 0, lx + 3, 0);
       vBeam.addColorStop(0, "rgba(255, 255, 255, 0)");
-      vBeam.addColorStop(0.5, "rgba(255, 255, 255, 0.35)");
+      vBeam.addColorStop(0.5, "rgba(255, 255, 255, 0.32)");
       vBeam.addColorStop(1, "rgba(255, 255, 255, 0)");
       ctx.fillStyle = vBeam;
       ctx.fillRect(lx - 3, 0, 6, CANVAS_SIZE);
     }
 
-    // REFLET 3 : Ondes de sonde de test électrique au clic
+    // COUCHE 4 : ONDES ÉLECTRIQUES DE TEST PROBE
     ctx.globalCompositeOperation = "source-over";
     probeWavesRef.current = probeWavesRef.current.filter((wave) => {
       wave.radius += 5;
@@ -301,7 +334,7 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
       return true;
     });
 
-    // REFLET 4 : Réticule laser sur le die survolé
+    // COUCHE 5 : RÉTICULE LASER SUR LE DIE SURVOLÉ
     if (hoveredDie) {
       ctx.save();
       ctx.strokeStyle = "#D4AF37";
@@ -310,7 +343,7 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
       ctx.shadowBlur = 8;
       ctx.strokeRect(hoveredDie.x, hoveredDie.y, DIE_SIZE, DIE_SIZE);
 
-      ctx.fillStyle = "rgba(212, 175, 55, 0.28)";
+      ctx.fillStyle = "rgba(212, 175, 55, 0.32)";
       ctx.fillRect(hoveredDie.x, hoveredDie.y, DIE_SIZE, DIE_SIZE);
       ctx.restore();
     }
@@ -318,7 +351,7 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     ctx.restore();
 
     animFrameRef.current = requestAnimationFrame(render);
-  }, [hoveredDie]);
+  }, [hoveredDie, iridAngle]);
 
   useEffect(() => {
     animFrameRef.current = requestAnimationFrame(render);
@@ -337,11 +370,14 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     mx.set(normX);
     my.set(normY);
 
+    // Faire pivoter l'angle d'iridescence avec la position de la souris
+    const angle = Math.round(Math.atan2(normY, normX) * (180 / Math.PI) + 180);
+    setIridAngle(angle);
+
     const canvasX = ((e.clientX - rect.left) / rect.width) * CANVAS_SIZE;
     const canvasY = ((e.clientY - rect.top) / rect.height) * CANVAS_SIZE;
     mousePosRef.current = { x: canvasX, y: canvasY, active: true };
 
-    // Détection du die sous le curseur
     const col = Math.floor((canvasX - ORIGIN_X) / DIE_PITCH);
     const row = Math.floor((canvasY - ORIGIN_Y) / DIE_PITCH);
 
@@ -366,7 +402,6 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
     setActiveDie(hoveredDie);
     setIsInspecting(true);
 
-    // Déclencher une impulsion électrique probe
     probeWavesRef.current.push({
       x: hoveredDie.x + DIE_SIZE / 2,
       y: hoveredDie.y + DIE_SIZE / 2,
@@ -386,7 +421,7 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
       <div className="mb-3 flex items-center justify-between w-full max-w-[420px] px-2 font-mono text-[10px] text-mute uppercase tracking-wider">
         <span className="flex items-center gap-1.5 text-ink">
           <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>SEMI 300mm · SILICON WAFER</span>
+          <span>SEMI 300mm · CZ SILICON P-TYPE ⟨100⟩</span>
         </span>
         <span className="text-right">
           {hoveredDie ? (
@@ -397,20 +432,20 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
         </span>
       </div>
 
-      {/* Disque de Silicium 3D Flottant */}
+      {/* Disque de Silicium 3D Flottant avec biseau métallique poli */}
       <motion.div
         ref={containerRef}
         style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleWaferClick}
-        className="relative aspect-square w-full max-w-[420px] cursor-crosshair select-none transition-shadow duration-500 rounded-full"
+        className="relative aspect-square w-full max-w-[420px] cursor-crosshair select-none rounded-full bg-gradient-to-tr from-[#080C14] via-[#131C2D] to-[#0A0E18] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.5),0_10px_30px_-10px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.45),inset_0_-4px_12px_rgba(0,0,0,0.95)] border border-white/20 p-1 flex items-center justify-center transition-shadow duration-500"
       >
         <canvas
           ref={canvasRef}
           width={CANVAS_SIZE}
           height={CANVAS_SIZE}
-          className="h-full w-full rounded-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:scale-[1.01]"
+          className="h-full w-full rounded-full transition-transform duration-300 hover:scale-[1.01]"
         />
 
         {/* Détail télémétrie die sélectionné en overlay flottant */}
@@ -428,10 +463,22 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
         )}
       </motion.div>
 
-      {/* Légende minimaliste en bas */}
-      <p className="mt-3 font-mono text-[10px] text-mute text-center">
-        Survolez pour inspecter les coordonnées · Cliquez pour tester la sonde
-      </p>
+      {/* Fiche de télémétrie industrielle sous le wafer */}
+      <div className="mt-3.5 flex items-center justify-between w-full max-w-[420px] font-mono text-[10.5px] text-mute px-2">
+        <div className="flex items-center gap-1.5">
+          <Crosshair className="size-3.5 text-signal" />
+          <span className="font-semibold text-ink">
+            {hoveredDie ? `DIE [${hoveredDie.col}, ${hoveredDie.row}]` : `WAFER 300mm`}
+          </span>
+          <span className="text-mute/60 hidden sm:inline">
+            · {totalDiesCount || 1080} DIES · ASML DUV 193nm
+          </span>
+        </div>
+        <div className="flex items-center gap-1 text-signal font-semibold">
+          <Cpu className="size-3" />
+          <span>RV32I TAPE-OUT</span>
+        </div>
+      </div>
     </div>
   );
 }
