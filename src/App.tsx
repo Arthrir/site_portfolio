@@ -262,7 +262,7 @@ const PROJECTS: Project[] = [
   },
   {
     t: "CPU RV32I sur Logisim",
-    img: ["/media/ismin-projets.png"],
+    // img: ["/media/ismin-projets.png"],
     date: "2025",
     d: "Oct - Déc 2025",
     cat: ["Hardware"],
@@ -311,7 +311,7 @@ const PROJECTS: Project[] = [
   },
   {
     t: "Projet Prototypage",
-    img: ["/media/ismin-projets2.png"],
+    // img: ["/media/ismin-projets2.png"],
     date: "2025",
     d: "Fév - Juin 2025",
     cat: ["Hardware", "Produit"],
@@ -337,7 +337,7 @@ const PROJECTS: Project[] = [
   },
   {
     t: "Robot autonome STM32",
-    img: ["/media/ismin-projets.png"],
+    // img: ["/media/ismin-projets.png"],
     date: "2025",
     d: "Fév - Juin 2025",
     cat: ["Hardware"],
@@ -412,7 +412,7 @@ const PROJECTS: Project[] = [
   },
   {
     t: "Jeu State.io multijoueur",
-    img: ["/media/ismin-projets2.png"],
+    // img: ["/media/ismin-projets2.png"],
     date: "2025",
     d: "Fév - Avr 2025",
     cat: ["Software"],
