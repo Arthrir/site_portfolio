@@ -4,6 +4,7 @@ import { Crosshair, Cpu, CheckCircle2 } from "lucide-react";
 
 interface SiliconWaferProps {
   onColorChange?: (color: string) => void;
+  standalone?: boolean;
 }
 
 // Paramètres géométriques étalonnés pour un wafer 300mm haute définition
@@ -47,7 +48,7 @@ interface ProbeWave {
   opacity: number;
 }
 
-export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
+export default function SiliconWafer({ onColorChange, standalone = false }: SiliconWaferProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bgCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -418,19 +419,21 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
   return (
     <div className="relative flex flex-col items-center">
       {/* HUD Microscope de Salle Blanche au-dessus */}
-      <div className="mb-3 flex items-center justify-between w-full max-w-[420px] px-2 font-mono text-[10px] text-mute uppercase tracking-wider">
-        <span className="flex items-center gap-1.5 text-ink">
-          <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>SEMI 300mm · CZ SILICON P-TYPE ⟨100⟩</span>
-        </span>
-        <span className="text-right">
-          {hoveredDie ? (
-            <span className="text-amber-500 font-semibold">DIE [{hoveredDie.col}, {hoveredDie.row}] · PROBE READY</span>
-          ) : (
-            <span>{totalDiesCount || 1080} DIES · 100% YIELD</span>
-          )}
-        </span>
-      </div>
+      {!standalone && (
+        <div className="mb-3 flex items-center justify-between w-full max-w-[420px] px-2 font-mono text-[10px] text-mute uppercase tracking-wider">
+          <span className="flex items-center gap-1.5 text-ink">
+            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>SEMI 300mm · CZ SILICON P-TYPE ⟨100⟩</span>
+          </span>
+          <span className="text-right">
+            {hoveredDie ? (
+              <span className="text-amber-500 font-semibold">DIE [{hoveredDie.col}, {hoveredDie.row}] · PROBE READY</span>
+            ) : (
+              <span>{totalDiesCount || 1080} DIES · 100% YIELD</span>
+            )}
+          </span>
+        </div>
+      )}
 
       {/* Disque de Silicium 3D Flottant avec biseau métallique poli */}
       <motion.div
@@ -464,21 +467,23 @@ export default function SiliconWafer({ onColorChange }: SiliconWaferProps) {
       </motion.div>
 
       {/* Fiche de télémétrie industrielle sous le wafer */}
-      <div className="mt-3.5 flex items-center justify-between w-full max-w-[420px] font-mono text-[10.5px] text-mute px-2">
-        <div className="flex items-center gap-1.5">
-          <Crosshair className="size-3.5 text-signal" />
-          <span className="font-semibold text-ink">
-            {hoveredDie ? `DIE [${hoveredDie.col}, ${hoveredDie.row}]` : `WAFER 300mm`}
-          </span>
-          <span className="text-mute/60 hidden sm:inline">
-            · {totalDiesCount || 1080} DIES · ASML DUV 193nm
-          </span>
+      {!standalone && (
+        <div className="mt-3.5 flex items-center justify-between w-full max-w-[420px] font-mono text-[10.5px] text-mute px-2">
+          <div className="flex items-center gap-1.5">
+            <Crosshair className="size-3.5 text-signal" />
+            <span className="font-semibold text-ink">
+              {hoveredDie ? `DIE [${hoveredDie.col}, ${hoveredDie.row}]` : `WAFER 300mm`}
+            </span>
+            <span className="text-mute/60 hidden sm:inline">
+              · {totalDiesCount || 1080} DIES · ASML DUV 193nm
+            </span>
+          </div>
+          <div className="flex items-center gap-1 text-signal font-semibold">
+            <Cpu className="size-3" />
+            <span>RV32I TAPE-OUT</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1 text-signal font-semibold">
-          <Cpu className="size-3" />
-          <span>RV32I TAPE-OUT</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
