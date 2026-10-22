@@ -5,9 +5,10 @@ import { Flame, Activity, Zap } from "lucide-react";
 interface VaporChamberProps {
   className?: string;
   interactive?: boolean;
+  showBadge?: boolean;
 }
 
-export default function VaporChamber({ className = "", interactive = true }: VaporChamberProps) {
+export default function VaporChamber({ className = "", interactive = true, showBadge = false }: VaporChamberProps) {
   const [isOverclocked, setIsOverclocked] = useState(false);
   const [temp, setTemp] = useState(48.2);
 
@@ -188,15 +189,17 @@ export default function VaporChamber({ className = "", interactive = true }: Vap
       </svg>
 
       {/* Badge télémétrie thermique flottant */}
-      <div className="mt-1 flex items-center justify-between px-2 font-mono text-[9px] text-mute">
-        <span className="flex items-center gap-1 text-amber-600 font-semibold">
-          <Flame className={`size-3 ${isOverclocked ? "animate-bounce text-rose-500" : "text-amber-500"}`} />
-          <span>CHAMBRE À VAPEUR · CUIVRE D-CU</span>
-        </span>
-        <span className={`font-semibold ${isOverclocked ? "text-rose-500 font-bold" : "text-amber-600"}`}>
-          {temp}°C (Cliquez pour {isOverclocked ? "calmer" : "chauffer"})
-        </span>
-      </div>
+      {showBadge && (
+        <div className="mt-1 flex items-center justify-between px-2 font-mono text-[9px] text-mute">
+          <span className="flex items-center gap-1 text-amber-600 font-semibold">
+            <Flame className={`size-3 ${isOverclocked ? "animate-bounce text-rose-500" : "text-amber-500"}`} />
+            <span>CHAMBRE À VAPEUR · CUIVRE D-CU</span>
+          </span>
+          <span className={`font-semibold ${isOverclocked ? "text-rose-500 font-bold" : "text-amber-600"}`}>
+            {temp}°C (Cliquez pour {isOverclocked ? "calmer" : "chauffer"})
+          </span>
+        </div>
+      )}
     </div>
   );
 }
