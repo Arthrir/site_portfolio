@@ -2189,20 +2189,20 @@ function Page() {
           </div>
           <div className="mt-12 grid grid-cols-2 gap-px border border-ink bg-ink lg:grid-cols-4">
             {SOCIALS.map(({ I, l, h }) => (
-              <a key={l} href={h} target="_blank" rel="noreferrer" className="group flex min-h-[86px] items-center justify-between bg-paper p-5 transition-colors hover:bg-ink hover:text-paper sm:p-6">
-                <span className="flex items-center gap-3 sm:gap-4"><I className="size-6 sm:size-7" /><span className="text-lg font-medium sm:text-xl">{l}</span></span>
-                <ArrowUpRight className="size-5 transition-transform group-hover:rotate-45" />
+              <a key={l} href={h} target="_blank" rel="noreferrer" className="group flex min-h-[86px] items-center justify-between gap-2 bg-paper px-4 py-5 sm:p-6 transition-colors hover:bg-ink hover:text-paper">
+                <span className="flex min-w-0 items-center gap-2.5 sm:gap-4"><I className="size-5 sm:size-7 shrink-0" /><span className="text-base font-medium sm:text-xl">{l}</span></span>
+                <ArrowUpRight className="size-5 shrink-0 transition-transform group-hover:rotate-45" />
               </a>
             ))}
-            <button onClick={() => setCv(true)} className="group flex min-h-[86px] items-center justify-between bg-paper p-5 text-left transition-colors hover:bg-ink hover:text-paper sm:p-6">
-              <span className="flex items-center gap-3 sm:gap-4">
-                <Download className="size-6 sm:size-7" />
+            <button onClick={() => setCv(true)} className="group flex min-h-[86px] items-center justify-between gap-2 bg-paper px-4 py-5 sm:p-6 text-left transition-colors hover:bg-ink hover:text-paper">
+              <span className="flex min-w-0 items-center gap-2.5 sm:gap-4">
+                <Download className="size-5 sm:size-7 shrink-0" />
                 <span className="flex flex-col gap-0.5">
-                  <span className="text-lg font-medium sm:text-xl">{tr("CV", "Resume")}</span>
+                  <span className="text-base font-medium sm:text-xl">{tr("CV", "Resume")}</span>
                   <span className="font-mono text-[10px] tracking-[0.14em] text-mute uppercase group-hover:text-paper/60">FR · EN</span>
                 </span>
               </span>
-              <ArrowUpRight className="size-5 transition-transform group-hover:rotate-45" />
+              <ArrowUpRight className="size-5 shrink-0 transition-transform group-hover:rotate-45" />
             </button>
           </div>
         </div>
