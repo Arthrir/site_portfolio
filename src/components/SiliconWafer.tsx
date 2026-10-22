@@ -85,26 +85,26 @@ export default function SiliconWafer({ onColorChange, standalone = false }: Sili
     ctx.clip();
 
     // Dégradé miroir du substrat silicium brut CZ P-type <100> (couleur originale ardoise/bleu nuit appréciée)
-    const bgGrad = ctx.createRadialGradient(CX - 100, CY - 100, 30, CX, CY, WAFER_RADIUS + 20);
-    bgGrad.addColorStop(0.0, "#1E293B");  // Ardoise / Slate 800 métallique
-    bgGrad.addColorStop(0.35, "#131C2E"); // Bleu minuit profond CZ silicon
-    bgGrad.addColorStop(0.70, "#0A0F1D"); // Fond sombre bleuté
-    bgGrad.addColorStop(1.0, "#03060C");  // Périphérie sombre
+    const bgGrad = ctx.createRadialGradient(CX - 100, CY - 100, 30, CX, CY, WAFER_RADIUS);
+    bgGrad.addColorStop(0.0, "#24334D");  // Ardoise lumineux CZ silicon
+    bgGrad.addColorStop(0.40, "#16233B"); // Bleu ardoise profond
+    bgGrad.addColorStop(0.80, "#0F192C"); // Fond subtil
+    bgGrad.addColorStop(1.0, "#0B1424");  // Périphérie ardoise propre (aucun noir opaque)
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-    // B. Anneau de biseau et d'exclusion (Edge Bead Removal 3mm)
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.16)";
+    // B. Biseau extérieur ultra fin du wafer (chanfrein cristallin poli, sans contour noir)
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
     ctx.lineWidth = 1.0;
     ctx.beginPath();
-    ctx.arc(CX, CY, WAFER_RADIUS - 8, 0, Math.PI * 2);
+    ctx.arc(CX, CY, WAFER_RADIUS - 1, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.10)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
     ctx.lineWidth = 0.8;
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
-    ctx.arc(CX, CY, WAFER_RADIUS - 14, 0, Math.PI * 2);
+    ctx.arc(CX, CY, WAFER_RADIUS - 10, 0, Math.PI * 2);
     ctx.stroke();
     ctx.setLineDash([]);
 
@@ -442,7 +442,11 @@ export default function SiliconWafer({ onColorChange, standalone = false }: Sili
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleWaferClick}
-        className="relative aspect-square w-full max-w-[420px] cursor-crosshair select-none rounded-full bg-gradient-to-tr from-[#080C14] via-[#131C2D] to-[#0A0E18] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.5),0_10px_30px_-10px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.45),inset_0_-4px_12px_rgba(0,0,0,0.95)] border border-white/20 p-1 flex items-center justify-center transition-shadow duration-500"
+        className={`relative aspect-square w-full select-none flex items-center justify-center transition-shadow duration-500 ${
+          standalone
+            ? "max-w-none p-0 bg-transparent border-none shadow-none cursor-pointer"
+            : "max-w-[420px] cursor-crosshair rounded-full bg-gradient-to-tr from-[#080C14] via-[#131C2D] to-[#0A0E18] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.5),0_10px_30px_-10px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.45),inset_0_-4px_12px_rgba(0,0,0,0.95)] border border-white/20 p-1"
+        }`}
       >
         <canvas
           ref={canvasRef}
