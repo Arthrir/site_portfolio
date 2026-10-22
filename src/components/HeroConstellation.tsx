@@ -18,8 +18,8 @@ export default function HeroConstellation({
   // Parallaxe 3D d'ensemble réactive à la souris
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const rx = useSpring(useTransform(my, [-1, 1], [3.5, -3.5]), { stiffness: 140, damping: 22 });
-  const ry = useSpring(useTransform(mx, [-1, 1], [-3.5, 3.5]), { stiffness: 140, damping: 22 });
+  const rx = useSpring(useTransform(my, [-1, 1], [3, -3]), { stiffness: 140, damping: 22 });
+  const ry = useSpring(useTransform(mx, [-1, 1], [-3, 3]), { stiffness: 140, damping: 22 });
 
   // Flottements en profondeur distincts selon les strates d'éléments
   const f1X = useSpring(useTransform(mx, [-1, 1], [-8, 4]), { stiffness: 120, damping: 20 });
@@ -38,14 +38,14 @@ export default function HeroConstellation({
   };
 
   return (
-    <div className="relative w-full select-none flex items-center justify-center translate-x-2 sm:translate-x-5 md:translate-x-8 lg:translate-x-12">
-      {/* CONTENEUR COMPACT DE LA COMPOSITION (DÉCALÉ VERS LA DROITE) */}
+    <div className="relative w-full select-none flex items-center justify-center translate-x-4 sm:translate-x-8 md:translate-x-12 lg:translate-x-16">
+      {/* CONTENEUR DU TRIO (DÉCALÉ VERS LA DROITE) */}
       <motion.div
         ref={containerRef}
         style={{ rotateX: rx, rotateY: ry, transformPerspective: 1200 }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative h-[410px] sm:h-[450px] md:h-[480px] w-full max-w-[540px] flex items-center justify-center"
+        className="relative h-[450px] sm:h-[500px] md:h-[540px] w-full max-w-[620px] flex items-center justify-center"
       >
         {/* ========================================================== */}
         {/* 1. GAUCHE : LE VOLANT F1 CARBONE (TAILLE RÉDUITE COMPACTE) */}
@@ -55,8 +55,8 @@ export default function HeroConstellation({
           initial={{ opacity: 0, x: -25, scale: 0.9 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          whileHover={{ scale: 1.05, rotateZ: -3, zIndex: 40 }}
-          className="absolute -left-6 sm:-left-12 md:-left-16 bottom-6 sm:bottom-10 z-20 w-[130px] sm:w-[155px] md:w-[175px] -rotate-6 cursor-pointer"
+          whileHover={{ scale: 1.04, rotateZ: -3, zIndex: 40 }}
+          className="absolute -left-8 sm:-left-14 md:-left-20 bottom-4 sm:bottom-8 z-20 w-[130px] sm:w-[155px] md:w-[175px] -rotate-6 cursor-pointer"
         >
           <F1Wheel />
         </motion.div>
@@ -70,7 +70,7 @@ export default function HeroConstellation({
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
           whileHover={{ zIndex: 40 }}
-          className="absolute -right-6 sm:-right-12 md:-right-16 top-6 sm:top-10 z-15 w-[130px] sm:w-[155px] md:w-[175px] aspect-square flex items-center justify-center cursor-pointer"
+          className="absolute -right-8 sm:-right-14 md:-right-20 top-4 sm:top-8 z-15 w-[130px] sm:w-[155px] md:w-[175px] aspect-square flex items-center justify-center cursor-pointer"
         >
           {useRealisticWafer ? (
             <PhotorealisticWafer />
@@ -80,15 +80,15 @@ export default function HeroConstellation({
         </motion.div>
 
         {/* ========================================================== */}
-        {/* 3. PREMIER PLAN CENTRAL : LA PHOTO D'ARTHUR EN PLUS GRAND   */}
-        {/*    (COINS ARRONDIS SOIGNÉS, ENVERGURE AUGMENTÉE)           */}
+        {/* 3. PREMIER PLAN CENTRAL : LA PHOTO D'ARTHUR EN GRAND       */}
+        {/*    (COINS ARRONDIS SOIGNÉS, ENVERGURE MAXIMALE)            */}
         {/* ========================================================== */}
         <motion.div
           initial={{ opacity: 0, scale: 0.92, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
           whileHover={{ scale: 1.02, zIndex: 50 }}
-          className="relative z-30 w-[220px] sm:w-[260px] md:w-[290px] lg:w-[310px] cursor-pointer overflow-hidden rounded-2xl sm:rounded-3xl shadow-[0_22px_55px_rgba(0,0,0,0.34)] transition-shadow duration-300 hover:shadow-[0_30px_70px_rgba(0,0,0,0.48)]"
+          className="relative z-30 w-[260px] sm:w-[310px] md:w-[350px] lg:w-[380px] cursor-pointer overflow-hidden rounded-2xl sm:rounded-3xl shadow-[0_25px_65px_rgba(0,0,0,0.36)] transition-shadow duration-300 hover:shadow-[0_35px_80px_rgba(0,0,0,0.5)]"
         >
           <div className="aspect-[4/5] w-full overflow-hidden bg-ink/5">
             <img

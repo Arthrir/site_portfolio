@@ -1822,7 +1822,7 @@ function Page() {
             <button onClick={() => setCv(true)} className="flex items-center gap-2 border border-ink px-5 py-3.5 text-sm font-medium transition-colors hover:bg-ink hover:text-paper"><Download className="size-4" />{tr("Mon CV", "My resume")}</button>
           </Reveal>
         </motion.div>
-        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[440px] sm:max-w-[500px] md:mt-0 md:max-w-[560px] lg:max-w-[620px] flex items-center justify-center lg:justify-end">
+        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[460px] sm:max-w-[540px] md:mt-0 md:max-w-[620px] lg:max-w-[680px] flex items-center justify-center lg:justify-end">
           <HeroConstellation useRealisticWafer={true} onColorChange={(c) => setDotColor(c)} />
         </motion.div>
       </header>
