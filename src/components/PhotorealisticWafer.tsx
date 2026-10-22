@@ -46,12 +46,12 @@ export default function PhotorealisticWafer({ interactive = true }: Photorealist
       {/* OMBRE PORTÉE NATURELLE */}
       <div className="absolute inset-x-2 bottom-0 h-10 bg-black/35 blur-xl rounded-full transform scale-90 pointer-events-none" />
 
-      {/* WAFER 300mm PHOTORÉALISTE SANS AUCUN CONTOUR BLANC */}
+      {/* WAFER 300mm PHOTORÉALISTE SANS AUCUN CONTOUR BLANC (SANS ZOOM AU HOVER) */}
       <div className="relative aspect-square w-full rounded-full overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.38)]">
         <img
           src="/assets/silicon-wafer.png"
           alt="Wafer Silicium 300mm SEMI Photorealiste"
-          className="size-full object-cover object-center pointer-events-none transition-transform duration-300 group-hover:scale-[1.03]"
+          className="size-full object-cover object-center pointer-events-none"
           draggable={false}
         />
 
