@@ -41,14 +41,17 @@ export default function PhotorealisticWafer({ interactive = true }: Photorealist
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
-      className="relative select-none aspect-square w-full flex items-center justify-center cursor-pointer"
+      className="relative select-none aspect-square w-full flex items-center justify-center cursor-pointer group"
     >
-      {/* WAFER 300mm PHOTORÉALISTE */}
-      <div className="relative aspect-square w-full rounded-full overflow-hidden drop-shadow-[0_25px_50px_rgba(0,0,0,0.45)]">
+      {/* OMBRE PORTÉE NATURELLE */}
+      <div className="absolute inset-x-2 bottom-0 h-10 bg-black/35 blur-xl rounded-full transform scale-90 pointer-events-none" />
+
+      {/* WAFER 300mm PHOTORÉALISTE SANS AUCUN CONTOUR BLANC */}
+      <div className="relative aspect-square w-full rounded-full overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.38)]">
         <img
           src="/assets/silicon-wafer.png"
           alt="Wafer Silicium 300mm SEMI Photorealiste"
-          className="size-full object-cover object-center pointer-events-none transition-transform duration-300 hover:scale-[1.02]"
+          className="size-full object-cover object-center pointer-events-none transition-transform duration-300 group-hover:scale-[1.03]"
           draggable={false}
         />
 
@@ -58,7 +61,7 @@ export default function PhotorealisticWafer({ interactive = true }: Photorealist
             background: useTransform(
               [specX, specY],
               ([sx, sy]) =>
-                `radial-gradient(circle at ${sx}% ${sy}%, rgba(255,255,255,0.42) 0%, rgba(56,189,248,0.28) 25%, rgba(236,72,153,0.22) 50%, rgba(245,158,11,0.18) 70%, transparent 85%)`
+                `radial-gradient(circle at ${sx}% ${sy}%, rgba(255,255,255,0.4) 0%, rgba(56,189,248,0.25) 25%, rgba(236,72,153,0.2) 50%, rgba(245,158,11,0.15) 70%, transparent 85%)`
             ),
           }}
           className="absolute inset-0 pointer-events-none mix-blend-screen transition-opacity duration-300"
