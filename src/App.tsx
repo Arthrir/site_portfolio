@@ -1823,7 +1823,7 @@ function Page() {
           </Reveal>
         </motion.div>
         <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[440px] sm:max-w-[540px] md:mt-0 md:max-w-[620px] lg:max-w-[680px] flex items-center justify-center">
-          <HeroTrio cornerStyle="sharp" leftItem="industrial" onColorChange={(c) => setDotColor(c)} />
+          <HeroTrio cornerStyle="sharp" leftItem="f1" onColorChange={(c) => setDotColor(c)} />
         </motion.div>
       </header>
 
