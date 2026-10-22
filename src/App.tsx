@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence, MotionValue } from "motion/react";
 import { ArrowUpRight, Command, Copy, Check, Download, Mail, Search, CornerDownLeft, Send, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Logo from "./components/Logo";
-import HeroFan from "./components/HeroFan";
+import HeroOrbital from "./components/HeroOrbital";
 import Legal from "./sections/Legal";
 import CvViewer from "./sections/CvViewer";
 import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "./components/Brand";
@@ -1822,8 +1822,8 @@ function Page() {
             <button onClick={() => setCv(true)} className="flex items-center gap-2 border border-ink px-5 py-3.5 text-sm font-medium transition-colors hover:bg-ink hover:text-paper"><Download className="size-4" />{tr("Mon CV", "My resume")}</button>
           </Reveal>
         </motion.div>
-        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[380px] sm:max-w-[460px] md:mt-0 md:max-w-[500px] flex items-center justify-center">
-          <HeroFan onColorChange={(c) => setDotColor(c)} />
+        <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[400px] sm:max-w-[480px] md:mt-0 md:max-w-[520px] flex items-center justify-center">
+          <HeroOrbital onColorChange={(c) => setDotColor(c)} />
         </motion.div>
       </header>
 
