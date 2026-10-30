@@ -1829,10 +1829,10 @@ function Page() {
             animate={{ opacity: 1, y: 0, rotate: -4 }}
             transition={{ duration: 1.2, ease, delay: 0.9 }}
             whileHover={{ rotate: 0, scale: 1.05, y: -4 }}
-            className="group absolute -top-12 -left-3 z-20 w-[105px] cursor-pointer select-none bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.4)] ring-1 ring-ink/10 transition-shadow hover:shadow-[0_25px_50px_-10px_rgba(18,18,17,.5)] sm:-top-10 sm:-left-6 sm:w-32 md:-top-12 md:-left-16 md:w-36"
+            className="group absolute -top-14 -left-3 z-20 w-[130px] cursor-pointer select-none bg-paper p-1.5 shadow-[0_22px_45px_-12px_rgba(18,18,17,.42)] ring-1 ring-ink/10 transition-shadow hover:shadow-[0_28px_55px_-10px_rgba(18,18,17,.55)] sm:-top-12 sm:-left-7 sm:w-40 md:-top-14 md:-left-16 md:w-44"
           >
             <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
-            <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
+            <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9.5px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
           </motion.figure>
         </motion.div>
       </header>
