@@ -53,21 +53,18 @@ export default function HeroWaferDuo({ onColorChange }: HeroWaferDuoProps) {
       >
         {/* ========================================================== */}
         {/* 1. DERRIÈRE : LE GRAND WAFER SILICIUM 300mm                 */}
-        {/*    Dépassant UNIQUEMENT sur le côté droit (gauche caché)   */}
-        {/*    Aucun zoom au hover                                     */}
+        {/*    Taille calibrée, dépassant UNIQUEMENT à droite          */}
+        {/*    Zéro débordement en bas ni à gauche                     */}
         {/* ========================================================== */}
         <motion.div
           style={{ x: waferX, y: waferY }}
           initial={{ opacity: 0, scale: 0.9, x: 40 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
           transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          className="absolute z-10 w-[330px] sm:w-[400px] md:w-[460px] lg:w-[500px] aspect-square translate-x-12 sm:translate-x-16 md:translate-x-22 lg:translate-x-26 top-1/2 -translate-y-1/2 pointer-events-none"
+          className="absolute z-10 w-[270px] sm:w-[320px] md:w-[370px] lg:w-[410px] aspect-square translate-x-14 sm:translate-x-18 md:translate-x-24 lg:translate-x-28 top-1/2 -translate-y-[58%] pointer-events-none"
         >
-          {/* Ombre portée douce du wafer */}
-          <div className="absolute inset-x-4 bottom-2 h-14 bg-black/30 blur-2xl rounded-full transform scale-90" />
-
-          {/* Wafer photoréaliste découpé sans contour blanc */}
-          <div className="relative aspect-square w-full rounded-full overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.38)]">
+          {/* Wafer photoréaliste découpé net, sans contour ni débordement en bas */}
+          <div className="relative aspect-square w-full rounded-full overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.35)]">
             <img
               src="/assets/silicon-wafer.png"
               alt="Wafer Silicium 300mm SEMI Photorealiste"
