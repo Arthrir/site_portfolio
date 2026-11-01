@@ -1778,15 +1778,26 @@ function Page() {
       <header id="top" ref={heroRef} className="relative mx-auto grid min-h-[100svh] max-w-[1400px] items-center gap-12 px-6 pt-[calc(env(safe-area-inset-top)+104px)] pb-28 md:px-10 md:pt-28 md:pb-16 lg:grid-cols-[1.25fr_1fr]">
         <div className="grid-bg pointer-events-none absolute inset-0 -z-10 opacity-50 [mask-image:radial-gradient(ellipse_at_70%_45%,black,transparent_70%)]" />
         <motion.div style={{ y: heroY, opacity: heroO }}>
-          <h1 className="text-[clamp(4.2rem,19vw,9.5rem)] leading-[0.86] font-semibold tracking-[-0.05em]">
-            {["Arthur", "Doradoux"].map((w, i) => (
-              <span key={w} className="block overflow-hidden pb-[0.06em]">
-                <motion.span className="block" initial={{ y: "105%" }} animate={{ y: 0 }} transition={{ duration: 1.1, ease, delay: 0.15 + i * 0.1 }}>
-                  {w}{i === 1 && <span style={{ color: dotColor }} className="transition-colors duration-500">.</span>}
-                </motion.span>
-              </span>
-            ))}
-          </h1>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 sm:gap-8">
+            <h1 className="text-[clamp(3.8rem,17vw,9.5rem)] leading-[0.86] font-semibold tracking-[-0.05em]">
+              {["Arthur", "Doradoux"].map((w, i) => (
+                <span key={w} className="block overflow-hidden pb-[0.06em]">
+                  <motion.span className="block" initial={{ y: "105%" }} animate={{ y: 0 }} transition={{ duration: 1.1, ease, delay: 0.15 + i * 0.1 }}>
+                    {w}{i === 1 && <span style={{ color: dotColor }} className="transition-colors duration-500">.</span>}
+                  </motion.span>
+                </span>
+              ))}
+            </h1>
+            <motion.figure
+              initial={{ opacity: 0, scale: 0.9, rotate: 3 }}
+              animate={{ opacity: 1, scale: 1, rotate: 3 }}
+              whileHover={{ rotate: 0, scale: 1.05 }}
+              className="group shrink-0 mb-2 w-24 sm:w-28 md:w-32 cursor-pointer select-none bg-paper p-1.5 shadow-[0_20px_40px_-15px_rgba(18,18,17,.35)] ring-1 ring-ink/10 transition-shadow hover:shadow-[0_28px_50px_-10px_rgba(18,18,17,.45)]"
+            >
+              <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
+              <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9px] text-mute uppercase"><span>fig. 01</span><span>A. Doradoux</span></figcaption>
+            </motion.figure>
+          </div>
           <Reveal delay={0.6} className="mt-8 max-w-3xl space-y-4">
             <p className="text-lg md:text-xl leading-relaxed text-ink/90 font-medium">
               {tr(
@@ -1824,16 +1835,6 @@ function Page() {
         </motion.div>
         <motion.div initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.4, ease, delay: 0.3 }} className="relative mx-auto mt-6 w-full max-w-[360px] sm:max-w-[420px] md:mt-0 md:max-w-[460px]">
           <Die onColorChange={(c) => setDotColor(c)} />
-          <motion.figure
-            initial={{ opacity: 0, y: 30, rotate: 0 }}
-            animate={{ opacity: 1, y: 0, rotate: -4 }}
-            transition={{ duration: 1.2, ease, delay: 0.9 }}
-            whileHover={{ rotate: 0, scale: 1.05, y: -4 }}
-            className="group absolute -top-14 -left-3 z-20 w-[130px] cursor-pointer select-none bg-paper p-1.5 shadow-[0_22px_45px_-12px_rgba(18,18,17,.42)] ring-1 ring-ink/10 transition-shadow hover:shadow-[0_28px_55px_-10px_rgba(18,18,17,.55)] sm:-top-12 sm:-left-7 sm:w-40 md:-top-14 md:-left-16 md:w-44"
-          >
-            <img src="/assets/arthur.jpeg" alt="Arthur Doradoux" className="aspect-[4/5] w-full object-cover" />
-            <figcaption className="flex justify-between px-0.5 pt-1.5 font-mono text-[9.5px] text-mute uppercase"><span>fig. 02</span><span>A. Doradoux</span></figcaption>
-          </motion.figure>
         </motion.div>
       </header>
 
